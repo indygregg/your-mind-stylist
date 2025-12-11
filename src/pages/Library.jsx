@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
@@ -78,6 +79,11 @@ export default function Library() {
 
   return (
     <div className="min-h-screen bg-[#F9F5EF] pt-32 pb-24">
+      <SEO
+        title="Your Library | Your Mind Stylist"
+        description="Access your programs, courses, and Inner Rehearsal Sessions in one place."
+        canonical="/library"
+      />
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

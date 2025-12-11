@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
@@ -101,6 +102,11 @@ export default function PurchaseCenter() {
 
   return (
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
+      <SEO
+        title="Purchase Center | Your Mind Stylist"
+        description="Explore and purchase programs, subscriptions, and services."
+        canonical="/purchase-center"
+      />
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
