@@ -10,12 +10,14 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { Save, Eye, Trash2, ArrowLeft, Calendar, Sparkles, Image as ImageIcon, TrendingUp, User as UserIcon } from "lucide-react";
+import { Save, Eye, Trash2, ArrowLeft, Calendar, Sparkles, Image as ImageIcon, TrendingUp, User as UserIcon, BarChart3, FileText } from "lucide-react";
 import AIHelper from "../components/ai/AIHelper";
 import ContentStudio from "../components/blog/ContentStudio";
 import AIContentGenerator from "../components/blog/AIContentGenerator";
 import ImageManager from "../components/blog/ImageManager";
 import SEOAnalyzer from "../components/blog/SEOAnalyzer";
+import BlogAnalyticsDashboard from "../components/blog/BlogAnalyticsDashboard";
+import BlogSummarizer from "../components/blog/BlogSummarizer";
 
 export default function BlogEditor() {
   const navigate = useNavigate();
@@ -113,6 +115,14 @@ export default function BlogEditor() {
   });
 
   const handleSave = (status) => {
+    // Guest authors can only submit for review
+    if (user && authors.length > 0) {
+      const userAuthor = authors.find(a => a.user_id === user.id);
+      if (userAuthor?.is_guest && status === "published") {
+        status = "pending_review";
+      }
+    }
+    
     const dataToSave = { ...formData, status };
     if (id) {
       updateMutation.mutate({ id, data: dataToSave });
@@ -254,6 +264,17 @@ export default function BlogEditor() {
             />
           </div>
 
+          {/* AI Summarizer */}
+          <div className="border border-[#6E4F7D]/20 rounded-lg p-6 bg-gradient-to-br from-[#6E4F7D]/5 to-[#D8B46B]/5">
+            <div className="flex items-center gap-2 mb-4">
+              <FileText size={20} className="text-[#6E4F7D]" />
+              <h3 className="font-serif text-lg text-[#1E3A32]">AI Blog Summarizer</h3>
+            </div>
+            <BlogSummarizer
+              onApplySummary={(summary) => setFormData({ ...formData, excerpt: summary })}
+            />
+          </div>
+
           {/* AI Content Generator */}
           <div className="border border-[#6E4F7D]/20 rounded-lg p-6 bg-gradient-to-br from-[#6E4F7D]/5 to-[#D8B46B]/5">
             <div className="flex items-center gap-2 mb-4">
@@ -383,6 +404,17 @@ export default function BlogEditor() {
               </div>
             </div>
           </div>
+
+          {/* Analytics (for published posts) */}
+          {id && formData.status === "published" && (
+            <div className="border-t pt-6">
+              <h3 className="font-medium text-[#1E3A32] mb-4 flex items-center gap-2">
+                <BarChart3 size={18} />
+                Post Analytics
+              </h3>
+              <BlogAnalyticsDashboard blogPostId={id} />
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex gap-3 justify-between border-t pt-6">
