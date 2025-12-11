@@ -19,6 +19,7 @@ export default function Dashboard() {
   const [studioStats, setStudioStats] = useState(null);
   const [dailyPrompt, setDailyPrompt] = useState(null);
   const [notesDrawerOpen, setNotesDrawerOpen] = useState(false);
+  const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,11 +44,21 @@ export default function Dashboard() {
           setDailyPrompt(prompts[today % prompts.length]);
         }
         
-        // Track app session
+        // Track app session and streak
         await base44.functions.invoke('trackEvent', {
           event_type: 'app_session',
           points: 1
         });
+        
+        await base44.functions.invoke('trackStreak', {
+          action_type: 'dashboard_visited'
+        });
+        
+        // Fetch personalized recommendations
+        const recs = await base44.functions.invoke('getRecommendations', {});
+        if (recs?.data?.recommendations) {
+          setRecommendations(recs.data.recommendations);
+        }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -119,6 +130,25 @@ export default function Dashboard() {
             <ConstellationMap totalPoints={studioStats?.constellation?.totalPoints || 0} />
             <InnerMomentumMeter weeklyPoints={studioStats?.momentum?.weeklyPoints || 0} />
           </div>
+
+          {/* Personalized Recommendations */}
+          {recommendations.length > 0 && (
+            <div className="mb-12">
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Suggested For You</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {recommendations.map((rec, index) => (
+                  <RecommendationCard 
+                    key={index} 
+                    recommendation={rec}
+                    onTakeAction={(prompt) => {
+                      setDailyPrompt({ prompt_text: prompt });
+                      setNotesDrawerOpen(true);
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Programs */}
           <div className="mb-12">
