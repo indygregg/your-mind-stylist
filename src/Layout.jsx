@@ -32,12 +32,19 @@ export default function Layout({ children, currentPageName }) {
   }, [currentPageName]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    if (!useAuthLayout) {
+      const handleScroll = () => {
+        setIsScrolled(window.scrollY > 50);
+      };
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }
+  }, [useAuthLayout]);
+
+  // Return AuthLayout if authenticated page
+  if (useAuthLayout) {
+    return <AuthLayout currentPageName={currentPageName}>{children}</AuthLayout>;
+  }
 
   const navLinks = [
     { name: "Home", page: "Home" },
