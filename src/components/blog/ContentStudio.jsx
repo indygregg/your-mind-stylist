@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Copy, CheckCircle, Loader2 } from "lucide-react";
+import { Sparkles, Copy, CheckCircle, Loader2, Image, Download } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 export default function ContentStudio({ blogContent }) {
@@ -37,7 +37,7 @@ export default function ContentStudio({ blogContent }) {
         </TabsContent>
 
         <TabsContent value="visuals" className="p-6">
-          <div className="text-[#2B2725]/60 text-sm">Coming soon...</div>
+          <VisualIntelligence blogContent={blogContent} />
         </TabsContent>
       </Tabs>
     </div>
