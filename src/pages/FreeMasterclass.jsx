@@ -71,7 +71,7 @@ export default function FreeMasterclass() {
       icon: Brain,
       title: "The Mind Styling Certification™",
       description: "For identity-level change and emotional intelligence.",
-      link: "Certification",
+      link: "Evolution",
     },
     {
       icon: Users,

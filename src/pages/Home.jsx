@@ -13,8 +13,8 @@ export default function Home() {
   return (
     <div className="bg-[#F9F5EF]">
       <SEO
-        title="The Mind Stylist | Emotional Intelligence & Mindset Transformation"
-        description="Emotional intelligence, mind styling, and inner transformation with The Mind Stylist, Roberta Fernandez. Rewrite your patterns and restyle your life from the inside out."
+        title="Your Mind Stylist | Emotional Intelligence & Mindset Transformation"
+        description="Emotional intelligence, mind styling, and inner transformation with Your Mind Stylist, Roberta Fernandez. Rewrite your patterns and restyle your life from the inside out."
         canonical="/"
       />
       <HeroSection />

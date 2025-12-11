@@ -91,7 +91,7 @@ export default function PrivateSessions() {
     <div className="bg-[#F9F5EF]">
       <SEO
         title="Private Mind Styling | 1:1 Emotional Intelligence & Mindset Work"
-        description="Work one-on-one with The Mind Stylist, Roberta Fernandez, to understand your patterns, release what no longer fits, and redesign the way you think."
+        description="Work one-on-one with Your Mind Stylist, Roberta Fernandez, to understand your patterns, release what no longer fits, and redesign the way you think."
         canonical="/private-sessions"
       />
       {/* Hero Section */}

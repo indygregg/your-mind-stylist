@@ -434,7 +434,7 @@ export default function InnerRehearsal() {
                 This work changes people because it helps them change how they feel — and when that
                 changes, everything else follows.
               </p>
-              <p className="font-serif text-xl italic pt-4">— Roberta Fernandez, The Mind Stylist</p>
+              <p className="font-serif text-xl italic pt-4">— Roberta Fernandez, Your Mind Stylist</p>
             </div>
           </motion.div>
         </div>

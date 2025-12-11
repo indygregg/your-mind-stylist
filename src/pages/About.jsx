@@ -61,7 +61,7 @@ export default function About() {
       icon: Layers,
       title: "The Mind Styling Certification™",
       description: "A three-part redesign of your mental operating system.",
-      link: "Certification",
+      link: "Evolution",
     },
     {
       icon: Users,
