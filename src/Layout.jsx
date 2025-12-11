@@ -12,16 +12,16 @@ export default function Layout({ children, currentPageName }) {
 
   useEffect(() => {
     const checkAuthPages = async () => {
-      const authPages = [
-        'Dashboard', 'AdminDashboard', 'ManagerDashboard', 'StudioDashboard',
-        'PurchaseCenter', 'Library', 'BlogManager', 'CourseManager', 
-        'AudioManager', 'MessagesManager', 'AdminRoadmap', 'AdminUsers',
-        'StudioSettings', 'AdminAnalytics', 'StudioLogs', 'StudioRoles',
-        'StudioDevDocs', 'StudioLegal', 'StudioPricing', 'BlogEditor',
-        'LegalEditor', 'CourseEditor', 'AudioEditor'
-      ];
+      // Pattern-based detection for authenticated pages
+      const isAuthPage = 
+        currentPageName.startsWith('Admin') ||
+        currentPageName.startsWith('Studio') ||
+        currentPageName.startsWith('Manager') ||
+        ['Dashboard', 'PurchaseCenter', 'Library'].includes(currentPageName) ||
+        currentPageName.endsWith('Editor') ||
+        currentPageName.endsWith('Manager');
       
-      if (authPages.includes(currentPageName)) {
+      if (isAuthPage) {
         const isAuth = await base44.auth.isAuthenticated();
         setUseAuthLayout(isAuth);
       }
