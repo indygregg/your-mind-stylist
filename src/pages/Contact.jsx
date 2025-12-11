@@ -80,8 +80,8 @@ export default function Contact() {
   return (
     <div className="bg-[#F9F5EF]">
       <SEO
-        title="Contact | The Mind Stylist"
-        description="Contact The Mind Stylist, Roberta Fernandez, to explore private work, organizational trainings, or questions about programs and Inner Rehearsal Sessions™."
+        title="Contact | Your Mind Stylist"
+        description="Contact Your Mind Stylist, Roberta Fernandez, to explore private work, organizational trainings, or questions about programs and Inner Rehearsal Sessions™."
         canonical="/contact"
       />
       {/* Hero Section */}

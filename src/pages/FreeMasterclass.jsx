@@ -91,7 +91,7 @@ export default function FreeMasterclass() {
     <div className="bg-[#F9F5EF]">
       <SEO
         title="Free Masterclass | Imposter Syndrome & Other Myths to Ditch"
-        description="An on-demand masterclass with The Mind Stylist on imposter syndrome and other myths to let go of so you can finally trust your own abilities."
+        description="An on-demand masterclass with Your Mind Stylist on imposter syndrome and other myths to let go of so you can finally trust your own abilities."
         canonical="/free-masterclass"
       />
       {/* Hero Section */}

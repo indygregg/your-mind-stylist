@@ -140,7 +140,7 @@ export default function Layout({ children, currentPageName }) {
                 Roberta Fernandez
               </span>
               <span className="font-serif font-bold text-lg md:text-xl text-[#1E3A32] tracking-wide">
-                The Mind Stylist
+                Your Mind Stylist
               </span>
             </div>
           </Link>
@@ -228,7 +228,7 @@ export default function Layout({ children, currentPageName }) {
                 Roberta Fernandez
               </p>
               <h3 className="font-serif font-bold text-3xl md:text-4xl text-[#F9F5EF] mb-6">
-                The Mind Stylist
+                Your Mind Stylist
               </h3>
               <p className="text-[#F9F5EF]/70 text-sm leading-relaxed">
                 Emotional Intelligence • Mind Styling
@@ -278,7 +278,7 @@ export default function Layout({ children, currentPageName }) {
           {/* Bottom Bar */}
           <div className="mt-16 pt-8 border-t border-[#F9F5EF]/10 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-[#F9F5EF]/40">
-              © {new Date().getFullYear()} The Mind Stylist. All rights reserved.
+              © {new Date().getFullYear()} Your Mind Stylist. All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link to={createPageUrl("LegalPage?slug=privacy-policy")} className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
