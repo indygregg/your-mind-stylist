@@ -15,6 +15,8 @@ export default function AdminRoadmap() {
   const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
@@ -90,6 +92,11 @@ export default function AdminRoadmap() {
     if (window.confirm(`Delete "${title}"?`)) {
       deleteMutation.mutate(id);
     }
+  };
+
+  const handleViewDetail = (item) => {
+    setSelectedItem(item);
+    setIsDetailOpen(true);
   };
 
   const filteredItems = statusFilter === "all" 
@@ -250,11 +257,12 @@ export default function AdminRoadmap() {
                     key={item.id}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-[#F9F5EF] p-4 rounded hover:shadow-md transition-shadow"
+                    className="bg-[#F9F5EF] p-4 rounded hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => handleViewDetail(item)}
                   >
                     <div className="flex justify-between items-start mb-2">
                       <h4 className="font-medium text-sm text-[#1E3A32]">{item.title}</h4>
-                      <div className="flex gap-1">
+                      <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => handleEdit(item)}>
                           <Edit size={14} />
                         </Button>
