@@ -169,24 +169,21 @@ export default function Layout({ children, currentPageName }) {
 
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.page}
-                to={createPageUrl(link.page)}
-                className={`text-sm tracking-wide transition-all duration-300 relative group ${
-                  currentPageName === link.page
-                    ? "text-[#1E3A32]"
-                    : "text-[#2B2725]/70 hover:text-[#1E3A32]"
+            <Link
+              to={createPageUrl("Home")}
+              className={`text-sm tracking-wide transition-all duration-300 relative group ${
+                currentPageName === "Home"
+                  ? "text-[#1E3A32]"
+                  : "text-[#2B2725]/70 hover:text-[#1E3A32]"
+              }`}
+            >
+              Home
+              <span
+                className={`absolute -bottom-1 left-0 h-[1px] bg-[#D8B46B] transition-all duration-300 ${
+                  currentPageName === "Home" ? "w-full" : "w-0 group-hover:w-full"
                 }`}
-              >
-                {link.name}
-                <span
-                  className={`absolute -bottom-1 left-0 h-[1px] bg-[#D8B46B] transition-all duration-300 ${
-                    currentPageName === link.page ? "w-full" : "w-0 group-hover:w-full"
-                  }`}
-                />
-              </Link>
-            ))}
+              />
+            </Link>
 
             {/* Services Mega Menu */}
             <div 
@@ -241,9 +238,28 @@ export default function Layout({ children, currentPageName }) {
                     </div>
                   </motion.div>
                 )}
-              </AnimatePresence>
-            </div>
-          </div>
+                </AnimatePresence>
+                </div>
+
+                {navLinks.slice(1).map((link) => (
+                <Link
+                key={link.page}
+                to={createPageUrl(link.page)}
+                className={`text-sm tracking-wide transition-all duration-300 relative group ${
+                  currentPageName === link.page
+                    ? "text-[#1E3A32]"
+                    : "text-[#2B2725]/70 hover:text-[#1E3A32]"
+                }`}
+                >
+                {link.name}
+                <span
+                  className={`absolute -bottom-1 left-0 h-[1px] bg-[#D8B46B] transition-all duration-300 ${
+                    currentPageName === link.page ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+                </Link>
+                ))}
+                </div>
 
           {/* Mobile Menu Button */}
                 <button
