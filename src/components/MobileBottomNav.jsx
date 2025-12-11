@@ -1,0 +1,120 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "../utils";
+import { Home, BookOpen, ShoppingCart, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export default function MobileBottomNav({ user, currentPageName, navLinks, onLogout }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleNavClick = () => {
+    if (navigator.vibrate) {
+      navigator.vibrate(10);
+    }
+    setMenuOpen(false);
+  };
+
+  const quickLinks = navLinks.slice(0, 3);
+  const moreLinks = navLinks.slice(3);
+
+  return (
+    <>
+      {/* Bottom Navigation Bar - Mobile Only */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#1E3A32] border-t border-[#F9F5EF]/10 z-50">
+        <div className="grid grid-cols-4 h-16">
+          {quickLinks.map((link) => (
+            <Link
+              key={link.page}
+              to={createPageUrl(link.page)}
+              onClick={handleNavClick}
+              className={`flex flex-col items-center justify-center gap-1 transition-colors ${
+                currentPageName === link.page
+                  ? "text-[#D8B46B]"
+                  : "text-[#F9F5EF]/70"
+              }`}
+            >
+              <Home size={20} />
+              <span className="text-[10px]">{link.name}</span>
+            </Link>
+          ))}
+          <button
+            onClick={() => {
+              if (navigator.vibrate) navigator.vibrate(10);
+              setMenuOpen(!menuOpen);
+            }}
+            className={`flex flex-col items-center justify-center gap-1 transition-colors ${
+              menuOpen ? "text-[#D8B46B]" : "text-[#F9F5EF]/70"
+            }`}
+          >
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            <span className="text-[10px]">More</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Slide-up Menu Panel */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMenuOpen(false)}
+              className="lg:hidden fixed inset-0 bg-black/50 z-40"
+            />
+
+            {/* Menu Panel */}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="lg:hidden fixed bottom-16 left-0 right-0 bg-[#1E3A32] rounded-t-3xl z-40 max-h-[70vh] overflow-y-auto"
+            >
+              <div className="px-6 py-6">
+                {/* User Info */}
+                <div className="pb-4 mb-4 border-b border-[#F9F5EF]/10">
+                  <p className="text-[#F9F5EF] font-medium">
+                    {user?.full_name || user?.email}
+                  </p>
+                  <p className="text-[#F9F5EF]/60 text-sm">{user?.email}</p>
+                </div>
+
+                {/* More Navigation Links */}
+                <div className="space-y-2 mb-4">
+                  {moreLinks.map((link) => (
+                    <Link
+                      key={link.page}
+                      to={createPageUrl(link.page)}
+                      onClick={handleNavClick}
+                      className={`block py-3 px-4 rounded-lg transition-colors ${
+                        currentPageName === link.page
+                          ? "bg-[#D8B46B]/20 text-[#D8B46B]"
+                          : "text-[#F9F5EF]/80 hover:bg-[#F9F5EF]/10"
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Logout Button */}
+                <button
+                  onClick={() => {
+                    if (navigator.vibrate) navigator.vibrate(10);
+                    onLogout();
+                  }}
+                  className="w-full py-3 px-4 bg-[#F9F5EF]/10 hover:bg-[#F9F5EF]/20 text-[#F9F5EF] rounded-lg transition-colors"
+                >
+                  Logout
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}

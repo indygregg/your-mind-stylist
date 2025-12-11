@@ -170,12 +170,15 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-[#1E3A32]"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+                <button
+                  onClick={() => {
+                    if (navigator.vibrate) navigator.vibrate(10);
+                    setMobileMenuOpen(!mobileMenuOpen);
+                  }}
+                  className="lg:hidden p-2 text-[#1E3A32]"
+                >
+                  {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
         </nav>
         
         <CookieBanner />
@@ -194,7 +197,10 @@ export default function Layout({ children, currentPageName }) {
                   <Link
                     key={link.page}
                     to={createPageUrl(link.page)}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                      if (navigator.vibrate) navigator.vibrate(10);
+                      setMobileMenuOpen(false);
+                    }}
                     className={`text-lg py-2 border-b border-[#E4D9C4] ${
                       currentPageName === link.page
                         ? "text-[#1E3A32] font-medium"
@@ -206,7 +212,10 @@ export default function Layout({ children, currentPageName }) {
                 ))}
                 <Link
                   to={createPageUrl("Contact")}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                    if (navigator.vibrate) navigator.vibrate(10);
+                    setMobileMenuOpen(false);
+                  }}
                   className="mt-4 px-6 py-3 bg-[#1E3A32] text-[#F9F5EF] text-center text-sm tracking-wide"
                 >
                   Book Consultation

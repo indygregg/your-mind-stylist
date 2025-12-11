@@ -4,6 +4,7 @@ import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { Menu, X, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import MobileBottomNav from "./MobileBottomNav";
 
 export default function AuthLayout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
@@ -199,7 +200,15 @@ export default function AuthLayout({ children, currentPageName }) {
       </header>
 
       {/* Main Content */}
-      <main className="pt-20">{children}</main>
+      <main className="pt-20 pb-20 lg:pb-0">{children}</main>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav 
+        user={user}
+        currentPageName={currentPageName}
+        navLinks={navLinks}
+        onLogout={handleLogout}
+      />
     </div>
   );
 }
