@@ -7,6 +7,7 @@ import Blog from './pages/Blog';
 import BlogEditor from './pages/BlogEditor';
 import BlogManager from './pages/BlogManager';
 import BlogPost from './pages/BlogPost';
+import CertPurchase from './pages/CertPurchase';
 import Certification from './pages/Certification';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
@@ -21,7 +22,9 @@ import Maintenance from './pages/Maintenance';
 import ManagerDashboard from './pages/ManagerDashboard';
 import NotFound from './pages/NotFound';
 import Podcast from './pages/Podcast';
+import Pricing from './pages/Pricing';
 import PrivateSessions from './pages/PrivateSessions';
+import PurchaseCenter from './pages/PurchaseCenter';
 import PurchaseComplete from './pages/PurchaseComplete';
 import SpeakingTraining from './pages/SpeakingTraining';
 import StudioDashboard from './pages/StudioDashboard';
@@ -29,14 +32,12 @@ import StudioDevDocs from './pages/StudioDevDocs';
 import StudioLegal from './pages/StudioLegal';
 import StudioLegalEditor from './pages/StudioLegalEditor';
 import StudioLogs from './pages/StudioLogs';
+import StudioPricing from './pages/StudioPricing';
 import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
-import Pricing from './pages/Pricing';
-import PurchaseCenter from './pages/PurchaseCenter';
-import StudioPricing from './pages/StudioPricing';
-import CertPurchase from './pages/CertPurchase';
+import Masterclass from './pages/Masterclass';
 import __Layout from './Layout.jsx';
 
 
@@ -50,6 +51,7 @@ export const PAGES = {
     "BlogEditor": BlogEditor,
     "BlogManager": BlogManager,
     "BlogPost": BlogPost,
+    "CertPurchase": CertPurchase,
     "Certification": Certification,
     "Contact": Contact,
     "Dashboard": Dashboard,
@@ -64,7 +66,9 @@ export const PAGES = {
     "ManagerDashboard": ManagerDashboard,
     "NotFound": NotFound,
     "Podcast": Podcast,
+    "Pricing": Pricing,
     "PrivateSessions": PrivateSessions,
+    "PurchaseCenter": PurchaseCenter,
     "PurchaseComplete": PurchaseComplete,
     "SpeakingTraining": SpeakingTraining,
     "StudioDashboard": StudioDashboard,
@@ -72,14 +76,12 @@ export const PAGES = {
     "StudioLegal": StudioLegal,
     "StudioLegalEditor": StudioLegalEditor,
     "StudioLogs": StudioLogs,
+    "StudioPricing": StudioPricing,
     "StudioRoles": StudioRoles,
     "StudioSettings": StudioSettings,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
-    "Pricing": Pricing,
-    "PurchaseCenter": PurchaseCenter,
-    "StudioPricing": StudioPricing,
-    "CertPurchase": CertPurchase,
+    "Masterclass": Masterclass,
 }
 
 export const pagesConfig = {
