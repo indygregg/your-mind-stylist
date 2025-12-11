@@ -393,7 +393,7 @@ export default function InnerRehearsal() {
 
             <div className="bg-[#F9F5EF] p-8 mb-10">
               <p className="text-[#2B2725]/80 text-lg text-center">
-                The Inner Rehearsal Library lives inside your private Mind Stylist Portal.
+                The Inner Rehearsal Library lives inside your private Your Mind Stylist Portal.
               </p>
             </div>
 

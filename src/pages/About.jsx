@@ -201,7 +201,7 @@ export default function About() {
             viewport={{ once: true }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              The Mind Stylist Philosophy
+              Your Mind Stylist Philosophy
             </span>
             <h2 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-8">
               Think From Where You Want to Be.
@@ -217,7 +217,7 @@ export default function About() {
             </div>
 
             <div className="bg-white p-8 md:p-10 mb-10">
-              <p className="text-[#2B2725]/70 mb-6">The Mind Stylist approach blends:</p>
+              <p className="text-[#2B2725]/70 mb-6">Your Mind Stylist approach blends:</p>
               <div className="grid md:grid-cols-2 gap-3">
                 {approaches.map((approach) => (
                   <div key={approach} className="flex items-center gap-3">

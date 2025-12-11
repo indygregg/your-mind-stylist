@@ -282,7 +282,7 @@ export default function FreeMasterclass() {
             </div>
 
             <p className="font-serif text-2xl text-[#1E3A32] mb-8">
-              The Mind Stylist approach is different.
+              Your Mind Stylist approach is different.
             </p>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">

@@ -90,8 +90,8 @@ export default function Blog() {
   return (
     <div className="bg-[#F9F5EF]">
       <SEO
-        title="The Mind Styling Journal | Articles & Reflections"
-        description="The Mind Styling Journal offers weekly articles, Monday Mentions, and Thursday Thoughts on mindset, emotional intelligence, and inner pattern shifts."
+        title="Your Mind Styling Journal | Articles & Reflections"
+        description="Your Mind Styling Journal offers weekly articles, Monday Mentions, and Thursday Thoughts on mindset, emotional intelligence, and inner pattern shifts."
         canonical="/blog"
       />
       {/* Hero Section */}
@@ -104,7 +104,7 @@ export default function Blog() {
             className="text-center"
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              The Mind Styling Journal
+              Your Mind Styling Journal
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
               Articles, Thoughts & Tools
