@@ -50,7 +50,7 @@ export default function Layout({ children, currentPageName }) {
     { name: "Home", page: "Home" },
     { name: "About", page: "About" },
     { name: "Programs", page: "Pricing" },
-    { name: "Certification", page: "Certification" },
+    { name: "Evolution", page: "Evolution" },
     { name: "Private Work", page: "PrivateSessions" },
     { name: "Inner Rehearsal", page: "InnerRehearsal" },
     { name: "Speaking", page: "SpeakingTraining" },

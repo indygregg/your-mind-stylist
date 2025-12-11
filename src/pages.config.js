@@ -20,6 +20,7 @@ import FreeMasterclass from './pages/FreeMasterclass';
 import InnerRehearsal from './pages/InnerRehearsal';
 import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
 import LegalPage from './pages/LegalPage';
+import Library from './pages/Library';
 import Maintenance from './pages/Maintenance';
 import ManagerDashboard from './pages/ManagerDashboard';
 import Masterclass from './pages/Masterclass';
@@ -41,7 +42,6 @@ import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
-import Library from './pages/Library';
 import __Layout from './Layout.jsx';
 
 
@@ -68,6 +68,7 @@ export const PAGES = {
     "InnerRehearsal": InnerRehearsal,
     "InnerRehearsalPurchase": InnerRehearsalPurchase,
     "LegalPage": LegalPage,
+    "Library": Library,
     "Maintenance": Maintenance,
     "ManagerDashboard": ManagerDashboard,
     "Masterclass": Masterclass,
@@ -89,7 +90,6 @@ export const PAGES = {
     "StudioSettings": StudioSettings,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
-    "Library": Library,
 }
 
 export const pagesConfig = {
