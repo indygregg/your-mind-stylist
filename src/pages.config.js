@@ -36,6 +36,7 @@ import WorkWithMe from './pages/WorkWithMe';
 import Pricing from './pages/Pricing';
 import PurchaseCenter from './pages/PurchaseCenter';
 import StudioPricing from './pages/StudioPricing';
+import CertPurchase from './pages/CertPurchase';
 import __Layout from './Layout.jsx';
 
 
@@ -78,6 +79,7 @@ export const PAGES = {
     "Pricing": Pricing,
     "PurchaseCenter": PurchaseCenter,
     "StudioPricing": StudioPricing,
+    "CertPurchase": CertPurchase,
 }
 
 export const pagesConfig = {
