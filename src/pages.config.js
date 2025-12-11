@@ -11,6 +11,8 @@ import Blog from './pages/Blog';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
 import BlogPost from './pages/BlogPost';
+import ManagerDashboard from './pages/ManagerDashboard';
+import BlogManager from './pages/BlogManager';
 import __Layout from './Layout.jsx';
 
 
@@ -28,6 +30,8 @@ export const PAGES = {
     "Contact": Contact,
     "Dashboard": Dashboard,
     "BlogPost": BlogPost,
+    "ManagerDashboard": ManagerDashboard,
+    "BlogManager": BlogManager,
 }
 
 export const pagesConfig = {
