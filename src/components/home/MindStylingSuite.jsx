@@ -8,7 +8,7 @@ export default function MindStylingSuite() {
   const services = [
     {
       icon: Layers,
-      title: "The Mind Styling Certification™",
+      title: "Mind Styling Evolution™",
       tagline: "A three-part inner redesign for people ready for a new mental operating system.",
       description:
         "Most people try to change their lives from the outside in. This program helps you transform from the inside out.",
@@ -26,8 +26,8 @@ export default function MindStylingSuite() {
           text: "Rehearse your future self. Build identity-level change.",
         },
       ],
-      cta: "Explore The Certification",
-      link: "Certification",
+      cta: "Explore Mind Styling Evolution",
+      link: "Evolution",
       accent: "#1E3A32",
       bg: "bg-white",
     },

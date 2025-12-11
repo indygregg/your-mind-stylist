@@ -41,7 +41,7 @@ export default function HeroSection() {
               <div className="flex items-center gap-6">
                 <div className="w-12 h-[2px] bg-[#D8B46B]" />
                 <h2 className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] tracking-wide">
-                  THE MIND STYLIST
+                  YOUR MIND STYLIST
                 </h2>
                 <div className="w-12 h-[2px] bg-[#D8B46B]" />
               </div>
@@ -101,7 +101,7 @@ export default function HeroSection() {
               <div className="relative aspect-[4/5] overflow-hidden bg-[#E4D9C4]">
                 <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9bff2cefb_Roberta-Fernandez-The-Mind-Stylist.jpg"
-                  alt="Roberta Fernandez - The Mind Stylist"
+                  alt="Roberta Fernandez - Your Mind Stylist"
                   className="w-full h-full object-cover object-center hover:scale-105 transition-all duration-700"
                 />
                 {/* Overlay */}
