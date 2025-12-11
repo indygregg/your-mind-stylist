@@ -32,7 +32,7 @@ export default function OnboardingModal({ role = "user", onComplete }) {
           description: "Everything you purchase will appear in your Library. You can access your programs, Inner Rehearsal Sessions™, and more from your dashboard.",
           actions: [
             { label: "Explore Programs", link: "WorkWithMe" },
-            { label: "Watch Free Masterclass", link: "Masterclass" },
+            { label: "Watch Free Masterclass", link: "FreeMasterclass" },
             { label: "Visit Blog", link: "Blog" },
           ]
         },
