@@ -4,7 +4,7 @@ import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart } from "lucide-react";
+import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download } from "lucide-react";
 
 export default function ManagerDashboard() {
   // Set auth layout
@@ -58,11 +58,72 @@ export default function ManagerDashboard() {
           </p>
         </motion.div>
 
-        {/* Quick Actions */}
+        {/* Content Alchemy Suite - Featured */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
+          className="mb-12"
+        >
+          <div className="bg-gradient-to-br from-[#1E3A32] to-[#2B4A40] p-8 md:p-10 rounded-lg shadow-xl relative overflow-hidden">
+            {/* Decorative background */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#D8B46B] opacity-10 rounded-full -mr-32 -mt-32"></div>
+            
+            <div className="relative z-10">
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Sparkles size={24} className="text-[#D8B46B]" />
+                    <span className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase">New</span>
+                  </div>
+                  <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-3">
+                    Content Alchemy Suite
+                  </h2>
+                  <p className="text-[#F9F5EF]/80 text-lg max-w-2xl">
+                    Transform every blog post into a content empire. Write once, distribute everywhere—with AI-powered magic.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <Target size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Social Media Transformer</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">Platform-optimized posts</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <Image size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Visual Intelligence</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">AI-generated branded images</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <Download size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Lead Magnets</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">PDF guides & worksheets</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <Sparkles size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">SEO & Quote Graphics</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">Optimize & share wisdom</p>
+                </div>
+              </div>
+
+              <Link
+                to={createPageUrl("BlogEditor?mode=new")}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#D8B46B] text-[#1E3A32] font-medium hover:bg-[#F9F5EF] transition-all"
+              >
+                <PenSquare size={18} />
+                Start Creating with Alchemy
+              </Link>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
           className="mb-12"
         >
           <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Quick Actions</h2>
@@ -86,7 +147,7 @@ export default function ManagerDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.3 }}
           className="mb-12"
         >
           <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">At a Glance</h2>
@@ -124,7 +185,7 @@ export default function ManagerDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
         >
           <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Recent Activity</h2>
           <div className="grid lg:grid-cols-3 gap-6">
