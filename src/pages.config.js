@@ -54,6 +54,7 @@ import WorkWithMe from './pages/WorkWithMe';
 import CoursePage from './pages/CoursePage';
 import CourseBuilder from './pages/CourseBuilder';
 import CourseManager from './pages/CourseManager';
+import WebinarPage from './pages/WebinarPage';
 import __Layout from './Layout.jsx';
 
 
@@ -114,6 +115,7 @@ export const PAGES = {
     "CoursePage": CoursePage,
     "CourseBuilder": CourseBuilder,
     "CourseManager": CourseManager,
+    "WebinarPage": WebinarPage,
 }
 
 export const pagesConfig = {
