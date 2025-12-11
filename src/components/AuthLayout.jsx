@@ -106,7 +106,7 @@ export default function AuthLayout({ children, currentPageName }) {
                 Roberta Fernandez
               </span>
               <span className="font-serif font-bold text-base md:text-lg text-[#F9F5EF] tracking-wide">
-                The Mind Stylist
+                Your Mind Stylist
               </span>
             </div>
           </Link>
