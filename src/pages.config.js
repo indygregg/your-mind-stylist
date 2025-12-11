@@ -52,6 +52,7 @@ import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import CoursePage from './pages/CoursePage';
+import CourseBuilder from './pages/CourseBuilder';
 import __Layout from './Layout.jsx';
 
 
@@ -110,6 +111,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
     "CoursePage": CoursePage,
+    "CourseBuilder": CourseBuilder,
 }
 
 export const pagesConfig = {
