@@ -74,13 +74,13 @@ export default function Dashboard() {
   const programs = [
     {
       icon: Layers,
-      title: "The Mind Styling Certification™",
+      title: "Mind Styling Evolution",
       status: "Not Enrolled",
       color: "#1E3A32",
     },
     {
       icon: Sparkles,
-      title: "The Inner Rehearsal Sessions™",
+      title: "Pocket Mindset",
       status: "Not Enrolled",
       color: "#A6B7A3",
     },
