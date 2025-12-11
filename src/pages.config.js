@@ -48,6 +48,7 @@ import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import LearnHypnosis from './pages/LearnHypnosis';
+import Programs from './pages/Programs';
 import __Layout from './Layout.jsx';
 
 
@@ -102,6 +103,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
     "LearnHypnosis": LearnHypnosis,
+    "Programs": Programs,
 }
 
 export const pagesConfig = {

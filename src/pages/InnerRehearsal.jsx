@@ -144,7 +144,7 @@ export default function InnerRehearsal() {
               Guided Experiences
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6 text-center">
-              Pocket Mindset™
+              Pocket Visualization™
             </h1>
             <p className="text-[#A6B7A3] font-serif text-2xl md:text-3xl italic mb-8 text-center">
               Reset your mind, regulate your nervous system, and rehearse your future self — in minutes.
