@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Layers, Sparkles, BookOpen, Calendar, Play, User } from "lucide-react";
+import { Layers, Sparkles, BookOpen, Calendar, Play, User, Edit3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import OnboardingModal from "../components/onboarding/OnboardingModal";
 import PaymentFailureBanner from "../components/purchase/PaymentFailureBanner";
 import { base44 } from "@/api/base44Client";
+import EmotionalWeather from "../components/studio/EmotionalWeather";
+import DailyPocketPrompt from "../components/studio/DailyPocketPrompt";
+import ConstellationMap from "../components/studio/ConstellationMap";
+import InnerMomentumMeter from "../components/studio/InnerMomentumMeter";
+import NotesDrawer from "../components/studio/NotesDrawer";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+  const [studioStats, setStudioStats] = useState(null);
+  const [dailyPrompt, setDailyPrompt] = useState(null);
+  const [notesDrawerOpen, setNotesDrawerOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -23,9 +31,22 @@ export default function Dashboard() {
           window.location.reload();
         }
         
-        // TODO: Fetch actual subscription status from backend
-        // const status = await base44.functions.invoke('getSubscriptionStatus');
-        // setSubscriptionStatus(status.data.status);
+        // Fetch studio stats
+        const stats = await base44.functions.invoke('getStudioStats', {});
+        setStudioStats(stats.data);
+        
+        // Fetch daily prompt
+        const prompts = await base44.entities.DailyPrompt.filter({ active: true });
+        if (prompts.length > 0) {
+          const today = new Date().getDate();
+          setDailyPrompt(prompts[today % prompts.length]);
+        }
+        
+        // Track app session
+        await base44.functions.invoke('trackEvent', {
+          event_type: 'app_session',
+          points: 1
+        });
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -56,6 +77,12 @@ export default function Dashboard() {
   return (
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
       {user && <OnboardingModal role="user" />}
+      <NotesDrawer
+        isOpen={notesDrawerOpen}
+        onClose={() => setNotesDrawerOpen(false)}
+        sourceType="freeform"
+      />
+      
       <div className="max-w-6xl mx-auto px-6">
         <PaymentFailureBanner 
           status={subscriptionStatus}
@@ -73,27 +100,23 @@ export default function Dashboard() {
               Welcome Back
             </span>
             <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32]">
-              Your Mind Studio
+              Your Mind Styling Studio
             </h1>
           </div>
 
-          {/* Quick Stats */}
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {[
-              { label: "Programs", value: "0", icon: Layers },
-              { label: "Sessions Completed", value: "0", icon: Play },
-              { label: "Days Active", value: "1", icon: Calendar },
-            ].map((stat) => (
-              <div key={stat.label} className="bg-white p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-[#D8B46B]/10 flex items-center justify-center">
-                  <stat.icon size={24} className="text-[#D8B46B]" />
-                </div>
-                <div>
-                  <p className="font-serif text-2xl text-[#1E3A32]">{stat.value}</p>
-                  <p className="text-[#2B2725]/60 text-sm">{stat.label}</p>
-                </div>
-              </div>
-            ))}
+          {/* Mind Styling Studio Hub */}
+          <div className="grid lg:grid-cols-2 gap-6 mb-12">
+            <EmotionalWeather sentiment={studioStats?.sentiment} />
+            <DailyPocketPrompt 
+              prompt={dailyPrompt?.prompt_text}
+              onCreateNote={() => setNotesDrawerOpen(true)}
+            />
+          </div>
+
+          {/* Constellation & Momentum */}
+          <div className="grid lg:grid-cols-2 gap-6 mb-12">
+            <ConstellationMap totalPoints={studioStats?.constellation?.totalPoints || 0} />
+            <InnerMomentumMeter weeklyPoints={studioStats?.momentum?.weeklyPoints || 0} />
           </div>
 
           {/* Programs */}
