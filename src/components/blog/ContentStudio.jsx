@@ -6,6 +6,7 @@ import { base44 } from "@/api/base44Client";
 import VisualIntelligence from "./VisualIntelligence";
 import LeadMagnetGenerator from "./LeadMagnetGenerator";
 import SEOEnchanter from "./SEOEnchanter";
+import QuoteHarvester from "./QuoteHarvester";
 
 export default function ContentStudio({ blogContent, onApplySEO }) {
   return (
@@ -29,6 +30,9 @@ export default function ContentStudio({ blogContent, onApplySEO }) {
           <TabsTrigger value="leads" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
             Lead Magnets
           </TabsTrigger>
+          <TabsTrigger value="quotes" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
+            Quotes
+          </TabsTrigger>
           <TabsTrigger value="seo" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
             SEO
           </TabsTrigger>
@@ -44,6 +48,10 @@ export default function ContentStudio({ blogContent, onApplySEO }) {
 
         <TabsContent value="leads" className="p-6">
           <LeadMagnetGenerator blogContent={blogContent} />
+        </TabsContent>
+
+        <TabsContent value="quotes" className="p-6">
+          <QuoteHarvester blogContent={blogContent} />
         </TabsContent>
 
         <TabsContent value="seo" className="p-6">
