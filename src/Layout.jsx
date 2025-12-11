@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import CookieBanner from "./components/legal/CookieBanner";
 
 export default function Layout({ children, currentPageName }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -231,12 +232,15 @@ export default function Layout({ children, currentPageName }) {
               © {new Date().getFullYear()} The Mind Stylist. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a href="#" className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
+              <Link to={createPageUrl("LegalPage?slug=privacy-policy")} className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
                 Privacy Policy
-              </a>
-              <a href="#" className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
+              </Link>
+              <Link to={createPageUrl("LegalPage?slug=terms-of-service")} className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
                 Terms of Service
-              </a>
+              </Link>
+              <Link to={createPageUrl("LegalPage?slug=cookie-policy")} className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
+                Cookies
+              </Link>
             </div>
           </div>
         </div>
