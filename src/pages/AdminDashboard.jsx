@@ -32,6 +32,7 @@ export default function AdminDashboard() {
 
   const quickActions = [
     { icon: ListTodo, label: "Manage Roadmap", link: "AdminRoadmap", color: "#6E4F7D" },
+    { icon: FileText, label: "Dev Docs", link: "StudioDevDocs", color: "#6E4F7D" },
     { icon: PenSquare, label: "Manage Blog Posts", link: "BlogManager", color: "#D8B46B" },
     { icon: FileVideo, label: "Manage Courses", link: "AdminCourses", color: "#A6B7A3" },
     { icon: Headphones, label: "Manage Audio Sessions", link: "AdminAudio", color: "#1E3A32" },
