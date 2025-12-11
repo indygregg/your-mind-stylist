@@ -2,37 +2,461 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, Award, Users, Sparkles, Layers } from "lucide-react";
 
 export default function About() {
+  const beliefs = [
+    {
+      icon: "✦",
+      title: "You are not broken.",
+      description: "You are simply patterned by experiences and beliefs that no longer fit who you're becoming.",
+    },
+    {
+      icon: "✦",
+      title: "Emotional intelligence is a superpower.",
+      description: "It's not about being emotional — it's about understanding the meaning behind your reactions.",
+    },
+    {
+      icon: "✦",
+      title: "Your mind is designed to protect you, not punish you.",
+      description: "Once you understand its mechanics, everything changes.",
+    },
+    {
+      icon: "✦",
+      title: "Change doesn't require force.",
+      description: "It requires awareness, safety, and alignment.",
+    },
+    {
+      icon: "✦",
+      title: "When you edit your internal story, your entire life restyles itself.",
+      description: "Relationships shift. Work changes. Confidence expands. Decisions become clearer.",
+    },
+  ];
+
+  const credentials = [
+    "Board-certified Hypnotherapist",
+    "Master Practitioner of NLP",
+    "Certified Integrative Emotional Intelligence Specialist",
+    "Decades of executive, team, and leadership coaching",
+    "Corporate consulting with Fortune-level and mid-size organizations",
+    "Creator of the Mind Styling Certification™",
+    "Creator of The Inner Rehearsal Sessions™",
+    "Host of Activated Dialogue — a podcast on emotional intelligence and conscious change",
+  ];
+
+  const approaches = [
+    "Emotional Intelligence",
+    "Neuroscience principles",
+    "NLP & language patterns",
+    "Hypnosis-informed mindset work",
+    "Narrative reframing",
+    "Cognitive-emotional integration",
+    "Inner state regulation",
+    "Identity rehearsal",
+  ];
+
+  const offerings = [
+    {
+      icon: Layers,
+      title: "The Mind Styling Certification™",
+      description: "A three-part redesign of your mental operating system.",
+      link: "Certification",
+    },
+    {
+      icon: Users,
+      title: "Private Mind Styling (1:1)",
+      description: "Deep, customized work for personal transformation.",
+      link: "PrivateSessions",
+    },
+    {
+      icon: Sparkles,
+      title: "The Inner Rehearsal Sessions™",
+      description: "Short, powerful guided experiences to shift your emotional state in minutes.",
+      link: "InnerRehearsal",
+    },
+    {
+      icon: Award,
+      title: "Organizational Mind Styling",
+      description: "Workshops and trainings for communication, leadership, and team performance.",
+      link: "SpeakingTraining",
+    },
+  ];
+
   return (
-    <div className="bg-[#F9F5EF] pt-32 pb-24">
-      <div className="max-w-4xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-            About
-          </span>
-          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-8">
-            Meet Roberta —
-            <br />
-            <span className="italic">The Mind Stylist</span>
-          </h1>
-          <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-12">
-            This page is coming soon. Learn more about Roberta's journey, philosophy, and credentials.
-          </p>
-          <Link
-            to={createPageUrl("Contact")}
-            className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide"
+    <div className="bg-[#F9F5EF]">
+      {/* Hero Section */}
+      <section className="pt-32 pb-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Left - Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+                Roberta Fernandez
+              </span>
+              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
+                Meet The Mind Stylist
+              </h1>
+              <p className="text-[#2B2725]/80 text-xl leading-relaxed mb-10">
+                Helping you rewrite old patterns, reclaim your emotional intelligence, and restyle
+                your life from the inside out.
+              </p>
+              <Link
+                to={createPageUrl("WorkWithMe")}
+                className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+              >
+                Work With Me
+                <ArrowRight
+                  size={16}
+                  className="group-hover:translate-x-1 transition-transform"
+                />
+              </Link>
+            </motion.div>
+
+            {/* Right - Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="relative">
+                <div className="absolute -top-6 -left-6 w-24 h-24 border-l-2 border-t-2 border-[#D8B46B]" />
+                <div className="absolute -bottom-6 -right-6 w-24 h-24 border-r-2 border-b-2 border-[#D8B46B]" />
+                <img
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9bff2cefb_Roberta-Fernandez-The-Mind-Stylist.jpg"
+                  alt="Roberta Fernandez"
+                  className="relative w-full aspect-[4/5] object-cover"
+                />
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Story Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            Get in Touch
-            <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </motion.div>
-      </div>
+            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+              The Mind Behind The Method
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
+              A lifetime of helping people
+              <br />
+              <span className="italic">think differently.</span>
+            </h2>
+
+            <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
+              <p>
+                I've spent more than forty years studying how people think, feel, communicate, and
+                change. My career has taken me into boardrooms, classrooms, small businesses,
+                government agencies, and deeply personal one-on-one conversations. Across all of
+                these environments, one truth emerged:
+              </p>
+
+              <p className="font-serif text-2xl text-[#1E3A32] italic py-6">
+                Your thinking determines your experience of everything else.
+              </p>
+
+              <p>
+                When people understand their internal patterns, everything becomes easier —
+                communication, decision-making, leadership, relationships, confidence, and
+                self-worth. When they don't, life feels heavier than it needs to.
+              </p>
+
+              <p>
+                This understanding became the foundation of my work — and the origin of The Mind
+                Stylist.
+              </p>
+
+              <p>
+                I help you see what you've been too close to recognize, let go of patterns you've
+                outgrown, and redesign your thinking so your life can finally match your intention.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Philosophy Section */}
+      <section className="py-24 bg-[#F9F5EF]">
+        <div className="max-w-4xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+              The Mind Stylist Philosophy
+            </span>
+            <h2 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-8">
+              Think From Where You Want to Be.
+            </h2>
+
+            <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed mb-10">
+              <p>Most people try to change their lives by changing what they do.</p>
+              <p>
+                But lasting transformation happens when you change <strong>how you think</strong> —
+                the meaning you assign, the stories you carry, the emotional patterns you repeat,
+                and the identity you operate from.
+              </p>
+            </div>
+
+            <div className="bg-white p-8 md:p-10 mb-10">
+              <p className="text-[#2B2725]/70 mb-6">The Mind Stylist approach blends:</p>
+              <div className="grid md:grid-cols-2 gap-3">
+                {approaches.map((approach) => (
+                  <div key={approach} className="flex items-center gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#D8B46B]" />
+                    <span className="text-[#2B2725]/80">{approach}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4 text-[#2B2725]/80 text-lg leading-relaxed">
+              <p>The work is profound, but it's not complicated.</p>
+              <p>It's simple, elegant, and deeply human.</p>
+              <p className="font-serif italic text-xl text-[#1E3A32]">
+                Just like great styling, it isn't about becoming someone else — it's about
+                uncovering the version of yourself that has always been there.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Beliefs Section */}
+      <section className="py-24 bg-[#1E3A32]">
+        <div className="max-w-5xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+              Core Principles
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF]">What I Believe</h2>
+          </motion.div>
+
+          <div className="space-y-8">
+            {beliefs.map((belief, index) => (
+              <motion.div
+                key={belief.title}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="border-l-2 border-[#D8B46B] pl-6 md:pl-8"
+              >
+                <h3 className="font-serif text-xl md:text-2xl text-[#F9F5EF] mb-3 flex items-start gap-3">
+                  <span className="text-[#D8B46B]">{belief.icon}</span>
+                  {belief.title}
+                </h3>
+                <p className="text-[#F9F5EF]/70 text-lg leading-relaxed">{belief.description}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="mt-12 text-center"
+          >
+            <p className="font-serif text-2xl text-[#D8B46B] italic">This is Mind Styling.</p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Credentials Section */}
+      <section className="py-24 bg-[#F9F5EF]">
+        <div className="max-w-4xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+              Credentials & Experience
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
+              My Experience
+            </h2>
+
+            <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10">
+              I've helped thousands of individuals and teams transform how they think and
+              communicate. My background includes:
+            </p>
+
+            <div className="bg-white p-8 md:p-10 mb-10">
+              <div className="space-y-4">
+                {credentials.map((credential) => (
+                  <div key={credential} className="flex items-start gap-4">
+                    <Check size={20} className="text-[#D8B46B] mt-1 flex-shrink-0" />
+                    <span className="text-[#2B2725]/80 text-lg">{credential}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <p className="font-serif text-xl text-[#1E3A32] italic">
+              From high-performing executives to individuals in transition, the real work is the
+              same: Help people recognize their patterns and step into the version of themselves
+              they've been waiting for.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Origin Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+              The Origin
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
+              Why "The Mind Stylist"?
+            </h2>
+
+            <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
+              <p>
+                Because transformation isn't about starting over — it's about refining, tailoring,
+                and redesigning the mindset you already have.
+              </p>
+
+              <p>Just like personal style, your mental patterns can be:</p>
+
+              <ul className="list-none space-y-2 pl-6">
+                <li className="flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-[#D8B46B]" />
+                  outdated
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-[#D8B46B]" />
+                  ill-fitting
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-[#D8B46B]" />
+                  inherited
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-[#D8B46B]" />
+                  misunderstood
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-[#D8B46B]" />
+                  or simply never chosen intentionally
+                </li>
+              </ul>
+
+              <p>
+                Mind Styling allows you to build a mental wardrobe that fits the life you want to
+                live.
+              </p>
+
+              <p className="font-serif text-xl text-[#1E3A32] italic">
+                It's elegant, intuitive, and profoundly effective.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Work With Me Section */}
+      <section className="py-24 bg-[#E4D9C4]/30">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+              How We Can Work Together
+            </span>
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-6">
+              Work With Me
+            </h2>
+            <p className="text-[#2B2725]/80 text-lg max-w-2xl mx-auto">
+              Whether you're an individual ready for personal reinvention or a leader looking to
+              elevate your team's emotional intelligence, there is a Mind Styling path for you.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {offerings.map((offering, index) => (
+              <motion.div
+                key={offering.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Link
+                  to={createPageUrl(offering.link)}
+                  className="block bg-white p-8 h-full group hover:shadow-lg transition-all duration-300"
+                >
+                  <offering.icon size={32} className="text-[#D8B46B] mb-4" />
+                  <h3 className="font-serif text-2xl text-[#1E3A32] mb-3">{offering.title}</h3>
+                  <p className="text-[#2B2725]/70 mb-6">{offering.description}</p>
+                  <span className="text-[#1E3A32] font-medium group-hover:text-[#D8B46B] transition-colors inline-flex items-center gap-2">
+                    Learn More <ArrowRight size={16} />
+                  </span>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-24 bg-[#1E3A32]">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
+              If You're Ready,
+              <br />
+              <span className="italic text-[#D8B46B]">I'm Ready.</span>
+            </h2>
+
+            <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
+              Changing your life starts with changing how you think. If you're ready to step into
+              clarity, calm, and confidence, let's begin.
+            </p>
+
+            <Link
+              to={createPageUrl("Contact")}
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
+            >
+              Schedule Your Complimentary Consultation
+              <ArrowRight
+                size={16}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
     </div>
   );
 }

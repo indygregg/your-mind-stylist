@@ -91,9 +91,9 @@ export default function HeroSection() {
               {/* Image Container */}
               <div className="relative aspect-[4/5] overflow-hidden bg-[#E4D9C4]">
                 <img
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80"
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9bff2cefb_Roberta-Fernandez-The-Mind-Stylist.jpg"
                   alt="Roberta Fernandez - The Mind Stylist"
-                  className="w-full h-full object-cover object-center grayscale-[20%] hover:grayscale-0 transition-all duration-700"
+                  className="w-full h-full object-cover object-center hover:scale-105 transition-all duration-700"
                 />
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A32]/20 to-transparent" />
