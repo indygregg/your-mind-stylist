@@ -1,90 +1,261 @@
 import React, { useState, useEffect } from "react";
-import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
-import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
-import { Layers, Sparkles, Play, BookOpen, Headphones, CheckCircle, Lock, ArrowRight } from "lucide-react";
+import { Layers, Sparkles, Play, Headphones, Users, Award, ChevronDown, ChevronUp } from "lucide-react";
+import ProgramCard from "../components/library/ProgramCard";
+import { base44 } from "@/api/base44Client";
 
 export default function Library() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [userAccess, setUserAccess] = useState({});
+  const [expandedSections, setExpandedSections] = useState({
+    featured: true,
+    programs: true,
+    pocketVisualization: true,
+    webinars: true,
+    audio: true,
+    coaching: false,
+    training: false,
+    comingSoon: false
+  });
 
   useEffect(() => {
-    const init = async () => {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
-      setLoading(false);
+    const fetchData = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+        
+        // TODO: Fetch user's access flags and purchased products
+        // For now, using mock data
+        setUserAccess({
+          hasToolkit: false,
+          hasPocketVisualization: false,
+          hasWebinars: [],
+          hasAudio: false,
+          hasSalon: false,
+          hasCouture: false,
+          hasHypnosisTraining: false
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
     };
-    init();
+    fetchData();
   }, []);
 
-  // Mock purchased content - in production, fetch from DB/Stripe
-  const userAccess = {
-    certification: false,
-    innerRehearsal: false,
-    masterclass: true, // Everyone gets free masterclass
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
   };
 
-  const collections = [
-    {
-      id: "certification",
+  // Check if library is completely empty
+  const isLibraryEmpty = !userAccess.hasToolkit && 
+                         !userAccess.hasPocketVisualization && 
+                         userAccess.hasWebinars.length === 0 &&
+                         !userAccess.hasAudio &&
+                         !userAccess.hasSalon &&
+                         !userAccess.hasCouture &&
+                         !userAccess.hasHypnosisTraining;
+
+  // Featured Programs (top 3 most relevant)
+  const featuredPrograms = [];
+  if (userAccess.hasPocketVisualization) {
+    featuredPrograms.push({
+      icon: Sparkles,
+      title: "Pocket Visualization™",
+      description: "Your daily guided experiences for emotional resets.",
+      status: "Subscription Active",
+      primaryAction: { label: "Open", onClick: () => {} },
+      route: "PocketVisualization",
+      color: "#A6B7A3"
+    });
+  }
+  if (userAccess.hasToolkit) {
+    featuredPrograms.push({
       icon: Layers,
-      title: "The Mind Styling Certification™",
-      description: "Your complete 3-phase journey: Edit → Tailor → Design",
-      progress: 0,
-      totalLessons: 30,
-      completedLessons: 0,
-      link: createPageUrl("Dashboard"), // Will link to actual course player
-      color: "#1E3A32",
-      hasAccess: userAccess.certification,
-      purchaseLink: createPageUrl("CertPurchase")
-    },
+      title: "Mind Style Toolkit",
+      description: "Your complete transformation program.",
+      progress: 35,
+      status: "In Progress",
+      primaryAction: { label: "Continue" },
+      route: "Evolution",
+      color: "#1E3A32"
+    });
+  }
+
+  // Programs & Courses
+  const toolkitModules = userAccess.hasToolkit ? [
     {
-      id: "inner-rehearsal",
-      icon: Headphones,
-      title: "Inner Rehearsal Sessions™",
-      description: "Guided audio sessions for calm, clarity, and identity shifts",
-      sessionCount: 24,
-      newThisMonth: 3,
-      link: createPageUrl("Dashboard"), // Will link to audio library
-      color: "#A6B7A3",
-      hasAccess: userAccess.innerRehearsal,
-      purchaseLink: createPageUrl("InnerRehearsalPurchase")
-    },
+      icon: Layers,
+      title: "Mind Style Toolkit — Part 1: Foundations",
+      description: "Build your emotional intelligence foundation.",
+      progress: 60,
+      status: "In Progress",
+      primaryAction: { label: "Continue" },
+      secondaryAction: { label: "View Overview", onClick: () => {} },
+      color: "#1E3A32"
+    }
+  ] : [];
+
+  // Webinars
+  const webinars = [
     {
-      id: "masterclass",
       icon: Play,
-      title: "Imposter Syndrome & Other Myths to Ditch",
-      description: "Free on-demand masterclass",
-      duration: "45 minutes",
-      watched: false,
-      link: createPageUrl("Masterclass"),
-      color: "#D8B46B",
-      hasAccess: userAccess.masterclass,
-      isFree: true
+      title: "Mini-Webinar: Imposter Myths to Ditch",
+      description: "Stop letting imposter feelings run your decisions.",
+      status: userAccess.hasWebinars.includes("imposter") ? "Owned" : "Not Enrolled",
+      primaryAction: { 
+        label: userAccess.hasWebinars.includes("imposter") ? "Watch Now" : "Get This Webinar ($9)"
+      },
+      color: "#6E4F7D"
     },
+    {
+      icon: Play,
+      title: "Mini-Webinar: Don't Let Your Thoughts Think for You",
+      description: "Learn to observe your thoughts without being controlled by them.",
+      status: userAccess.hasWebinars.includes("thoughts") ? "Owned" : "Not Enrolled",
+      primaryAction: { 
+        label: userAccess.hasWebinars.includes("thoughts") ? "Watch Now" : "Get This Webinar ($9)"
+      },
+      color: "#6E4F7D"
+    }
   ];
 
-  if (loading) {
+  // Audio Series
+  const audioSeries = {
+    icon: Headphones,
+    title: "Mind Declutter Audio Series",
+    description: "Clear your mental space with guided audio sessions.",
+    status: userAccess.hasAudio ? "Owned" : "Not Enrolled",
+    primaryAction: { 
+      label: userAccess.hasAudio ? "Listen Now" : "Get Audio Series"
+    },
+    color: "#D8B46B"
+  };
+
+  // Coaching Programs
+  const coachingPrograms = [];
+  if (userAccess.hasSalon) {
+    coachingPrograms.push({
+      icon: Users,
+      title: "Salon — Group Coaching",
+      description: "Your cohort meets twice monthly for deep work.",
+      status: "Active",
+      primaryAction: { label: "Join Session" },
+      secondaryAction: { label: "View Schedule", onClick: () => {} },
+      color: "#1E3A32"
+    });
+  }
+  if (userAccess.hasCouture) {
+    coachingPrograms.push({
+      icon: Award,
+      title: "Couture — 1:1 Coaching",
+      description: "Your private intensive coaching program.",
+      status: "Active",
+      primaryAction: { label: "Your Sessions" },
+      secondaryAction: { label: "Upload Documents", onClick: () => {} },
+      color: "#6E4F7D"
+    });
+  }
+
+  // Training Programs
+  const trainingPrograms = userAccess.hasHypnosisTraining ? [
+    {
+      icon: Award,
+      title: "Hypnosis Training — Certification Track",
+      description: "Professional hypnosis certification program.",
+      progress: 20,
+      status: "In Progress",
+      primaryAction: { label: "Continue Training" },
+      color: "#1E3A32"
+    }
+  ] : [];
+
+  const LibrarySection = ({ title, children, sectionKey, emptyMessage }) => {
+    const isExpanded = expandedSections[sectionKey];
+    const hasContent = React.Children.count(children) > 0;
+
+    if (!hasContent && !emptyMessage) return null;
+
     return (
-      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
-        <p className="text-[#2B2725]/60">Loading your library...</p>
+      <div className="mb-8">
+        <button
+          onClick={() => toggleSection(sectionKey)}
+          className="w-full flex items-center justify-between mb-4 group"
+        >
+          <h2 className="font-serif text-2xl text-[#1E3A32]">{title}</h2>
+          {isExpanded ? (
+            <ChevronUp className="text-[#D8B46B] group-hover:text-[#1E3A32] transition-colors" />
+          ) : (
+            <ChevronDown className="text-[#D8B46B] group-hover:text-[#1E3A32] transition-colors" />
+          )}
+        </button>
+
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {hasContent ? (
+              <div className="grid gap-4">
+                {children}
+              </div>
+            ) : (
+              <div className="bg-white p-8 text-center">
+                <p className="text-[#2B2725]/70 leading-relaxed">{emptyMessage}</p>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </div>
+    );
+  };
+
+  if (isLibraryEmpty) {
+    return (
+      <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
+        <div className="max-w-4xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4">
+              Your Library is Empty (For Now)
+            </h1>
+            <p className="text-[#2B2725]/70 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+              You can start anytime. Pocket Visualization™ is a gentle place to begin, or explore all programs to see what resonates.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to={createPageUrl("Programs")}
+                className="px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+              >
+                Explore Programs
+              </Link>
+              <Link
+                to={createPageUrl("PocketVisualization")}
+                className="px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
+              >
+                Subscribe to Pocket Visualization™
+              </Link>
+            </div>
+          </motion.div>
+        </div>
       </div>
     );
   }
 
-  const accessibleContent = collections.filter(c => c.hasAccess);
-  const lockedContent = collections.filter(c => !c.hasAccess);
-
   return (
-    <div className="min-h-screen bg-[#F9F5EF] pt-32 pb-24">
-      <SEO
-        title="Your Library | Your Mind Stylist"
-        description="Access your programs, courses, and Inner Rehearsal Sessions in one place."
-        canonical="/library"
-      />
-      <div className="max-w-7xl mx-auto px-6">
+    <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
+      <div className="max-w-6xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -92,179 +263,106 @@ export default function Library() {
         >
           {/* Header */}
           <div className="mb-12">
-            <div className="flex items-center gap-3 mb-4">
-              <BookOpen size={32} className="text-[#D8B46B]" />
-              <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32]">
-                Your Library
-              </h1>
-            </div>
-            <p className="text-[#2B2725]/70 text-lg">
-              Everything you need for your mind styling journey — in one place.
+            <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-3">
+              Your Library
+            </h1>
+            <p className="text-[#2B2725]/60 text-lg italic">
+              Everything you've unlocked lives here. Continue your journey at your own pace.
             </p>
           </div>
 
-          {/* Accessible Content */}
-          {accessibleContent.length > 0 && (
-            <section className="mb-16">
-              <h2 className="text-[#2B2725]/60 text-xs uppercase tracking-wide mb-6">
-                Your Programs
-              </h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {accessibleContent.map((collection, index) => (
-                  <motion.div
-                    key={collection.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Link
-                      to={collection.link}
-                      className="block bg-white p-8 hover:shadow-xl transition-all duration-300 group h-full"
-                    >
-                      {/* Icon */}
-                      <div
-                        className="w-16 h-16 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform"
-                        style={{ backgroundColor: `${collection.color}15` }}
-                      >
-                        <collection.icon size={32} style={{ color: collection.color }} />
-                      </div>
-
-                      {/* Content */}
-                      <h3 className="font-serif text-xl text-[#1E3A32] mb-2 group-hover:text-[#D8B46B] transition-colors">
-                        {collection.title}
-                      </h3>
-                      <p className="text-[#2B2725]/70 text-sm mb-6">
-                        {collection.description}
-                      </p>
-
-                      {/* Stats */}
-                      {collection.id === "certification" && (
-                        <div className="mb-4">
-                          <div className="flex items-center justify-between text-xs text-[#2B2725]/60 mb-2">
-                            <span>Progress</span>
-                            <span>{collection.completedLessons} / {collection.totalLessons} lessons</span>
-                          </div>
-                          <div className="w-full h-2 bg-[#E4D9C4] rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-[#D8B46B] transition-all duration-500"
-                              style={{ width: `${collection.progress}%` }}
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {collection.id === "inner-rehearsal" && (
-                        <div className="flex items-center gap-4 text-sm text-[#2B2725]/70 mb-4">
-                          <span>{collection.sessionCount} sessions</span>
-                          {collection.newThisMonth > 0 && (
-                            <span className="px-2 py-1 bg-[#D8B46B]/20 text-[#D8B46B] text-xs uppercase tracking-wide">
-                              {collection.newThisMonth} New
-                            </span>
-                          )}
-                        </div>
-                      )}
-
-                      {collection.id === "masterclass" && (
-                        <div className="flex items-center gap-2 text-sm text-[#2B2725]/70 mb-4">
-                          {collection.watched ? (
-                            <CheckCircle size={16} className="text-[#A6B7A3]" />
-                          ) : (
-                            <Play size={16} className="text-[#D8B46B]" />
-                          )}
-                          <span>{collection.duration}</span>
-                        </div>
-                      )}
-
-                      {/* CTA */}
-                      <div className="flex items-center gap-2 text-[#1E3A32] group-hover:text-[#D8B46B] font-medium transition-colors">
-                        <span>Continue</span>
-                        <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </section>
+          {/* Featured Programs */}
+          {featuredPrograms.length > 0 && (
+            <LibrarySection 
+              title="Your Featured Programs" 
+              sectionKey="featured"
+            >
+              {featuredPrograms.map((program, index) => (
+                <ProgramCard key={index} program={program} />
+              ))}
+            </LibrarySection>
           )}
 
-          {/* Locked Content */}
-          {lockedContent.length > 0 && (
-            <section>
-              <h2 className="text-[#2B2725]/60 text-xs uppercase tracking-wide mb-6">
-                Available to Purchase
-              </h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {lockedContent.map((collection, index) => (
-                  <motion.div
-                    key={collection.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: (accessibleContent.length + index) * 0.1 }}
-                    className="bg-white p-8 relative overflow-hidden"
-                  >
-                    {/* Lock Overlay */}
-                    <div className="absolute top-4 right-4">
-                      <div className="w-10 h-10 rounded-full bg-[#2B2725]/5 flex items-center justify-center">
-                        <Lock size={18} className="text-[#2B2725]/40" />
-                      </div>
-                    </div>
+          {/* Programs & Courses */}
+          <LibrarySection 
+            title="Programs & Courses" 
+            sectionKey="programs"
+            emptyMessage="When you add a program, it will appear here. You can begin with the Mind Style Toolkit at any time."
+          >
+            {toolkitModules.map((module, index) => (
+              <ProgramCard key={index} program={module} />
+            ))}
+          </LibrarySection>
 
-                    {/* Icon */}
-                    <div
-                      className="w-16 h-16 rounded-full flex items-center justify-center mb-6 opacity-40"
-                      style={{ backgroundColor: `${collection.color}15` }}
-                    >
-                      <collection.icon size={32} style={{ color: collection.color }} />
-                    </div>
+          {/* Pocket Visualization */}
+          <LibrarySection 
+            title="Pocket Visualization™" 
+            sectionKey="pocketVisualization"
+            emptyMessage="Pocket Visualization™ offers guided micro-sessions for emotional resets throughout your day. Subscribe to unlock daily access."
+          >
+            {userAccess.hasPocketVisualization && featuredPrograms[0] && (
+              <ProgramCard program={featuredPrograms[0]} />
+            )}
+          </LibrarySection>
 
-                    {/* Content */}
-                    <h3 className="font-serif text-xl text-[#1E3A32] mb-2">
-                      {collection.title}
-                    </h3>
-                    <p className="text-[#2B2725]/70 text-sm mb-6">
-                      {collection.description}
-                    </p>
+          {/* Webinars */}
+          <LibrarySection 
+            title="Webinars" 
+            sectionKey="webinars"
+            emptyMessage="Webinars offer bite-sized insights to expand your Mind Style toolkit. Add any webinar to your library to watch instantly."
+          >
+            {webinars.map((webinar, index) => (
+              <ProgramCard key={index} program={webinar} />
+            ))}
+          </LibrarySection>
 
-                    {/* CTA */}
-                    <Link
-                      to={collection.purchaseLink}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all"
-                    >
-                      Learn More
-                      <ArrowRight size={14} />
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </section>
+          {/* Audio Series */}
+          <LibrarySection 
+            title="Audio Series" 
+            sectionKey="audio"
+          >
+            <ProgramCard program={audioSeries} />
+          </LibrarySection>
+
+          {/* Coaching Programs */}
+          {coachingPrograms.length > 0 && (
+            <LibrarySection 
+              title="Coaching Programs" 
+              sectionKey="coaching"
+            >
+              {coachingPrograms.map((program, index) => (
+                <ProgramCard key={index} program={program} />
+              ))}
+            </LibrarySection>
           )}
 
-          {/* Empty State */}
-          {accessibleContent.length === 0 && (
-            <div className="bg-white p-12 text-center">
-              <div className="w-20 h-20 rounded-full bg-[#D8B46B]/20 flex items-center justify-center mx-auto mb-6">
-                <BookOpen size={32} className="text-[#D8B46B]" />
-              </div>
-              <h2 className="font-serif text-2xl text-[#1E3A32] mb-3">
-                Your library is ready for you.
-              </h2>
-              <p className="text-[#2B2725]/70 mb-8 max-w-md mx-auto">
-                Start with the free masterclass, or explore programs designed to help you restyle your mind from the inside out.
+          {/* Training & Certification */}
+          {trainingPrograms.length > 0 && (
+            <LibrarySection 
+              title="Training & Certification" 
+              sectionKey="training"
+            >
+              {trainingPrograms.map((program, index) => (
+                <ProgramCard key={index} program={program} />
+              ))}
+            </LibrarySection>
+          )}
+
+          {/* Contextual Suggestion */}
+          {!userAccess.hasToolkit && userAccess.hasPocketVisualization && (
+            <div className="mt-12 bg-[#A6B7A3]/20 p-8 border-l-4 border-[#A6B7A3]">
+              <h3 className="font-serif text-xl text-[#1E3A32] mb-3">
+                A next good step might be…
+              </h3>
+              <p className="text-[#2B2725]/70 mb-4">
+                The Mind Style Toolkit would deepen what you're already exploring with Pocket Visualization™.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  to={createPageUrl("Masterclass")}
-                  className="px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all"
-                >
-                  Watch Free Masterclass
-                </Link>
-                <Link
-                  to={createPageUrl("PurchaseCenter")}
-                  className="px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all"
-                >
-                  Browse Programs
-                </Link>
-              </div>
+              <Link
+                to={createPageUrl("Programs")}
+                className="inline-block px-6 py-3 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+              >
+                Explore Toolkit
+              </Link>
             </div>
           )}
         </motion.div>
