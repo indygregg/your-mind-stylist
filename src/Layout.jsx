@@ -9,6 +9,8 @@ import { base44 } from "@/api/base44Client";
 
 export default function Layout({ children, currentPageName }) {
   const [useAuthLayout, setUseAuthLayout] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const checkAuthPages = async () => {
@@ -28,15 +30,6 @@ export default function Layout({ children, currentPageName }) {
     };
     checkAuthPages();
   }, [currentPageName]);
-
-  // Return AuthLayout if authenticated page
-  if (useAuthLayout) {
-    return <AuthLayout currentPageName={currentPageName}>{children}</AuthLayout>;
-  }
-
-  // Otherwise render marketing layout
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
