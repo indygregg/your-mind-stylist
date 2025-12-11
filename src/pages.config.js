@@ -22,6 +22,7 @@ import StudioRoles from './pages/StudioRoles';
 import StudioLegal from './pages/StudioLegal';
 import StudioSettings from './pages/StudioSettings';
 import StudioLogs from './pages/StudioLogs';
+import NotFound from './pages/NotFound';
 import __Layout from './Layout.jsx';
 
 
@@ -50,6 +51,7 @@ export const PAGES = {
     "StudioLegal": StudioLegal,
     "StudioSettings": StudioSettings,
     "StudioLogs": StudioLogs,
+    "NotFound": NotFound,
 }
 
 export const pagesConfig = {
