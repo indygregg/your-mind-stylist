@@ -300,15 +300,15 @@ export default function Pricing() {
             <div className="space-y-8">
               <div>
                 <h3 className="font-medium text-[#1E3A32] text-lg mb-3">
-                  What's the difference between the Certification and Private Sessions?
+                  What's the difference between the Evolution program and Private Sessions?
                 </h3>
                 <p className="text-[#2B2725]/80 leading-relaxed">
-                  The Certification is a self-paced structured program with lessons, tools, and assessments designed for broad transformation. Private Sessions are one-on-one custom work tailored to your unique patterns. Many clients do both — the Certification provides the framework, and Private Sessions offer personalized guidance.
+                  Mind Styling Evolution is a self-paced structured program with lessons, tools, and assessments designed for broad transformation. Private Sessions are one-on-one custom work tailored to your unique patterns. Many clients do both — Evolution provides the framework, and Private Sessions offer personalized guidance.
                 </p>
               </div>
               <div>
                 <h3 className="font-medium text-[#1E3A32] text-lg mb-3">
-                  Can I do a payment plan for the Certification?
+                  Can I do a payment plan for Mind Styling Evolution?
                 </h3>
                 <p className="text-[#2B2725]/80 leading-relaxed">
                   Yes. You can choose full pay ($1,995), a 3-month plan (3 × $697), or a 6-month plan (6 × $365). Payment plans allow you to start immediately while spreading the investment.
@@ -316,7 +316,7 @@ export default function Pricing() {
               </div>
               <div>
                 <h3 className="font-medium text-[#1E3A32] text-lg mb-3">
-                  What if I'm not ready for the full Certification yet?
+                  What if I'm not ready for the full Evolution program yet?
                 </h3>
                 <p className="text-[#2B2725]/80 leading-relaxed">
                   Start with the free masterclass or explore the Inner Rehearsal Sessions. Both are gentle entry points that introduce the Mind Styling approach without requiring a major commitment.
@@ -327,7 +327,7 @@ export default function Pricing() {
                   Is there a refund policy?
                 </h3>
                 <p className="text-[#2B2725]/80 leading-relaxed">
-                  The Certification and Inner Rehearsal come with a 14-day money-back guarantee. If within the first two weeks you feel it's not the right fit, reach out and we'll process a full refund.
+                  Mind Styling Evolution and Inner Rehearsal come with a 14-day money-back guarantee. If within the first two weeks you feel it's not the right fit, reach out and we'll process a full refund.
                 </p>
               </div>
             </div>
