@@ -22,16 +22,19 @@ import FreeMasterclass from './pages/FreeMasterclass';
 import GuestAuthorInvite from './pages/GuestAuthorInvite';
 import InnerRehearsal from './pages/InnerRehearsal';
 import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
+import LearnHypnosis from './pages/LearnHypnosis';
 import LegalPage from './pages/LegalPage';
 import Library from './pages/Library';
 import Maintenance from './pages/Maintenance';
 import ManagerDashboard from './pages/ManagerDashboard';
 import Masterclass from './pages/Masterclass';
 import NotFound from './pages/NotFound';
+import PocketVisualization from './pages/PocketVisualization';
 import Podcast from './pages/Podcast';
 import Pricing from './pages/Pricing';
 import PrivateSessions from './pages/PrivateSessions';
 import PrivateSessionsPurchase from './pages/PrivateSessionsPurchase';
+import Programs from './pages/Programs';
 import PurchaseCenter from './pages/PurchaseCenter';
 import PurchaseComplete from './pages/PurchaseComplete';
 import SpeakingTraining from './pages/SpeakingTraining';
@@ -47,9 +50,6 @@ import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
-import LearnHypnosis from './pages/LearnHypnosis';
-import Programs from './pages/Programs';
-import PocketVisualization from './pages/PocketVisualization';
 import __Layout from './Layout.jsx';
 
 
@@ -78,16 +78,19 @@ export const PAGES = {
     "GuestAuthorInvite": GuestAuthorInvite,
     "InnerRehearsal": InnerRehearsal,
     "InnerRehearsalPurchase": InnerRehearsalPurchase,
+    "LearnHypnosis": LearnHypnosis,
     "LegalPage": LegalPage,
     "Library": Library,
     "Maintenance": Maintenance,
     "ManagerDashboard": ManagerDashboard,
     "Masterclass": Masterclass,
     "NotFound": NotFound,
+    "PocketVisualization": PocketVisualization,
     "Podcast": Podcast,
     "Pricing": Pricing,
     "PrivateSessions": PrivateSessions,
     "PrivateSessionsPurchase": PrivateSessionsPurchase,
+    "Programs": Programs,
     "PurchaseCenter": PurchaseCenter,
     "PurchaseComplete": PurchaseComplete,
     "SpeakingTraining": SpeakingTraining,
@@ -103,9 +106,6 @@ export const PAGES = {
     "StudioSettings": StudioSettings,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
-    "LearnHypnosis": LearnHypnosis,
-    "Programs": Programs,
-    "PocketVisualization": PocketVisualization,
 }
 
 export const pagesConfig = {

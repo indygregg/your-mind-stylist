@@ -74,13 +74,13 @@ export default function Dashboard() {
   const programs = [
     {
       icon: Layers,
-      title: "Mind Styling Evolution",
+      title: "The Mind Styling Evolution™",
       status: "Not Enrolled",
       color: "#1E3A32",
     },
     {
       icon: Sparkles,
-      title: "Pocket Mindset",
+      title: "Pocket Visualization™",
       status: "Not Enrolled",
       color: "#A6B7A3",
     },
@@ -111,9 +111,12 @@ export default function Dashboard() {
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
               Welcome Back
             </span>
-            <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32]">
-              Your Mind Styling Studio
+            <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-3">
+              The Mind Styling Studio™
             </h1>
+            <p className="text-[#2B2725]/60 italic">
+              Here's what's unfolding in your inner world today.
+            </p>
           </div>
 
           {/* Mind Styling Studio Hub */}
@@ -153,40 +156,60 @@ export default function Dashboard() {
           {/* Programs */}
           <div className="mb-12">
             <h2 className="font-serif text-xl text-[#1E3A32] mb-6">Your Programs</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {programs.map((program) => (
-                <div
-                  key={program.title}
-                  className="bg-white p-8 border-l-4"
-                  style={{ borderColor: program.color }}
-                >
-                  <program.icon size={32} style={{ color: program.color }} className="mb-4" />
-                  <h3 className="font-serif text-xl text-[#1E3A32] mb-2">{program.title}</h3>
-                  <span className="inline-block px-3 py-1 bg-[#E4D9C4] text-[#2B2725]/70 text-sm rounded-full">
-                    {program.status}
-                  </span>
-                </div>
-              ))}
-            </div>
+            {programs.length === 0 ? (
+              <div className="bg-white p-8 text-center">
+                <p className="text-[#2B2725]/70 leading-relaxed">
+                  You haven't added any programs yet. When you're ready, you can begin with{" "}
+                  <Link to={createPageUrl("PocketVisualization")} className="text-[#D8B46B] hover:underline">
+                    Pocket Visualization™
+                  </Link>{" "}
+                  or explore the Mind Style Toolkit.
+                </p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-6">
+                {programs.map((program) => (
+                  <div
+                    key={program.title}
+                    className="bg-white p-8 border-l-4"
+                    style={{ borderColor: program.color }}
+                  >
+                    <program.icon size={32} style={{ color: program.color }} className="mb-4" />
+                    <h3 className="font-serif text-xl text-[#1E3A32] mb-3">{program.title}</h3>
+                    <span className="inline-block px-3 py-1 bg-[#E4D9C4] text-[#2B2725]/70 text-sm rounded-full mb-4">
+                      {program.status}
+                    </span>
+                    <div className="mt-4">
+                      <button className="text-[#1E3A32] text-sm font-medium hover:text-[#D8B46B] transition-colors">
+                        Learn More →
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Resources */}
+          {/* Quick Links */}
           <div>
             <h2 className="font-serif text-xl text-[#1E3A32] mb-6">Quick Links</h2>
-            <div className="grid md:grid-cols-4 gap-4">
+            <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
               {[
-                { label: "Explore Programs", page: "WorkWithMe", icon: Layers },
-                { label: "Free Masterclass", page: "FreeMasterclass", icon: Play },
-                { label: "Read Blog", page: "Blog", icon: BookOpen },
-                { label: "Account Settings", page: "Contact", icon: User },
+                { label: "Explore Programs", page: "Programs", icon: Layers, description: "Discover your next step." },
+                { label: "Pocket Visualization™", page: "PocketVisualization", icon: Sparkles, description: "Daily emotional reset tools." },
+                { label: "Notes", page: "StudioNotes", icon: Edit3, description: "Capture insights as you learn." },
+                { label: "Free Masterclass", page: "FreeMasterclass", icon: Play, description: "Watch anytime." },
+                { label: "Read Blog", page: "Blog", icon: BookOpen, description: "Articles and insights." },
+                { label: "Account Settings", page: "StudioSettings", icon: User, description: "Manage your profile." },
               ].map((link) => (
                 <Link
                   key={link.label}
                   to={createPageUrl(link.page)}
-                  className="bg-white p-4 flex items-center gap-3 hover:shadow-md transition-shadow"
+                  className="bg-white p-4 hover:shadow-md transition-shadow flex flex-col gap-2"
                 >
-                  <link.icon size={18} className="text-[#D8B46B]" />
-                  <span className="text-[#1E3A32] text-sm">{link.label}</span>
+                  <link.icon size={20} className="text-[#D8B46B]" />
+                  <span className="text-[#1E3A32] text-sm font-medium">{link.label}</span>
+                  <span className="text-[#2B2725]/60 text-xs">{link.description}</span>
                 </Link>
               ))}
             </div>
