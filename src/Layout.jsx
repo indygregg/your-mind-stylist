@@ -29,9 +29,12 @@ export default function Layout({ children, currentPageName }) {
     checkAuthPages();
   }, [currentPageName]);
 
+  // Return AuthLayout if authenticated page
   if (useAuthLayout) {
     return <AuthLayout currentPageName={currentPageName}>{children}</AuthLayout>;
   }
+
+  // Otherwise render marketing layout
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
