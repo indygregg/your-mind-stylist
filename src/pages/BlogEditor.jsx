@@ -10,9 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { Save, Eye, Trash2, ArrowLeft, Calendar } from "lucide-react";
+import { Save, Eye, Trash2, ArrowLeft, Calendar, Sparkles, Image as ImageIcon } from "lucide-react";
 import AIHelper from "../components/ai/AIHelper";
 import ContentStudio from "../components/blog/ContentStudio";
+import AIContentGenerator from "../components/blog/AIContentGenerator";
+import ImageManager from "../components/blog/ImageManager";
 
 export default function BlogEditor() {
   const navigate = useNavigate();
@@ -103,6 +105,28 @@ export default function BlogEditor() {
     setFormData(prev => ({ ...prev, content: prev.content + "\n\n" + content }));
   };
 
+  const handleImageInsert = (imageUrl) => {
+    const imgHtml = `<p><img src="${imageUrl}" alt="" style="max-width: 100%; height: auto;" /></p>`;
+    setFormData(prev => ({ ...prev, content: prev.content + imgHtml }));
+  };
+
+  const handleFeaturedImageSet = (imageUrl) => {
+    setFormData(prev => ({ ...prev, featured_image: imageUrl }));
+  };
+
+  const quillModules = {
+    toolbar: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      [{ 'indent': '-1'}, { 'indent': '+1' }],
+      ['blockquote', 'code-block'],
+      [{ 'align': [] }],
+      ['link', 'image'],
+      ['clean']
+    ],
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
@@ -184,6 +208,15 @@ export default function BlogEditor() {
             />
           </div>
 
+          {/* AI Content Generator */}
+          <div className="border border-[#6E4F7D]/20 rounded-lg p-6 bg-gradient-to-br from-[#6E4F7D]/5 to-[#D8B46B]/5">
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles size={20} className="text-[#6E4F7D]" />
+              <h3 className="font-serif text-lg text-[#1E3A32]">AI Content Generator</h3>
+            </div>
+            <AIContentGenerator onInsert={handleAIInsert} />
+          </div>
+
           {/* Content */}
           <div>
             <Label className="mb-2 block">Main Content</Label>
@@ -191,17 +224,38 @@ export default function BlogEditor() {
               value={formData.content}
               onChange={(content) => setFormData({ ...formData, content })}
               theme="snow"
+              modules={quillModules}
               style={{ minHeight: "400px" }}
             />
           </div>
 
+          {/* Insert Image */}
+          <div className="border border-[#D8B46B]/20 rounded-lg p-6 bg-[#F9F5EF]">
+            <div className="flex items-center gap-2 mb-4">
+              <ImageIcon size={20} className="text-[#D8B46B]" />
+              <h3 className="font-serif text-lg text-[#1E3A32]">Insert Image</h3>
+            </div>
+            <ImageManager onInsert={handleImageInsert} mode="insert" />
+          </div>
+
           {/* Featured Image */}
-          <div>
-            <Label>Cover Image (optional)</Label>
-            <Input
-              value={formData.featured_image}
-              onChange={(e) => setFormData({ ...formData, featured_image: e.target.value })}
-              placeholder="Image URL"
+          <div className="border border-[#D8B46B]/20 rounded-lg p-6 bg-[#F9F5EF]">
+            <div className="flex items-center gap-2 mb-4">
+              <ImageIcon size={20} className="text-[#D8B46B]" />
+              <h3 className="font-serif text-lg text-[#1E3A32]">Featured Image</h3>
+            </div>
+            {formData.featured_image && (
+              <div className="mb-4">
+                <img 
+                  src={formData.featured_image} 
+                  alt="Featured" 
+                  className="w-full max-h-64 object-cover rounded border border-[#E4D9C4]"
+                />
+              </div>
+            )}
+            <ImageManager 
+              onSetFeaturedImage={handleFeaturedImageSet} 
+              mode="featured" 
             />
           </div>
 
