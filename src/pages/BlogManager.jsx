@@ -6,7 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PenSquare, Eye, Trash2, Plus } from "lucide-react";
+import { PenSquare, Eye, Trash2, Plus, UserPlus, CheckCircle, XCircle, BarChart3 } from "lucide-react";
 import { format } from "date-fns";
 
 export default function BlogManager() {
@@ -19,8 +19,28 @@ export default function BlogManager() {
     queryFn: () => base44.entities.BlogPost.list("-created_date"),
   });
 
+  const { data: analytics = [] } = useQuery({
+    queryKey: ["allAnalytics"],
+    queryFn: () => base44.entities.BlogAnalytics.list(),
+  });
+
   const deleteMutation = useMutation({
     mutationFn: (id) => base44.entities.BlogPost.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogPosts"] });
+    },
+  });
+
+  const approveMutation = useMutation({
+    mutationFn: (id) => base44.entities.BlogPost.update(id, { status: "published" }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["blogPosts"] });
+    },
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: ({ id, reason }) => 
+      base44.entities.BlogPost.update(id, { status: "rejected", rejection_reason: reason }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["blogPosts"] });
     },
@@ -38,6 +58,23 @@ export default function BlogManager() {
     }
   };
 
+  const handleApprove = (id) => {
+    if (window.confirm("Approve and publish this guest post?")) {
+      approveMutation.mutate(id);
+    }
+  };
+
+  const handleReject = (id) => {
+    const reason = window.prompt("Rejection reason (will be sent to author):");
+    if (reason) {
+      rejectMutation.mutate({ id, reason });
+    }
+  };
+
+  const getAnalytics = (postId) => {
+    return analytics.find(a => a.blog_post_id === postId) || { views: 0, likes: 0, shares: 0 };
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
       <div className="max-w-7xl mx-auto">
@@ -48,12 +85,20 @@ export default function BlogManager() {
             </h1>
             <p className="text-[#2B2725]/70">The Mind Styling Journal</p>
           </div>
-          <Link to={createPageUrl("BlogEditor?mode=new")}>
-            <Button className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]">
-              <Plus size={20} className="mr-2" />
-              Create New Blog Post
-            </Button>
-          </Link>
+          <div className="flex gap-3">
+            <Link to={createPageUrl("GuestAuthorInvite")}>
+              <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32]">
+                <UserPlus size={20} className="mr-2" />
+                Invite Guest Author
+              </Button>
+            </Link>
+            <Link to={createPageUrl("BlogEditor?mode=new")}>
+              <Button className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]">
+                <Plus size={20} className="mr-2" />
+                Create New Blog Post
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Filters */}
@@ -68,8 +113,10 @@ export default function BlogManager() {
                 <SelectContent>
                   <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="draft">Draft</SelectItem>
+                  <SelectItem value="pending_review">Pending Review</SelectItem>
                   <SelectItem value="scheduled">Scheduled</SelectItem>
                   <SelectItem value="published">Published</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -117,6 +164,9 @@ export default function BlogManager() {
                       Status
                     </th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">
+                      Analytics
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">
                       Published On
                     </th>
                     <th className="px-6 py-4 text-right text-sm font-medium text-[#2B2725]">
@@ -138,13 +188,29 @@ export default function BlogManager() {
                           className={`inline-flex px-3 py-1 text-xs uppercase tracking-wide ${
                             post.status === "published"
                               ? "bg-[#A6B7A3]/20 text-[#1E3A32]"
-                              : post.status === "scheduled"
+                              : post.status === "pending_review"
                               ? "bg-[#D8B46B]/20 text-[#2B2725]"
+                              : post.status === "scheduled"
+                              ? "bg-[#6E4F7D]/20 text-[#2B2725]"
+                              : post.status === "rejected"
+                              ? "bg-red-100 text-red-800"
                               : "bg-[#E4D9C4] text-[#2B2725]/70"
                           }`}
                         >
-                          {post.status}
+                          {post.status.replace('_', ' ')}
                         </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        {post.status === "published" && (() => {
+                          const stats = getAnalytics(post.id);
+                          return (
+                            <div className="flex items-center gap-3 text-xs text-[#2B2725]/60">
+                              <span title="Views">{stats.views} 👁</span>
+                              <span title="Likes">{stats.likes} ❤️</span>
+                              <span title="Shares">{stats.shares} 📤</span>
+                            </div>
+                          );
+                        })()}
                       </td>
                       <td className="px-6 py-4 text-sm text-[#2B2725]/70">
                         {post.publish_date
@@ -153,16 +219,40 @@ export default function BlogManager() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
+                          {post.status === "pending_review" && (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-green-600 hover:text-green-700"
+                                onClick={() => handleApprove(post.id)}
+                                title="Approve & Publish"
+                              >
+                                <CheckCircle size={18} />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="text-red-600 hover:text-red-700"
+                                onClick={() => handleReject(post.id)}
+                                title="Reject"
+                              >
+                                <XCircle size={18} />
+                              </Button>
+                            </>
+                          )}
                           <Link to={createPageUrl(`BlogEditor?mode=edit&id=${post.id}`)}>
                             <Button variant="ghost" size="icon" className="text-[#1E3A32]">
                               <PenSquare size={18} />
                             </Button>
                           </Link>
-                          <Link to={createPageUrl(`BlogPost?slug=${post.slug}`)}>
-                            <Button variant="ghost" size="icon" className="text-[#1E3A32]">
-                              <Eye size={18} />
-                            </Button>
-                          </Link>
+                          {post.status === "published" && (
+                            <Link to={createPageUrl(`BlogPost?slug=${post.slug}`)}>
+                              <Button variant="ghost" size="icon" className="text-[#1E3A32]">
+                                <Eye size={18} />
+                              </Button>
+                            </Link>
+                          )}
                           <Button
                             variant="ghost"
                             size="icon"
