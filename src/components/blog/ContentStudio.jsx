@@ -7,6 +7,7 @@ import VisualIntelligence from "./VisualIntelligence";
 import LeadMagnetGenerator from "./LeadMagnetGenerator";
 import SEOEnchanter from "./SEOEnchanter";
 import QuoteHarvester from "./QuoteHarvester";
+import SchemaBuilder from "./SchemaBuilder";
 
 export default function ContentStudio({ blogContent, onApplySEO }) {
   return (
@@ -33,6 +34,9 @@ export default function ContentStudio({ blogContent, onApplySEO }) {
           <TabsTrigger value="quotes" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
             Quotes
           </TabsTrigger>
+          <TabsTrigger value="frameworks" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
+            Frameworks
+          </TabsTrigger>
           <TabsTrigger value="seo" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
             SEO
           </TabsTrigger>
@@ -52,6 +56,10 @@ export default function ContentStudio({ blogContent, onApplySEO }) {
 
         <TabsContent value="quotes" className="p-6">
           <QuoteHarvester blogContent={blogContent} />
+        </TabsContent>
+
+        <TabsContent value="frameworks" className="p-6">
+          <SchemaBuilder blogContent={blogContent} />
         </TabsContent>
 
         <TabsContent value="seo" className="p-6">
