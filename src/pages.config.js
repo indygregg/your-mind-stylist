@@ -49,6 +49,7 @@ import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import LearnHypnosis from './pages/LearnHypnosis';
 import Programs from './pages/Programs';
+import PocketVisualization from './pages/PocketVisualization';
 import __Layout from './Layout.jsx';
 
 
@@ -104,6 +105,7 @@ export const PAGES = {
     "WorkWithMe": WorkWithMe,
     "LearnHypnosis": LearnHypnosis,
     "Programs": Programs,
+    "PocketVisualization": PocketVisualization,
 }
 
 export const pagesConfig = {
