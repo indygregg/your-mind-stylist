@@ -1,5 +1,6 @@
 import Home from './pages/Home';
 import About from './pages/About';
+import Accessibility from './pages/Accessibility';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProducts from './pages/AdminProducts';
 import AdminRoadmap from './pages/AdminRoadmap';
@@ -50,13 +51,14 @@ import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
-import Accessibility from './pages/Accessibility';
+import CoursePage from './pages/CoursePage';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Home": Home,
     "About": About,
+    "Accessibility": Accessibility,
     "AdminDashboard": AdminDashboard,
     "AdminProducts": AdminProducts,
     "AdminRoadmap": AdminRoadmap,
@@ -107,7 +109,7 @@ export const PAGES = {
     "StudioSettings": StudioSettings,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
-    "Accessibility": Accessibility,
+    "CoursePage": CoursePage,
 }
 
 export const pagesConfig = {
