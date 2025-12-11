@@ -17,6 +17,12 @@ export default function Dashboard() {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
         
+        // Auto-assign manager role if applicable
+        if (currentUser && currentUser.email === 'roberta@robertafernandez.com' && currentUser.role === 'user') {
+          await base44.functions.invoke('autoAssignManagerRole', {});
+          window.location.reload();
+        }
+        
         // TODO: Fetch actual subscription status from backend
         // const status = await base44.functions.invoke('getSubscriptionStatus');
         // setSubscriptionStatus(status.data.status);
