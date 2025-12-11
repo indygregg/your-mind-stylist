@@ -11,6 +11,7 @@ import DailyPocketPrompt from "@/components/studio/DailyPocketPrompt";
 import ConstellationMap from "@/components/studio/ConstellationMap";
 import InnerMomentumMeter from "@/components/studio/InnerMomentumMeter";
 import NotesDrawer from "@/components/studio/NotesDrawer";
+import RecommendationCard from "@/components/studio/RecommendationCard";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
