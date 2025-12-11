@@ -12,6 +12,7 @@ export default function Layout({ children, currentPageName }) {
   const [useAuthLayout, setUseAuthLayout] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
 
   useEffect(() => {
     const checkAuthPages = async () => {
@@ -50,15 +51,33 @@ export default function Layout({ children, currentPageName }) {
   const navLinks = [
     { name: "Home", page: "Home" },
     { name: "About", page: "About" },
-    { name: "Programs", page: "Pricing" },
-    { name: "Evolution", page: "Evolution" },
-    { name: "Learn Hypnosis", page: "LearnHypnosis" },
-    { name: "Private Work", page: "PrivateSessions" },
-    { name: "Pocket Visualization", page: "InnerRehearsal" },
-    { name: "Speaking", page: "SpeakingTraining" },
     { name: "Podcast", page: "Podcast" },
     { name: "Blog", page: "Blog" },
     { name: "Contact", page: "Contact" },
+  ];
+
+  const servicesMenu = [
+    {
+      category: "Transformational Programs",
+      items: [
+        { name: "All Programs & Pricing", page: "Programs", description: "Explore all offerings" },
+        { name: "The Mind Styling Certification™", page: "Evolution", description: "Deep transformation training" },
+        { name: "Pocket Visualization™", page: "InnerRehearsal", description: "Daily guided experiences" },
+      ]
+    },
+    {
+      category: "Professional Development",
+      items: [
+        { name: "Hypnosis Training", page: "LearnHypnosis", description: "Become a certified hypnotist" },
+        { name: "Speaking & Training", page: "SpeakingTraining", description: "Organizational Mind Styling" },
+      ]
+    },
+    {
+      category: "Private Work",
+      items: [
+        { name: "1:1 Coaching", page: "PrivateSessions", description: "Intensive personal coaching" },
+      ]
+    }
   ];
 
   return (
@@ -168,6 +187,62 @@ export default function Layout({ children, currentPageName }) {
                 />
               </Link>
             ))}
+
+            {/* Services Mega Menu */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setServicesOpen(true)}
+              onMouseLeave={() => setServicesOpen(false)}
+            >
+              <button
+                className="text-sm tracking-wide transition-all duration-300 relative group text-[#2B2725]/70 hover:text-[#1E3A32]"
+              >
+                Services
+                <span
+                  className={`absolute -bottom-1 left-0 h-[1px] bg-[#D8B46B] transition-all duration-300 ${
+                    servicesOpen ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+              </button>
+
+              <AnimatePresence>
+                {servicesOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full right-0 mt-4 bg-white shadow-2xl border border-[#E4D9C4] min-w-[700px] z-50"
+                  >
+                    <div className="grid grid-cols-3 gap-6 p-8">
+                      {servicesMenu.map((section) => (
+                        <div key={section.category}>
+                          <h3 className="font-serif text-sm text-[#D8B46B] tracking-wider uppercase mb-4">
+                            {section.category}
+                          </h3>
+                          <div className="space-y-3">
+                            {section.items.map((item) => (
+                              <Link
+                                key={item.page}
+                                to={createPageUrl(item.page)}
+                                className="block group"
+                              >
+                                <p className="text-[#1E3A32] font-medium mb-1 group-hover:text-[#D8B46B] transition-colors">
+                                  {item.name}
+                                </p>
+                                <p className="text-xs text-[#2B2725]/60">
+                                  {item.description}
+                                </p>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
