@@ -4,6 +4,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import AdminProducts from './pages/AdminProducts';
 import AdminRoadmap from './pages/AdminRoadmap';
 import AdminUsers from './pages/AdminUsers';
+import AuthorProfile from './pages/AuthorProfile';
 import Blog from './pages/Blog';
 import BlogEditor from './pages/BlogEditor';
 import BlogManager from './pages/BlogManager';
@@ -18,6 +19,7 @@ import Error403 from './pages/Error403';
 import Error500 from './pages/Error500';
 import Evolution from './pages/Evolution';
 import FreeMasterclass from './pages/FreeMasterclass';
+import GuestAuthorInvite from './pages/GuestAuthorInvite';
 import InnerRehearsal from './pages/InnerRehearsal';
 import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
 import LegalPage from './pages/LegalPage';
@@ -33,20 +35,19 @@ import PrivateSessionsPurchase from './pages/PrivateSessionsPurchase';
 import PurchaseCenter from './pages/PurchaseCenter';
 import PurchaseComplete from './pages/PurchaseComplete';
 import SpeakingTraining from './pages/SpeakingTraining';
+import StudioAudio from './pages/StudioAudio';
 import StudioDashboard from './pages/StudioDashboard';
 import StudioDevDocs from './pages/StudioDevDocs';
 import StudioLegal from './pages/StudioLegal';
 import StudioLegalEditor from './pages/StudioLegalEditor';
 import StudioLogs from './pages/StudioLogs';
+import StudioNotes from './pages/StudioNotes';
 import StudioPricing from './pages/StudioPricing';
 import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
-import StudioNotes from './pages/StudioNotes';
-import StudioAudio from './pages/StudioAudio';
-import AuthorProfile from './pages/AuthorProfile';
-import GuestAuthorInvite from './pages/GuestAuthorInvite';
+import LearnHypnosis from './pages/LearnHypnosis';
 import __Layout from './Layout.jsx';
 
 
@@ -57,6 +58,7 @@ export const PAGES = {
     "AdminProducts": AdminProducts,
     "AdminRoadmap": AdminRoadmap,
     "AdminUsers": AdminUsers,
+    "AuthorProfile": AuthorProfile,
     "Blog": Blog,
     "BlogEditor": BlogEditor,
     "BlogManager": BlogManager,
@@ -71,6 +73,7 @@ export const PAGES = {
     "Error500": Error500,
     "Evolution": Evolution,
     "FreeMasterclass": FreeMasterclass,
+    "GuestAuthorInvite": GuestAuthorInvite,
     "InnerRehearsal": InnerRehearsal,
     "InnerRehearsalPurchase": InnerRehearsalPurchase,
     "LegalPage": LegalPage,
@@ -86,20 +89,19 @@ export const PAGES = {
     "PurchaseCenter": PurchaseCenter,
     "PurchaseComplete": PurchaseComplete,
     "SpeakingTraining": SpeakingTraining,
+    "StudioAudio": StudioAudio,
     "StudioDashboard": StudioDashboard,
     "StudioDevDocs": StudioDevDocs,
     "StudioLegal": StudioLegal,
     "StudioLegalEditor": StudioLegalEditor,
     "StudioLogs": StudioLogs,
+    "StudioNotes": StudioNotes,
     "StudioPricing": StudioPricing,
     "StudioRoles": StudioRoles,
     "StudioSettings": StudioSettings,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
-    "StudioNotes": StudioNotes,
-    "StudioAudio": StudioAudio,
-    "AuthorProfile": AuthorProfile,
-    "GuestAuthorInvite": GuestAuthorInvite,
+    "LearnHypnosis": LearnHypnosis,
 }
 
 export const pagesConfig = {

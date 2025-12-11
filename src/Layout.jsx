@@ -52,6 +52,7 @@ export default function Layout({ children, currentPageName }) {
     { name: "About", page: "About" },
     { name: "Programs", page: "Pricing" },
     { name: "Evolution", page: "Evolution" },
+    { name: "Learn Hypnosis", page: "LearnHypnosis" },
     { name: "Private Work", page: "PrivateSessions" },
     { name: "Pocket Mindset", page: "InnerRehearsal" },
     { name: "Speaking", page: "SpeakingTraining" },
