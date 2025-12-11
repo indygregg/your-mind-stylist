@@ -39,6 +39,7 @@ import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import Masterclass from './pages/Masterclass';
 import AdminProducts from './pages/AdminProducts';
+import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
 import __Layout from './Layout.jsx';
 
 
@@ -84,6 +85,7 @@ export const PAGES = {
     "WorkWithMe": WorkWithMe,
     "Masterclass": Masterclass,
     "AdminProducts": AdminProducts,
+    "InnerRehearsalPurchase": InnerRehearsalPurchase,
 }
 
 export const pagesConfig = {
