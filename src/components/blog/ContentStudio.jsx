@@ -5,8 +5,9 @@ import { Sparkles, Copy, CheckCircle, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import VisualIntelligence from "./VisualIntelligence";
 import LeadMagnetGenerator from "./LeadMagnetGenerator";
+import SEOEnchanter from "./SEOEnchanter";
 
-export default function ContentStudio({ blogContent }) {
+export default function ContentStudio({ blogContent, onApplySEO }) {
   return (
     <div className="fixed right-0 top-0 w-[25rem] h-screen bg-white border-l border-[#E4D9C4] shadow-lg overflow-y-auto">
       <div className="p-6 border-b border-[#E4D9C4]">
@@ -46,7 +47,7 @@ export default function ContentStudio({ blogContent }) {
         </TabsContent>
 
         <TabsContent value="seo" className="p-6">
-          <div className="text-[#2B2725]/60 text-sm">Coming soon...</div>
+          <SEOEnchanter blogContent={blogContent} onApplySEO={onApplySEO} />
         </TabsContent>
       </Tabs>
     </div>

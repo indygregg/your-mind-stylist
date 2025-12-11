@@ -1,6 +1,7 @@
 import Home from './pages/Home';
 import About from './pages/About';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminProducts from './pages/AdminProducts';
 import AdminRoadmap from './pages/AdminRoadmap';
 import AdminUsers from './pages/AdminUsers';
 import Blog from './pages/Blog';
@@ -17,9 +18,11 @@ import Error403 from './pages/Error403';
 import Error500 from './pages/Error500';
 import FreeMasterclass from './pages/FreeMasterclass';
 import InnerRehearsal from './pages/InnerRehearsal';
+import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
 import LegalPage from './pages/LegalPage';
 import Maintenance from './pages/Maintenance';
 import ManagerDashboard from './pages/ManagerDashboard';
+import Masterclass from './pages/Masterclass';
 import NotFound from './pages/NotFound';
 import Podcast from './pages/Podcast';
 import Pricing from './pages/Pricing';
@@ -37,9 +40,6 @@ import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
-import Masterclass from './pages/Masterclass';
-import AdminProducts from './pages/AdminProducts';
-import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
 import __Layout from './Layout.jsx';
 
 
@@ -47,6 +47,7 @@ export const PAGES = {
     "Home": Home,
     "About": About,
     "AdminDashboard": AdminDashboard,
+    "AdminProducts": AdminProducts,
     "AdminRoadmap": AdminRoadmap,
     "AdminUsers": AdminUsers,
     "Blog": Blog,
@@ -63,9 +64,11 @@ export const PAGES = {
     "Error500": Error500,
     "FreeMasterclass": FreeMasterclass,
     "InnerRehearsal": InnerRehearsal,
+    "InnerRehearsalPurchase": InnerRehearsalPurchase,
     "LegalPage": LegalPage,
     "Maintenance": Maintenance,
     "ManagerDashboard": ManagerDashboard,
+    "Masterclass": Masterclass,
     "NotFound": NotFound,
     "Podcast": Podcast,
     "Pricing": Pricing,
@@ -83,9 +86,6 @@ export const PAGES = {
     "StudioSettings": StudioSettings,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
-    "Masterclass": Masterclass,
-    "AdminProducts": AdminProducts,
-    "InnerRehearsalPurchase": InnerRehearsalPurchase,
 }
 
 export const pagesConfig = {

@@ -287,7 +287,16 @@ export default function BlogEditor() {
         </div>
       </div>
 
-      <ContentStudio blogContent={formData} />
+      <ContentStudio 
+        blogContent={formData}
+        onApplySEO={(seoData) => {
+          setFormData({
+            ...formData,
+            meta_title: seoData.meta_title,
+            meta_description: seoData.meta_description
+          });
+        }}
+      />
     </div>
   );
 }
