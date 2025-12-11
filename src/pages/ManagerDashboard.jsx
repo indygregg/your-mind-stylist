@@ -7,6 +7,11 @@ import { motion } from "framer-motion";
 import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart } from "lucide-react";
 
 export default function ManagerDashboard() {
+  // Set auth layout
+  if (typeof window !== 'undefined') {
+    window.__USE_AUTH_LAYOUT = true;
+  }
+
   const { data: blogPosts = [] } = useQuery({
     queryKey: ["blogPosts"],
     queryFn: () => base44.entities.BlogPost.list("-created_date", 3),

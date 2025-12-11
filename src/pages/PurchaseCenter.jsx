@@ -18,6 +18,11 @@ export default function PurchaseCenter() {
     fetchUser();
   }, []);
 
+  // Set auth layout
+  if (typeof window !== 'undefined') {
+    window.__USE_AUTH_LAYOUT = true;
+  }
+
   // Mock data - in production, fetch from your DB/Stripe
   const userPurchases = [
     // Example: { productId: "cert", purchased: true, subscribed: false }

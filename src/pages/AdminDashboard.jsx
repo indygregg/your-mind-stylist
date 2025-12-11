@@ -10,6 +10,11 @@ import {
 } from "lucide-react";
 
 export default function AdminDashboard() {
+  // Set auth layout
+  if (typeof window !== 'undefined') {
+    window.__USE_AUTH_LAYOUT = true;
+  }
+
   const { data: blogPosts = [] } = useQuery({
     queryKey: ["admin-blogPosts"],
     queryFn: () => base44.entities.BlogPost.list("-created_date", 5),
