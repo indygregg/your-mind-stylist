@@ -33,7 +33,22 @@ export default function AIContentGenerator({ onInsert }) {
       const selectedType = contentTypes.find(t => t.value === contentType);
       let fullPrompt = `${selectedType.prompt}${prompt}
 
-Style: Mind Styling voice - calm, intelligent, introspective, identity-focused. Write for emotional intelligence and personal transformation. Keep it grounded, not fluffy.`;
+Style: Mind Styling voice - calm, intelligent, introspective, identity-focused. Write for emotional intelligence and personal transformation. Keep it grounded, not fluffy.
+
+CRITICAL: Output HTML formatted content using these tags:
+- Use <h2> for main headings (NOT h1)
+- Use <h3> for subheadings
+- Use <p> for paragraphs
+- Use <ul> and <li> for bullet lists
+- Use <strong> for emphasis
+- Use <em> for italics
+
+Apply these inline styles:
+- h2: style="font-family: 'Playfair Display', serif; font-size: 2rem; color: #1E3A32; margin-top: 2rem; margin-bottom: 1rem; font-weight: 600;"
+- h3: style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #1E3A32; margin-top: 1.5rem; margin-bottom: 0.75rem; font-weight: 600;"
+- p: style="color: rgba(43, 39, 37, 0.8); font-size: 1.125rem; line-height: 1.75; margin-bottom: 1.5rem;"
+- ul: style="margin-left: 1.5rem; margin-bottom: 1.5rem;"
+- li: style="color: rgba(43, 39, 37, 0.8); font-size: 1.125rem; line-height: 1.75; margin-bottom: 0.5rem;"`;
 
       if (selectedType.fullPost) {
         fullPrompt += `
@@ -125,9 +140,10 @@ Include:
               Copy
             </Button>
           </div>
-          <div className="prose prose-sm max-w-none mb-4 text-[#2B2725]">
-            {generatedContent}
-          </div>
+          <div 
+            className="prose prose-sm max-w-none mb-4 text-[#2B2725] bg-white p-4 rounded border border-[#E4D9C4]"
+            dangerouslySetInnerHTML={{ __html: generatedContent }}
+          />
           <Button onClick={handleInsert} className="w-full bg-[#1E3A32]">
             <ArrowRight size={16} className="mr-2" />
             Insert into Editor
