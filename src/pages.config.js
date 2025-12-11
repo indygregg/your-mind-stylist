@@ -53,6 +53,7 @@ import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import CoursePage from './pages/CoursePage';
 import CourseBuilder from './pages/CourseBuilder';
+import CourseManager from './pages/CourseManager';
 import __Layout from './Layout.jsx';
 
 
@@ -112,6 +113,7 @@ export const PAGES = {
     "WorkWithMe": WorkWithMe,
     "CoursePage": CoursePage,
     "CourseBuilder": CourseBuilder,
+    "CourseManager": CourseManager,
 }
 
 export const pagesConfig = {
