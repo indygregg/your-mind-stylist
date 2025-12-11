@@ -26,6 +26,13 @@ import NotFound from './pages/NotFound';
 import LegalPage from './pages/LegalPage';
 import StudioLegalEditor from './pages/StudioLegalEditor';
 import BlogEditor from './pages/BlogEditor';
+import Error401 from './pages/Error401';
+import Error403 from './pages/Error403';
+import Error500 from './pages/Error500';
+import Maintenance from './pages/Maintenance';
+import Welcome from './pages/Welcome';
+import PurchaseComplete from './pages/PurchaseComplete';
+import EmailVerified from './pages/EmailVerified';
 import __Layout from './Layout.jsx';
 
 
@@ -58,6 +65,13 @@ export const PAGES = {
     "LegalPage": LegalPage,
     "StudioLegalEditor": StudioLegalEditor,
     "BlogEditor": BlogEditor,
+    "Error401": Error401,
+    "Error403": Error403,
+    "Error500": Error500,
+    "Maintenance": Maintenance,
+    "Welcome": Welcome,
+    "PurchaseComplete": PurchaseComplete,
+    "EmailVerified": EmailVerified,
 }
 
 export const pagesConfig = {
