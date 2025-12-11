@@ -88,10 +88,10 @@ export default function Layout({ children, currentPageName }) {
         <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link to={createPageUrl("Home")} className="group">
             <div className="flex flex-col">
-              <span className="font-serif text-xl md:text-2xl text-[#1E3A32] tracking-wide">
+              <span className="text-[10px] md:text-xs text-[#2B2725]/60 tracking-[0.2em] uppercase">
                 Roberta Fernandez
               </span>
-              <span className="text-[10px] md:text-xs tracking-[0.3em] text-[#D8B46B] uppercase font-light">
+              <span className="font-serif font-bold text-lg md:text-xl text-[#1E3A32] tracking-wide">
                 The Mind Stylist
               </span>
             </div>
@@ -174,10 +174,12 @@ export default function Layout({ children, currentPageName }) {
           <div className="grid md:grid-cols-3 gap-12 md:gap-8">
             {/* Brand */}
             <div>
-              <h3 className="font-serif text-2xl mb-2">Roberta Fernandez</h3>
-              <p className="text-[#D8B46B] text-sm tracking-[0.2em] uppercase mb-6">
-                The Mind Stylist
+              <p className="text-[#F9F5EF]/60 text-xs tracking-[0.2em] uppercase mb-2">
+                Roberta Fernandez
               </p>
+              <h3 className="font-serif font-bold text-3xl md:text-4xl text-[#F9F5EF] mb-6">
+                The Mind Stylist
+              </h3>
               <p className="text-[#F9F5EF]/70 text-sm leading-relaxed">
                 Emotional Intelligence • Mind Styling
                 <br />
@@ -226,7 +228,7 @@ export default function Layout({ children, currentPageName }) {
           {/* Bottom Bar */}
           <div className="mt-16 pt-8 border-t border-[#F9F5EF]/10 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-[#F9F5EF]/40">
-              © {new Date().getFullYear()} Roberta Fernandez — The Mind Stylist. All rights reserved.
+              © {new Date().getFullYear()} The Mind Stylist. All rights reserved.
             </p>
             <div className="flex gap-6">
               <a href="#" className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">

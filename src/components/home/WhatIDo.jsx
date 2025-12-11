@@ -25,6 +25,10 @@ export default function WhatIDo() {
               <span className="italic">Where You Want to Be</span>
             </h2>
 
+            <p className="text-[#2B2725]/80 text-xl leading-relaxed mb-6">
+              Hi, I'm <span className="font-medium">Roberta Fernandez — The Mind Stylist.</span>
+            </p>
+
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
               I'm an Integrative Emotional Intelligence Specialist, Master Practitioner of NLP, and
               Board-certified Hypnotherapist with decades of experience helping individuals and

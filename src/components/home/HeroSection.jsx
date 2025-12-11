@@ -28,18 +28,27 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            {/* Overline */}
-            <motion.p
+            {/* Brand Lockup */}
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.6 }}
-              className="text-[#D8B46B] text-sm tracking-[0.3em] uppercase mb-6"
+              className="mb-10"
             >
-              Roberta Fernandez • The Mind Stylist
-            </motion.p>
+              <p className="text-[#2B2725]/60 text-xs tracking-[0.3em] uppercase mb-2">
+                Roberta Fernandez
+              </p>
+              <div className="flex items-center gap-6">
+                <div className="w-12 h-[2px] bg-[#D8B46B]" />
+                <h2 className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] tracking-wide">
+                  THE MIND STYLIST
+                </h2>
+                <div className="w-12 h-[2px] bg-[#D8B46B]" />
+              </div>
+            </motion.div>
 
             {/* Headline */}
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-[#1E3A32] leading-[1.1] mb-8">
+            <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-[#1E3A32] leading-[1.1] mb-8">
               Rewrite Your Mind.
               <br />
               <span className="italic text-[#2B2725]">Restyle Your Life.</span>
