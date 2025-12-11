@@ -4,8 +4,34 @@ import { createPageUrl } from "./utils";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CookieBanner from "./components/legal/CookieBanner";
+import AuthLayout from "./components/AuthLayout";
+import { base44 } from "@/api/base44Client";
 
 export default function Layout({ children, currentPageName }) {
+  const [useAuthLayout, setUseAuthLayout] = useState(false);
+
+  useEffect(() => {
+    const checkAuthPages = async () => {
+      const authPages = [
+        'Dashboard', 'AdminDashboard', 'ManagerDashboard', 'StudioDashboard',
+        'PurchaseCenter', 'Library', 'BlogManager', 'CourseManager', 
+        'AudioManager', 'MessagesManager', 'AdminRoadmap', 'AdminUsers',
+        'StudioSettings', 'AdminAnalytics', 'StudioLogs', 'StudioRoles',
+        'StudioDevDocs', 'StudioLegal', 'StudioPricing', 'BlogEditor',
+        'LegalEditor', 'CourseEditor', 'AudioEditor'
+      ];
+      
+      if (authPages.includes(currentPageName)) {
+        const isAuth = await base44.auth.isAuthenticated();
+        setUseAuthLayout(isAuth);
+      }
+    };
+    checkAuthPages();
+  }, [currentPageName]);
+
+  if (useAuthLayout) {
+    return <AuthLayout currentPageName={currentPageName}>{children}</AuthLayout>;
+  }
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
