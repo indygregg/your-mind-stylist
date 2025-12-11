@@ -195,7 +195,7 @@ export default function Dashboard() {
             <h2 className="font-serif text-xl text-[#1E3A32] mb-6">Quick Links</h2>
             <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
               {[
-                { label: "Explore Programs", page: "Programs", icon: Layers, description: "Discover your next step." },
+                { label: "Library", page: "Library", icon: Layers, description: "Access your programs." },
                 { label: "Pocket Visualization™", page: "PocketVisualization", icon: Sparkles, description: "Daily emotional reset tools." },
                 { label: "Notes", page: "StudioNotes", icon: Edit3, description: "Capture insights as you learn." },
                 { label: "Free Masterclass", page: "FreeMasterclass", icon: Play, description: "Watch anytime." },
