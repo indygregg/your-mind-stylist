@@ -296,6 +296,95 @@ export default function AdminRoadmap() {
             </div>
           ))}
         </div>
+
+        {/* Detail View Dialog */}
+        <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            {selectedItem && (
+              <>
+                <DialogHeader>
+                  <DialogTitle className="text-2xl">{selectedItem.title}</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6">
+                  <div className="flex gap-2 flex-wrap">
+                    <span className={`text-sm px-3 py-1 ${
+                      selectedItem.priority === "Critical" ? "bg-red-100 text-red-800" :
+                      selectedItem.priority === "High" ? "bg-orange-100 text-orange-800" :
+                      selectedItem.priority === "Medium" ? "bg-yellow-100 text-yellow-800" :
+                      "bg-gray-100 text-gray-800"
+                    }`}>
+                      {selectedItem.priority} Priority
+                    </span>
+                    <span className="text-sm px-3 py-1 bg-[#D8B46B]/20 text-[#2B2725]">
+                      {selectedItem.category}
+                    </span>
+                    <span className="text-sm px-3 py-1 bg-[#A6B7A3]/20 text-[#1E3A32]">
+                      {selectedItem.status}
+                    </span>
+                  </div>
+
+                  {selectedItem.description && (
+                    <div>
+                      <h3 className="font-medium text-[#1E3A32] mb-2">Description</h3>
+                      <p className="text-[#2B2725]/80 leading-relaxed whitespace-pre-wrap">
+                        {selectedItem.description}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedItem.notes && (
+                    <div>
+                      <h3 className="font-medium text-[#1E3A32] mb-2">Notes</h3>
+                      <p className="text-[#2B2725]/80 leading-relaxed whitespace-pre-wrap">
+                        {selectedItem.notes}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {selectedItem.assigned_to && (
+                      <div>
+                        <h3 className="font-medium text-[#1E3A32] mb-1 text-sm">Assigned To</h3>
+                        <p className="text-[#2B2725]/80">{selectedItem.assigned_to}</p>
+                      </div>
+                    )}
+                    {selectedItem.due_date && (
+                      <div>
+                        <h3 className="font-medium text-[#1E3A32] mb-1 text-sm">Due Date</h3>
+                        <p className="text-[#2B2725]/80">{format(new Date(selectedItem.due_date), "MMMM d, yyyy")}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => {
+                        setIsDetailOpen(false);
+                        handleEdit(selectedItem);
+                      }}
+                      className="flex-1"
+                    >
+                      <Edit size={16} className="mr-2" />
+                      Edit Item
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="text-red-600 hover:text-red-700"
+                      onClick={() => {
+                        setIsDetailOpen(false);
+                        handleDelete(selectedItem.id, selectedItem.title);
+                      }}
+                    >
+                      <Trash2 size={16} className="mr-2" />
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
