@@ -1,10 +1,16 @@
 import React from "react";
+import SEO from "../components/SEO";
 import { motion } from "framer-motion";
 import { Headphones } from "lucide-react";
 
 export default function Podcast() {
   return (
     <div className="bg-[#F9F5EF] pt-32 pb-24">
+      <SEO
+        title="Activated Dialogue Podcast | The Mind Stylist"
+        description="Deeper conversations about emotional intelligence, change, and conscious living with The Mind Stylist, Roberta Fernandez."
+        canonical="/podcast"
+      />
       <div className="max-w-4xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
