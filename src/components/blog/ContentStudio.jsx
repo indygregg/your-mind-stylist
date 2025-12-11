@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, Copy, CheckCircle, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import VisualIntelligence from "./VisualIntelligence";
+import LeadMagnetGenerator from "./LeadMagnetGenerator";
 
 export default function ContentStudio({ blogContent }) {
   return (
@@ -21,11 +22,14 @@ export default function ContentStudio({ blogContent }) {
           <TabsTrigger value="social" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
             Social Media
           </TabsTrigger>
-          <TabsTrigger value="seo" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
-            SEO
-          </TabsTrigger>
           <TabsTrigger value="visuals" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
             Visuals
+          </TabsTrigger>
+          <TabsTrigger value="leads" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
+            Lead Magnets
+          </TabsTrigger>
+          <TabsTrigger value="seo" className="rounded-none border-b-2 data-[state=active]:border-[#D8B46B]">
+            SEO
           </TabsTrigger>
         </TabsList>
 
@@ -33,12 +37,16 @@ export default function ContentStudio({ blogContent }) {
           <SocialMediaTransformer blogContent={blogContent} />
         </TabsContent>
 
-        <TabsContent value="seo" className="p-6">
-          <div className="text-[#2B2725]/60 text-sm">Coming soon...</div>
-        </TabsContent>
-
         <TabsContent value="visuals" className="p-6">
           <VisualIntelligence blogContent={blogContent} />
+        </TabsContent>
+
+        <TabsContent value="leads" className="p-6">
+          <LeadMagnetGenerator blogContent={blogContent} />
+        </TabsContent>
+
+        <TabsContent value="seo" className="p-6">
+          <div className="text-[#2B2725]/60 text-sm">Coming soon...</div>
         </TabsContent>
       </Tabs>
     </div>
