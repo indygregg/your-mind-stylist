@@ -33,7 +33,7 @@ export default function BlogManager() {
   });
 
   const handleDelete = (id, title) => {
-    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
+    if (window.confirm(`Delete "${title}"? This can't be undone.`)) {
       deleteMutation.mutate(id);
     }
   };
@@ -96,10 +96,11 @@ export default function BlogManager() {
         {/* Posts Table */}
         <div className="bg-white overflow-hidden">
           {isLoading ? (
-            <div className="p-12 text-center text-[#2B2725]/60">Loading posts...</div>
+            <div className="p-12 text-center text-[#2B2725]/60">Loading your posts...</div>
           ) : filteredPosts.length === 0 ? (
-            <div className="p-12 text-center text-[#2B2725]/60">
-              No posts found. Create your first one!
+            <div className="p-12 text-center">
+              <p className="text-[#2B2725]/60 mb-2">No posts here yet.</p>
+              <p className="text-[#2B2725]/40 text-sm">When you're ready, your first idea can live here.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">

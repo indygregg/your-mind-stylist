@@ -25,7 +25,7 @@ export default function AIHelper({ mode, onInsert, context = {} }) {
 
       setOutput(response);
     } catch (error) {
-      setOutput("Sorry, something went wrong. Please try again.");
+      setOutput("Something didn't work as expected. Try again?");
     } finally {
       setLoading(false);
     }
@@ -72,7 +72,7 @@ export default function AIHelper({ mode, onInsert, context = {} }) {
           </button>
         </div>
         <p className="text-white/80 text-sm">
-          {getModeDescription(mode)}
+          Use the AI Assistant to help you shape your ideas — you're always in control of the final words.
         </p>
       </div>
 
@@ -89,7 +89,7 @@ export default function AIHelper({ mode, onInsert, context = {} }) {
           <Textarea
             value={customPrompt}
             onChange={(e) => setCustomPrompt(e.target.value)}
-            placeholder="Describe what you need..."
+            placeholder="What would you like help with?"
             rows={3}
             className="mb-2"
           />
@@ -105,7 +105,7 @@ export default function AIHelper({ mode, onInsert, context = {} }) {
               </>
             ) : (
               <>
-                Generate
+                Create
                 <ArrowRight size={16} className="ml-2" />
               </>
             )}

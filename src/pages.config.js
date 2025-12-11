@@ -27,6 +27,7 @@ import NotFound from './pages/NotFound';
 import Podcast from './pages/Podcast';
 import Pricing from './pages/Pricing';
 import PrivateSessions from './pages/PrivateSessions';
+import PrivateSessionsPurchase from './pages/PrivateSessionsPurchase';
 import PurchaseCenter from './pages/PurchaseCenter';
 import PurchaseComplete from './pages/PurchaseComplete';
 import SpeakingTraining from './pages/SpeakingTraining';
@@ -40,7 +41,6 @@ import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
-import PrivateSessionsPurchase from './pages/PrivateSessionsPurchase';
 import __Layout from './Layout.jsx';
 
 
@@ -74,6 +74,7 @@ export const PAGES = {
     "Podcast": Podcast,
     "Pricing": Pricing,
     "PrivateSessions": PrivateSessions,
+    "PrivateSessionsPurchase": PrivateSessionsPurchase,
     "PurchaseCenter": PurchaseCenter,
     "PurchaseComplete": PurchaseComplete,
     "SpeakingTraining": SpeakingTraining,
@@ -87,7 +88,6 @@ export const PAGES = {
     "StudioSettings": StudioSettings,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
-    "PrivateSessionsPurchase": PrivateSessionsPurchase,
 }
 
 export const pagesConfig = {

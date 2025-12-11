@@ -134,10 +134,10 @@ export default function Contact() {
               >
                 <CheckCircle size={48} className="text-[#A6B7A3] mx-auto mb-4" />
                 <p className="text-[#1E3A32] text-lg font-medium mb-2">
-                  Thank you. Your message has been received.
+                  Your message has been received.
                 </p>
                 <p className="text-[#2B2725]/70">
-                  I'll review what you've shared and be in touch as soon as possible.
+                  I'll review what you've shared and be in touch soon.
                 </p>
               </motion.div>
             ) : (
