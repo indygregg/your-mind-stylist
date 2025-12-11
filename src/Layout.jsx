@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import CookieBanner from "./components/legal/CookieBanner";
 import AuthLayout from "./components/AuthLayout";
 import ScrollToTop from "./components/ScrollToTop";
+import AccessibilityWidget from "./components/accessibility/AccessibilityWidget";
 import { base44 } from "@/api/base44Client";
 
 export default function Layout({ children, currentPageName }) {
@@ -272,8 +273,9 @@ export default function Layout({ children, currentPageName }) {
                   {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
         </nav>
-        
+
         <CookieBanner />
+        <AccessibilityWidget />
 
         {/* Mobile Menu */}
         <AnimatePresence>
@@ -392,6 +394,9 @@ export default function Layout({ children, currentPageName }) {
               </Link>
               <Link to={createPageUrl("LegalPage?slug=cookie-policy")} className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
                 Cookies
+              </Link>
+              <Link to={createPageUrl("Accessibility")} className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
+                Accessibility
               </Link>
             </div>
           </div>

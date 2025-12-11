@@ -50,6 +50,7 @@ import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
+import Accessibility from './pages/Accessibility';
 import __Layout from './Layout.jsx';
 
 
@@ -106,6 +107,7 @@ export const PAGES = {
     "StudioSettings": StudioSettings,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
+    "Accessibility": Accessibility,
 }
 
 export const pagesConfig = {
