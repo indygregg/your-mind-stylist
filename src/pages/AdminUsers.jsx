@@ -1,0 +1,139 @@
+import React, { useState } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, Mail, Calendar } from "lucide-react";
+import { format } from "date-fns";
+
+export default function AdminUsers() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+
+  const { data: users = [], isLoading } = useQuery({
+    queryKey: ["admin-all-users"],
+    queryFn: () => base44.entities.User.list("-created_date"),
+  });
+
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch = 
+      user.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = roleFilter === "all" || user.role === roleFilter;
+    return matchesSearch && matchesRole;
+  });
+
+  return (
+    <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">User Management</h1>
+          <p className="text-[#2B2725]/70">View and manage all platform users</p>
+        </div>
+
+        {/* Filters */}
+        <div className="bg-white p-6 mb-6">
+          <div className="flex flex-wrap gap-4">
+            <div className="flex-1 min-w-[300px]">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" size={20} />
+                <Input
+                  placeholder="Search by name or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <div className="w-48">
+              <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Roles</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="user">User</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* Users Table */}
+        <div className="bg-white overflow-hidden">
+          {isLoading ? (
+            <div className="p-12 text-center text-[#2B2725]/60">Loading users...</div>
+          ) : filteredUsers.length === 0 ? (
+            <div className="p-12 text-center text-[#2B2725]/60">No users found.</div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-[#F9F5EF]">
+                  <tr>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">
+                      User
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">
+                      Email
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">
+                      Role
+                    </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">
+                      Joined
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E4D9C4]">
+                  {filteredUsers.map((user) => (
+                    <motion.tr
+                      key={user.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="hover:bg-[#F9F5EF]/50"
+                    >
+                      <td className="px-6 py-4">
+                        <p className="font-medium text-[#1E3A32]">
+                          {user.full_name || "—"}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-[#2B2725]/70">
+                          <Mail size={14} />
+                          {user.email}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex px-3 py-1 text-xs uppercase tracking-wide ${
+                            user.role === "admin"
+                              ? "bg-[#6E4F7D]/20 text-[#6E4F7D]"
+                              : "bg-[#A6B7A3]/20 text-[#1E3A32]"
+                          }`}
+                        >
+                          {user.role}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-[#2B2725]/70">
+                        <div className="flex items-center gap-2">
+                          <Calendar size={14} />
+                          {format(new Date(user.created_date), "MMM d, yyyy")}
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6 text-center text-sm text-[#2B2725]/60">
+          Showing {filteredUsers.length} of {users.length} users
+        </div>
+      </div>
+    </div>
+  );
+}

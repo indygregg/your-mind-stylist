@@ -13,6 +13,9 @@ import Dashboard from './pages/Dashboard';
 import BlogPost from './pages/BlogPost';
 import ManagerDashboard from './pages/ManagerDashboard';
 import BlogManager from './pages/BlogManager';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminRoadmap from './pages/AdminRoadmap';
+import AdminUsers from './pages/AdminUsers';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +35,9 @@ export const PAGES = {
     "BlogPost": BlogPost,
     "ManagerDashboard": ManagerDashboard,
     "BlogManager": BlogManager,
+    "AdminDashboard": AdminDashboard,
+    "AdminRoadmap": AdminRoadmap,
+    "AdminUsers": AdminUsers,
 }
 
 export const pagesConfig = {
