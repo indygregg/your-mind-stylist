@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { Play, CheckCircle, Calendar, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -155,33 +157,33 @@ export default function Masterclass() {
             The Mind Stylist:
           </p>
           <div className="space-y-3">
-            <a
-              href="/certification"
+            <Link
+              to={createPageUrl("Certification")}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
               <h3 className="font-medium text-[#1E3A32] mb-1">The Mind Styling Certification™</h3>
               <p className="text-[#2B2725]/60 text-sm">
                 For identity-level change and emotional intelligence
               </p>
-            </a>
-            <a
-              href="/private-sessions"
+            </Link>
+            <Link
+              to={createPageUrl("PrivateSessions")}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
               <h3 className="font-medium text-[#1E3A32] mb-1">Private Mind Styling (1:1)</h3>
               <p className="text-[#2B2725]/60 text-sm">
                 Personalized support in shifting long-held patterns
               </p>
-            </a>
-            <a
-              href="/inner-rehearsal"
+            </Link>
+            <Link
+              to={createPageUrl("InnerRehearsal")}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
               <h3 className="font-medium text-[#1E3A32] mb-1">The Inner Rehearsal Sessions™</h3>
               <p className="text-[#2B2725]/60 text-sm">
                 Ongoing internal resets and future-self rehearsal
               </p>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

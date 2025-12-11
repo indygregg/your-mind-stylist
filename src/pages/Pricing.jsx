@@ -175,7 +175,7 @@ export default function Pricing() {
                 {certification.paymentPlans.map((plan, idx) => (
                   <div 
                     key={plan.label} 
-                    className={`bg-[#F9F5EF]/10 backdrop-blur-sm p-6 ${idx === 0 ? 'border-2 border-[#D8B46B]' : 'border border-[#F9F5EF]/20'}`}
+                    className={`bg-[#F9F5EF]/10 backdrop-blur-sm p-6 transition-all duration-300 ${idx === 0 ? 'border-2 border-[#D8B46B]' : 'border border-[#F9F5EF]/20 hover:border-[#D8B46B]/50 hover:bg-[#F9F5EF]/15'}`}
                   >
                     {idx === 0 && (
                       <span className="inline-block bg-[#D8B46B] text-[#1E3A32] text-xs px-3 py-1 mb-3 uppercase tracking-wide">
