@@ -4,22 +4,34 @@ import { Layers, Sparkles, BookOpen, Calendar, Play, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import OnboardingModal from "../components/onboarding/OnboardingModal";
+import PaymentFailureBanner from "../components/purchase/PaymentFailureBanner";
 import { base44 } from "@/api/base44Client";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // TODO: Fetch actual subscription status from backend
+        // const status = await base44.functions.invoke('getSubscriptionStatus');
+        // setSubscriptionStatus(status.data.status);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     };
     fetchUser();
   }, []);
+
+  const handleUpdatePayment = () => {
+    // TODO: Open Stripe billing portal
+    // window.location.href = billingPortalUrl;
+    console.log("Opening billing portal...");
+  };
   const programs = [
     {
       icon: Layers,
@@ -39,6 +51,11 @@ export default function Dashboard() {
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
       {user && <OnboardingModal role="user" />}
       <div className="max-w-6xl mx-auto px-6">
+        <PaymentFailureBanner 
+          status={subscriptionStatus}
+          onUpdatePayment={handleUpdatePayment}
+        />
+        
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
