@@ -9,11 +9,16 @@ import { Layers, Sparkles, Play, User, Check, ArrowRight, ShoppingCart, External
 
 export default function PurchaseCenter() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchUser();
   }, []);
@@ -85,6 +90,14 @@ export default function PurchaseCenter() {
       color: "#6E4F7D"
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
+        <p className="text-[#2B2725]/60">Loading your programs...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">

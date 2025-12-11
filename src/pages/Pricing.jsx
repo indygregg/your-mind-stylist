@@ -175,11 +175,16 @@ export default function Pricing() {
                 {certification.paymentPlans.map((plan, idx) => (
                   <div 
                     key={plan.label} 
-                    className={`bg-[#F9F5EF]/10 backdrop-blur-sm p-6 transition-all duration-300 ${idx === 0 ? 'border-2 border-[#D8B46B]' : 'border border-[#F9F5EF]/20 hover:border-[#D8B46B]/50 hover:bg-[#F9F5EF]/15'}`}
+                    className={`bg-[#F9F5EF]/10 backdrop-blur-sm p-6 transition-all duration-300 ${idx === 0 ? 'border-2 border-[#D8B46B]' : idx === 1 ? 'border-2 border-[#6E4F7D] hover:border-[#6E4F7D]' : 'border border-[#F9F5EF]/20 hover:border-[#D8B46B]/50 hover:bg-[#F9F5EF]/15'}`}
                   >
                     {idx === 0 && (
                       <span className="inline-block bg-[#D8B46B] text-[#1E3A32] text-xs px-3 py-1 mb-3 uppercase tracking-wide">
                         Best Value
+                      </span>
+                    )}
+                    {idx === 1 && (
+                      <span className="inline-block bg-[#6E4F7D] text-[#F9F5EF] text-xs px-3 py-1 mb-3 uppercase tracking-wide">
+                        Most Popular
                       </span>
                     )}
                     <h4 className="font-medium text-lg mb-2">{plan.label}</h4>
