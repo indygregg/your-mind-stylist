@@ -9,14 +9,14 @@ export default function WorkWithMe() {
     {
       overline: "Signature Program",
       icon: Layers,
-      title: "The Mind Styling Certification™",
+      title: "Mind Styling Evolution™",
       tagline: "A three-part inner redesign for people ready for a new mental operating system.",
       description:
         "If you want to shift identity, break old patterns, and elevate your emotional intelligence, this is your foundational program. Through the Edit → Tailor → Design framework, you'll learn how to recognize, release, and restyle the patterns shaping your choices, relationships, and leadership.",
       perfectFor:
         "Individuals seeking meaningful change, leaders, professionals, creatives, and anyone tired of repeating old stories.",
-      cta: "Explore The Certification",
-      link: "Certification",
+      cta: "Explore Mind Styling Evolution",
+      link: "Evolution",
       color: "#1E3A32",
       bg: "bg-white",
     },
@@ -67,8 +67,8 @@ export default function WorkWithMe() {
   return (
     <div className="bg-[#F9F5EF]">
       <SEO
-        title="Work With Me | The Mind Stylist"
-        description="Explore ways to work with The Mind Stylist: certification, private sessions, Inner Rehearsal Sessions™, and organizational mind styling for teams and leaders."
+        title="Work With Me | Your Mind Stylist"
+        description="Explore ways to work with Your Mind Stylist: certification, private sessions, Inner Rehearsal Sessions™, and organizational mind styling for teams and leaders."
         canonical="/work-with-me"
       />
       {/* Hero Section */}

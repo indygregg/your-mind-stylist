@@ -16,6 +16,7 @@ import EmailVerified from './pages/EmailVerified';
 import Error401 from './pages/Error401';
 import Error403 from './pages/Error403';
 import Error500 from './pages/Error500';
+import Evolution from './pages/Evolution';
 import FreeMasterclass from './pages/FreeMasterclass';
 import InnerRehearsal from './pages/InnerRehearsal';
 import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
@@ -42,7 +43,6 @@ import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
-import Evolution from './pages/Evolution';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +65,7 @@ export const PAGES = {
     "Error401": Error401,
     "Error403": Error403,
     "Error500": Error500,
+    "Evolution": Evolution,
     "FreeMasterclass": FreeMasterclass,
     "InnerRehearsal": InnerRehearsal,
     "InnerRehearsalPurchase": InnerRehearsalPurchase,
@@ -91,7 +92,6 @@ export const PAGES = {
     "StudioSettings": StudioSettings,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
-    "Evolution": Evolution,
 }
 
 export const pagesConfig = {

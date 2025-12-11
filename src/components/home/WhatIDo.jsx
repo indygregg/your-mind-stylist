@@ -26,7 +26,7 @@ export default function WhatIDo() {
             </h2>
 
             <p className="text-[#2B2725]/80 text-xl leading-relaxed mb-6">
-              Hi, I'm <span className="font-medium">Roberta Fernandez — The Mind Stylist.</span>
+              Hi, I'm <span className="font-medium">Roberta Fernandez — Your Mind Stylist.</span>
             </p>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
@@ -53,10 +53,10 @@ export default function WhatIDo() {
                 />
               </Link>
               <Link
-                to={createPageUrl("Certification")}
+                to={createPageUrl("Evolution")}
                 className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:text-[#D8B46B] transition-colors"
               >
-                Explore The Mind Styling Certification™
+                Explore Mind Styling Evolution™
                 <ArrowUpRight
                   size={18}
                   className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"

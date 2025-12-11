@@ -337,7 +337,7 @@ export default function About() {
               The Origin
             </span>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              Why "The Mind Stylist"?
+              Why "Your Mind Stylist"?
             </h2>
 
             <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
