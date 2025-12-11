@@ -9,6 +9,9 @@ export default function Masterclass() {
   const [user, setUser] = useState(null);
   const [signup, setSignup] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [showTranscript, setShowTranscript] = useState(false);
+  const videoRef = React.useRef(null);
 
   useEffect(() => {
     const init = async () => {
@@ -48,6 +51,38 @@ export default function Masterclass() {
     init();
   }, []);
 
+  // Keyboard controls
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        togglePlay();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [isPlaying]);
+
+  // Auto-track at 90%+ watched
+  const handleVideoProgress = async (currentTime, duration) => {
+    const percentage = (currentTime / duration) * 100;
+    
+    if (percentage >= 90 && signup && !signup.watched) {
+      await base44.entities.MasterclassSignup.update(signup.id, {
+        watched: true,
+        watch_date: new Date().toISOString(),
+        watch_percentage: Math.floor(percentage)
+      });
+      setSignup({ ...signup, watched: true, watch_percentage: Math.floor(percentage) });
+    }
+  };
+
+  const togglePlay = () => {
+    setIsPlaying(!isPlaying);
+    // When real video player is integrated: videoRef.current?.play() or pause()
+  };
+
   const handleWatchComplete = async () => {
     if (signup && !signup.watched) {
       await base44.entities.MasterclassSignup.update(signup.id, {
@@ -86,18 +121,43 @@ export default function Masterclass() {
 
         {/* Video Player */}
         <div className="mb-12">
-          <div className="aspect-video bg-[#2B2725] relative overflow-hidden rounded-lg shadow-xl">
+          <div className="aspect-video bg-[#2B2725] relative overflow-hidden rounded-lg shadow-xl" ref={videoRef}>
             <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A32]/50 to-[#6E4F7D]/30" />
             <div className="relative z-10 flex items-center justify-center h-full">
               <div className="text-center">
-                <div className="w-24 h-24 rounded-full bg-[#D8B46B] flex items-center justify-center mx-auto mb-6 cursor-pointer hover:scale-110 transition-transform">
+                <button
+                  onClick={togglePlay}
+                  className="w-24 h-24 rounded-full bg-[#D8B46B] flex items-center justify-center mx-auto mb-6 cursor-pointer hover:scale-110 transition-transform focus:outline-none focus:ring-4 focus:ring-[#D8B46B]/50"
+                  aria-label={isPlaying ? "Pause video" : "Play video"}
+                >
                   <Play size={40} className="text-[#1E3A32] ml-1" fill="currentColor" />
-                </div>
+                </button>
                 <p className="text-[#F9F5EF] text-sm">Video player coming soon</p>
-                <p className="text-[#F9F5EF]/60 text-xs mt-2">45 minutes</p>
+                <p className="text-[#F9F5EF]/60 text-xs mt-2">45 minutes • Press Space to play/pause</p>
               </div>
             </div>
           </div>
+
+          {/* Video Controls Info */}
+          <div className="mt-4 flex items-center justify-between text-sm text-[#2B2725]/60">
+            <button
+              onClick={() => setShowTranscript(!showTranscript)}
+              className="hover:text-[#1E3A32] transition-colors"
+            >
+              {showTranscript ? "Hide" : "Show"} Transcript
+            </button>
+            <span className="text-xs">Keyboard: Space = Play/Pause</span>
+          </div>
+
+          {/* Transcript */}
+          {showTranscript && (
+            <div className="mt-6 bg-white p-6 rounded-lg">
+              <h3 className="font-medium text-[#1E3A32] mb-3">Transcript</h3>
+              <p className="text-[#2B2725]/70 text-sm leading-relaxed">
+                [Transcript will be available when video is embedded. This ensures accessibility for all users, improves SEO, and allows users to read along or reference specific sections.]
+              </p>
+            </div>
+          )}
           
           {/* Mark Complete Button */}
           {!signup?.watched && (
