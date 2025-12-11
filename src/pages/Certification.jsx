@@ -1,4 +1,5 @@
 import React from "react";
+import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
@@ -123,6 +124,11 @@ export default function Certification() {
 
   return (
     <div className="bg-[#F9F5EF]">
+      <SEO
+        title="The Mind Styling Certification™ | Mindset & Emotional Intelligence Training"
+        description="A three-part inner redesign for people ready for a new mental operating system. Build emotional intelligence, identity-level change, and clearer thinking."
+        canonical="/certification"
+      />
       {/* Hero Section */}
       <section className="pt-32 pb-20">
         <div className="max-w-5xl mx-auto px-6">

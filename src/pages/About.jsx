@@ -84,6 +84,11 @@ export default function About() {
 
   return (
     <div className="bg-[#F9F5EF]">
+      <SEO
+        title="About Roberta | The Mind Stylist"
+        description="Meet The Mind Stylist, Roberta Fernandez. Learn how decades of emotional intelligence, mindset work, and leadership coaching shaped her unique Mind Styling method."
+        canonical="/about"
+      />
       {/* Hero Section */}
       <section className="pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6">

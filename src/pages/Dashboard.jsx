@@ -1,10 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Layers, Sparkles, BookOpen, Calendar, Play, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import OnboardingModal from "../components/onboarding/OnboardingModal";
+import { base44 } from "@/api/base44Client";
 
 export default function Dashboard() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchUser();
+  }, []);
   const programs = [
     {
       icon: Layers,
@@ -22,6 +37,7 @@ export default function Dashboard() {
 
   return (
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
+      {user && <OnboardingModal role="user" />}
       <div className="max-w-6xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

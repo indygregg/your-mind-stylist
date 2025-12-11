@@ -1,77 +1,77 @@
 import Home from './pages/Home';
 import About from './pages/About';
-import WorkWithMe from './pages/WorkWithMe';
-import Certification from './pages/Certification';
-import PrivateSessions from './pages/PrivateSessions';
-import InnerRehearsal from './pages/InnerRehearsal';
-import SpeakingTraining from './pages/SpeakingTraining';
-import FreeMasterclass from './pages/FreeMasterclass';
-import Podcast from './pages/Podcast';
-import Blog from './pages/Blog';
-import Contact from './pages/Contact';
-import Dashboard from './pages/Dashboard';
-import BlogPost from './pages/BlogPost';
-import ManagerDashboard from './pages/ManagerDashboard';
-import BlogManager from './pages/BlogManager';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminRoadmap from './pages/AdminRoadmap';
 import AdminUsers from './pages/AdminUsers';
-import StudioDashboard from './pages/StudioDashboard';
-import StudioDevDocs from './pages/StudioDevDocs';
-import StudioRoles from './pages/StudioRoles';
-import StudioLegal from './pages/StudioLegal';
-import StudioSettings from './pages/StudioSettings';
-import StudioLogs from './pages/StudioLogs';
-import NotFound from './pages/NotFound';
-import LegalPage from './pages/LegalPage';
-import StudioLegalEditor from './pages/StudioLegalEditor';
+import Blog from './pages/Blog';
 import BlogEditor from './pages/BlogEditor';
+import BlogManager from './pages/BlogManager';
+import BlogPost from './pages/BlogPost';
+import Certification from './pages/Certification';
+import Contact from './pages/Contact';
+import Dashboard from './pages/Dashboard';
+import EmailVerified from './pages/EmailVerified';
 import Error401 from './pages/Error401';
 import Error403 from './pages/Error403';
 import Error500 from './pages/Error500';
+import FreeMasterclass from './pages/FreeMasterclass';
+import InnerRehearsal from './pages/InnerRehearsal';
+import LegalPage from './pages/LegalPage';
 import Maintenance from './pages/Maintenance';
-import Welcome from './pages/Welcome';
+import ManagerDashboard from './pages/ManagerDashboard';
+import NotFound from './pages/NotFound';
+import Podcast from './pages/Podcast';
+import PrivateSessions from './pages/PrivateSessions';
 import PurchaseComplete from './pages/PurchaseComplete';
-import EmailVerified from './pages/EmailVerified';
+import SpeakingTraining from './pages/SpeakingTraining';
+import StudioDashboard from './pages/StudioDashboard';
+import StudioDevDocs from './pages/StudioDevDocs';
+import StudioLegal from './pages/StudioLegal';
+import StudioLegalEditor from './pages/StudioLegalEditor';
+import StudioLogs from './pages/StudioLogs';
+import StudioRoles from './pages/StudioRoles';
+import StudioSettings from './pages/StudioSettings';
+import Welcome from './pages/Welcome';
+import WorkWithMe from './pages/WorkWithMe';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Home": Home,
     "About": About,
-    "WorkWithMe": WorkWithMe,
-    "Certification": Certification,
-    "PrivateSessions": PrivateSessions,
-    "InnerRehearsal": InnerRehearsal,
-    "SpeakingTraining": SpeakingTraining,
-    "FreeMasterclass": FreeMasterclass,
-    "Podcast": Podcast,
-    "Blog": Blog,
-    "Contact": Contact,
-    "Dashboard": Dashboard,
-    "BlogPost": BlogPost,
-    "ManagerDashboard": ManagerDashboard,
-    "BlogManager": BlogManager,
     "AdminDashboard": AdminDashboard,
     "AdminRoadmap": AdminRoadmap,
     "AdminUsers": AdminUsers,
-    "StudioDashboard": StudioDashboard,
-    "StudioDevDocs": StudioDevDocs,
-    "StudioRoles": StudioRoles,
-    "StudioLegal": StudioLegal,
-    "StudioSettings": StudioSettings,
-    "StudioLogs": StudioLogs,
-    "NotFound": NotFound,
-    "LegalPage": LegalPage,
-    "StudioLegalEditor": StudioLegalEditor,
+    "Blog": Blog,
     "BlogEditor": BlogEditor,
+    "BlogManager": BlogManager,
+    "BlogPost": BlogPost,
+    "Certification": Certification,
+    "Contact": Contact,
+    "Dashboard": Dashboard,
+    "EmailVerified": EmailVerified,
     "Error401": Error401,
     "Error403": Error403,
     "Error500": Error500,
+    "FreeMasterclass": FreeMasterclass,
+    "InnerRehearsal": InnerRehearsal,
+    "LegalPage": LegalPage,
     "Maintenance": Maintenance,
-    "Welcome": Welcome,
+    "ManagerDashboard": ManagerDashboard,
+    "NotFound": NotFound,
+    "Podcast": Podcast,
+    "PrivateSessions": PrivateSessions,
     "PurchaseComplete": PurchaseComplete,
-    "EmailVerified": EmailVerified,
+    "SpeakingTraining": SpeakingTraining,
+    "StudioDashboard": StudioDashboard,
+    "StudioDevDocs": StudioDevDocs,
+    "StudioLegal": StudioLegal,
+    "StudioLegalEditor": StudioLegalEditor,
+    "StudioLogs": StudioLogs,
+    "StudioRoles": StudioRoles,
+    "StudioSettings": StudioSettings,
+    "Welcome": Welcome,
+    "WorkWithMe": WorkWithMe,
 }
 
 export const pagesConfig = {
