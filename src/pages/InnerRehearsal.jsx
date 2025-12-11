@@ -162,7 +162,7 @@ export default function InnerRehearsal() {
                 to="/app/signup?intent=inner-rehearsal"
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                Access Pocket Mindset
+                Access Pocket Visualization
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
@@ -188,11 +188,11 @@ export default function InnerRehearsal() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              What Is Pocket Mindset?
+              What Is Pocket Visualization™?
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
-              Unlike meditation, motivation, or passive relaxation, Pocket Mindset™ combines:
+              Unlike meditation, motivation, or passive relaxation, Pocket Visualization™ combines:
             </p>
 
             <div className="grid md:grid-cols-2 gap-3 mb-10">
@@ -228,7 +228,7 @@ export default function InnerRehearsal() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-6">
-              Why Pocket Mindset Works
+              Why Pocket Visualization™ Works
             </h2>
             <p className="text-[#2B2725]/80 text-lg leading-relaxed max-w-3xl mx-auto">
               Your subconscious mind doesn't distinguish vividly imagined experience from lived
@@ -274,7 +274,7 @@ export default function InnerRehearsal() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-10">
-              When to Use Pocket Mindset
+              When to Use Pocket Visualization™
             </h2>
 
             <div className="bg-[#F9F5EF] p-10 mb-10">
@@ -323,7 +323,7 @@ export default function InnerRehearsal() {
               What You'll Find Inside
             </h2>
             <p className="text-[#2B2725]/70 text-lg">
-              The Pocket Mindset library includes categories like:
+              The Pocket Visualization™ library includes categories like:
             </p>
           </motion.div>
 
@@ -393,7 +393,7 @@ export default function InnerRehearsal() {
 
             <div className="bg-[#F9F5EF] p-8 mb-10">
               <p className="text-[#2B2725]/80 text-lg text-center">
-                Pocket Mindset lives inside your private Your Mind Stylist Portal.
+                Pocket Visualization™ lives inside your private Your Mind Stylist Portal.
               </p>
             </div>
 
@@ -402,7 +402,7 @@ export default function InnerRehearsal() {
                 to="/app/signup?intent=inner-rehearsal"
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                Access Pocket Mindset
+                Access Pocket Visualization
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
@@ -425,7 +425,7 @@ export default function InnerRehearsal() {
 
             <div className="space-y-6 text-[#F9F5EF]/95 text-lg leading-relaxed">
               <p>
-                Pocket Mindset sessions are the tools I wish more people had access to — simple,
+                Pocket Visualization™ sessions are the tools I wish more people had access to — simple,
                 calming, and deeply effective. You don't need an hour of meditation or a week-long
                 retreat to shift your internal state. You just need a few quiet minutes and a gentle
                 guide.
@@ -461,7 +461,7 @@ export default function InnerRehearsal() {
                 to="/app/signup?intent=inner-rehearsal"
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
               >
-                Access Pocket Mindset
+                Access Pocket Visualization
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
