@@ -33,6 +33,9 @@ import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
+import Pricing from './pages/Pricing';
+import PurchaseCenter from './pages/PurchaseCenter';
+import StudioPricing from './pages/StudioPricing';
 import __Layout from './Layout.jsx';
 
 
@@ -72,6 +75,9 @@ export const PAGES = {
     "StudioSettings": StudioSettings,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
+    "Pricing": Pricing,
+    "PurchaseCenter": PurchaseCenter,
+    "StudioPricing": StudioPricing,
 }
 
 export const pagesConfig = {
