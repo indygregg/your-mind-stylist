@@ -37,6 +37,7 @@ export default function AuthLayout({ children, currentPageName }) {
     if (user.role === "admin") {
       return [
         ...commonLinks,
+        { name: "Library", page: "Library" },
         { name: "Studio", page: "StudioDashboard" },
         { name: "Roadmap", page: "AdminRoadmap" },
         { name: "Users", page: "AdminUsers" },
@@ -47,6 +48,7 @@ export default function AuthLayout({ children, currentPageName }) {
     if (user.role === "manager") {
       return [
         ...commonLinks,
+        { name: "Library", page: "Library" },
         { name: "Blog", page: "BlogManager" },
         { name: "Author Profile", page: "AuthorProfile" },
         { name: "Courses", page: "CourseManager" },
