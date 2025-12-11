@@ -30,8 +30,10 @@ export default function ManagerDashboard() {
   const quickActions = [
     { icon: PenSquare, label: "Create New Blog Post", link: "BlogEditor?mode=new" },
     { icon: FileVideo, label: "Create New Course", link: "CourseEditor?mode=new" },
-    { icon: Headphones, label: "Upload Inner Rehearsal Session", link: "AudioEditor?mode=new" },
+    { icon: Headphones, label: "Upload Pocket Visualization™ Track", link: "AudioEditor?mode=new" },
     { icon: Mail, label: "View Messages", link: "MessagesManager" },
+    { icon: FileVideo, label: "Add Webinar", link: "WebinarEditor?mode=new" },
+    { icon: FileText, label: "Add Toolkit Module", link: "ToolkitEditor?mode=new" },
   ];
 
   const snapshotCards = [
@@ -106,6 +108,26 @@ export default function ManagerDashboard() {
                   <p className="text-[#F9F5EF] text-sm font-medium mb-1">SEO & Quote Graphics</p>
                   <p className="text-[#F9F5EF]/60 text-xs">Optimize & share wisdom</p>
                 </div>
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <FileText size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Script Writer</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">Blog, lesson, and webinar scripts</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <Mail size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Email Sequences</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">For launches, sales, and nurturing</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <Headphones size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Pocket Visualization™ Script Generator</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">Creates new tracks with guided language</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <FileVideo size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Course Outline Generator</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">Built from simple prompts or transcripts</p>
+                </div>
               </div>
 
               <Link
@@ -127,7 +149,7 @@ export default function ManagerDashboard() {
           className="mb-12"
         >
           <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Quick Actions</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {quickActions.map((action, index) => (
               <Link
                 key={index}
