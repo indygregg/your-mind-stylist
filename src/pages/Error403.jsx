@@ -18,14 +18,14 @@ export default function Error403() {
 
         <h1 className="font-serif text-6xl text-[#1E3A32] mb-2">403</h1>
         <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
-          You don't have permission to view this page.
+          This area isn't accessible to you.
         </h2>
 
         <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
           This page is reserved for a different role or access level.
           <br />
           <br />
-          If you believe this is an error, please contact support.
+          If this seems wrong, reach out to support.
         </p>
 
         <div className="space-y-3 mb-12">

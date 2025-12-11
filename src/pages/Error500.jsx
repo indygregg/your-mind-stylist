@@ -18,24 +18,22 @@ export default function Error500() {
 
         <h1 className="font-serif text-6xl text-[#1E3A32] mb-2">500</h1>
         <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
-          Something Unexpected Happened
+          Something went wrong on our end.
         </h2>
 
         <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6 max-w-xl mx-auto">
-          The system ran into an issue processing your request.
+          The system hit an unexpected issue.
         </p>
 
         <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-xl mx-auto">
-          This isn't your fault.
-          <br />
-          We've logged the issue and will resolve it as soon as possible.
+          This isn't your fault — we've logged it and will fix it soon.
         </p>
 
         <div className="mb-8">
-          <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-4">Try Again</p>
+          <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-4">You can try:</p>
           <div className="flex flex-col gap-2 text-[#2B2725]/70">
-            <p>• Refresh the page</p>
-            <p>• Return to your dashboard</p>
+            <p>• Refreshing the page</p>
+            <p>• Returning to your dashboard</p>
           </div>
         </div>
 
