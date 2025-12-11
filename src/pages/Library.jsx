@@ -8,7 +8,15 @@ import { base44 } from "@/api/base44Client";
 
 export default function Library() {
   const [user, setUser] = useState(null);
-  const [userAccess, setUserAccess] = useState({});
+  const [userAccess, setUserAccess] = useState({
+    hasToolkit: false,
+    hasPocketVisualization: false,
+    hasWebinars: [],
+    hasAudio: false,
+    hasSalon: false,
+    hasCouture: false,
+    hasHypnosisTraining: false
+  });
   const [expandedSections, setExpandedSections] = useState({
     featured: true,
     programs: true,
@@ -54,7 +62,7 @@ export default function Library() {
   // Check if library is completely empty
   const isLibraryEmpty = !userAccess.hasToolkit && 
                          !userAccess.hasPocketVisualization && 
-                         userAccess.hasWebinars.length === 0 &&
+                         (!userAccess.hasWebinars || userAccess.hasWebinars.length === 0) &&
                          !userAccess.hasAudio &&
                          !userAccess.hasSalon &&
                          !userAccess.hasCouture &&
@@ -106,9 +114,9 @@ export default function Library() {
       icon: Play,
       title: "Mini-Webinar: Imposter Myths to Ditch",
       description: "Stop letting imposter feelings run your decisions.",
-      status: userAccess.hasWebinars.includes("imposter") ? "Owned" : "Not Enrolled",
+      status: userAccess.hasWebinars?.includes("imposter") ? "Owned" : "Not Enrolled",
       primaryAction: { 
-        label: userAccess.hasWebinars.includes("imposter") ? "Watch Now" : "Get This Webinar ($9)"
+        label: userAccess.hasWebinars?.includes("imposter") ? "Watch Now" : "Get This Webinar ($9)"
       },
       color: "#6E4F7D"
     },
@@ -116,9 +124,9 @@ export default function Library() {
       icon: Play,
       title: "Mini-Webinar: Don't Let Your Thoughts Think for You",
       description: "Learn to observe your thoughts without being controlled by them.",
-      status: userAccess.hasWebinars.includes("thoughts") ? "Owned" : "Not Enrolled",
+      status: userAccess.hasWebinars?.includes("thoughts") ? "Owned" : "Not Enrolled",
       primaryAction: { 
-        label: userAccess.hasWebinars.includes("thoughts") ? "Watch Now" : "Get This Webinar ($9)"
+        label: userAccess.hasWebinars?.includes("thoughts") ? "Watch Now" : "Get This Webinar ($9)"
       },
       color: "#6E4F7D"
     }
