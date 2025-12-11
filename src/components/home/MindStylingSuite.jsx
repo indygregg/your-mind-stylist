@@ -44,7 +44,7 @@ export default function MindStylingSuite() {
     },
     {
       icon: Sparkles,
-      title: "The Inner Rehearsal Sessions™",
+      title: "Pocket Mindset™ Sessions",
       tagline: "Reset your mind. Rehearse your future self. Shift your emotional state in minutes.",
       description:
         "Short, powerful guided experiences that help you regulate your nervous system, dissolve stress, and embody the identity you're growing into.",
@@ -59,7 +59,7 @@ export default function MindStylingSuite() {
       ],
       bottomNote:
         "Not meditation. Not napping. This is inner rehearsal—a fast, elegant way to shift your state and reset your mind.",
-      cta: "Explore the Inner Rehearsal Library",
+      cta: "Explore the Pocket Mindset Library",
       link: "InnerRehearsal",
       accent: "#A6B7A3",
       bg: "bg-[#A6B7A3]/10",
