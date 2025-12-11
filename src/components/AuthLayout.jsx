@@ -48,6 +48,7 @@ export default function AuthLayout({ children, currentPageName }) {
       return [
         ...commonLinks,
         { name: "Blog", page: "BlogManager" },
+        { name: "Author Profile", page: "AuthorProfile" },
         { name: "Courses", page: "CourseManager" },
         { name: "Audio", page: "AudioManager" },
         { name: "Messages", page: "MessagesManager" },
