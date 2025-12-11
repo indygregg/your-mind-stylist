@@ -8,6 +8,8 @@ import AuthLayout from "./components/AuthLayout";
 import ScrollToTop from "./components/ScrollToTop";
 import AccessibilityWidget from "./components/accessibility/AccessibilityWidget";
 import { base44 } from "@/api/base44Client";
+import { EditModeProvider } from "./components/cms/EditModeProvider";
+import ManagerBar from "./components/cms/ManagerBar";
 
 export default function Layout({ children, currentPageName }) {
   const [useAuthLayout, setUseAuthLayout] = useState(false);
@@ -82,8 +84,10 @@ export default function Layout({ children, currentPageName }) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F9F5EF]">
-      <ScrollToTop />
+    <EditModeProvider>
+      <div className="min-h-screen bg-[#F9F5EF]">
+        <ManagerBar />
+        <ScrollToTop />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -403,5 +407,6 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </footer>
     </div>
+    </EditModeProvider>
   );
 }

@@ -13,6 +13,9 @@ import BlogPost from './pages/BlogPost';
 import CertPurchase from './pages/CertPurchase';
 import Certification from './pages/Certification';
 import Contact from './pages/Contact';
+import CourseBuilder from './pages/CourseBuilder';
+import CourseManager from './pages/CourseManager';
+import CoursePage from './pages/CoursePage';
 import Dashboard from './pages/Dashboard';
 import EmailVerified from './pages/EmailVerified';
 import Error401 from './pages/Error401';
@@ -49,12 +52,9 @@ import StudioNotes from './pages/StudioNotes';
 import StudioPricing from './pages/StudioPricing';
 import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
+import WebinarPage from './pages/WebinarPage';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
-import CoursePage from './pages/CoursePage';
-import CourseBuilder from './pages/CourseBuilder';
-import CourseManager from './pages/CourseManager';
-import WebinarPage from './pages/WebinarPage';
 import __Layout from './Layout.jsx';
 
 
@@ -74,6 +74,9 @@ export const PAGES = {
     "CertPurchase": CertPurchase,
     "Certification": Certification,
     "Contact": Contact,
+    "CourseBuilder": CourseBuilder,
+    "CourseManager": CourseManager,
+    "CoursePage": CoursePage,
     "Dashboard": Dashboard,
     "EmailVerified": EmailVerified,
     "Error401": Error401,
@@ -110,12 +113,9 @@ export const PAGES = {
     "StudioPricing": StudioPricing,
     "StudioRoles": StudioRoles,
     "StudioSettings": StudioSettings,
+    "WebinarPage": WebinarPage,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
-    "CoursePage": CoursePage,
-    "CourseBuilder": CourseBuilder,
-    "CourseManager": CourseManager,
-    "WebinarPage": WebinarPage,
 }
 
 export const pagesConfig = {
