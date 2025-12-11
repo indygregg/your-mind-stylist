@@ -187,7 +187,7 @@ export default function Layout({ children, currentPageName }) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden bg-[#F9F5EF] border-t border-[#D8B46B]/20"
+              className="lg:hidden bg-[#F9F5EF] border-t border-[#D8B46B]/20 max-h-[calc(100vh-80px)] overflow-y-auto"
             >
               <div className="px-6 py-8 flex flex-col gap-4">
                 {navLinks.map((link) => (
