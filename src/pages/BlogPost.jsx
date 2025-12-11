@@ -1,16 +1,53 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
 
 export default function BlogPost() {
-  // In a real implementation, this would be fetched based on the slug from URL params
   const urlParams = new URLSearchParams(window.location.search);
   const slug = urlParams.get("slug");
 
-  // Sample post data - in production, this would come from a CMS or database
-  const post = {
+  const { data: post, isLoading } = useQuery({
+    queryKey: ["blogPost", slug],
+    queryFn: async () => {
+      const posts = await base44.entities.BlogPost.filter({ slug, status: "published" });
+      return posts[0];
+    },
+    enabled: !!slug,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] py-32 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-[#2B2725]/60">Loading post...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] py-32 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-[#2B2725]/60 mb-4">Post not found.</p>
+          <Link
+            to={createPageUrl("Blog")}
+            className="text-[#1E3A32] hover:text-[#D8B46B] underline"
+          >
+            Back to The Mind Styling Journal
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Legacy mock data structure - keeping for reference
+  const legacyPost = {
     category: "Thursday Thoughts",
     title: "The Stories You Tell Yourself About Who You Are",
     subtitle: "And why changing them changes everything",
