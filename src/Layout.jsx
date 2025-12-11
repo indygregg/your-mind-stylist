@@ -49,6 +49,7 @@ export default function Layout({ children, currentPageName }) {
   const navLinks = [
     { name: "Home", page: "Home" },
     { name: "About", page: "About" },
+    { name: "Programs", page: "Pricing" },
     { name: "Certification", page: "Certification" },
     { name: "Private Work", page: "PrivateSessions" },
     { name: "Inner Rehearsal", page: "InnerRehearsal" },
@@ -105,12 +106,29 @@ export default function Layout({ children, currentPageName }) {
             <p className="text-xs tracking-[0.2em] text-[#2B2725]/60 uppercase font-light">
               Las Vegas • Emotional Intelligence • Mind Styling • Leadership & Personal Transformation
             </p>
-            <Link
-              to={createPageUrl("Contact")}
-              className="text-xs tracking-wide text-[#1E3A32] hover:text-[#D8B46B] transition-colors font-medium"
-            >
-              Schedule Your Complimentary Consultation
-            </Link>
+            <div className="flex items-center gap-6">
+              <Link
+                to={createPageUrl("Contact")}
+                className="text-xs tracking-wide text-[#1E3A32] hover:text-[#D8B46B] transition-colors font-medium"
+              >
+                Schedule Your Complimentary Consultation
+              </Link>
+              <div className="flex items-center gap-3">
+                <Link
+                  to="/app/login"
+                  className="text-xs tracking-wide text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
+                >
+                  Login
+                </Link>
+                <span className="text-[#D8B46B]/30">|</span>
+                <Link
+                  to="/app/signup"
+                  className="text-xs tracking-wide text-[#1E3A32] hover:text-[#D8B46B] transition-colors font-medium"
+                >
+                  Join
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
 
