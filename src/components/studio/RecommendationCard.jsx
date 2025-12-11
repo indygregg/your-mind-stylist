@@ -27,7 +27,7 @@ export default function RecommendationCard({ recommendation, onTakeAction, class
     if (recommendation.type === 'reflection' && recommendation.prompt) {
       onTakeAction(recommendation.prompt);
     } else if (recommendation.type === 'audio_session') {
-      window.location.href = createPageUrl('Library') + '?tab=sessions';
+      window.location.href = createPageUrl('StudioAudio');
     } else if (recommendation.type === 'lesson') {
       window.location.href = createPageUrl('Library') + '?tab=courses';
     }
