@@ -12,6 +12,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Save, Eye, Trash2, ArrowLeft, Calendar } from "lucide-react";
 import AIHelper from "../components/ai/AIHelper";
+import ContentStudio from "../components/blog/ContentStudio";
 
 export default function BlogEditor() {
   const navigate = useNavigate();
@@ -113,7 +114,7 @@ export default function BlogEditor() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F5EF] py-12 px-6 pr-[25rem]">
+    <div className="min-h-screen bg-[#F9F5EF] py-12 px-6 pr-[26rem]">
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
           <Button
@@ -286,15 +287,7 @@ export default function BlogEditor() {
         </div>
       </div>
 
-      <AIHelper
-        mode="blog"
-        onInsert={handleAIInsert}
-        context={{
-          topic: formData.title,
-          category: formData.category,
-          content: formData.content,
-        }}
-      />
+      <ContentStudio blogContent={formData} />
     </div>
   );
 }
