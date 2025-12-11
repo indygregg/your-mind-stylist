@@ -43,7 +43,6 @@ export default function ManagerDashboard() {
 
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
-      {user && <OnboardingModal role="manager" />}
       <div className="max-w-7xl mx-auto">
         {/* Welcome Panel */}
         <motion.div
