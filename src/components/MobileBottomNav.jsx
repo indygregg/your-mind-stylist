@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
-import { Home, BookOpen, ShoppingCart, Menu, X } from "lucide-react";
+import { Home, BookOpen, ShoppingCart, Menu, X, Settings, Users, FileText, MessageSquare, Headphones, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function MobileBottomNav({ user, currentPageName, navLinks, onLogout }) {
@@ -14,6 +14,33 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
     setMenuOpen(false);
   };
 
+  const getIcon = (pageName) => {
+    const iconMap = {
+      Dashboard: Home,
+      AdminDashboard: LayoutDashboard,
+      ManagerDashboard: LayoutDashboard,
+      StudioDashboard: LayoutDashboard,
+      Library: BookOpen,
+      PurchaseCenter: ShoppingCart,
+      Purchase: ShoppingCart,
+      AdminRoadmap: FileText,
+      Roadmap: FileText,
+      AdminUsers: Users,
+      Users: Users,
+      StudioSettings: Settings,
+      Settings: Settings,
+      BlogManager: FileText,
+      Blog: FileText,
+      CourseManager: BookOpen,
+      Courses: BookOpen,
+      AudioManager: Headphones,
+      Audio: Headphones,
+      MessagesManager: MessageSquare,
+      Messages: MessageSquare,
+    };
+    return iconMap[pageName] || Home;
+  };
+
   const quickLinks = navLinks.slice(0, 3);
   const moreLinks = navLinks.slice(3);
 
@@ -21,34 +48,39 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
     <>
       {/* Bottom Navigation Bar - Mobile Only */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#1E3A32] border-t border-[#F9F5EF]/10 z-50">
-        <div className="grid grid-cols-4 h-16">
-          {quickLinks.map((link) => (
-            <Link
-              key={link.page}
-              to={createPageUrl(link.page)}
-              onClick={handleNavClick}
+        <div className={`grid ${moreLinks.length > 0 ? 'grid-cols-4' : 'grid-cols-3'} h-16`}>
+          {quickLinks.map((link) => {
+            const Icon = getIcon(link.page);
+            return (
+              <Link
+                key={link.page}
+                to={createPageUrl(link.page)}
+                onClick={handleNavClick}
+                className={`flex flex-col items-center justify-center gap-1 transition-colors ${
+                  currentPageName === link.page
+                    ? "text-[#D8B46B]"
+                    : "text-[#F9F5EF]/70"
+                }`}
+              >
+                <Icon size={20} />
+                <span className="text-[10px]">{link.name}</span>
+              </Link>
+            );
+          })}
+          {moreLinks.length > 0 && (
+            <button
+              onClick={() => {
+                if (navigator.vibrate) navigator.vibrate(10);
+                setMenuOpen(!menuOpen);
+              }}
               className={`flex flex-col items-center justify-center gap-1 transition-colors ${
-                currentPageName === link.page
-                  ? "text-[#D8B46B]"
-                  : "text-[#F9F5EF]/70"
+                menuOpen ? "text-[#D8B46B]" : "text-[#F9F5EF]/70"
               }`}
             >
-              <Home size={20} />
-              <span className="text-[10px]">{link.name}</span>
-            </Link>
-          ))}
-          <button
-            onClick={() => {
-              if (navigator.vibrate) navigator.vibrate(10);
-              setMenuOpen(!menuOpen);
-            }}
-            className={`flex flex-col items-center justify-center gap-1 transition-colors ${
-              menuOpen ? "text-[#D8B46B]" : "text-[#F9F5EF]/70"
-            }`}
-          >
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            <span className="text-[10px]">More</span>
-          </button>
+              {menuOpen ? <X size={20} /> : <Menu size={20} />}
+              <span className="text-[10px]">More</span>
+            </button>
+          )}
         </div>
       </nav>
 
