@@ -179,21 +179,23 @@ export default function BlogPost() {
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
               {post.title}
             </h1>
-            {post.subtitle && (
+            {post.excerpt && (
               <p className="font-serif text-2xl md:text-3xl text-[#6E4F7D] italic mb-8">
-                {post.subtitle}
+                {post.excerpt}
               </p>
             )}
 
             <div className="flex items-center gap-6 text-[#2B2725]/60 text-sm">
               <div className="flex items-center gap-2">
                 <Calendar size={16} />
-                {post.date}
+                {post.publish_date ? format(new Date(post.publish_date), "MMMM d, yyyy") : format(new Date(post.created_date), "MMMM d, yyyy")}
               </div>
-              <div className="flex items-center gap-2">
-                <Clock size={16} />
-                {post.readTime} min read
-              </div>
+              {post.read_time && (
+                <div className="flex items-center gap-2">
+                  <Clock size={16} />
+                  {post.read_time} min read
+                </div>
+              )}
             </div>
           </motion.div>
         </div>
