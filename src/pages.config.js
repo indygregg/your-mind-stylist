@@ -44,6 +44,7 @@ import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import StudioNotes from './pages/StudioNotes';
+import StudioAudio from './pages/StudioAudio';
 import __Layout from './Layout.jsx';
 
 
@@ -94,6 +95,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
     "StudioNotes": StudioNotes,
+    "StudioAudio": StudioAudio,
 }
 
 export const pagesConfig = {
