@@ -8,6 +8,8 @@ import { base44 } from "@/api/base44Client";
 
 export default function Library() {
   const [user, setUser] = useState(null);
+  const [courses, setCourses] = useState([]);
+  const [userProgress, setUserProgress] = useState([]);
   const [userAccess, setUserAccess] = useState({
     hasToolkit: false,
     hasPocketVisualization: false,
@@ -33,6 +35,17 @@ export default function Library() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Fetch all published courses
+        const allCourses = await base44.entities.Course.filter({ status: "published" });
+        
+        // Fetch user's course progress
+        const progress = await base44.entities.UserCourseProgress.filter({ user_id: currentUser.id });
+        setUserProgress(progress);
+        
+        // TODO: Filter courses by product linkage and user's purchases
+        // For now, showing all published courses
+        setCourses(allCourses);
         
         // TODO: Fetch user's access flags and purchased products
         // For now, using mock data
@@ -94,19 +107,43 @@ export default function Library() {
     });
   }
 
-  // Programs & Courses
-  const toolkitModules = userAccess.hasToolkit ? [
-    {
+  // Convert courses to program cards
+  const getCourseProgress = (courseId) => {
+    const progress = userProgress.find(p => p.course_id === courseId);
+    return progress?.completion_percentage || 0;
+  };
+
+  const getCourseStatus = (courseId) => {
+    const progress = userProgress.find(p => p.course_id === courseId);
+    if (!progress || progress.status === "not_started") return "Not Started";
+    if (progress.status === "completed") return "Completed";
+    return "In Progress";
+  };
+
+  const coursesByType = {
+    toolkit: courses.filter(c => c.type === "Toolkit Module"),
+    webinar: courses.filter(c => c.type === "Webinar"),
+    audio: courses.filter(c => c.type === "Audio-Based Program"),
+    training: courses.filter(c => c.type === "Training Program"),
+  };
+
+  const convertCourseToProgramCard = (course) => {
+    const progress = getCourseProgress(course.id);
+    const status = getCourseStatus(course.id);
+    
+    return {
       icon: Layers,
-      title: "Mind Style Toolkit — Part 1: Foundations",
-      description: "Build your emotional intelligence foundation.",
-      progress: 60,
-      status: "In Progress",
-      primaryAction: { label: "Continue" },
-      secondaryAction: { label: "View Overview", onClick: () => {} },
+      title: course.title,
+      description: course.short_description || course.subtitle,
+      progress: progress,
+      status: status,
+      primaryAction: { 
+        label: status === "Not Started" ? "Start" : status === "Completed" ? "Revisit" : "Continue"
+      },
+      route: `CoursePage?slug=${course.slug}`,
       color: "#1E3A32"
-    }
-  ] : [];
+    };
+  };
 
   // Webinars
   const webinars = [
@@ -291,14 +328,14 @@ export default function Library() {
             </LibrarySection>
           )}
 
-          {/* Programs & Courses */}
+          {/* Toolkit Modules */}
           <LibrarySection 
-            title="Programs & Courses" 
+            title="Mind Style Toolkit" 
             sectionKey="programs"
-            emptyMessage="When you add a program, it will appear here. You can begin with the Mind Style Toolkit at any time."
+            emptyMessage="Toolkit modules will appear here as they become available."
           >
-            {toolkitModules.map((module, index) => (
-              <ProgramCard key={index} program={module} />
+            {coursesByType.toolkit.map((course) => (
+              <ProgramCard key={course.id} program={convertCourseToProgramCard(course)} />
             ))}
           </LibrarySection>
 
@@ -319,17 +356,20 @@ export default function Library() {
             sectionKey="webinars"
             emptyMessage="Webinars offer bite-sized insights to expand your Mind Style toolkit. Add any webinar to your library to watch instantly."
           >
-            {webinars.map((webinar, index) => (
-              <ProgramCard key={index} program={webinar} />
+            {coursesByType.webinar.map((course) => (
+              <ProgramCard key={course.id} program={convertCourseToProgramCard(course)} />
             ))}
           </LibrarySection>
 
-          {/* Audio Series */}
+          {/* Audio Programs */}
           <LibrarySection 
-            title="Audio Series" 
+            title="Audio Programs" 
             sectionKey="audio"
+            emptyMessage="Audio-based programs will appear here."
           >
-            <ProgramCard program={audioSeries} />
+            {coursesByType.audio.map((course) => (
+              <ProgramCard key={course.id} program={convertCourseToProgramCard(course)} />
+            ))}
           </LibrarySection>
 
           {/* Coaching Programs */}
@@ -345,16 +385,15 @@ export default function Library() {
           )}
 
           {/* Training & Certification */}
-          {trainingPrograms.length > 0 && (
-            <LibrarySection 
-              title="Training & Certification" 
-              sectionKey="training"
-            >
-              {trainingPrograms.map((program, index) => (
-                <ProgramCard key={index} program={program} />
-              ))}
-            </LibrarySection>
-          )}
+          <LibrarySection 
+            title="Training & Certification" 
+            sectionKey="training"
+            emptyMessage="Training and certification programs will appear here."
+          >
+            {coursesByType.training.map((course) => (
+              <ProgramCard key={course.id} program={convertCourseToProgramCard(course)} />
+            ))}
+          </LibrarySection>
 
           {/* Contextual Suggestion */}
           {!userAccess.hasToolkit && userAccess.hasPocketVisualization && (
