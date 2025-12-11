@@ -25,6 +25,7 @@ import StudioLogs from './pages/StudioLogs';
 import NotFound from './pages/NotFound';
 import LegalPage from './pages/LegalPage';
 import StudioLegalEditor from './pages/StudioLegalEditor';
+import BlogEditor from './pages/BlogEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -56,6 +57,7 @@ export const PAGES = {
     "NotFound": NotFound,
     "LegalPage": LegalPage,
     "StudioLegalEditor": StudioLegalEditor,
+    "BlogEditor": BlogEditor,
 }
 
 export const pagesConfig = {
