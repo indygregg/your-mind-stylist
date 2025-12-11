@@ -13,6 +13,9 @@ export default function AIContentGenerator({ onInsert }) {
   const [generatedContent, setGeneratedContent] = useState("");
 
   const contentTypes = [
+    { value: "full", label: "Full Blog Post", prompt: "Write a complete, engaging blog post about: ", fullPost: true },
+    { value: "outline", label: "Blog Outline", prompt: "Create a detailed outline for a blog post about: " },
+    { value: "title", label: "Title Ideas", prompt: "Generate 5 compelling blog post titles about: " },
     { value: "paragraph", label: "Paragraph", prompt: "Write a compelling blog paragraph about: " },
     { value: "intro", label: "Opening Hook", prompt: "Write an engaging opening paragraph that hooks the reader for a blog post about: " },
     { value: "conclusion", label: "Conclusion", prompt: "Write a powerful conclusion for a blog post about: " },
@@ -28,9 +31,20 @@ export default function AIContentGenerator({ onInsert }) {
     setGenerating(true);
     try {
       const selectedType = contentTypes.find(t => t.value === contentType);
-      const fullPrompt = `${selectedType.prompt}${prompt}
+      let fullPrompt = `${selectedType.prompt}${prompt}
 
 Style: Mind Styling voice - calm, intelligent, introspective, identity-focused. Write for emotional intelligence and personal transformation. Keep it grounded, not fluffy.`;
+
+      if (selectedType.fullPost) {
+        fullPrompt += `
+
+Include:
+- Engaging opening hook
+- Clear sections with subheadings
+- Practical insights and examples
+- Strong conclusion
+- Length: 800-1200 words`;
+      }
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: fullPrompt,

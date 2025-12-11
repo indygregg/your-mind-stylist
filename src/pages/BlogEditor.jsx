@@ -10,11 +10,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { Save, Eye, Trash2, ArrowLeft, Calendar, Sparkles, Image as ImageIcon } from "lucide-react";
+import { Save, Eye, Trash2, ArrowLeft, Calendar, Sparkles, Image as ImageIcon, TrendingUp, User as UserIcon } from "lucide-react";
 import AIHelper from "../components/ai/AIHelper";
 import ContentStudio from "../components/blog/ContentStudio";
 import AIContentGenerator from "../components/blog/AIContentGenerator";
 import ImageManager from "../components/blog/ImageManager";
+import SEOAnalyzer from "../components/blog/SEOAnalyzer";
 
 export default function BlogEditor() {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export default function BlogEditor() {
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
+    author_id: "",
     category: "Emotional Intelligence",
     excerpt: "",
     content: "",
@@ -35,7 +37,31 @@ export default function BlogEditor() {
     publish_date: "",
     meta_title: "",
     meta_description: "",
+    seo_keywords: [],
   });
+
+  const [user, setUser] = useState(null);
+  const [authors, setAuthors] = useState([]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+      
+      // Fetch all authors
+      const allAuthors = await base44.entities.Author.list();
+      setAuthors(allAuthors);
+      
+      // Set default author if creating new post
+      if (!id && allAuthors.length > 0) {
+        const userAuthor = allAuthors.find(a => a.user_id === currentUser.id);
+        if (userAuthor) {
+          setFormData(prev => ({ ...prev, author_id: userAuthor.id }));
+        }
+      }
+    };
+    fetchUser();
+  }, [id]);
 
   const { data: existingPost, isLoading } = useQuery({
     queryKey: ["blogPost", id],
@@ -176,6 +202,26 @@ export default function BlogEditor() {
             <p className="text-xs text-[#2B2725]/60 mt-1">This becomes the URL of your post</p>
           </div>
 
+          {/* Author */}
+          <div>
+            <Label>Author</Label>
+            <Select value={formData.author_id} onValueChange={(v) => setFormData({ ...formData, author_id: v })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select author" />
+              </SelectTrigger>
+              <SelectContent>
+                {authors.map(author => (
+                  <SelectItem key={author.id} value={author.id}>
+                    {author.display_name} {author.is_guest && "(Guest)"}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-[#2B2725]/60 mt-1">
+              Don't see your name? <a href="/app/AuthorProfile" className="text-[#1E3A32] underline">Set up your author profile</a>
+            </p>
+          </div>
+
           {/* Category */}
           <div>
             <Label>Category</Label>
@@ -261,8 +307,24 @@ export default function BlogEditor() {
 
           {/* SEO */}
           <div className="border-t pt-6">
-            <h3 className="font-medium text-[#1E3A32] mb-4">SEO Settings</h3>
+            <h3 className="font-medium text-[#1E3A32] mb-4 flex items-center gap-2">
+              <TrendingUp size={18} />
+              SEO Settings
+            </h3>
             <div className="space-y-4">
+              <div className="border border-[#1E3A32]/20 rounded-lg p-6 bg-gradient-to-br from-[#1E3A32]/5 to-[#A6B7A3]/5">
+                <SEOAnalyzer
+                  title={formData.title}
+                  content={formData.content}
+                  excerpt={formData.excerpt}
+                  onApplySEO={(seoData) => {
+                    setFormData({
+                      ...formData,
+                      ...seoData
+                    });
+                  }}
+                />
+              </div>
               <div>
                 <Label>Meta Title</Label>
                 <Input
@@ -278,6 +340,18 @@ export default function BlogEditor() {
                   rows={2}
                 />
               </div>
+              {formData.seo_keywords && formData.seo_keywords.length > 0 && (
+                <div>
+                  <Label>SEO Keywords</Label>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {formData.seo_keywords.map((keyword, idx) => (
+                      <Badge key={idx} className="bg-[#A6B7A3]/20 text-[#1E3A32]">
+                        {keyword}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
