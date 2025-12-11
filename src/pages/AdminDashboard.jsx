@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { 
   PenSquare, FileVideo, Headphones, Mail, Users, FileText, 
-  ShoppingCart, ListTodo, Settings, BarChart3, Shield 
+  ShoppingCart, ListTodo, Settings, BarChart3, Shield, Sparkles, Target, Image, Download 
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -68,11 +68,80 @@ export default function AdminDashboard() {
           </p>
         </motion.div>
 
-        {/* Quick Actions */}
+        {/* Content Alchemy Suite - Featured */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
+          className="mb-12"
+        >
+          <div className="bg-gradient-to-br from-[#1E3A32] to-[#2B4A40] p-8 md:p-10 rounded-lg shadow-xl relative overflow-hidden">
+            {/* Decorative background */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#D8B46B] opacity-10 rounded-full -mr-32 -mt-32"></div>
+            
+            <div className="relative z-10">
+              <div className="flex items-start justify-between mb-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Sparkles size={24} className="text-[#D8B46B]" />
+                    <span className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase">Content Tools</span>
+                  </div>
+                  <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-3">
+                    Content Alchemy Suite
+                  </h2>
+                  <p className="text-[#F9F5EF]/80 text-lg max-w-2xl">
+                    Help Roberta transform every blog post into a multi-channel content empire. Build social strategy, create visuals, and drive organic reach.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <Target size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Social Media Transformer</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">LinkedIn, Instagram, Twitter, Facebook</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <Image size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Visual Intelligence</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">AI cover images & quote graphics</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <Download size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Lead Magnet Generator</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">PDF guides, worksheets & checklists</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                  <Sparkles size={20} className="text-[#D8B46B] mb-2" />
+                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">SEO Enchanter</p>
+                  <p className="text-[#F9F5EF]/60 text-xs">Meta tags, keywords & readability</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  to={createPageUrl("BlogEditor?mode=new")}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#D8B46B] text-[#1E3A32] font-medium hover:bg-[#F9F5EF] transition-all"
+                >
+                  <PenSquare size={18} />
+                  Create New Blog Post
+                </Link>
+                <Link
+                  to={createPageUrl("BlogManager")}
+                  className="inline-flex items-center gap-2 px-6 py-3 border border-[#F9F5EF]/30 text-[#F9F5EF] font-medium hover:bg-white/10 transition-all"
+                >
+                  Edit Existing Posts
+                </Link>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
           className="mb-12"
         >
           <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Admin Actions</h2>
@@ -96,7 +165,7 @@ export default function AdminDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.3 }}
           className="mb-12"
         >
           <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">System Overview</h2>
@@ -134,7 +203,7 @@ export default function AdminDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4 }}
         >
           <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Recent Activity</h2>
           <div className="grid lg:grid-cols-3 gap-6">
