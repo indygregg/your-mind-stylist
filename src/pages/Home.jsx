@@ -1,4 +1,5 @@
 import React from "react";
+import SEO from "../components/SEO";
 import HeroSection from "../components/home/HeroSection";
 import SocialProofStrip from "../components/home/SocialProofStrip";
 import WhatIDo from "../components/home/WhatIDo";

@@ -1,4 +1,5 @@
 import React from "react";
+import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
@@ -126,6 +127,11 @@ export default function InnerRehearsal() {
 
   return (
     <div className="bg-[#F9F5EF]">
+      <SEO
+        title="The Inner Rehearsal Sessions™ | Calm, Clarity & Identity Shifts"
+        description="Short, powerful guided Inner Rehearsal Sessions™ to reset your mind, regulate your nervous system, and rehearse your future self in minutes."
+        canonical="/inner-rehearsal"
+      />
       {/* Hero Section */}
       <section className="pt-32 pb-20">
         <div className="max-w-5xl mx-auto px-6">

@@ -88,6 +88,11 @@ export default function Blog() {
 
   return (
     <div className="bg-[#F9F5EF]">
+      <SEO
+        title="The Mind Styling Journal | Articles & Reflections"
+        description="The Mind Styling Journal offers weekly articles, Monday Mentions, and Thursday Thoughts on mindset, emotional intelligence, and inner pattern shifts."
+        canonical="/blog"
+      />
       {/* Hero Section */}
       <section className="pt-32 pb-20">
         <div className="max-w-5xl mx-auto px-6">

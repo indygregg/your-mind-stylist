@@ -1,4 +1,5 @@
 import React from "react";
+import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
@@ -88,6 +89,11 @@ export default function FreeMasterclass() {
 
   return (
     <div className="bg-[#F9F5EF]">
+      <SEO
+        title="Free Masterclass | Imposter Syndrome & Other Myths to Ditch"
+        description="An on-demand masterclass with The Mind Stylist on imposter syndrome and other myths to let go of so you can finally trust your own abilities."
+        canonical="/free-masterclass"
+      />
       {/* Hero Section */}
       <section className="pt-32 pb-20">
         <div className="max-w-5xl mx-auto px-6">

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
@@ -67,6 +68,11 @@ export default function Contact() {
 
   return (
     <div className="bg-[#F9F5EF]">
+      <SEO
+        title="Contact | The Mind Stylist"
+        description="Contact The Mind Stylist, Roberta Fernandez, to explore private work, organizational trainings, or questions about programs and Inner Rehearsal Sessions™."
+        canonical="/contact"
+      />
       {/* Hero Section */}
       <section className="pt-32 pb-20">
         <div className="max-w-5xl mx-auto px-6">
