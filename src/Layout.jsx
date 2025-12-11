@@ -155,7 +155,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         {/* Main Nav */}
-        <nav className="w-full px-6 py-4 flex justify-between items-center">
+        <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link to={createPageUrl("Home")} className="group">
             <div className="flex flex-col">
               <span className="text-[10px] md:text-xs text-[#2B2725]/60 tracking-[0.2em] uppercase">
