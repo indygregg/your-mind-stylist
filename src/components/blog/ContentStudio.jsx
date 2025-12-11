@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Copy, CheckCircle, Loader2, Image, Download } from "lucide-react";
+import { Sparkles, Copy, CheckCircle, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import VisualIntelligence from "./VisualIntelligence";
 
 export default function ContentStudio({ blogContent }) {
   return (
