@@ -16,6 +16,12 @@ import BlogManager from './pages/BlogManager';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminRoadmap from './pages/AdminRoadmap';
 import AdminUsers from './pages/AdminUsers';
+import StudioDashboard from './pages/StudioDashboard';
+import StudioDevDocs from './pages/StudioDevDocs';
+import StudioRoles from './pages/StudioRoles';
+import StudioLegal from './pages/StudioLegal';
+import StudioSettings from './pages/StudioSettings';
+import StudioLogs from './pages/StudioLogs';
 import __Layout from './Layout.jsx';
 
 
@@ -38,6 +44,12 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "AdminRoadmap": AdminRoadmap,
     "AdminUsers": AdminUsers,
+    "StudioDashboard": StudioDashboard,
+    "StudioDevDocs": StudioDevDocs,
+    "StudioRoles": StudioRoles,
+    "StudioLegal": StudioLegal,
+    "StudioSettings": StudioSettings,
+    "StudioLogs": StudioLogs,
 }
 
 export const pagesConfig = {
