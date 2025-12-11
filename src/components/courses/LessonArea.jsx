@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, StickyNote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import VideoPlayer from "./VideoPlayer";
+import CourseAudioPlayer from "./CourseAudioPlayer";
 
-export default function LessonArea({ lesson, isCompleted, onMarkComplete, onAddNote }) {
+export default function LessonArea({ lesson, isCompleted, onMarkComplete, onAddNote, onProgressUpdate, lastPosition }) {
   const getTypeLabel = (type) => {
     const labels = {
       video: "Video Lesson",
@@ -30,37 +32,23 @@ export default function LessonArea({ lesson, isCompleted, onMarkComplete, onAddN
         {/* Video Player */}
         {(lesson.type === "video" || lesson.type === "hybrid") && (
           <div className="mb-8 bg-black rounded-lg overflow-hidden">
-            {lesson.embed_url ? (
-              <div className="aspect-video">
-                <iframe
-                  src={lesson.embed_url}
-                  className="w-full h-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              </div>
-            ) : lesson.media_url ? (
-              <video
-                controls
-                className="w-full"
-                src={lesson.media_url}
-              >
-                Your browser does not support the video tag.
-              </video>
-            ) : (
-              <div className="aspect-video flex items-center justify-center text-white">
-                Video content coming soon
-              </div>
-            )}
+            <VideoPlayer
+              src={lesson.media_url}
+              embedUrl={lesson.embed_url}
+              onProgressUpdate={onProgressUpdate}
+              lastPosition={lastPosition}
+            />
           </div>
         )}
 
         {/* Audio Player */}
         {lesson.type === "audio" && lesson.media_url && (
           <div className="mb-8">
-            <audio controls className="w-full" src={lesson.media_url}>
-              Your browser does not support the audio element.
-            </audio>
+            <CourseAudioPlayer
+              src={lesson.media_url}
+              onProgressUpdate={onProgressUpdate}
+              lastPosition={lastPosition}
+            />
           </div>
         )}
 

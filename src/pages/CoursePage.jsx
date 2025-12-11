@@ -114,6 +114,26 @@ export default function CoursePage() {
     },
   });
 
+  // Update lesson progress (watch time)
+  const progressUpdateMutation = useMutation({
+    mutationFn: async ({ lessonId, watchTime }) => {
+      const existingProgress = userLessonProgress.find(p => p.lesson_id === lessonId);
+      if (existingProgress) {
+        return base44.entities.UserLessonProgress.update(existingProgress.id, {
+          watch_time: watchTime,
+          last_position: watchTime,
+        });
+      } else {
+        return base44.entities.UserLessonProgress.create({
+          user_id: user.id,
+          lesson_id: lessonId,
+          watch_time: watchTime,
+          last_position: watchTime,
+        });
+      }
+    },
+  });
+
   // Mark lesson complete
   const lessonCompleteMutation = useMutation({
     mutationFn: async (lessonId) => {
@@ -169,11 +189,14 @@ export default function CoursePage() {
     lessonCompleteMutation.mutate(currentLessonId);
   };
 
+  const handleProgressUpdate = (watchTime) => {
+    progressUpdateMutation.mutate({ lessonId: currentLessonId, watchTime });
+  };
+
   const currentLesson = allLessons.find(l => l.id === currentLessonId);
   const completedLessons = userLessonProgress.filter(p => p.completed).length;
-  const isCurrentLessonCompleted = userLessonProgress.find(
-    p => p.lesson_id === currentLessonId
-  )?.completed;
+  const currentLessonProgress = userLessonProgress.find(p => p.lesson_id === currentLessonId);
+  const isCurrentLessonCompleted = currentLessonProgress?.completed;
 
   if (!course) {
     return (
@@ -206,6 +229,8 @@ export default function CoursePage() {
             isCompleted={isCurrentLessonCompleted}
             onMarkComplete={handleMarkComplete}
             onAddNote={() => setNotesDrawerOpen(true)}
+            onProgressUpdate={handleProgressUpdate}
+            lastPosition={currentLessonProgress?.last_position || 0}
           />
         )}
       </div>
