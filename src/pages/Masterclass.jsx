@@ -218,7 +218,7 @@ export default function Masterclass() {
           </p>
           <div className="space-y-3">
             <Link
-              to={createPageUrl("Certification")}
+              to={createPageUrl("Evolution")}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
               <h3 className="font-medium text-[#1E3A32] mb-1">The Mind Styling Certification™</h3>

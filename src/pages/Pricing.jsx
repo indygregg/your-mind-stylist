@@ -19,7 +19,7 @@ export default function Pricing() {
 
   const certification = {
     icon: Layers,
-    title: "The Mind Styling Certification™",
+    title: "Mind Styling Evolution™",
     tagline: "The Complete Inner Transformation",
     description: "The flagship program. Edit → Tailor → Design your mental operating system.",
     features: [
@@ -109,7 +109,7 @@ export default function Pricing() {
     <div className="bg-[#F9F5EF]">
       <SEO
         title="Pricing | The Mind Stylist"
-        description="Choose your path: The Mind Styling Certification™, Inner Rehearsal Sessions™, Private Mind Styling, or start with the free masterclass."
+        description="Choose your path: Mind Styling Evolution™, Inner Rehearsal Sessions™, Private Mind Styling, or start with the free masterclass."
         canonical="/pricing"
       />
 

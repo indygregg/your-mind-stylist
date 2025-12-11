@@ -373,7 +373,7 @@ export default function Contact() {
 
             <div className="grid md:grid-cols-2 gap-4 mb-10">
               <Link
-                to={createPageUrl("Certification")}
+                to={createPageUrl("Evolution")}
                 className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors flex items-center gap-2"
               >
                 <span className="text-[#D8B46B]">✦</span>
