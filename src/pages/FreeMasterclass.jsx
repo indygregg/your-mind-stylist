@@ -7,7 +7,7 @@ import { ArrowRight, Play, CheckCircle, Lightbulb, Shield, Brain, Users, Star } 
 export default function FreeMasterclass() {
   const learnings = [
     "What imposter syndrome really is — and what it isn't",
-    "The emotional and cognitive patterns behind "I'm not enough"",
+    "The emotional and cognitive patterns behind \"I'm not enough\"",
     "Why high performers and leaders are especially vulnerable to it",
     "How your mind creates stories about worth, competence, and belonging",
     "Practical ways to interrupt the imposter loop when it shows up",
@@ -17,7 +17,7 @@ export default function FreeMasterclass() {
   const forYouIf = [
     "You're successful on paper but still feel like you're winging it",
     "You downplay your achievements or feel uncomfortable owning them",
-    "You worry others will "find out" you're not as capable as they think",
+    "You worry others will \"find out\" you're not as capable as they think",
     "You compare yourself constantly and come up short",
     "You feel pressure to perform perfectly to feel safe or worthy",
     "You lead others, but privately question your legitimacy",
@@ -51,7 +51,7 @@ export default function FreeMasterclass() {
     {
       number: "2",
       title: "Access the masterclass",
-      description: "You'll find the video inside your portal under "Imposter Syndrome & Other Myths to Ditch."",
+      description: "You'll find the video inside your portal under \"Imposter Syndrome & Other Myths to Ditch.\"",
     },
     {
       number: "3",
