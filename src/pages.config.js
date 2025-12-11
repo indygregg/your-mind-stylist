@@ -10,6 +10,7 @@ import Podcast from './pages/Podcast';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
+import BlogPost from './pages/BlogPost';
 import __Layout from './Layout.jsx';
 
 
@@ -26,6 +27,7 @@ export const PAGES = {
     "Blog": Blog,
     "Contact": Contact,
     "Dashboard": Dashboard,
+    "BlogPost": BlogPost,
 }
 
 export const pagesConfig = {
