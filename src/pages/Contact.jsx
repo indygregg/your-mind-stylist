@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
@@ -25,6 +25,17 @@ export default function Contact() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const interest = urlParams.get("interest");
+    if (interest === "private-sessions") {
+      setFormData(prev => ({
+        ...prev,
+        interests: ["Private Mind Styling (1:1)"]
+      }));
+    }
+  }, []);
 
   const interestOptions = [
     "The Mind Styling Certification™",
