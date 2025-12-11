@@ -6,11 +6,11 @@ import { createPageUrl } from "../utils";
 import OnboardingModal from "../components/onboarding/OnboardingModal";
 import PaymentFailureBanner from "../components/purchase/PaymentFailureBanner";
 import { base44 } from "@/api/base44Client";
-import EmotionalWeather from "../components/studio/EmotionalWeather";
-import DailyPocketPrompt from "../components/studio/DailyPocketPrompt";
-import ConstellationMap from "../components/studio/ConstellationMap";
-import InnerMomentumMeter from "../components/studio/InnerMomentumMeter";
-import NotesDrawer from "../components/studio/NotesDrawer";
+import EmotionalWeather from "@/components/studio/EmotionalWeather";
+import DailyPocketPrompt from "@/components/studio/DailyPocketPrompt";
+import ConstellationMap from "@/components/studio/ConstellationMap";
+import InnerMomentumMeter from "@/components/studio/InnerMomentumMeter";
+import NotesDrawer from "@/components/studio/NotesDrawer";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
