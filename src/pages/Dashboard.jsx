@@ -4,6 +4,8 @@ import { Layers, Sparkles, BookOpen, Calendar, Play, User, Edit3 } from "lucide-
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import OnboardingModal from "../components/onboarding/OnboardingModal";
+import OnboardingChecklist from "../components/onboarding/OnboardingChecklist";
+import DashboardTooltips from "../components/onboarding/DashboardTooltips";
 import PaymentFailureBanner from "../components/purchase/PaymentFailureBanner";
 import { base44 } from "@/api/base44Client";
 import EmotionalWeather from "@/components/studio/EmotionalWeather";
@@ -121,6 +123,7 @@ export default function Dashboard() {
   return (
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
       {user && <OnboardingModal role="user" />}
+      <DashboardTooltips />
       <NotesDrawer
         isOpen={notesDrawerOpen}
         onClose={() => setNotesDrawerOpen(false)}
@@ -132,6 +135,9 @@ export default function Dashboard() {
           status={subscriptionStatus}
           onUpdatePayment={handleUpdatePayment}
         />
+
+        {/* Onboarding Checklist */}
+        {user && <OnboardingChecklist user={user} />}
         
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -160,17 +166,25 @@ export default function Dashboard() {
 
           {/* Mind Styling Studio Hub */}
           <div className="grid lg:grid-cols-2 gap-6 mb-12">
-            <EmotionalWeather sentiment={studioStats?.sentiment} />
-            <DailyPocketPrompt 
-              prompt={dailyPrompt?.prompt_text}
-              onCreateNote={() => setNotesDrawerOpen(true)}
-            />
+            <div data-tour="emotional-weather">
+              <EmotionalWeather sentiment={studioStats?.sentiment} />
+            </div>
+            <div data-tour="daily-prompt">
+              <DailyPocketPrompt 
+                prompt={dailyPrompt?.prompt_text}
+                onCreateNote={() => setNotesDrawerOpen(true)}
+              />
+            </div>
           </div>
 
           {/* Constellation & Momentum */}
           <div className="grid lg:grid-cols-2 gap-6 mb-12">
-            <ConstellationMap totalPoints={studioStats?.constellation?.totalPoints || 0} />
-            <InnerMomentumMeter weeklyPoints={studioStats?.momentum?.weeklyPoints || 0} />
+            <div data-tour="constellation">
+              <ConstellationMap totalPoints={studioStats?.constellation?.totalPoints || 0} />
+            </div>
+            <div data-tour="momentum">
+              <InnerMomentumMeter weeklyPoints={studioStats?.momentum?.weeklyPoints || 0} />
+            </div>
           </div>
 
           {/* Upcoming Sessions */}
