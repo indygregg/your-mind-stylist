@@ -2,6 +2,7 @@ import React from "react";
 import SEO from "../components/SEO";
 import { motion } from "framer-motion";
 import { Headphones } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function Podcast() {
   return (
@@ -20,18 +21,42 @@ export default function Podcast() {
         >
           <Headphones size={48} className="text-[#D8B46B] mx-auto mb-6" />
           <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-            Podcast
+            <CmsText 
+              contentKey="podcast.hero.subtitle" 
+              page="Podcast"
+              blockTitle="Hero Subtitle"
+              fallback="Podcast" 
+              contentType="short_text"
+            />
           </span>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
-            Activated Dialogue
+            <CmsText 
+              contentKey="podcast.hero.title" 
+              page="Podcast"
+              blockTitle="Hero Title"
+              fallback="Activated Dialogue" 
+              contentType="short_text"
+            />
           </h1>
           <p className="text-[#2B2725]/80 text-lg max-w-2xl mx-auto mb-12">
-            Deeper conversations about emotional intelligence, change, and conscious living.
+            <CmsText 
+              contentKey="podcast.hero.description" 
+              page="Podcast"
+              blockTitle="Hero Description"
+              fallback="Deeper conversations about emotional intelligence, change, and conscious living." 
+              contentType="rich_text"
+            />
           </p>
 
           <div className="bg-white p-12 text-center">
             <p className="text-[#2B2725]/60">
-              Podcast episodes coming soon. Subscribe to stay updated.
+              <CmsText 
+                contentKey="podcast.comingsoon" 
+                page="Podcast"
+                blockTitle="Coming Soon Message"
+                fallback="Podcast episodes coming soon. Subscribe to stay updated." 
+                contentType="rich_text"
+              />
             </p>
           </div>
         </motion.div>
