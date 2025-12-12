@@ -78,6 +78,7 @@ import Diary from './pages/Diary';
 import StudioRevisions from './pages/StudioRevisions';
 import CoursePreview from './pages/CoursePreview';
 import StylePauses from './pages/StylePauses';
+import BuyPrograms from './pages/BuyPrograms';
 import __Layout from './Layout.jsx';
 
 
@@ -162,6 +163,7 @@ export const PAGES = {
     "StudioRevisions": StudioRevisions,
     "CoursePreview": CoursePreview,
     "StylePauses": StylePauses,
+    "BuyPrograms": BuyPrograms,
 }
 
 export const pagesConfig = {
