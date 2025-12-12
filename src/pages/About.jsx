@@ -60,9 +60,9 @@ export default function About() {
   const offerings = [
     {
       icon: Layers,
-      title: "The Mind Styling Evolution™",
-      description: "A three-part redesign of your mental operating system.",
-      link: "Evolution",
+      title: "Cleaning Out Your Closet",
+      description: "One-on-one hypnosis work to release old patterns and step into your future self.",
+      link: "CleaningOutYourCloset",
     },
     {
       icon: Users,

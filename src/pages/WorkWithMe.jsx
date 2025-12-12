@@ -10,14 +10,14 @@ export default function WorkWithMe() {
     {
       overline: "Signature Program",
       icon: Layers,
-      title: "Mind Styling Evolution™",
-      tagline: "A three-part inner redesign for people ready for a new mental operating system.",
+      title: "Cleaning Out Your Closet",
+      tagline: "One-on-one hypnosis work to release old patterns and step into your future self.",
       description:
-        "If you want to shift identity, break old patterns, and elevate your emotional intelligence, this is your foundational program. Through the Edit → Tailor → Design framework, you'll learn how to recognize, release, and restyle the patterns shaping your choices, relationships, and leadership.",
+        "This is where deep transformation happens. Working privately with Roberta, you'll identify the patterns that no longer serve you, release outdated beliefs, and redesign your mindset from the inside out through the Edit → Tailor → Design framework.",
       perfectFor:
         "Individuals seeking meaningful change, leaders, professionals, creatives, and anyone tired of repeating old stories.",
-      cta: "Explore Mind Styling Evolution",
-      link: "Evolution",
+      cta: "Explore Cleaning Out Your Closet",
+      link: "CleaningOutYourCloset",
       color: "#1E3A32",
       bg: "bg-white",
     },
@@ -91,7 +91,7 @@ export default function WorkWithMe() {
               organizational support for your team, there is a Mind Styling path designed for you.
             </p>
             <Link
-              to={createPageUrl("Contact")}
+              to={createPageUrl("Bookings")}
               className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
             >
               Schedule Your Complimentary Consultation
@@ -222,7 +222,7 @@ export default function WorkWithMe() {
             </p>
 
             <Link
-              to={createPageUrl("Contact")}
+              to={createPageUrl("Bookings")}
               className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
             >
               Schedule Your Complimentary Consultation
