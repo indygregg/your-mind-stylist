@@ -25,6 +25,30 @@ export default function Dashboard() {
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const [pastBookings, setPastBookings] = useState([]);
 
+  const fetchBookings = async (currentUser) => {
+    const allBookings = await base44.entities.Booking.filter({ user_email: currentUser.email });
+    const now = new Date();
+    
+    const upcoming = allBookings.filter(b => 
+      ['confirmed', 'scheduled', 'pending_payment'].includes(b.booking_status) &&
+      (!b.scheduled_date || new Date(b.scheduled_date) >= now)
+    ).sort((a, b) => {
+      if (!a.scheduled_date) return 1;
+      if (!b.scheduled_date) return -1;
+      return new Date(a.scheduled_date) - new Date(b.scheduled_date);
+    });
+    
+    const past = allBookings.filter(b => 
+      b.booking_status === 'completed' || 
+      b.booking_status === 'cancelled' ||
+      b.booking_status === 'expired' ||
+      (b.scheduled_date && new Date(b.scheduled_date) < now)
+    ).sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+    
+    setUpcomingBookings(upcoming);
+    setPastBookings(past);
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -65,28 +89,7 @@ export default function Dashboard() {
         }
         
         // Fetch bookings
-        const allBookings = await base44.entities.Booking.filter({ user_email: currentUser.email });
-        const now = new Date();
-        
-        // Split into upcoming and past
-        const upcoming = allBookings.filter(b => 
-          ['confirmed', 'scheduled', 'pending_payment'].includes(b.booking_status) &&
-          (!b.scheduled_date || new Date(b.scheduled_date) >= now)
-        ).sort((a, b) => {
-          if (!a.scheduled_date) return 1;
-          if (!b.scheduled_date) return -1;
-          return new Date(a.scheduled_date) - new Date(b.scheduled_date);
-        });
-        
-        const past = allBookings.filter(b => 
-          b.booking_status === 'completed' || 
-          b.booking_status === 'cancelled' ||
-          b.booking_status === 'expired' ||
-          (b.scheduled_date && new Date(b.scheduled_date) < now)
-        ).sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
-        
-        setUpcomingBookings(upcoming);
-        setPastBookings(past);
+        await fetchBookings(currentUser);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -166,7 +169,13 @@ export default function Dashboard() {
           {upcomingBookings.length > 0 && (
             <div className="mb-12">
               <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Your Upcoming Sessions</h2>
-              <UpcomingSessions bookings={upcomingBookings} />
+              <UpcomingSessions 
+                bookings={upcomingBookings} 
+                onRefresh={async () => {
+                  const currentUser = await base44.auth.me();
+                  await fetchBookings(currentUser);
+                }} 
+              />
             </div>
           )}
 

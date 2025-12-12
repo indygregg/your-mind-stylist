@@ -4,8 +4,9 @@ import { Calendar, Video, Clock, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import BookingActions from "./BookingActions";
 
-export default function UpcomingSessions({ bookings }) {
+export default function UpcomingSessions({ bookings, onRefresh }) {
   if (!bookings || bookings.length === 0) {
     return (
       <div className="bg-white p-8 text-center">
@@ -83,6 +84,8 @@ export default function UpcomingSessions({ bookings }) {
               </p>
             </div>
           )}
+
+          <BookingActions booking={booking} onSuccess={onRefresh} />
         </motion.div>
       ))}
     </div>
