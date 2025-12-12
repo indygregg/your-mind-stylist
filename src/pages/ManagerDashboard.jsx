@@ -4,7 +4,7 @@ import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings, Clock, CheckCircle, Circle, X } from "lucide-react";
+import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings, Clock, CheckCircle, Circle, X, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function ManagerDashboard() {
@@ -253,6 +253,71 @@ export default function ManagerDashboard() {
             </div>
           </motion.div>
         )}
+
+        {/* Analytics Dashboard Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-12"
+        >
+          <Link to={createPageUrl("ManagerAnalytics")}>
+            <div className="bg-gradient-to-br from-[#6E4F7D] to-[#8B659B] p-8 md:p-10 shadow-xl relative overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer">
+              {/* Decorative background */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-32 -mt-32"></div>
+
+              <div className="relative z-10">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-3">
+                      <BarChart3 size={28} className="text-white" />
+                      <span className="text-white/80 text-xs tracking-[0.2em] uppercase">Live Dashboard</span>
+                    </div>
+                    <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
+                      Booking Analytics
+                    </h2>
+                    <p className="text-white/80 text-lg max-w-2xl">
+                      Track your business performance, revenue trends, and client insights in real-time.
+                    </p>
+                  </div>
+                  <div className="hidden md:block">
+                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                      <TrendingUp size={24} className="text-white" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                    <DollarSign size={20} className="text-white/80 mb-2" />
+                    <p className="text-white text-sm font-medium mb-1">Revenue Tracking</p>
+                    <p className="text-white/60 text-xs">Daily, weekly, monthly</p>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                    <Calendar size={20} className="text-white/80 mb-2" />
+                    <p className="text-white text-sm font-medium mb-1">Booking Volume</p>
+                    <p className="text-white/60 text-xs">Popular services</p>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                    <Users size={20} className="text-white/80 mb-2" />
+                    <p className="text-white text-sm font-medium mb-1">Client Retention</p>
+                    <p className="text-white/60 text-xs">Returning clients</p>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
+                    <TrendingUp size={20} className="text-white/80 mb-2" />
+                    <p className="text-white text-sm font-medium mb-1">Performance</p>
+                    <p className="text-white/60 text-xs">Service metrics</p>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex items-center gap-2 text-white group-hover:gap-3 transition-all">
+                  <span className="text-sm font-medium">View Full Analytics Dashboard</span>
+                  <span className="text-lg">→</span>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </motion.div>
 
         {/* Content Alchemy Suite - Featured */}
         <motion.div
