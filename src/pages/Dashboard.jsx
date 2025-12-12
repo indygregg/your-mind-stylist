@@ -17,6 +17,8 @@ import RecommendationCard from "@/components/studio/RecommendationCard";
 import UpcomingSessions from "@/components/dashboard/UpcomingSessions";
 import BookingHistory from "@/components/dashboard/BookingHistory";
 import NextSessionWidget from "@/components/dashboard/NextSessionWidget";
+import DailyStyleCheck from "@/components/studio/DailyStyleCheck";
+import { Button } from "@/components/ui/button";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -131,6 +133,13 @@ export default function Dashboard() {
         sourceType="freeform"
       />
       
+      {showStyleCheck && (
+        <DailyStyleCheck
+          onClose={() => setShowStyleCheck(false)}
+          onComplete={() => setShowStyleCheck(false)}
+        />
+      )}
+      
       <div className="max-w-6xl mx-auto px-6">
         <PaymentFailureBanner 
           status={subscriptionStatus}
@@ -164,6 +173,24 @@ export default function Dashboard() {
               <NextSessionWidget booking={upcomingBookings[0]} />
             </div>
           )}
+
+          {/* Daily Style Check CTA */}
+          <div className="mb-8">
+            <div className="bg-gradient-to-r from-[#D8B46B] to-[#C9A55A] p-6 rounded-lg text-white">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-serif text-xl mb-2">Daily Style Check™</h3>
+                  <p className="text-white/90 text-sm">Quick check-in • Everything optional</p>
+                </div>
+                <Button
+                  onClick={() => setShowStyleCheck(true)}
+                  className="bg-white text-[#1E3A32] hover:bg-white/90"
+                >
+                  Check In Now
+                </Button>
+              </div>
+            </div>
+          </div>
 
           {/* Mind Styling Studio Hub */}
           <div className="grid lg:grid-cols-2 gap-6 mb-12">
