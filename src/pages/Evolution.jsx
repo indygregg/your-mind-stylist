@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Edit3, Scissors, Sparkles } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function Evolution() {
   const phases = [
@@ -139,19 +140,41 @@ export default function Evolution() {
             className="text-center"
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              Signature Program
+              <CmsText 
+                contentKey="evolution.hero.subtitle" 
+                page="Evolution"
+                blockTitle="Hero Subtitle"
+                fallback="Signature Program" 
+                contentType="short_text"
+              />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
-              Mind Styling Evolution™
+              <CmsText 
+                contentKey="evolution.hero.title" 
+                page="Evolution"
+                blockTitle="Hero Title"
+                fallback="Mind Styling Evolution™" 
+                contentType="short_text"
+              />
             </h1>
             <p className="text-[#1E3A32] font-serif text-2xl md:text-3xl italic mb-8">
-              A three-part inner redesign for people ready for a new mental operating system.
+              <CmsText 
+                contentKey="evolution.hero.tagline" 
+                page="Evolution"
+                blockTitle="Hero Tagline"
+                fallback="A three-part inner redesign for people ready for a new mental operating system." 
+                contentType="short_text"
+              />
             </p>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-3xl mx-auto">
-              When your mindset shifts, everything else in your life begins to realign. This
-              program is designed to help you understand how your mind actually works, release
-              the patterns that no longer fit, and become the person you've been trying to step into.
+              <CmsText 
+                contentKey="evolution.hero.description" 
+                page="Evolution"
+                blockTitle="Hero Description"
+                fallback="When your mindset shifts, everything else in your life begins to realign. This program is designed to help you understand how your mind actually works, release the patterns that no longer fit, and become the person you've been trying to step into." 
+                contentType="rich_text"
+              />
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -185,13 +208,23 @@ export default function Evolution() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              Who This Program Is Designed For
+              <CmsText 
+                contentKey="evolution.for.title" 
+                page="Evolution"
+                blockTitle="Who This Is For Title"
+                fallback="Who This Program Is Designed For" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
-              This program is for individuals who are ready for more than surface-level mindset work.
-              It's for people who are done repeating the same stories, outgrowing old patterns, and
-              feeling stuck between who they are and who they want to be.
+              <CmsText 
+                contentKey="evolution.for.intro" 
+                page="Evolution"
+                blockTitle="Who This Is For Intro"
+                fallback="This program is for individuals who are ready for more than surface-level mindset work. It's for people who are done repeating the same stories, outgrowing old patterns, and feeling stuck between who they are and who they want to be." 
+                contentType="rich_text"
+              />
             </p>
 
             <div className="bg-[#F9F5EF] p-8 mb-8">
@@ -207,8 +240,13 @@ export default function Evolution() {
             </div>
 
             <p className="font-serif text-xl text-[#1E3A32] italic">
-              If you're ready to think from where you want to be — not where you've been — this is
-              your path.
+              <CmsText 
+                contentKey="evolution.for.closing" 
+                page="Evolution"
+                blockTitle="Who This Is For Closing"
+                fallback="If you're ready to think from where you want to be — not where you've been — this is your path." 
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -224,10 +262,22 @@ export default function Evolution() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
-              How Mind Styling Evolution Works
+              <CmsText 
+                contentKey="evolution.overview.title" 
+                page="Evolution"
+                blockTitle="Overview Title"
+                fallback="How Mind Styling Evolution Works" 
+                contentType="short_text"
+              />
             </h2>
             <p className="text-[#2B2725]/70 text-lg">
-              A three-part, editorial-style process based on the Mind Stylist method
+              <CmsText 
+                contentKey="evolution.overview.subtitle" 
+                page="Evolution"
+                blockTitle="Overview Subtitle"
+                fallback="A three-part, editorial-style process based on the Mind Stylist method" 
+                contentType="short_text"
+              />
             </p>
           </motion.div>
 
@@ -337,7 +387,13 @@ export default function Evolution() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-10">
-              What's Included in Mind Styling Evolution
+              <CmsText 
+                contentKey="evolution.included.title" 
+                page="Evolution"
+                blockTitle="What's Included Title"
+                fallback="What's Included in Mind Styling Evolution" 
+                contentType="short_text"
+              />
             </h2>
 
             <div className="grid md:grid-cols-2 gap-4">
@@ -361,11 +417,23 @@ export default function Evolution() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] mb-10">
-              The Transformation You Can Expect
+              <CmsText 
+                contentKey="evolution.outcomes.title" 
+                page="Evolution"
+                blockTitle="Outcomes Title"
+                fallback="The Transformation You Can Expect" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg mb-10">
-              By the end of this program, you will:
+              <CmsText 
+                contentKey="evolution.outcomes.intro" 
+                page="Evolution"
+                blockTitle="Outcomes Intro"
+                fallback="By the end of this program, you will:" 
+                contentType="short_text"
+              />
             </p>
 
             <div className="grid md:grid-cols-2 gap-4 mb-10">
@@ -378,7 +446,13 @@ export default function Evolution() {
             </div>
 
             <p className="font-serif text-2xl text-[#D8B46B] italic text-center">
-              This is a complete internal redesign.
+              <CmsText 
+                contentKey="evolution.outcomes.closing" 
+                page="Evolution"
+                blockTitle="Outcomes Closing"
+                fallback="This is a complete internal redesign." 
+                contentType="short_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -393,7 +467,13 @@ export default function Evolution() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-12 text-center">
-              Frequently Asked Questions
+              <CmsText 
+                contentKey="evolution.faq.title" 
+                page="Evolution"
+                blockTitle="FAQ Title"
+                fallback="Frequently Asked Questions" 
+                contentType="short_text"
+              />
             </h2>
 
             <div className="space-y-8">
@@ -426,12 +506,23 @@ export default function Evolution() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
-              Begin Your Mind Styling Evolution
+              <CmsText 
+                contentKey="evolution.cta.title" 
+                page="Evolution"
+                blockTitle="CTA Title"
+                fallback="Begin Your Mind Styling Evolution" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
-              When you change your thinking, you change everything — your confidence, relationships,
-              leadership, and sense of possibility.
+              <CmsText 
+                contentKey="evolution.cta.description" 
+                page="Evolution"
+                blockTitle="CTA Description"
+                fallback="When you change your thinking, you change everything — your confidence, relationships, leadership, and sense of possibility." 
+                contentType="rich_text"
+              />
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
