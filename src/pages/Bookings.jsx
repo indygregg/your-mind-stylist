@@ -1,17 +1,84 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, Video, CheckCircle, ArrowRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar, Clock, Video, CheckCircle, ArrowRight, ArrowLeft, Settings } from "lucide-react";
 import { createPageUrl } from "../utils";
 import SEO from "../components/SEO";
+import BookingCalendar from "@/components/booking/BookingCalendar";
+import { format } from "date-fns";
 
 export default function Bookings() {
+  const [step, setStep] = useState(1); // 1: Browse types, 2: Select slot, 3: Enter details, 4: Confirming
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [user, setUser] = useState(null);
+  const [clientDetails, setClientDetails] = useState({
+    name: "",
+    email: "",
+    notes: ""
+  });
+
   const { data: appointmentTypes = [], isLoading } = useQuery({
     queryKey: ["appointmentTypes"],
     queryFn: () => base44.entities.AppointmentType.filter({ active: true }),
   });
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+        setClientDetails({
+          name: currentUser.full_name || "",
+          email: currentUser.email || "",
+          notes: ""
+        });
+      } catch (error) {
+        // User not logged in
+      }
+    };
+    loadUser();
+  }, []);
+
+  const handleSelectAppointment = (apt) => {
+    setSelectedAppointment(apt);
+    setStep(2);
+  };
+
+  const handleSelectSlot = (slot) => {
+    setSelectedSlot(slot);
+    setStep(3);
+  };
+
+  const handleSubmitDetails = async () => {
+    if (!clientDetails.name || !clientDetails.email) {
+      alert("Please fill in your name and email");
+      return;
+    }
+
+    setStep(4); // Show confirming state
+
+    try {
+      const response = await base44.functions.invoke('createBookingCheckout', {
+        appointment_type_id: selectedAppointment.id,
+        scheduled_date: selectedSlot.start,
+        client_name: clientDetails.name,
+        client_email: clientDetails.email,
+        client_notes: clientDetails.notes
+      });
+
+      // Redirect to Stripe checkout
+      window.location.href = response.data.checkout_url;
+    } catch (error) {
+      alert('Failed to create booking: ' + error.message);
+      setStep(3);
+    }
+  };
 
   const formatPrice = (cents) => {
     return new Intl.NumberFormat("en-US", {
@@ -19,6 +86,16 @@ export default function Bookings() {
       currency: "USD",
       minimumFractionDigits: 0,
     }).format(cents / 100);
+  };
+
+  const getPriceLabel = (apt) => {
+    if (apt.price === 0) return "No payment required";
+    return "Payment required to confirm";
+  };
+
+  const getCtaLabel = (apt) => {
+    if (apt.price === 0) return "Book This Session";
+    return "Continue to Secure Checkout";
   };
 
   const serviceCategories = {
@@ -47,6 +124,9 @@ export default function Bookings() {
     return acc;
   }, {});
 
+  // Manager view banner
+  const isManager = user?.role === 'admin' || user?.role === 'manager';
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
@@ -66,8 +146,39 @@ export default function Bookings() {
       />
       
       <div className="min-h-screen bg-[#F9F5EF]">
-        {/* Hero Section */}
-        <section className="relative pt-32 pb-20 px-6 bg-gradient-to-br from-[#1E3A32] to-[#2B4A40] text-white">
+        {/* Manager View Banner */}
+        {isManager && step === 1 && (
+          <div className="bg-[#1E3A32] text-white py-3 px-6">
+            <div className="max-w-6xl mx-auto flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Settings size={18} />
+                <span className="text-sm font-medium">Manager View</span>
+              </div>
+              <div className="flex gap-3">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="text-[#1E3A32]"
+                  onClick={() => window.location.href = createPageUrl('ManagerCalendar')}
+                >
+                  Open Calendar
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="text-[#1E3A32]"
+                  onClick={() => window.location.href = createPageUrl('ManagerAppointments')}
+                >
+                  Edit Appointment Types
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Hero Section - Only show on step 1 */}
+        {step === 1 && (
+          <section className="relative pt-32 pb-20 px-6 bg-gradient-to-br from-[#1E3A32] to-[#2B4A40] text-white">
           <div className="max-w-5xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -86,9 +197,51 @@ export default function Bookings() {
             </motion.div>
           </div>
         </section>
+        )}
 
-        {/* How It Works */}
-        <section className="py-16 px-6 bg-white">
+        {/* Progress Indicator - Show on steps 2, 3, 4 */}
+        {step > 1 && step < 4 && (
+          <div className="bg-white border-b border-[#E4D9C4] py-6 px-6">
+            <div className="max-w-3xl mx-auto">
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => setStep(step - 1)}
+                  className="flex items-center gap-2 text-[#2B2725]/70 hover:text-[#1E3A32]"
+                >
+                  <ArrowLeft size={18} />
+                  <span className="text-sm">Back</span>
+                </button>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
+                      step >= 1 ? 'bg-[#D8B46B] text-white' : 'bg-[#E4D9C4] text-[#2B2725]/60'
+                    }`}>1</div>
+                    <span className="text-xs hidden sm:inline">Service</span>
+                  </div>
+                  <div className="w-8 h-[2px] bg-[#E4D9C4]"></div>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
+                      step >= 2 ? 'bg-[#D8B46B] text-white' : 'bg-[#E4D9C4] text-[#2B2725]/60'
+                    }`}>2</div>
+                    <span className="text-xs hidden sm:inline">Time</span>
+                  </div>
+                  <div className="w-8 h-[2px] bg-[#E4D9C4]"></div>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium ${
+                      step >= 3 ? 'bg-[#D8B46B] text-white' : 'bg-[#E4D9C4] text-[#2B2725]/60'
+                    }`}>3</div>
+                    <span className="text-xs hidden sm:inline">Details</span>
+                  </div>
+                </div>
+                <div className="w-20"></div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* How It Works - Only show on step 1 */}
+        {step === 1 && (
+          <section className="py-16 px-6 bg-white">
           <div className="max-w-5xl mx-auto">
             <h2 className="font-serif text-3xl text-[#1E3A32] text-center mb-12">
               How It Works
@@ -136,9 +289,11 @@ export default function Bookings() {
             </div>
           </div>
         </section>
+        )}
 
-        {/* Services Grid */}
-        <section className="py-20 px-6">
+        {/* Step 1: Services Grid */}
+        {step === 1 && (
+          <section className="py-20 px-6">
           <div className="max-w-6xl mx-auto">
             {Object.entries(groupedServices).map(([type, services]) => {
               const category = serviceCategories[type];
@@ -209,11 +364,14 @@ export default function Bookings() {
                               </div>
                               <Button 
                                 className="w-full bg-[#1E3A32] hover:bg-[#2B4A40] text-white"
-                                onClick={() => window.location.href = createPageUrl(`BookAppointment?type=${service.id}`)}
+                                onClick={() => handleSelectAppointment(service)}
                               >
-                                Book Now
+                                {getCtaLabel(service)}
                                 <ArrowRight size={18} className="ml-2" />
                               </Button>
+                              <p className="text-xs text-center text-[#2B2725]/60 mt-2">
+                                You'll choose a date and time next.
+                              </p>
                             </div>
                           </div>
                         </motion.div>
@@ -224,9 +382,126 @@ export default function Bookings() {
             })}
           </div>
         </section>
+        )}
 
-        {/* CTA Section */}
-        <section className="py-20 px-6 bg-[#1E3A32] text-white">
+        {/* Step 2: Calendar / Timeslot Picker */}
+        {step === 2 && selectedAppointment && (
+          <section className="py-12 px-6">
+            <div className="max-w-4xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <div className="mb-8">
+                  <h2 className="font-serif text-3xl text-[#1E3A32] mb-2">Select a Date & Time</h2>
+                  <p className="text-[#2B2725]/70">Available times are shown in your local time zone.</p>
+                </div>
+
+                <div className="bg-white p-6 shadow-md mb-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-serif text-xl text-[#1E3A32] mb-1">{selectedAppointment.name}</h3>
+                      <p className="text-sm text-[#2B2725]/70">{selectedAppointment.duration} minutes • {formatPrice(selectedAppointment.price)}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <BookingCalendar
+                  appointmentType={selectedAppointment}
+                  onSlotSelected={handleSelectSlot}
+                />
+              </motion.div>
+            </div>
+          </section>
+        )}
+
+        {/* Step 3: Client Details Form */}
+        {step === 3 && selectedAppointment && selectedSlot && (
+          <section className="py-12 px-6">
+            <div className="max-w-2xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white p-8 shadow-md"
+              >
+                <h2 className="font-serif text-3xl text-[#1E3A32] mb-6">Your Details</h2>
+
+                {/* Selected appointment summary */}
+                <div className="bg-[#F9F5EF] p-4 mb-6 border-l-4 border-[#D8B46B]">
+                  <div className="text-sm text-[#2B2725]/70 mb-1">You're booking:</div>
+                  <div className="font-medium text-[#1E3A32]">{selectedAppointment.name}</div>
+                  <div className="text-sm text-[#2B2725]/70 mt-1">
+                    {format(new Date(selectedSlot.start), "EEEE, MMMM d, yyyy 'at' h:mm a")}
+                  </div>
+                </div>
+
+                <div className="space-y-4 mb-6">
+                  <div>
+                    <Label>Name</Label>
+                    <Input
+                      value={clientDetails.name}
+                      onChange={(e) => setClientDetails({ ...clientDetails, name: e.target.value })}
+                      placeholder="Your full name"
+                    />
+                  </div>
+                  <div>
+                    <Label>Email</Label>
+                    <Input
+                      type="email"
+                      value={clientDetails.email}
+                      onChange={(e) => setClientDetails({ ...clientDetails, email: e.target.value })}
+                      placeholder="your@email.com"
+                    />
+                  </div>
+                  <div>
+                    <Label>Optional Notes</Label>
+                    <Textarea
+                      value={clientDetails.notes}
+                      onChange={(e) => setClientDetails({ ...clientDetails, notes: e.target.value })}
+                      placeholder="If you'd like, share anything you want me to know before we meet. This is optional."
+                      rows={4}
+                    />
+                  </div>
+                </div>
+
+                <Button 
+                  onClick={handleSubmitDetails}
+                  className="w-full bg-[#1E3A32] hover:bg-[#2B4A40] text-white"
+                  size="lg"
+                >
+                  {selectedAppointment.price === 0 ? 'Confirm Booking' : 'Continue to Secure Checkout'}
+                </Button>
+              </motion.div>
+            </div>
+          </section>
+        )}
+
+        {/* Step 4: Payment Processing */}
+        {step === 4 && (
+          <section className="py-20 px-6">
+            <div className="max-w-2xl mx-auto text-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+              >
+                <div className="bg-white p-12 shadow-md">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1E3A32] mx-auto mb-6"></div>
+                  <h2 className="font-serif text-3xl text-[#1E3A32] mb-4">Secure Checkout</h2>
+                  <p className="text-[#2B2725]/70 mb-2">
+                    You'll complete payment through Stripe to confirm your session.
+                  </p>
+                  <p className="text-sm text-[#2B2725]/60">
+                    Your time will be held while you check out.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          </section>
+        )}
+
+        {/* CTA Section - Only show on step 1 */}
+        {step === 1 && (
+          <section className="py-20 px-6 bg-[#1E3A32] text-white">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="font-serif text-4xl md:text-5xl mb-6">
               Not Sure Where to Start?
@@ -243,6 +518,7 @@ export default function Bookings() {
             </Button>
           </div>
         </section>
+        )}
       </div>
     </>
   );
