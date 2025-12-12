@@ -66,44 +66,84 @@ export default function ManagerCalendar() {
     );
   }
 
+  // Calculate stats
+  const upcomingBookings = bookings.filter(b => b.scheduled_date && new Date(b.scheduled_date) > new Date());
+  const thisMonthBookings = bookings.filter(b => {
+    if (!b.scheduled_date) return false;
+    const bookingDate = new Date(b.scheduled_date);
+    return bookingDate.getMonth() === currentDate.getMonth() && bookingDate.getFullYear() === currentDate.getFullYear();
+  });
+  const todayBookings = bookings.filter(b => {
+    if (!b.scheduled_date) return false;
+    return isToday(new Date(b.scheduled_date));
+  });
+
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-8">
           <div>
             <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Booking Calendar</h1>
             <p className="text-[#2B2725]/70">View and manage all scheduled appointments</p>
           </div>
+          
+          {/* Quick Stats */}
+          <div className="flex gap-4">
+            <div className="bg-white px-4 py-3 shadow-sm">
+              <div className="text-2xl font-serif text-[#1E3A32]">{todayBookings.length}</div>
+              <div className="text-xs text-[#2B2725]/60">Today</div>
+            </div>
+            <div className="bg-white px-4 py-3 shadow-sm">
+              <div className="text-2xl font-serif text-[#1E3A32]">{thisMonthBookings.length}</div>
+              <div className="text-xs text-[#2B2725]/60">This Month</div>
+            </div>
+            <div className="bg-white px-4 py-3 shadow-sm">
+              <div className="text-2xl font-serif text-[#1E3A32]">{upcomingBookings.length}</div>
+              <div className="text-xs text-[#2B2725]/60">Upcoming</div>
+            </div>
+          </div>
         </div>
 
         {/* Calendar Navigation */}
-        <div className="bg-white p-6 mb-6">
-          <div className="flex items-center justify-between mb-6">
+        <div className="bg-white shadow-md mb-6">
+          <div className="flex items-center justify-between p-6 border-b border-[#E4D9C4]">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentDate(subMonths(currentDate, 1))}
+              >
+                <ChevronLeft size={18} />
+              </Button>
+              <h2 className="font-serif text-2xl text-[#1E3A32] min-w-[200px] text-center">
+                {format(currentDate, "MMMM yyyy")}
+              </h2>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentDate(addMonths(currentDate, 1))}
+              >
+                <ChevronRight size={18} />
+              </Button>
+            </div>
             <Button
               variant="outline"
-              size="icon"
-              onClick={() => setCurrentDate(subMonths(currentDate, 1))}
+              onClick={() => setCurrentDate(new Date())}
+              className="text-sm"
             >
-              <ChevronLeft size={20} />
-            </Button>
-            <h2 className="font-serif text-2xl text-[#1E3A32]">
-              {format(currentDate, "MMMM yyyy")}
-            </h2>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setCurrentDate(addMonths(currentDate, 1))}
-            >
-              <ChevronRight size={20} />
+              Today
             </Button>
           </div>
+          
+          <div className="p-6">
 
           {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-7 gap-1">
             {/* Day Headers */}
-            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-              <div key={day} className="text-center font-medium text-[#2B2725]/70 text-sm py-2">
-                {day}
+            {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
+              <div key={day} className="text-center font-semibold text-[#1E3A32] text-sm py-3 bg-[#F9F5EF]">
+                <span className="hidden md:inline">{day}</span>
+                <span className="md:hidden">{day.slice(0, 3)}</span>
               </div>
             ))}
 
@@ -115,42 +155,66 @@ export default function ManagerCalendar() {
               const isCurrentDay = isToday(day);
 
               return (
-                <motion.div
+                <div
                   key={day.toISOString()}
-                  whileHover={{ scale: 1.02 }}
-                  className={`min-h-[120px] p-2 border transition-colors ${
-                    isCurrentMonth ? "bg-white" : "bg-gray-50"
-                  } ${isCurrentDay ? "border-[#D8B46B] border-2" : "border-[#E4D9C4]"}`}
+                  className={`min-h-[140px] p-3 border transition-all ${
+                    isCurrentMonth ? "bg-white" : "bg-[#F9F5EF]/50"
+                  } ${isCurrentDay ? "ring-2 ring-[#D8B46B] bg-[#FFF9F0]" : "border-[#E4D9C4]"} ${
+                    dayBookings.length > 0 ? "hover:shadow-md cursor-pointer" : ""
+                  }`}
                 >
-                  <div
-                    className={`text-sm font-medium mb-2 ${
-                      isCurrentMonth ? "text-[#2B2725]" : "text-[#2B2725]/40"
-                    } ${isCurrentDay ? "text-[#D8B46B] font-bold" : ""}`}
-                  >
-                    {format(day, "d")}
+                  <div className="flex items-center justify-between mb-2">
+                    <div
+                      className={`text-sm font-semibold ${
+                        isCurrentMonth ? "text-[#1E3A32]" : "text-[#2B2725]/30"
+                      } ${isCurrentDay ? "bg-[#D8B46B] text-white w-7 h-7 rounded-full flex items-center justify-center" : ""}`}
+                    >
+                      {format(day, "d")}
+                    </div>
+                    {dayBookings.length > 0 && (
+                      <span className="text-xs bg-[#1E3A32] text-white px-2 py-0.5 rounded-full">
+                        {dayBookings.length}
+                      </span>
+                    )}
                   </div>
-                  <div className="space-y-1">
-                    {dayBookings.map((booking) => (
+                  <div className="space-y-1.5">
+                    {dayBookings.slice(0, 3).map((booking) => (
                       <button
                         key={booking.id}
                         onClick={() => setSelectedBooking(booking)}
-                        className="w-full text-left px-2 py-1 bg-[#1E3A32]/10 hover:bg-[#1E3A32]/20 transition-colors text-xs relative"
+                        className={`w-full text-left px-2 py-1.5 rounded transition-all text-xs ${
+                          booking.booking_status === 'confirmed' 
+                            ? 'bg-green-100 hover:bg-green-200 border border-green-300' 
+                            : booking.booking_status === 'cancelled'
+                            ? 'bg-red-100 hover:bg-red-200 border border-red-300'
+                            : 'bg-blue-100 hover:bg-blue-200 border border-blue-300'
+                        }`}
                       >
-                        <div className="font-medium text-[#1E3A32] truncate flex items-center gap-1">
+                        <div className="font-medium truncate flex items-center gap-1">
+                          <Clock size={10} className="flex-shrink-0" />
+                          <span>{booking.scheduled_date && format(new Date(booking.scheduled_date), "h:mm a")}</span>
+                        </div>
+                        <div className="text-[10px] truncate font-medium mt-0.5 flex items-center gap-1">
                           {booking.user_name}
+                          {booking.zoom_status === 'created' && (
+                            <Video size={10} className="text-blue-600 flex-shrink-0" />
+                          )}
                           {booking.zoom_status === 'failed' && (
                             <AlertCircle size={10} className="text-red-500 flex-shrink-0" />
                           )}
                         </div>
-                        <div className="text-[#2B2725]/60 text-[10px]">
-                          {booking.scheduled_date && format(new Date(booking.scheduled_date), "h:mm a")}
-                        </div>
                       </button>
                     ))}
+                    {dayBookings.length > 3 && (
+                      <div className="text-xs text-[#2B2725]/60 text-center py-1">
+                        +{dayBookings.length - 3} more
+                      </div>
+                    )}
                   </div>
-                </motion.div>
+                </div>
               );
             })}
+          </div>
           </div>
         </div>
 
@@ -316,37 +380,51 @@ export default function ManagerCalendar() {
                 </Dialog>
 
         {/* Upcoming Bookings List */}
-        <div className="bg-white p-6">
-          <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Upcoming Bookings</h2>
-          <div className="space-y-3">
-            {bookings
-              .filter((b) => b.scheduled_date && new Date(b.scheduled_date) > new Date())
-              .slice(0, 10)
-              .map((booking) => (
-                <button
-                  key={booking.id}
-                  onClick={() => setSelectedBooking(booking)}
-                  className="w-full text-left p-4 bg-[#F9F5EF] hover:bg-[#E4D9C4] transition-colors flex items-center justify-between"
-                >
-                  <div>
-                    <div className="font-medium text-[#1E3A32] mb-1">{booking.user_name}</div>
-                    <div className="text-sm text-[#2B2725]/70">
-                      {format(new Date(booking.scheduled_date), "EEEE, MMMM d 'at' h:mm a")}
+        <div className="bg-white shadow-md">
+          <div className="p-6 border-b border-[#E4D9C4]">
+            <h2 className="font-serif text-2xl text-[#1E3A32]">Upcoming Sessions</h2>
+          </div>
+          <div className="divide-y divide-[#E4D9C4]">
+            {upcomingBookings.slice(0, 10).map((booking) => (
+              <button
+                key={booking.id}
+                onClick={() => setSelectedBooking(booking)}
+                className="w-full text-left p-6 hover:bg-[#F9F5EF] transition-colors"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="font-serif text-lg text-[#1E3A32]">{booking.user_name}</div>
+                      {booking.zoom_status === "created" && (
+                        <div className="flex items-center gap-1 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                          <Video size={12} />
+                          <span>Zoom Ready</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-[#2B2725]/70 mb-1">
+                      <Clock size={14} />
+                      <span>{format(new Date(booking.scheduled_date), "EEEE, MMMM d 'at' h:mm a")}</span>
+                    </div>
+                    <div className="text-xs text-[#2B2725]/60">
+                      {booking.service_type?.replace(/_/g, " ")}
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    {booking.zoom_status === "created" && (
-                      <Video size={16} className="text-[#2D8CFF]" />
-                    )}
+                  <div className="flex flex-col items-end gap-2">
                     <Badge className={getStatusColor(booking.booking_status)}>
                       {booking.booking_status?.replace(/_/g, " ")}
                     </Badge>
+                    <div className="text-sm font-medium text-[#1E3A32]">
+                      {formatAmount(booking.amount)}
+                    </div>
                   </div>
-                </button>
-              ))}
-            {bookings.filter((b) => b.scheduled_date && new Date(b.scheduled_date) > new Date()).length === 0 && (
+                </div>
+              </button>
+            ))}
+            {upcomingBookings.length === 0 && (
               <div className="text-center py-12 text-[#2B2725]/50">
-                No upcoming bookings scheduled
+                <Calendar size={48} className="mx-auto mb-4 opacity-30" />
+                <p>No upcoming bookings scheduled</p>
               </div>
             )}
           </div>
