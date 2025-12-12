@@ -5,6 +5,7 @@ import CourseHeader from "../components/courses/CourseHeader";
 import ProgressBar from "../components/courses/ProgressBar";
 import ModuleNavigator from "../components/courses/ModuleNavigator";
 import LessonArea from "../components/courses/LessonArea";
+import LessonNavigation from "../components/courses/LessonNavigation";
 import NotesDrawer from "../components/studio/NotesDrawer";
 
 export default function CoursePage() {
@@ -210,6 +211,18 @@ export default function CoursePage() {
   const currentLessonProgress = userLessonProgress.find(p => p.lesson_id === currentLessonId);
   const isCurrentLessonCompleted = currentLessonProgress?.completed;
 
+  const isCurrentLessonLocked = () => {
+    if (!currentLesson?.prerequisites || currentLesson.prerequisites.length === 0) return false;
+    return !currentLesson.prerequisites.every(prereqId =>
+      userLessonProgress.some(p => p.lesson_id === prereqId && p.completed)
+    );
+  };
+
+  const getPrerequisiteLessons = () => {
+    if (!currentLesson?.prerequisites) return [];
+    return allLessons.filter(l => currentLesson.prerequisites.includes(l.id));
+  };
+
   if (!course) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
@@ -227,7 +240,7 @@ export default function CoursePage() {
         completedLessons={completedLessons}
         onContinue={handleContinue}
       />
-      <div className="flex" id="lesson-area">
+      <div className="flex flex-col lg:flex-row" id="lesson-area">
         <ModuleNavigator
           modules={modules}
           lessons={allLessons}
@@ -235,16 +248,33 @@ export default function CoursePage() {
           currentLessonId={currentLessonId}
           onLessonSelect={handleLessonSelect}
         />
-        {currentLesson && (
-          <LessonArea
-            lesson={currentLesson}
-            isCompleted={isCurrentLessonCompleted}
-            onMarkComplete={handleMarkComplete}
-            onAddNote={() => setNotesDrawerOpen(true)}
-            onProgressUpdate={handleProgressUpdate}
-            lastPosition={currentLessonProgress?.last_position || 0}
-          />
-        )}
+        <div className="flex-1 flex flex-col">
+          {currentLesson && (
+            <>
+              <LessonArea
+                lesson={currentLesson}
+                isCompleted={isCurrentLessonCompleted}
+                onMarkComplete={handleMarkComplete}
+                onAddNote={() => setNotesDrawerOpen(true)}
+                onProgressUpdate={handleProgressUpdate}
+                lastPosition={currentLessonProgress?.last_position || 0}
+                isLocked={isCurrentLessonLocked()}
+                prerequisiteLessons={getPrerequisiteLessons()}
+              />
+              {!isCurrentLessonLocked() && (
+                <LessonNavigation
+                  currentLesson={currentLesson}
+                  allLessons={allLessons}
+                  modules={modules}
+                  userLessonProgress={userLessonProgress}
+                  onLessonSelect={handleLessonSelect}
+                  onMarkComplete={handleMarkComplete}
+                  isCompleted={isCurrentLessonCompleted}
+                />
+              )}
+            </>
+          )}
+        </div>
       </div>
       <NotesDrawer
         isOpen={notesDrawerOpen}

@@ -1,11 +1,20 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, StickyNote } from "lucide-react";
+import { CheckCircle, StickyNote, Download, FileText, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import VideoPlayer from "./VideoPlayer";
 import CourseAudioPlayer from "./CourseAudioPlayer";
 
-export default function LessonArea({ lesson, isCompleted, onMarkComplete, onAddNote, onProgressUpdate, lastPosition }) {
+export default function LessonArea({ 
+  lesson, 
+  isCompleted, 
+  onMarkComplete, 
+  onAddNote, 
+  onProgressUpdate, 
+  lastPosition,
+  isLocked = false,
+  prerequisiteLessons = []
+}) {
   const getTypeLabel = (type) => {
     const labels = {
       video: "Video Lesson",
@@ -19,15 +28,44 @@ export default function LessonArea({ lesson, isCompleted, onMarkComplete, onAddN
   return (
     <div className="flex-1 bg-[#F9F5EF]">
       <div className="max-w-4xl mx-auto p-6 lg:p-12">
+        {/* Locked State */}
+        {isLocked && (
+          <div className="bg-white p-8 rounded-lg text-center mb-8 border-2 border-[#E4D9C4]">
+            <Lock size={48} className="mx-auto text-[#D8B46B] mb-4" />
+            <h2 className="font-serif text-2xl text-[#1E3A32] mb-3">This Lesson is Locked</h2>
+            <p className="text-[#2B2725]/70 mb-4">
+              Complete the following lessons to unlock this content:
+            </p>
+            <div className="space-y-2 max-w-md mx-auto">
+              {prerequisiteLessons.map((prereq, idx) => (
+                <div key={idx} className="flex items-center gap-2 p-2 bg-[#F9F5EF] rounded text-left">
+                  <Circle size={16} className="text-[#2B2725]/40 flex-shrink-0" />
+                  <span className="text-sm text-[#2B2725]/80">{prereq.title}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Lesson Header */}
-        <div className="mb-8">
-          <Badge className="bg-[#D8B46B]/20 text-[#1E3A32] mb-3">
-            {getTypeLabel(lesson.type)}
-          </Badge>
-          <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4">
-            {lesson.title}
-          </h1>
-        </div>
+        {!isLocked && (
+          <>
+            <div className="mb-8">
+              <div className="flex items-center gap-2 mb-3">
+                <Badge className="bg-[#D8B46B]/20 text-[#1E3A32]">
+                  {getTypeLabel(lesson.type)}
+                </Badge>
+                {lesson.estimated_time && (
+                  <Badge variant="outline" className="text-[#2B2725]/60">
+                    <FileText size={12} className="mr-1" />
+                    {lesson.estimated_time} min
+                  </Badge>
+                )}
+              </div>
+              <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4">
+                {lesson.title}
+              </h1>
+            </div>
 
         {/* Video Player */}
         {(lesson.type === "video" || lesson.type === "hybrid") && (
@@ -75,25 +113,46 @@ export default function LessonArea({ lesson, isCompleted, onMarkComplete, onAddN
           </div>
         )}
 
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Button
-            onClick={onAddNote}
-            variant="outline"
-            className="flex-1 border-[#D8B46B] hover:bg-[#D8B46B]/10"
-          >
-            <StickyNote size={16} className="mr-2" />
-            Add Note
-          </Button>
-          <Button
-            onClick={onMarkComplete}
-            disabled={isCompleted}
-            className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
-          >
-            <CheckCircle size={16} className="mr-2" />
-            {isCompleted ? "Completed" : "Mark as Complete"}
-          </Button>
-        </div>
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button
+                onClick={onAddNote}
+                variant="outline"
+                className="flex-1 border-[#D8B46B] hover:bg-[#D8B46B]/10"
+              >
+                <StickyNote size={16} className="mr-2" />
+                Add Note
+              </Button>
+              <Button
+                onClick={onMarkComplete}
+                disabled={isCompleted}
+                className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
+              >
+                <CheckCircle size={16} className="mr-2" />
+                {isCompleted ? "Completed" : "Mark as Complete"}
+              </Button>
+            </div>
+
+            {/* Transcription */}
+            {lesson.transcription_url && (
+              <div className="mt-8 bg-white p-6 rounded-lg">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-serif text-xl text-[#1E3A32]">Transcript Available</h2>
+                  <a
+                    href={lesson.transcription_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
+                  >
+                    <Download size={16} />
+                    Download
+                  </a>
+                </div>
+                <p className="text-sm text-[#2B2725]/70">
+                  Download the full transcript for accessibility or reference
+                </p>
+              </div>
+            )}
 
         {/* Transcription */}
         {lesson.transcription_url && (
@@ -111,28 +170,30 @@ export default function LessonArea({ lesson, isCompleted, onMarkComplete, onAddN
           </div>
         )}
 
-        {/* Resources */}
-        {lesson.resources && lesson.resources.length > 0 && (
-          <div className="mt-12">
-            <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Resources</h2>
-            <div className="grid gap-4">
-              {lesson.resources.map((resource, index) => (
-                <a
-                  key={index}
-                  href={resource.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-4 bg-white rounded-lg hover:shadow-md transition-shadow"
-                >
-                  <div>
-                    <p className="font-medium text-[#1E3A32]">{resource.title}</p>
-                    <p className="text-sm text-[#2B2725]/60 capitalize">{resource.type}</p>
-                  </div>
-                  <span className="text-[#D8B46B]">→</span>
-                </a>
-              ))}
-            </div>
-          </div>
+            {/* Resources */}
+            {lesson.resources && lesson.resources.length > 0 && (
+              <div className="mt-12">
+                <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Resources</h2>
+                <div className="grid gap-4">
+                  {lesson.resources.map((resource, index) => (
+                    <a
+                      key={index}
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-4 bg-white rounded-lg hover:shadow-md transition-shadow"
+                    >
+                      <div>
+                        <p className="font-medium text-[#1E3A32]">{resource.title}</p>
+                        <p className="text-sm text-[#2B2725]/60 capitalize">{resource.type}</p>
+                      </div>
+                      <Download size={18} className="text-[#D8B46B]" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
