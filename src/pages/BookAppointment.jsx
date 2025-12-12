@@ -12,6 +12,10 @@ export default function BookAppointment() {
   const [step, setStep] = useState(1); // 1: Select service, 2: Select time, 3: Confirm
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [recurringFrequency, setRecurringFrequency] = useState("weekly");
+  const [recurringOccurrences, setRecurringOccurrences] = useState(4);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -44,10 +48,23 @@ export default function BookAppointment() {
 
   const handleConfirmBooking = async () => {
     try {
-      const response = await base44.functions.invoke('createBookingCheckout', {
-        appointment_type_id: selectedAppointment.id,
-        scheduled_date: selectedSlot.start
-      });
+      let response;
+      
+      if (isRecurring) {
+        response = await base44.functions.invoke('createRecurringBookings', {
+          appointment_type_id: selectedAppointment.id,
+          start_date: selectedSlot.start,
+          frequency: recurringFrequency,
+          occurrences: recurringOccurrences,
+          staff_id: selectedStaff?.id
+        });
+      } else {
+        response = await base44.functions.invoke('createBookingCheckout', {
+          appointment_type_id: selectedAppointment.id,
+          scheduled_date: selectedSlot.start,
+          staff_id: selectedStaff?.id
+        });
+      }
 
       // Redirect to Stripe checkout
       window.location.href = response.data.checkout_url;

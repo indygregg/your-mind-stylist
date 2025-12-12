@@ -68,6 +68,8 @@ import ManagerMasterclass from './pages/ManagerMasterclass';
 import ContentStudio from './pages/ContentStudio';
 import ManagerAvailability from './pages/ManagerAvailability';
 import BookAppointment from './pages/BookAppointment';
+import ClientBookings from './pages/ClientBookings';
+import StaffManagement from './pages/StaffManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -142,6 +144,8 @@ export const PAGES = {
     "ContentStudio": ContentStudio,
     "ManagerAvailability": ManagerAvailability,
     "BookAppointment": BookAppointment,
+    "ClientBookings": ClientBookings,
+    "StaffManagement": StaffManagement,
 }
 
 export const pagesConfig = {
