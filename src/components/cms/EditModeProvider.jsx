@@ -13,7 +13,8 @@ export function EditModeProvider({ children }) {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
-        setIsManager(currentUser?.role === "manager" || currentUser?.role === "admin");
+        const userRole = currentUser?.custom_role || currentUser?.role;
+        setIsManager(userRole === "manager" || userRole === "admin");
       } catch (error) {
         setIsManager(false);
       }
