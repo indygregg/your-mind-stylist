@@ -127,7 +127,7 @@ export default function Contact() {
                 contentKey="contact.hero.description" 
                 page="Contact"
                 blockTitle="Hero Description"
-                fallback="Sometimes the first step toward change is simply saying, \"Here's where I am, and here's what I'd like to be different.\" This page is your space to do exactly that." 
+                fallback="Sometimes the first step toward change is simply saying, &quot;Here's where I am, and here's what I'd like to be different.&quot; This page is your space to do exactly that." 
                 contentType="rich_text"
               />
             </p>
