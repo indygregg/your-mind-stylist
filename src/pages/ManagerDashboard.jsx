@@ -103,12 +103,18 @@ export default function ManagerDashboard() {
     { icon: TrendingUp, label: "Masterclass Funnel", link: "ManagerMasterclass" },
     { icon: Video, label: "Zoom Integration", link: "ZoomConnect" },
     { icon: Users, label: "View Messages", link: "MessagesManager" },
-  ];
+    { icon: FileVideo, label: "Course Manager", link: "CourseManager" },
+    ];
+
+  const { data: courses = [] } = useQuery({
+    queryKey: ["allCourses"],
+    queryFn: () => base44.entities.Course.list(),
+  });
 
   const snapshotCards = [
     { icon: Calendar, label: "Active Bookings", value: bookings.filter(b => b.booking_status === 'confirmed').length, color: "#D8B46B", link: "ManagerBookings" },
-    { icon: ShoppingCart, label: "New purchases this week", value: 5, color: "#A6B7A3" },
-    { icon: Mail, label: "Unanswered messages", value: messages.length, color: "#6E4F7D", link: "MessagesManager" },
+    { icon: FileVideo, label: "Published Courses", value: courses.filter(c => c.status === 'published').length, color: "#6E4F7D", link: "CourseManager" },
+    { icon: Mail, label: "Unanswered messages", value: messages.length, color: "#A6B7A3", link: "MessagesManager" },
     { icon: FileText, label: "Drafts waiting to publish", value: drafts.length, color: "#1E3A32", link: "BlogManager" },
   ];
 

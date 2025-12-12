@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Search, MoreVertical, Edit, Copy, Archive, Trash2, Eye } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Search, MoreVertical, Edit, Copy, Archive, Trash2, Eye, BarChart3 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import CourseAnalytics from "@/components/courses/CourseAnalytics";
 import { createPageUrl } from "../utils";
 import { useNavigate } from "react-router-dom";
 
@@ -149,6 +151,21 @@ export default function CourseManager() {
           </Button>
         </div>
 
+        <Tabs defaultValue="courses" className="w-full">
+          <TabsList className="mb-6">
+            <TabsTrigger value="courses" className="flex items-center gap-2">
+              <Search size={16} />
+              Courses
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart3 size={16} />
+              Analytics
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="courses">
+            <div>
+
         {/* Stats Overview */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg border border-[#E4D9C4]">
@@ -212,10 +229,10 @@ export default function CourseManager() {
           </div>
         </div>
 
-        {/* Course List */}
-        {isLoading ? (
-          <div className="text-center py-12 text-[#2B2725]/70">Loading courses...</div>
-        ) : filteredCourses.length === 0 ? (
+            {/* Course List */}
+            {isLoading ? (
+              <div className="text-center py-12 text-[#2B2725]/70">Loading courses...</div>
+            ) : filteredCourses.length === 0 ? (
           <div className="bg-white p-12 rounded-lg border border-[#E4D9C4] text-center">
             <p className="text-[#2B2725]/70 mb-4">No courses found</p>
             <Button
@@ -343,8 +360,15 @@ export default function CourseManager() {
                 </div>
               );
             })}
-          </div>
-        )}
+              </div>
+            )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <CourseAnalytics courses={courses} />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

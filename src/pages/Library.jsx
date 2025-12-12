@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { Layers, Sparkles, Play, Headphones, Users, Award, ChevronDown, ChevronUp } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import ProgramCard from "../components/library/ProgramCard";
+import StudentDashboard from "../components/library/StudentDashboard";
 import { base44 } from "@/api/base44Client";
 
 export default function Library() {
   const [user, setUser] = useState(null);
   const [courses, setCourses] = useState([]);
   const [userProgress, setUserProgress] = useState([]);
+  const [showDashboard, setShowDashboard] = useState(true);
   const [userAccess, setUserAccess] = useState({
     hasToolkit: false,
     hasPocketVisualization: false,
@@ -28,6 +31,36 @@ export default function Library() {
     coaching: false,
     training: false,
     comingSoon: false
+  });
+
+  const { data: userLessonProgress = [] } = useQuery({
+    queryKey: ["userLessonProgress", user?.id],
+    queryFn: () => base44.entities.UserLessonProgress.filter({ user_id: user.id }),
+    enabled: !!user?.id,
+  });
+
+  const { data: allModules = [] } = useQuery({
+    queryKey: ["allModules"],
+    queryFn: () => base44.entities.Module.list(),
+  });
+
+  const { data: allLessons = [] } = useQuery({
+    queryKey: ["allLessons"],
+    queryFn: () => base44.entities.Lesson.list(),
+  });
+
+  const { data: upcomingBookings = [] } = useQuery({
+    queryKey: ["upcomingBookings", user?.id],
+    queryFn: async () => {
+      const bookings = await base44.entities.Booking.filter({ 
+        user_email: user.email,
+        booking_status: "confirmed"
+      });
+      return bookings
+        .filter(b => new Date(b.scheduled_date) > new Date())
+        .sort((a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date));
+    },
+    enabled: !!user?.email,
   });
 
   useEffect(() => {
@@ -308,13 +341,51 @@ export default function Library() {
         >
           {/* Header */}
           <div className="mb-12">
-            <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-3">
-              Your Library
-            </h1>
+            <div className="flex items-center justify-between mb-3">
+              <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32]">
+                Your Library
+              </h1>
+              {userProgress.length > 0 && (
+                <div className="flex gap-2">
+                  <Button
+                    variant={showDashboard ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setShowDashboard(true)}
+                    className={showDashboard ? "bg-[#1E3A32]" : ""}
+                  >
+                    Dashboard
+                  </Button>
+                  <Button
+                    variant={!showDashboard ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setShowDashboard(false)}
+                    className={!showDashboard ? "bg-[#1E3A32]" : ""}
+                  >
+                    Browse All
+                  </Button>
+                </div>
+              )}
+            </div>
             <p className="text-[#2B2725]/60 text-lg italic">
               Everything you've unlocked lives here. Continue your journey at your own pace.
             </p>
           </div>
+
+          {/* Student Dashboard View */}
+          {showDashboard && userProgress.length > 0 && (
+            <StudentDashboard
+              courses={courses}
+              userProgress={userProgress}
+              userLessonProgress={userLessonProgress}
+              allLessons={allLessons}
+              modules={allModules}
+              upcomingBookings={upcomingBookings}
+            />
+          )}
+
+          {/* Traditional Library View */}
+          {!showDashboard && (
+            <div>
 
           {/* Featured Programs */}
           {featuredPrograms.length > 0 && (
@@ -411,6 +482,8 @@ export default function Library() {
                 Explore Toolkit
               </Link>
             </div>
+            )}
+          </div>
           )}
         </motion.div>
       </div>
