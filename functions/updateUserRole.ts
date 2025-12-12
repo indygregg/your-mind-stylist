@@ -20,8 +20,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Invalid role' }, { status: 400 });
     }
 
-    // Update user role using service role
-    const updatedUser = await base44.asServiceRole.entities.User.update(userId, { role });
+    // Update custom_role field since built-in role only supports 'admin' and 'user'
+    const updatedUser = await base44.asServiceRole.entities.User.update(userId, { 
+      custom_role: role,
+      role: role === 'manager' ? 'user' : role // Set built-in role to 'user' for managers
+    });
 
     return Response.json({ 
       success: true, 
