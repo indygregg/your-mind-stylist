@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Calendar, DollarSign, Mail, Phone, User, Clock, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { Calendar, DollarSign, Mail, Phone, User, Clock, CheckCircle, XCircle, AlertCircle, Video, Copy } from "lucide-react";
 import { format } from "date-fns";
 import {
   Dialog,
@@ -325,6 +325,70 @@ export default function ManagerBookings() {
                     )}
                   </div>
                 </div>
+
+                {/* Zoom Meeting */}
+                {selectedBooking.zoom_status === 'created' && selectedBooking.zoom_join_url && (
+                  <div>
+                    <h3 className="text-sm font-medium text-[#2B2725] mb-3 flex items-center gap-2">
+                      <Video size={16} className="text-[#2D8CFF]" />
+                      Zoom Meeting
+                    </h3>
+                    <div className="bg-[#F9F5EF] p-4 space-y-3">
+                      <div>
+                        <p className="text-xs text-[#2B2725]/70 mb-1">Client Join URL:</p>
+                        <div className="flex items-center gap-2">
+                          <a 
+                            href={selectedBooking.zoom_join_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-sm text-[#2D8CFF] hover:underline truncate flex-1"
+                          >
+                            {selectedBooking.zoom_join_url}
+                          </a>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => {
+                              navigator.clipboard.writeText(selectedBooking.zoom_join_url);
+                            }}
+                          >
+                            <Copy size={14} />
+                          </Button>
+                        </div>
+                      </div>
+                      {selectedBooking.zoom_start_url && (
+                        <div>
+                          <p className="text-xs text-[#2B2725]/70 mb-1">Host Start URL:</p>
+                          <div className="flex items-center gap-2">
+                            <a 
+                              href={selectedBooking.zoom_start_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-sm text-[#2D8CFF] hover:underline truncate flex-1"
+                            >
+                              {selectedBooking.zoom_start_url}
+                            </a>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => {
+                                navigator.clipboard.writeText(selectedBooking.zoom_start_url);
+                              }}
+                            >
+                              <Copy size={14} />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                      {selectedBooking.zoom_password && (
+                        <div>
+                          <p className="text-xs text-[#2B2725]/70 mb-1">Meeting Password:</p>
+                          <p className="text-sm font-mono text-[#1E3A32]">{selectedBooking.zoom_password}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
 
                 {/* Notes */}
                 {selectedBooking.notes && (

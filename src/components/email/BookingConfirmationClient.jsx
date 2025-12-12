@@ -119,6 +119,40 @@ export default function BookingConfirmationClient({ booking }) {
           </div>
         </div>
 
+        {/* Zoom Meeting Link */}
+        {booking.zoom_status === 'created' && booking.zoom_join_url && (
+          <div style={{ backgroundColor: "#E8F4FD", border: "2px solid #2D8CFF", padding: "25px", marginTop: "30px", marginBottom: "20px" }}>
+            <h3 style={{ color: "#1E3A32", fontFamily: "Georgia, serif", fontSize: "18px", marginTop: 0, marginBottom: "15px", display: "flex", alignItems: "center" }}>
+              🎥 Your Zoom Meeting Link
+            </h3>
+            <p style={{ color: "#2B2725", fontSize: "14px", lineHeight: "1.6", marginBottom: "15px" }}>
+              Your virtual session is all set up. Click the button below to join when it's time for your session.
+            </p>
+            <div style={{ textAlign: "center", marginBottom: "15px" }}>
+              <a 
+                href={booking.zoom_join_url}
+                style={{ 
+                  display: "inline-block",
+                  backgroundColor: "#2D8CFF", 
+                  color: "#FFFFFF", 
+                  padding: "14px 32px", 
+                  textDecoration: "none", 
+                  fontSize: "14px",
+                  fontWeight: "600",
+                  borderRadius: "4px"
+                }}
+              >
+                Join Zoom Meeting
+              </a>
+            </div>
+            {booking.zoom_password && (
+              <p style={{ color: "#2B2725", fontSize: "13px", textAlign: "center", margin: 0 }}>
+                Meeting Password: <strong style={{ fontFamily: "monospace" }}>{booking.zoom_password}</strong>
+              </p>
+            )}
+          </div>
+        )}
+
         {booking.notes && (
           <div style={{ backgroundColor: "#F9F5EF", padding: "20px", marginTop: "30px", borderLeft: "4px solid #D8B46B" }}>
             <p style={{ color: "#2B2725", fontSize: "14px", margin: "0 0 8px 0", fontWeight: "600" }}>Your Notes:</p>

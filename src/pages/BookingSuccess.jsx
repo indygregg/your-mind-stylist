@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Calendar, Mail, Loader2 } from "lucide-react";
+import { CheckCircle, Calendar, Mail, Loader2, Video } from "lucide-react";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { base44 } from "@/api/base44Client";
@@ -79,7 +79,7 @@ export default function BookingSuccess() {
 
           {/* Booking Summary */}
           {booking && (
-            <div className="bg-[#F9F5EF] p-6 mb-8 max-w-xl mx-auto">
+            <div className="bg-white border border-[#E4D9C4] p-6 mb-8 max-w-xl mx-auto">
               <h3 className="font-medium text-[#1E3A32] mb-4">Booking Summary</h3>
               <div className="space-y-2 text-left">
                 <div className="flex justify-between">
@@ -101,6 +101,33 @@ export default function BookingSuccess() {
                   </span>
                 </div>
               </div>
+
+              {/* Zoom Meeting Link */}
+              {booking.zoom_status === 'created' && booking.zoom_join_url && (
+                <div className="mt-6 pt-6 border-t border-[#E4D9C4]">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Video size={20} className="text-[#2D8CFF]" />
+                    <h4 className="font-medium text-[#1E3A32]">Your Zoom Meeting</h4>
+                  </div>
+                  <p className="text-sm text-[#2B2725]/70 mb-3">
+                    Your virtual session link is ready. You'll also receive this in your confirmation email.
+                  </p>
+                  <a
+                    href={booking.zoom_join_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#2D8CFF] text-white text-sm hover:bg-[#2D8CFF]/90 transition-colors"
+                  >
+                    <Video size={16} />
+                    Join Zoom Meeting
+                  </a>
+                  {booking.zoom_password && (
+                    <p className="text-xs text-[#2B2725]/60 mt-3">
+                      Meeting Password: <span className="font-mono font-medium">{booking.zoom_password}</span>
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
