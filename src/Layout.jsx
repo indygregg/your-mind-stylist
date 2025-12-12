@@ -65,7 +65,7 @@ export default function Layout({ children, currentPageName }) {
       category: "Transformational Programs",
       items: [
         { name: "All Programs & Pricing", page: "Programs", description: "Explore all offerings" },
-        { name: "The Mind Styling Evolution™", page: "Evolution", description: "Deep transformation training" },
+        { name: "Cleaning Out Your Closet", page: "Evolution", description: "One-on-one hypnosis work" },
         { name: "Pocket Visualization™", page: "PocketVisualization", description: "Daily guided experiences" },
       ]
     },

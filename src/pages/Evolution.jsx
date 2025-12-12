@@ -153,7 +153,7 @@ export default function Evolution() {
                 contentKey="evolution.hero.title" 
                 page="Evolution"
                 blockTitle="Hero Title"
-                fallback="Mind Styling Evolution™" 
+                fallback="Cleaning Out Your Closet" 
                 contentType="short_text"
               />
             </h1>
@@ -162,7 +162,7 @@ export default function Evolution() {
                 contentKey="evolution.hero.tagline" 
                 page="Evolution"
                 blockTitle="Hero Tagline"
-                fallback="A three-part inner redesign for people ready for a new mental operating system." 
+                fallback="One-on-one hypnosis work to release old patterns and step into your future self." 
                 contentType="short_text"
               />
             </p>
@@ -179,10 +179,10 @@ export default function Evolution() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to="/app/signup?intent=evolution"
+                to={createPageUrl("Bookings")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                Begin Your Evolution
+                Schedule Your Free Consultation
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
@@ -192,7 +192,7 @@ export default function Evolution() {
                 to={createPageUrl("Contact")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
               >
-                Schedule a Consultation
+                Have Questions?
               </Link>
             </div>
           </motion.div>
@@ -356,8 +356,8 @@ export default function Evolution() {
                       </p>
 
                       <div className="border-l-2 border-[#D8B46B] pl-6 mb-8">
-                        <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-4">
-                          You'll learn:
+                        <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-2">
+                          You'll Learn To:
                         </p>
                         <CmsText 
                           contentKey={`evolution.phase${index + 1}.learnings`}
@@ -387,10 +387,10 @@ export default function Evolution() {
                       </div>
 
                       <Link
-                        to="/app/signup?intent=evolution"
+                        to={createPageUrl("Bookings")}
                         className="group inline-flex items-center justify-center gap-3 px-6 py-3 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
                       >
-                        {index === 0 ? "Start Your Evolution" : "Enroll Now"}
+                        Schedule Your Free Consultation
                         <ArrowRight
                           size={16}
                           className="group-hover:translate-x-1 transition-transform"
@@ -405,34 +405,7 @@ export default function Evolution() {
         </div>
       </section>
 
-      {/* What's Included */}
-      <section className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-10">
-              <CmsText 
-                contentKey="evolution.included.title" 
-                page="Evolution"
-                blockTitle="What's Included Title"
-                fallback="What's Included in Mind Styling Evolution" 
-                contentType="short_text"
-              />
-            </h2>
 
-            <CmsText 
-              contentKey="evolution.included.list"
-              page="Evolution"
-              blockTitle="What's Included List"
-              fallback={`<div class='grid md:grid-cols-2 gap-4'>${included.map(item => `<div class='flex items-start gap-3'><svg class='lucide lucide-check' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='margin-top: 4px; flex-shrink: 0;'><path d='M20 6 9 17l-5-5'/></svg><span class='text-[#2B2725]/80 text-lg'>${item}</span></div>`).join('')}</div>`}
-              contentType="rich_text"
-            />
-          </motion.div>
-        </div>
-      </section>
 
       {/* Benefits & Outcomes */}
       <section className="py-24 bg-[#1E3A32]">
@@ -576,10 +549,10 @@ export default function Evolution() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to="/app/signup?intent=evolution"
+                to={createPageUrl("Bookings")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
               >
-                Begin Your Evolution
+                Schedule Your Free Consultation
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
@@ -589,7 +562,7 @@ export default function Evolution() {
                 to={createPageUrl("Contact")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
               >
-                Have Questions? Contact Roberta
+                Have Questions?
               </Link>
             </div>
           </motion.div>
