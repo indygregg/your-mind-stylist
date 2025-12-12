@@ -5,6 +5,7 @@ import { CheckCircle, Loader2, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import CmsText from "../components/cms/CmsText";
 
 export default function InnerRehearsalPurchase() {
   const [user, setUser] = useState(null);
@@ -157,13 +158,32 @@ export default function InnerRehearsalPurchase() {
           className="text-center mb-12"
         >
           <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-            Subscribe
+            <CmsText 
+              contentKey="innerpurchase.hero.subtitle"
+              page="InnerRehearsalPurchase"
+              blockTitle="Hero Subtitle"
+              fallback="Subscribe"
+              contentType="short_text"
+              as="span"
+            />
           </span>
           <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-4">
-            The Pocket Visualization Sessions™
+            <CmsText 
+              contentKey="innerpurchase.hero.title"
+              page="InnerRehearsalPurchase"
+              blockTitle="Hero Title"
+              fallback="The Pocket Visualization Sessions™"
+              contentType="short_text"
+            />
           </h1>
           <p className="text-[#2B2725] text-xl md:text-2xl font-serif italic mb-6">
-            Guided audio sessions to regulate your nervous system, release doubt, and rehearse your future self.
+            <CmsText 
+              contentKey="innerpurchase.hero.description"
+              page="InnerRehearsalPurchase"
+              blockTitle="Hero Description"
+              fallback="Guided audio sessions to regulate your nervous system, release doubt, and rehearse your future self."
+              contentType="rich_text"
+            />
           </p>
         </motion.div>
 
@@ -176,7 +196,15 @@ export default function InnerRehearsalPurchase() {
               transition={{ delay: 0.2 }}
               className="bg-white p-8"
             >
-              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Choose Your Plan</h2>
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">
+                <CmsText 
+                  contentKey="innerpurchase.pricing.title"
+                  page="InnerRehearsalPurchase"
+                  blockTitle="Pricing Title"
+                  fallback="Choose Your Plan"
+                  contentType="short_text"
+                />
+              </h2>
 
               {/* Billing Toggle */}
               <div className="flex gap-4 mb-8">
@@ -269,20 +297,32 @@ export default function InnerRehearsalPurchase() {
               transition={{ delay: 0.3 }}
               className="bg-white p-8 sticky top-6"
             >
-              <h3 className="font-serif text-xl text-[#1E3A32] mb-6">What's Included</h3>
-              <div className="space-y-4">
-                {features.map((feature, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-[#A6B7A3] flex-shrink-0 mt-0.5" />
-                    <span className="text-[#2B2725]/80 leading-relaxed">{feature}</span>
-                  </div>
-                ))}
-              </div>
+              <h3 className="font-serif text-xl text-[#1E3A32] mb-6">
+                <CmsText 
+                  contentKey="innerpurchase.included.title"
+                  page="InnerRehearsalPurchase"
+                  blockTitle="Included Title"
+                  fallback="What's Included"
+                  contentType="short_text"
+                />
+              </h3>
+              <CmsText 
+                contentKey="innerpurchase.included.features"
+                page="InnerRehearsalPurchase"
+                blockTitle="Included Features"
+                fallback={`<div class='space-y-4'>${features.map((feature, index) => `<div class='flex items-start gap-3'><svg class='lucide lucide-check-circle' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#A6B7A3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='flex-shrink: 0; margin-top: 2px;'><path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/><polyline points='22 4 12 14.01 9 11.01'/></svg><span class='text-[#2B2725]/80 leading-relaxed'>${feature}</span></div>`).join('')}</div>`}
+                contentType="rich_text"
+              />
 
               <div className="mt-8 pt-6 border-t border-[#E4D9C4]">
                 <p className="text-sm text-[#2B2725]/70 leading-relaxed">
-                  These aren't meditation tracks — they're mental rehearsal sessions combining visualization, 
-                  hypnotic language, and emotional intelligence tools to help you reset and realign.
+                  <CmsText 
+                    contentKey="innerpurchase.included.note"
+                    page="InnerRehearsalPurchase"
+                    blockTitle="Included Note"
+                    fallback="These aren't meditation tracks — they're mental rehearsal sessions combining visualization, hypnotic language, and emotional intelligence tools to help you reset and realign."
+                    contentType="rich_text"
+                  />
                 </p>
               </div>
             </motion.div>
@@ -297,34 +337,93 @@ export default function InnerRehearsalPurchase() {
           className="mt-16 bg-white p-8"
         >
           <h2 className="font-serif text-2xl text-[#1E3A32] mb-8 text-center">
-            Frequently Asked Questions
+            <CmsText 
+              contentKey="innerpurchase.faq.title"
+              page="InnerRehearsalPurchase"
+              blockTitle="FAQ Title"
+              fallback="Frequently Asked Questions"
+              contentType="short_text"
+            />
           </h2>
           <div className="max-w-3xl mx-auto space-y-6">
             <div>
-              <h3 className="font-medium text-[#1E3A32] mb-2">Can I cancel anytime?</h3>
+              <h3 className="font-medium text-[#1E3A32] mb-2">
+                <CmsText 
+                  contentKey="innerpurchase.faq1.question"
+                  page="InnerRehearsalPurchase"
+                  blockTitle="FAQ 1 Question"
+                  fallback="Can I cancel anytime?"
+                  contentType="short_text"
+                />
+              </h3>
               <p className="text-[#2B2725]/70 leading-relaxed">
-                Yes. You can cancel your subscription at any time from your dashboard. 
-                You'll continue to have access until the end of your current billing period.
+                <CmsText 
+                  contentKey="innerpurchase.faq1.answer"
+                  page="InnerRehearsalPurchase"
+                  blockTitle="FAQ 1 Answer"
+                  fallback="Yes. You can cancel your subscription at any time from your dashboard. You'll continue to have access until the end of your current billing period."
+                  contentType="rich_text"
+                />
               </p>
             </div>
             <div>
-              <h3 className="font-medium text-[#1E3A32] mb-2">How often are new sessions added?</h3>
+              <h3 className="font-medium text-[#1E3A32] mb-2">
+                <CmsText 
+                  contentKey="innerpurchase.faq2.question"
+                  page="InnerRehearsalPurchase"
+                  blockTitle="FAQ 2 Question"
+                  fallback="How often are new sessions added?"
+                  contentType="short_text"
+                />
+              </h3>
               <p className="text-[#2B2725]/70 leading-relaxed">
-                New sessions are added monthly based on requests and themes that emerge in the community.
+                <CmsText 
+                  contentKey="innerpurchase.faq2.answer"
+                  page="InnerRehearsalPurchase"
+                  blockTitle="FAQ 2 Answer"
+                  fallback="New sessions are added monthly based on requests and themes that emerge in the community."
+                  contentType="rich_text"
+                />
               </p>
             </div>
             <div>
-              <h3 className="font-medium text-[#1E3A32] mb-2">Can I download the sessions?</h3>
+              <h3 className="font-medium text-[#1E3A32] mb-2">
+                <CmsText 
+                  contentKey="innerpurchase.faq3.question"
+                  page="InnerRehearsalPurchase"
+                  blockTitle="FAQ 3 Question"
+                  fallback="Can I download the sessions?"
+                  contentType="short_text"
+                />
+              </h3>
               <p className="text-[#2B2725]/70 leading-relaxed">
-                Sessions are available for streaming through your dashboard. Downloads are not currently available 
-                to ensure content quality and access control.
+                <CmsText 
+                  contentKey="innerpurchase.faq3.answer"
+                  page="InnerRehearsalPurchase"
+                  blockTitle="FAQ 3 Answer"
+                  fallback="Sessions are available for streaming through your dashboard. Downloads are not currently available to ensure content quality and access control."
+                  contentType="rich_text"
+                />
               </p>
             </div>
             <div>
-              <h3 className="font-medium text-[#1E3A32] mb-2">Is this the same as meditation?</h3>
+              <h3 className="font-medium text-[#1E3A32] mb-2">
+                <CmsText 
+                  contentKey="innerpurchase.faq4.question"
+                  page="InnerRehearsalPurchase"
+                  blockTitle="FAQ 4 Question"
+                  fallback="Is this the same as meditation?"
+                  contentType="short_text"
+                />
+              </h3>
               <p className="text-[#2B2725]/70 leading-relaxed">
-                No. These are structured mental rehearsal sessions that combine elements of visualization, 
-                emotional intelligence, and future-self embodiment. They're active, not passive.
+                <CmsText 
+                  contentKey="innerpurchase.faq4.answer"
+                  page="InnerRehearsalPurchase"
+                  blockTitle="FAQ 4 Answer"
+                  fallback="No. These are structured mental rehearsal sessions that combine elements of visualization, emotional intelligence, and future-self embodiment. They're active, not passive."
+                  contentType="rich_text"
+                />
               </p>
             </div>
           </div>
