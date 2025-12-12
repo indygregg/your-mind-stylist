@@ -9,6 +9,7 @@ import DiaryEntryCard from "../components/diary/DiaryEntryCard";
 import DiaryEntryEditor from "../components/diary/DiaryEntryEditor";
 import DiaryPrompts from "../components/diary/DiaryPrompts";
 import MoodTrends from "../components/diary/MoodTrends";
+import SEO from "../components/SEO";
 
 export default function Diary() {
   const queryClient = useQueryClient();
@@ -91,7 +92,12 @@ export default function Diary() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
+    <>
+      <SEO
+        title="My Diary - Your Mind Stylist"
+        description="Your private space for reflection, emotional tracking, and personal growth. Journal your thoughts, track your moods, and discover patterns."
+      />
+      <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -271,5 +277,6 @@ export default function Diary() {
         </motion.div>
       </div>
     </div>
+    </>
   );
 }
