@@ -1,0 +1,321 @@
+import React, { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, CheckCircle, Sparkles } from "lucide-react";
+
+export default function DailyStyleCheck({ onClose, onComplete }) {
+  const queryClient = useQueryClient();
+  const [step, setStep] = useState(1); // 1: state, 2: voice, 3: identity, 4: done
+  const [checkInData, setCheckInData] = useState({
+    state_key: "calm_activated",
+    state_value: 50,
+    voice_tone: null,
+    identity_id: null,
+    identity_name: null,
+    notes: ""
+  });
+
+  // Fetch identities
+  const { data: identities = [] } = useQuery({
+    queryKey: ["identity-wardrobe"],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      return base44.entities.IdentityWardrobe.filter({ created_by: user.email });
+    }
+  });
+
+  // Save check-in
+  const saveCheckInMutation = useMutation({
+    mutationFn: (data) => base44.entities.DailyStyleCheck.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["daily-style-checks"] });
+      setStep(4);
+    }
+  });
+
+  const handleStateChange = (value) => {
+    setCheckInData({ ...checkInData, state_value: value });
+  };
+
+  const handleStateKeyChange = (key) => {
+    setCheckInData({ ...checkInData, state_key: key, state_value: 50 });
+  };
+
+  const handleVoiceToneSelect = (tone) => {
+    setCheckInData({ ...checkInData, voice_tone: tone });
+  };
+
+  const handleIdentitySelect = (identity) => {
+    setCheckInData({ 
+      ...checkInData, 
+      identity_id: identity?.id || null,
+      identity_name: identity?.name || null
+    });
+  };
+
+  const handleSubmit = () => {
+    const dataToSave = { ...checkInData };
+    // Remove null/empty fields
+    Object.keys(dataToSave).forEach(key => {
+      if (dataToSave[key] === null || dataToSave[key] === "") {
+        delete dataToSave[key];
+      }
+    });
+    saveCheckInMutation.mutate(dataToSave);
+  };
+
+  const stateOptions = [
+    { key: "calm_activated", left: "Calm", right: "Activated" },
+    { key: "grounded_scattered", left: "Grounded", right: "Scattered" },
+    { key: "open_guarded", left: "Open", right: "Guarded" }
+  ];
+
+  const voiceTones = [
+    { value: "supportive", label: "Supportive", icon: "💚" },
+    { value: "neutral", label: "Neutral", icon: "⚪" },
+    { value: "critical", label: "Critical", icon: "🔴" },
+    { value: "urgent", label: "Urgent", icon: "⚡" },
+    { value: "avoidant", label: "Avoidant", icon: "🌫️" }
+  ];
+
+  const selectedState = stateOptions.find(s => s.key === checkInData.state_key);
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          className="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="sticky top-0 bg-white border-b border-[#E4D9C4] p-6 flex justify-between items-center">
+            <div>
+              <h2 className="font-serif text-2xl text-[#1E3A32]">Daily Style Check™</h2>
+              <p className="text-sm text-[#2B2725]/60">Quick check-in • Everything optional</p>
+            </div>
+            <Button variant="ghost" size="icon" onClick={onClose}>
+              <X size={20} />
+            </Button>
+          </div>
+
+          {/* Content */}
+          <div className="p-6">
+            <AnimatePresence mode="wait">
+              {/* Step 1: State Selection */}
+              {step === 1 && (
+                <motion.div
+                  key="state"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h3 className="font-medium text-[#1E3A32] mb-4">How are you showing up?</h3>
+                    
+                    {/* State Type Selector */}
+                    <div className="flex gap-2 mb-4">
+                      {stateOptions.map((option) => (
+                        <button
+                          key={option.key}
+                          onClick={() => handleStateKeyChange(option.key)}
+                          className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                            checkInData.state_key === option.key
+                              ? "bg-[#D8B46B] text-white"
+                              : "bg-[#F9F5EF] text-[#2B2725]/70 hover:bg-[#E4D9C4]"
+                          }`}
+                        >
+                          {option.left} ↔ {option.right}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Slider */}
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-sm text-[#2B2725]/70">
+                        <span>{selectedState.left}</span>
+                        <span>{selectedState.right}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={checkInData.state_value}
+                        onChange={(e) => handleStateChange(parseInt(e.target.value))}
+                        className="w-full h-2 bg-[#E4D9C4] rounded-lg appearance-none cursor-pointer slider"
+                        style={{
+                          background: `linear-gradient(to right, #D8B46B ${checkInData.state_value}%, #E4D9C4 ${checkInData.state_value}%)`
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button variant="outline" onClick={() => { handleSubmit(); }} className="flex-1">
+                      Skip to Save
+                    </Button>
+                    <Button onClick={() => setStep(2)} className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725]">
+                      Continue
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 2: Voice Tone */}
+              {step === 2 && (
+                <motion.div
+                  key="voice"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h3 className="font-medium text-[#1E3A32] mb-4">What's your inner voice tone?</h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {voiceTones.map((tone) => (
+                        <button
+                          key={tone.value}
+                          onClick={() => handleVoiceToneSelect(tone.value)}
+                          className={`p-4 rounded-lg border-2 transition-all ${
+                            checkInData.voice_tone === tone.value
+                              ? "border-[#D8B46B] bg-[#D8B46B]/10"
+                              : "border-[#E4D9C4] hover:border-[#D8B46B]/50"
+                          }`}
+                        >
+                          <div className="text-2xl mb-2">{tone.icon}</div>
+                          <div className="text-sm font-medium text-[#1E3A32]">{tone.label}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button variant="outline" onClick={() => setStep(1)}>
+                      Back
+                    </Button>
+                    <Button variant="outline" onClick={() => setStep(3)} className="flex-1">
+                      Skip
+                    </Button>
+                    <Button onClick={() => setStep(3)} disabled={!checkInData.voice_tone} className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725]">
+                      Continue
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 3: Identity Selection */}
+              {step === 3 && (
+                <motion.div
+                  key="identity"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h3 className="font-medium text-[#1E3A32] mb-4">Which outfit are you wearing?</h3>
+                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                      {/* Old Default Pattern */}
+                      <button
+                        onClick={() => handleIdentitySelect(null)}
+                        className={`w-full p-3 rounded-lg border-2 text-left transition-all ${
+                          checkInData.identity_id === null && checkInData.identity_name === null
+                            ? "border-[#2B2725]/30 bg-[#2B2725]/5"
+                            : "border-[#E4D9C4] hover:border-[#2B2725]/20"
+                        }`}
+                      >
+                        <div className="text-sm font-medium text-[#2B2725]/70">Old Default Pattern</div>
+                      </button>
+
+                      {/* User Identities */}
+                      {identities.map((identity) => (
+                        <button
+                          key={identity.id}
+                          onClick={() => handleIdentitySelect(identity)}
+                          className={`w-full p-3 rounded-lg border-2 text-left transition-all ${
+                            checkInData.identity_id === identity.id
+                              ? "border-[#D8B46B] bg-[#D8B46B]/10"
+                              : "border-[#E4D9C4] hover:border-[#D8B46B]/50"
+                          }`}
+                        >
+                          <div className="text-sm font-medium text-[#1E3A32]">{identity.name}</div>
+                          {identity.description && (
+                            <div className="text-xs text-[#2B2725]/60 mt-1">{identity.description}</div>
+                          )}
+                        </button>
+                      ))}
+
+                      {identities.length === 0 && (
+                        <div className="text-center py-6 text-[#2B2725]/50 text-sm">
+                          No identities yet. You can create them later.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-4">
+                    <Button variant="outline" onClick={() => setStep(2)}>
+                      Back
+                    </Button>
+                    <Button variant="outline" onClick={handleSubmit} className="flex-1">
+                      Skip & Save
+                    </Button>
+                    <Button onClick={handleSubmit} className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725]">
+                      Save Check-In
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Step 4: Complete */}
+              {step === 4 && (
+                <motion.div
+                  key="complete"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center py-8 space-y-6"
+                >
+                  <div className="w-16 h-16 bg-[#D8B46B]/20 rounded-full flex items-center justify-center mx-auto">
+                    <CheckCircle size={32} className="text-[#D8B46B]" />
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">Check-in saved</h3>
+                    <p className="text-[#2B2725]/70">You can check in again anytime</p>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Button onClick={() => { onComplete?.(); onClose(); }} className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
+                      Back to Studio
+                    </Button>
+                    
+                    <div className="pt-4 border-t border-[#E4D9C4]">
+                      <p className="text-xs text-[#2B2725]/60 mb-3">Would you like a Style Pause™?</p>
+                      <Button variant="outline" size="sm" className="w-full" onClick={onClose}>
+                        <Sparkles size={14} className="mr-2" />
+                        Maybe later
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}

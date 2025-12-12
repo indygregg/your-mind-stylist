@@ -24,6 +24,7 @@ export default function Dashboard() {
   const [studioStats, setStudioStats] = useState(null);
   const [dailyPrompt, setDailyPrompt] = useState(null);
   const [notesDrawerOpen, setNotesDrawerOpen] = useState(false);
+  const [showStyleCheck, setShowStyleCheck] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const [pastBookings, setPastBookings] = useState([]);
