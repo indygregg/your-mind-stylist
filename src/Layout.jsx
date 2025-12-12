@@ -133,29 +133,12 @@ export default function Layout({ children, currentPageName }) {
             <p className="text-xs tracking-[0.2em] text-[#2B2725]/60 uppercase font-light">
               Las Vegas • Emotional Intelligence • Mind Styling • Leadership & Personal Transformation
             </p>
-            <div className="flex items-center gap-6">
-              <Link
-                to={createPageUrl("Contact")}
-                className="text-xs tracking-wide text-[#1E3A32] hover:text-[#D8B46B] transition-colors font-medium"
-              >
-                Schedule Your Complimentary Consultation
-              </Link>
-              <div className="flex items-center gap-3">
-                <Link
-                  to="/app/login"
-                  className="text-xs tracking-wide text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
-                >
-                  Login
-                </Link>
-                <span className="text-[#D8B46B]/30">|</span>
-                <Link
-                  to="/app/signup"
-                  className="text-xs tracking-wide text-[#1E3A32] hover:text-[#D8B46B] transition-colors font-medium"
-                >
-                  Join
-                </Link>
-              </div>
-            </div>
+            <Link
+              to={createPageUrl("Contact")}
+              className="text-xs tracking-wide text-[#1E3A32] hover:text-[#D8B46B] transition-colors font-medium"
+            >
+              Schedule Your Complimentary Consultation
+            </Link>
           </div>
         </div>
 
@@ -264,9 +247,24 @@ export default function Layout({ children, currentPageName }) {
                 />
                 </Link>
                 ))}
+
+                <div className="flex items-center gap-3 ml-6 pl-6 border-l border-[#D8B46B]/20">
+                  <Link
+                    to="/login"
+                    className="text-sm tracking-wide text-[#2B2725]/70 hover:text-[#1E3A32] transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="px-5 py-2 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+                  >
+                    Get Started
+                  </Link>
+                </div>
                 </div>
 
-          {/* Mobile Menu Button */}
+                {/* Mobile Menu Button */}
                 <button
                   onClick={() => {
                     if (navigator.vibrate) navigator.vibrate(10);
@@ -308,16 +306,28 @@ export default function Layout({ children, currentPageName }) {
                     {link.name}
                   </Link>
                 ))}
-                <Link
-                  to={createPageUrl("Contact")}
-                  onClick={() => {
-                    if (navigator.vibrate) navigator.vibrate(10);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="mt-4 px-6 py-3 bg-[#1E3A32] text-[#F9F5EF] text-center text-sm tracking-wide"
-                >
-                  Book Consultation
-                </Link>
+                <div className="mt-6 pt-4 border-t border-[#E4D9C4] flex flex-col gap-3">
+                  <Link
+                    to="/login"
+                    onClick={() => {
+                      if (navigator.vibrate) navigator.vibrate(10);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="px-6 py-3 border border-[#1E3A32] text-[#1E3A32] text-center text-sm tracking-wide"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/login"
+                    onClick={() => {
+                      if (navigator.vibrate) navigator.vibrate(10);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="px-6 py-3 bg-[#1E3A32] text-[#F9F5EF] text-center text-sm tracking-wide"
+                  >
+                    Get Started
+                  </Link>
+                </div>
               </div>
             </motion.div>
           )}
