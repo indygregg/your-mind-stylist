@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import SEO from "../components/SEO";
+import LockedResourceModal from "../components/resources/LockedResourceModal";
 import { 
   FileText, Video, Headphones, Link as LinkIcon, FileSpreadsheet, Download,
   Lock, Grid3x3, List, Search, Filter, ExternalLink
@@ -19,10 +20,16 @@ export default function Resources() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [accessFilter, setAccessFilter] = useState("all");
   const [userProducts, setUserProducts] = useState([]);
+  const [lockedResource, setLockedResource] = useState(null);
 
   const { data: resources = [], isLoading } = useQuery({
     queryKey: ["resources"],
     queryFn: () => base44.entities.Resource.filter({ status: "published" }, "sort_order"),
+  });
+
+  const { data: products = [] } = useQuery({
+    queryKey: ["products"],
+    queryFn: () => base44.entities.Product.list(),
   });
 
   useEffect(() => {
@@ -55,7 +62,7 @@ export default function Resources() {
 
   const handleResourceClick = async (resource) => {
     if (!hasAccess(resource)) {
-      alert("This resource requires a purchase to access. Please check the required products.");
+      setLockedResource(resource);
       return;
     }
 
@@ -135,6 +142,14 @@ export default function Resources() {
         title="Resource Library - Your Mind Stylist"
         description="Access worksheets, guides, audio sessions, and tools to support your transformation journey."
       />
+
+      {lockedResource && (
+        <LockedResourceModal
+          resource={lockedResource}
+          products={products}
+          onClose={() => setLockedResource(null)}
+        />
+      )}
 
       <div className="min-h-screen bg-[#F9F5EF]">
         {/* Hero Section */}
