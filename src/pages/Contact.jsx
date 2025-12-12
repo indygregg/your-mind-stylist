@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Send, Mail, CheckCircle } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -94,19 +95,41 @@ export default function Contact() {
             className="text-center"
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              Contact
+              <CmsText 
+                contentKey="contact.hero.subtitle" 
+                page="Contact"
+                blockTitle="Hero Subtitle"
+                fallback="Contact" 
+                contentType="short_text"
+              />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
-              Let's Start the Conversation
+              <CmsText 
+                contentKey="contact.hero.title" 
+                page="Contact"
+                blockTitle="Hero Title"
+                fallback="Let's Start the Conversation" 
+                contentType="short_text"
+              />
             </h1>
             <p className="text-[#2B2725] font-serif text-2xl md:text-3xl italic mb-8">
-              Whether you're exploring personal work, organizational support, or have a question about
-              one of my programs, I'd love to hear from you.
+              <CmsText 
+                contentKey="contact.hero.subtitle2" 
+                page="Contact"
+                blockTitle="Hero Subtitle 2"
+                fallback="Whether you're exploring personal work, organizational support, or have a question about one of my programs, I'd love to hear from you." 
+                contentType="rich_text"
+              />
             </p>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed max-w-3xl mx-auto">
-              Sometimes the first step toward change is simply saying, "Here's where I am, and here's
-              what I'd like to be different." This page is your space to do exactly that.
+              <CmsText 
+                contentKey="contact.hero.description" 
+                page="Contact"
+                blockTitle="Hero Description"
+                fallback="Sometimes the first step toward change is simply saying, \"Here's where I am, and here's what I'd like to be different.\" This page is your space to do exactly that." 
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -120,10 +143,23 @@ export default function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">Get in Touch</h2>
+            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
+              <CmsText 
+                contentKey="contact.form.title" 
+                page="Contact"
+                blockTitle="Form Section Title"
+                fallback="Get in Touch" 
+                contentType="short_text"
+              />
+            </h2>
             <p className="text-[#2B2725]/80 text-lg mb-10">
-              Share a bit about what you're looking for, and I'll respond as soon as I can with next
-              steps or a suggested path forward.
+              <CmsText 
+                contentKey="contact.form.description" 
+                page="Contact"
+                blockTitle="Form Description"
+                fallback="Share a bit about what you're looking for, and I'll respond as soon as I can with next steps or a suggested path forward." 
+                contentType="rich_text"
+              />
             </p>
 
             {submitted ? (
@@ -309,9 +345,23 @@ export default function Contact() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-8">
-              Other Ways to Connect
+              <CmsText 
+                contentKey="contact.other.title" 
+                page="Contact"
+                blockTitle="Other Ways Title"
+                fallback="Other Ways to Connect" 
+                contentType="short_text"
+              />
             </h2>
-            <p className="text-[#2B2725]/80 text-lg mb-6">If you prefer, you can also reach out here:</p>
+            <p className="text-[#2B2725]/80 text-lg mb-6">
+              <CmsText 
+                contentKey="contact.other.description" 
+                page="Contact"
+                blockTitle="Other Ways Description"
+                fallback="If you prefer, you can also reach out here:" 
+                contentType="rich_text"
+              />
+            </p>
 
             <div className="space-y-4">
               <div className="flex items-start gap-4">
@@ -346,12 +396,23 @@ export default function Contact() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-8">
-              Not Sure Where to Start?
+              <CmsText 
+                contentKey="contact.nextsteps.title" 
+                page="Contact"
+                blockTitle="Next Steps Title"
+                fallback="Not Sure Where to Start?" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">
-              If you're unsure which path is right for you, that's completely okay. You can use this
-              page simply to say:
+              <CmsText 
+                contentKey="contact.nextsteps.intro" 
+                page="Contact"
+                blockTitle="Next Steps Intro"
+                fallback="If you're unsure which path is right for you, that's completely okay. You can use this page simply to say:" 
+                contentType="rich_text"
+              />
             </p>
 
             <div className="bg-[#F9F5EF] p-8 mb-8">
@@ -430,12 +491,23 @@ export default function Contact() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
-              You Don't Have to Figure It All Out Alone
+              <CmsText 
+                contentKey="contact.cta.title" 
+                page="Contact"
+                blockTitle="CTA Title"
+                fallback="You Don't Have to Figure It All Out Alone" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
-              Rewriting your patterns and shifting your internal world can feel big — but you don't
-              have to do it by yourself. This is an invitation to begin.
+              <CmsText 
+                contentKey="contact.cta.description" 
+                page="Contact"
+                blockTitle="CTA Description"
+                fallback="Rewriting your patterns and shifting your internal world can feel big — but you don't have to do it by yourself. This is an invitation to begin." 
+                contentType="rich_text"
+              />
             </p>
 
             <a
