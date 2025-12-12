@@ -34,6 +34,7 @@ import ManagerDashboard from './pages/ManagerDashboard';
 import Masterclass from './pages/Masterclass';
 import NotFound from './pages/NotFound';
 import PocketVisualization from './pages/PocketVisualization';
+import PocketVisualizationPurchase from './pages/PocketVisualizationPurchase';
 import Podcast from './pages/Podcast';
 import Pricing from './pages/Pricing';
 import PrivateSessions from './pages/PrivateSessions';
@@ -55,7 +56,7 @@ import StudioSettings from './pages/StudioSettings';
 import WebinarPage from './pages/WebinarPage';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
-import PocketVisualizationPurchase from './pages/PocketVisualizationPurchase';
+import BookingSuccess from './pages/BookingSuccess';
 import __Layout from './Layout.jsx';
 
 
@@ -96,6 +97,7 @@ export const PAGES = {
     "Masterclass": Masterclass,
     "NotFound": NotFound,
     "PocketVisualization": PocketVisualization,
+    "PocketVisualizationPurchase": PocketVisualizationPurchase,
     "Podcast": Podcast,
     "Pricing": Pricing,
     "PrivateSessions": PrivateSessions,
@@ -117,7 +119,7 @@ export const PAGES = {
     "WebinarPage": WebinarPage,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
-    "PocketVisualizationPurchase": PocketVisualizationPurchase,
+    "BookingSuccess": BookingSuccess,
 }
 
 export const pagesConfig = {
