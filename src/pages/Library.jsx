@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
-import { Layers, Sparkles, Play, Headphones, Users, Award, ChevronDown, ChevronUp } from "lucide-react";
+import { Layers, Sparkles, Play, Headphones, Users, Award, ChevronDown, ChevronUp, FileText } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import ProgramCard from "../components/library/ProgramCard";
 import StudentDashboard from "../components/library/StudentDashboard";
@@ -61,6 +61,11 @@ export default function Library() {
         .sort((a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date));
     },
     enabled: !!user?.email,
+  });
+
+  const { data: resources = [] } = useQuery({
+    queryKey: ["publishedResources"],
+    queryFn: () => base44.entities.Resource.filter({ status: "published" }),
   });
 
   useEffect(() => {
@@ -386,6 +391,40 @@ export default function Library() {
           {/* Traditional Library View */}
           {!showDashboard && (
             <div>
+
+          {/* Resources Card - Prominent placement */}
+          <Link to={createPageUrl("Resources")}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ scale: 1.02 }}
+              className="bg-gradient-to-br from-[#D8B46B] to-[#C9A55B] p-8 mb-8 cursor-pointer shadow-lg hover:shadow-xl transition-all"
+            >
+              <div className="flex items-start gap-6">
+                <div className="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <FileText size={32} className="text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-serif text-2xl text-white mb-2">Resource Library</h3>
+                  <p className="text-white/90 mb-4">
+                    Access worksheets, guides, audio sessions, and tools to support your journey.
+                  </p>
+                  <div className="flex items-center gap-6 text-sm text-white/80">
+                    <span>{resources.length} Resources Available</span>
+                    {resources.filter(r => r.featured).length > 0 && (
+                      <span>• {resources.filter(r => r.featured).length} Featured</span>
+                    )}
+                    {resources.filter(r => r.access_level === "public").length > 0 && (
+                      <span>• {resources.filter(r => r.access_level === "public").length} Free</span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-white/60 self-center">
+                  <ChevronDown size={24} className="rotate-[-90deg]" />
+                </div>
+              </div>
+            </motion.div>
+          </Link>
 
           {/* Featured Programs */}
           {featuredPrograms.length > 0 && (
