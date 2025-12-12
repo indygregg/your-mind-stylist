@@ -4,6 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Video, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 
 export default function ZoomConnect() {
+    // Set auth layout
+    if (typeof window !== 'undefined') {
+        window.__USE_AUTH_LAYOUT = true;
+    }
+
     const [user, setUser] = useState(null);
     const [connecting, setConnecting] = useState(false);
 
@@ -43,8 +48,9 @@ export default function ZoomConnect() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
-            <div className="bg-white rounded-lg shadow-sm border p-8">
+        <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
+            <div className="max-w-2xl mx-auto">
+            <div className="bg-white rounded-lg shadow-md p-8">
                 <div className="flex items-center gap-3 mb-6">
                     <Video size={32} className="text-[#2D8CFF]" />
                     <h1 className="text-2xl font-serif text-[#1E3A32]">Zoom Integration</h1>
@@ -114,6 +120,7 @@ export default function ZoomConnect() {
                         </p>
                     </div>
                 )}
+            </div>
             </div>
         </div>
     );
