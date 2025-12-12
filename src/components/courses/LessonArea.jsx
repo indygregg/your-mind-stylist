@@ -95,6 +95,22 @@ export default function LessonArea({ lesson, isCompleted, onMarkComplete, onAddN
           </Button>
         </div>
 
+        {/* Transcription */}
+        {lesson.transcription_url && (
+          <div className="bg-white p-6 rounded-lg mb-8">
+            <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">Transcript</h2>
+            <a
+              href={lesson.transcription_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
+            >
+              <span>Download Transcript</span>
+              <span>→</span>
+            </a>
+          </div>
+        )}
+
         {/* Resources */}
         {lesson.resources && lesson.resources.length > 0 && (
           <div className="mt-12">

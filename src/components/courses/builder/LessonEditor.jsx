@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { X, Plus, Upload } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { X, Plus, Upload, FileText } from "lucide-react";
 import ReactQuill from "react-quill";
+import { base44 } from "@/api/base44Client";
 
-export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload }) {
+export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload, allLessons = [], modules = [] }) {
+  const [uploadingTranscription, setUploadingTranscription] = useState(false);
+  
   const addKeyTakeaway = () => {
     const takeaways = lesson.key_takeaways || [];
     onUpdate({ ...lesson, key_takeaways: [...takeaways, ""] });
@@ -23,6 +27,52 @@ export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload 
     const takeaways = lesson.key_takeaways.filter((_, i) => i !== index);
     onUpdate({ ...lesson, key_takeaways: takeaways });
   };
+
+  const addResource = () => {
+    const resources = lesson.resources || [];
+    onUpdate({ ...lesson, resources: [...resources, { title: "", type: "pdf", url: "" }] });
+  };
+
+  const updateResource = (index, field, value) => {
+    const resources = [...(lesson.resources || [])];
+    resources[index] = { ...resources[index], [field]: value };
+    onUpdate({ ...lesson, resources });
+  };
+
+  const removeResource = (index) => {
+    const resources = lesson.resources.filter((_, i) => i !== index);
+    onUpdate({ ...lesson, resources });
+  };
+
+  const handleTranscriptionUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploadingTranscription(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      onUpdate({ ...lesson, transcription_url: file_url });
+    } catch (error) {
+      alert("Failed to upload transcription");
+    } finally {
+      setUploadingTranscription(false);
+    }
+  };
+
+  const togglePrerequisite = (prereqId) => {
+    const prerequisites = lesson.prerequisites || [];
+    if (prerequisites.includes(prereqId)) {
+      onUpdate({ ...lesson, prerequisites: prerequisites.filter(id => id !== prereqId) });
+    } else {
+      onUpdate({ ...lesson, prerequisites: [...prerequisites, prereqId] });
+    }
+  };
+
+  // Get available prerequisite lessons (lessons before this one)
+  const availablePrerequisites = allLessons.filter(l => 
+    l.id !== lesson.id && 
+    (l.order < lesson.order || l.module_id !== lesson.module_id)
+  );
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 overflow-y-auto">
@@ -123,6 +173,52 @@ export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload 
                   onChange={(e) => onUpdate({ ...lesson, embed_url: e.target.value })}
                   placeholder="YouTube, Vimeo, etc."
                 />
+                <p className="text-xs text-[#2B2725]/60 mt-1">
+                  Supports YouTube, Vimeo, and other iframe-embeddable videos
+                </p>
+              </div>
+            )}
+
+            {/* Transcription Upload */}
+            {(lesson.type === "video" || lesson.type === "audio") && (
+              <div>
+                <Label>Transcription (Optional)</Label>
+                {lesson.transcription_url ? (
+                  <div className="p-4 bg-[#F9F5EF] rounded flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <FileText size={16} className="text-[#D8B46B]" />
+                      <span className="text-sm text-[#2B2725]">Transcription uploaded</span>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onUpdate({ ...lesson, transcription_url: "" })}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-[#E4D9C4] rounded-lg p-4">
+                    <input
+                      type="file"
+                      accept=".txt,.pdf,.doc,.docx"
+                      onChange={handleTranscriptionUpload}
+                      className="hidden"
+                      id="transcription-upload"
+                    />
+                    <label htmlFor="transcription-upload">
+                      <Button type="button" variant="outline" size="sm" disabled={uploadingTranscription} asChild>
+                        <span>
+                          {uploadingTranscription ? "Uploading..." : "Upload Transcription"}
+                        </span>
+                      </Button>
+                    </label>
+                    <p className="text-xs text-[#2B2725]/60 mt-2">
+                      For accessibility - transcript of {lesson.type} content
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
@@ -134,6 +230,32 @@ export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload 
                 onChange={(value) => onUpdate({ ...lesson, content: value })}
                 className="bg-white"
               />
+            </div>
+
+            {/* Estimated Time */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="estimated-time">Estimated Time (minutes)</Label>
+                <Input
+                  id="estimated-time"
+                  type="number"
+                  value={lesson.estimated_time || ""}
+                  onChange={(e) => onUpdate({ ...lesson, estimated_time: parseInt(e.target.value) || 0 })}
+                  placeholder="e.g., 15"
+                />
+              </div>
+              <div className="flex items-end">
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    id="required"
+                    checked={lesson.required !== false}
+                    onCheckedChange={(checked) => onUpdate({ ...lesson, required: checked })}
+                  />
+                  <Label htmlFor="required" className="font-normal cursor-pointer">
+                    Required lesson
+                  </Label>
+                </div>
+              </div>
             </div>
 
             {/* Key Takeaways */}
@@ -169,6 +291,96 @@ export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload 
                 </Button>
               </div>
             </div>
+
+            {/* Resources */}
+            <div>
+              <Label>Resources</Label>
+              <div className="space-y-3">
+                {(lesson.resources || []).map((resource, index) => (
+                  <div key={index} className="p-3 bg-[#F9F5EF] rounded-lg space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-xs">Resource {index + 1}</Label>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeResource(index)}
+                      >
+                        <X size={14} />
+                      </Button>
+                    </div>
+                    <Input
+                      value={resource.title || ""}
+                      onChange={(e) => updateResource(index, "title", e.target.value)}
+                      placeholder="Resource title"
+                      className="text-sm"
+                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <Select
+                        value={resource.type || "pdf"}
+                        onValueChange={(value) => updateResource(index, "type", value)}
+                      >
+                        <SelectTrigger className="text-sm">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pdf">PDF</SelectItem>
+                          <SelectItem value="link">Link</SelectItem>
+                          <SelectItem value="audio">Audio</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Input
+                        value={resource.url || ""}
+                        onChange={(e) => updateResource(index, "url", e.target.value)}
+                        placeholder="URL"
+                        className="text-sm"
+                      />
+                    </div>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={addResource}
+                  className="w-full border-dashed"
+                >
+                  <Plus size={16} className="mr-2" />
+                  Add Resource
+                </Button>
+              </div>
+            </div>
+
+            {/* Prerequisites */}
+            {availablePrerequisites.length > 0 && (
+              <div>
+                <Label>Prerequisites (Optional)</Label>
+                <p className="text-xs text-[#2B2725]/60 mb-3">
+                  Students must complete these lessons before accessing this one
+                </p>
+                <div className="max-h-40 overflow-y-auto space-y-2 border border-[#E4D9C4] rounded-lg p-3">
+                  {availablePrerequisites.map((prereq) => {
+                    const prereqModule = modules.find(m => m.id === prereq.module_id);
+                    return (
+                      <div key={prereq.id} className="flex items-center gap-2">
+                        <Checkbox
+                          id={`prereq-${prereq.id}`}
+                          checked={(lesson.prerequisites || []).includes(prereq.id)}
+                          onCheckedChange={() => togglePrerequisite(prereq.id)}
+                        />
+                        <Label 
+                          htmlFor={`prereq-${prereq.id}`} 
+                          className="text-sm font-normal cursor-pointer flex-1"
+                        >
+                          {prereqModule?.title}: {prereq.title}
+                        </Label>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Actions */}
             <div className="flex justify-end gap-3 pt-4 border-t">

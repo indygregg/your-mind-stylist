@@ -359,6 +359,8 @@ export default function CourseBuilder() {
       {editingLesson && currentLesson && (
         <LessonEditor
           lesson={currentLesson}
+          allLessons={modules.flatMap(m => m.lessons || [])}
+          modules={modules}
           onUpdate={(updatedLesson) => {
             const updatedModules = modules.map((mod) => {
               if (mod.id === editingLesson.moduleId) {

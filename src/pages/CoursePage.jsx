@@ -178,6 +178,18 @@ export default function CoursePage() {
   };
 
   const handleLessonSelect = (lessonId) => {
+    // Check if lesson is locked
+    const lesson = allLessons.find(l => l.id === lessonId);
+    if (lesson?.prerequisites && lesson.prerequisites.length > 0) {
+      const allPrereqsCompleted = lesson.prerequisites.every(prereqId =>
+        userLessonProgress.some(p => p.lesson_id === prereqId && p.completed)
+      );
+      if (!allPrereqsCompleted) {
+        alert("Please complete the prerequisite lessons first");
+        return;
+      }
+    }
+
     setCurrentLessonId(lessonId);
     progressMutation.mutate({ 
       status: progress?.status === "completed" ? "completed" : "in_progress", 
