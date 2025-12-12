@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings, Clock } from "lucide-react";
+import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings, Clock, CheckCircle, Circle, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function ManagerDashboard() {
   // Set auth layout
   if (typeof window !== 'undefined') {
     window.__USE_AUTH_LAYOUT = true;
   }
+
+  const [setupDismissed, setSetupDismissed] = useState(() => {
+    return localStorage.getItem('booking_setup_dismissed') === 'true';
+  });
 
   const { data: blogPosts = [] } = useQuery({
     queryKey: ["blogPosts"],
@@ -31,6 +36,62 @@ export default function ManagerDashboard() {
     queryKey: ["manager-bookings-count"],
     queryFn: () => base44.entities.Booking.list(),
   });
+
+  const { data: appointmentTypes = [] } = useQuery({
+    queryKey: ["appointmentTypes"],
+    queryFn: () => base44.entities.AppointmentType.list(),
+  });
+
+  const { data: availabilityRules = [] } = useQuery({
+    queryKey: ["availabilityRules"],
+    queryFn: () => base44.entities.AvailabilityRule.list(),
+  });
+
+  const { data: user } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: () => base44.auth.me(),
+  });
+
+  // Check setup completion
+  const hasAvailability = availabilityRules.length > 0;
+  const hasAppointmentTypes = appointmentTypes.length > 0;
+  const hasZoomConnected = user?.zoom_access_token ? true : false;
+  const hasTestedBooking = bookings.length > 0;
+
+  const setupSteps = [
+    { 
+      id: 'availability', 
+      label: 'Set your availability', 
+      completed: hasAvailability, 
+      link: 'ManagerAvailability' 
+    },
+    { 
+      id: 'appointment_types', 
+      label: 'Create your appointment types', 
+      completed: hasAppointmentTypes, 
+      link: 'ManagerAppointments' 
+    },
+    { 
+      id: 'zoom', 
+      label: 'Connect Zoom (optional)', 
+      completed: hasZoomConnected, 
+      link: 'ZoomConnect' 
+    },
+    { 
+      id: 'test', 
+      label: 'Test a booking', 
+      completed: hasTestedBooking, 
+      link: 'Bookings' 
+    },
+  ];
+
+  const completedSteps = setupSteps.filter(s => s.completed).length;
+  const allComplete = completedSteps === setupSteps.length;
+
+  const handleDismissSetup = () => {
+    localStorage.setItem('booking_setup_dismissed', 'true');
+    setSetupDismissed(true);
+  };
 
   const quickActions = [
     { icon: PenSquare, label: "Create New Blog Post", link: "BlogEditor?mode=new" },
@@ -67,6 +128,131 @@ export default function ManagerDashboard() {
             Here's what's happening in your world today.
           </p>
         </motion.div>
+
+        {/* Booking Setup Checklist */}
+        {!setupDismissed && !allComplete && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-12"
+          >
+            <div className="bg-white border-2 border-[#D8B46B] p-8 shadow-lg relative">
+              <button
+                onClick={handleDismissSetup}
+                className="absolute top-4 right-4 text-[#2B2725]/40 hover:text-[#2B2725] transition-colors"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="flex items-start gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-[#D8B46B]/10 flex items-center justify-center flex-shrink-0">
+                  <Settings size={24} className="text-[#D8B46B]" />
+                </div>
+                <div>
+                  <h2 className="font-serif text-2xl text-[#1E3A32] mb-2">
+                    Booking Setup Checklist
+                  </h2>
+                  <p className="text-[#2B2725]/70">
+                    You're almost ready to accept bookings. Complete these steps once, then you're set.
+                  </p>
+                </div>
+              </div>
+
+              {/* Progress bar */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between text-sm text-[#2B2725]/60 mb-2">
+                  <span>{completedSteps} of {setupSteps.length} completed</span>
+                  <span>{Math.round((completedSteps / setupSteps.length) * 100)}%</span>
+                </div>
+                <div className="h-2 bg-[#E4D9C4] rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${(completedSteps / setupSteps.length) * 100}%` }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="h-full bg-[#D8B46B]"
+                  />
+                </div>
+              </div>
+
+              {/* Checklist */}
+              <div className="space-y-3 mb-6">
+                {setupSteps.map((step, idx) => (
+                  <Link
+                    key={step.id}
+                    to={createPageUrl(step.link)}
+                    className="flex items-center gap-3 p-3 rounded hover:bg-[#F9F5EF] transition-colors group"
+                  >
+                    {step.completed ? (
+                      <CheckCircle size={20} className="text-green-600 flex-shrink-0" />
+                    ) : (
+                      <Circle size={20} className="text-[#2B2725]/30 flex-shrink-0" />
+                    )}
+                    <span className={`flex-1 ${step.completed ? 'text-[#2B2725]/60 line-through' : 'text-[#1E3A32] font-medium group-hover:text-[#D8B46B]'}`}>
+                      {step.label}
+                    </span>
+                    <span className="text-xs text-[#2B2725]/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                      →
+                    </span>
+                  </Link>
+                ))}
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => {
+                    const firstIncomplete = setupSteps.find(s => !s.completed);
+                    if (firstIncomplete) {
+                      window.location.href = createPageUrl(firstIncomplete.link);
+                    }
+                  }}
+                  className="bg-[#1E3A32] hover:bg-[#2B4A40]"
+                >
+                  Continue Setup
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={handleDismissSetup}
+                >
+                  Hide for now
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Setup Complete State */}
+        {!setupDismissed && allComplete && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="mb-12"
+          >
+            <div className="bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-200 p-8 shadow-lg relative">
+              <button
+                onClick={handleDismissSetup}
+                className="absolute top-4 right-4 text-green-600/40 hover:text-green-600 transition-colors"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center flex-shrink-0">
+                  <CheckCircle size={24} className="text-white" />
+                </div>
+                <div>
+                  <h2 className="font-serif text-2xl text-green-900 mb-1">
+                    You're ready to accept bookings!
+                  </h2>
+                  <p className="text-green-700">
+                    Your booking system is fully configured. Clients can now schedule sessions with you.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Content Alchemy Suite - Featured */}
         <motion.div
