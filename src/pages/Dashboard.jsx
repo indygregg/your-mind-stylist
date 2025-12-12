@@ -303,7 +303,7 @@ export default function Dashboard() {
           <div>
             <h2 className="font-serif text-xl text-[#1E3A32] mb-6">Quick Links</h2>
             <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
-              [
+              {[
                 { label: "Style Pauses™", page: "StylePauses", icon: Sparkles, description: "1-3 minute resets." },
                 { label: "Library", page: "Library", icon: Layers, description: "Access your programs." },
                 { label: "Pocket Visualization™", page: "PocketVisualization", icon: Sparkles, description: "Daily emotional reset tools." },
