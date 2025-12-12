@@ -49,6 +49,11 @@ export default function StudioDashboard() {
     { icon: ShoppingCart, label: "New Purchases (Last 7 Days)", value: "—", color: "#1E3A32" },
   ];
 
+  const { data: stylePauses = [] } = useQuery({
+    queryKey: ["studio-style-pauses"],
+    queryFn: () => base44.entities.StylePause.list(),
+  });
+
   const contentOverview = [
     { 
       label: "Blog Posts", 
@@ -62,6 +67,11 @@ export default function StudioDashboard() {
       published: courses.filter(c => c.status === "published").length,
     },
     { 
+      label: "Style Pauses™", 
+      draft: stylePauses.filter(s => !s.is_published).length,
+      published: stylePauses.filter(s => s.is_published).length,
+    },
+    { 
       label: "Inner Rehearsal Sessions", 
       draft: audioSessions.filter(a => a.status === "draft").length,
       published: audioSessions.filter(a => a.status === "published").length,
@@ -72,6 +82,7 @@ export default function StudioDashboard() {
     { icon: Users, label: "Open Manager Dashboard", link: "ManagerDashboard", color: "#1E3A32" },
     { icon: FileText, label: "Go to Blog Manager", link: "BlogManager", color: "#D8B46B" },
     { icon: FileVideo, label: "Go to Course Manager", link: "StudioCourses", color: "#A6B7A3" },
+    { icon: Headphones, label: "Style Pauses™", link: "StylePauses", color: "#6E4F7D" },
     { icon: ListTodo, label: "Roadmap", link: "AdminRoadmap", color: "#6E4F7D" },
     { icon: BookOpen, label: "Dev Docs", link: "StudioDevDocs", color: "#2B2725" },
     { icon: Shield, label: "Roles & Access", link: "StudioRoles", color: "#1E3A32" },

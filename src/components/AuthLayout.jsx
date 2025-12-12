@@ -72,6 +72,7 @@ export default function AuthLayout({ children, currentPageName }) {
     // Regular user
     return [
       ...commonLinks,
+      { name: "Style Pauses™", page: "StylePauses" },
       { name: "My Bookings", page: "ClientBookings" },
       { name: "Library", page: "Library" },
       { name: "Programs", page: "Programs" },
