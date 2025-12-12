@@ -54,6 +54,21 @@ export default function StudioDashboard() {
     queryFn: () => base44.entities.StylePause.list(),
   });
 
+  const { data: identityWardrobe = [] } = useQuery({
+    queryKey: ["studio-identity-wardrobe"],
+    queryFn: () => base44.entities.IdentityWardrobe.list(),
+  });
+
+  const { data: dailyChecks = [] } = useQuery({
+    queryKey: ["studio-daily-checks"],
+    queryFn: () => base44.entities.DailyStyleCheck.list(),
+  });
+
+  const { data: pauseCompletions = [] } = useQuery({
+    queryKey: ["studio-pause-completions"],
+    queryFn: () => base44.entities.StylePauseCompletion.list(),
+  });
+
   const contentOverview = [
     { 
       label: "Blog Posts", 
@@ -75,6 +90,32 @@ export default function StudioDashboard() {
       label: "Inner Rehearsal Sessions", 
       draft: audioSessions.filter(a => a.status === "draft").length,
       published: audioSessions.filter(a => a.status === "published").length,
+    },
+    {
+      label: "Identity Wardrobe",
+      draft: identityWardrobe.filter(i => i.is_default).length,
+      published: identityWardrobe.filter(i => !i.is_default).length,
+      draftLabel: "Default",
+      publishedLabel: "User-Created"
+    },
+    {
+      label: "Daily Style Checks",
+      total: dailyChecks.length,
+      thisWeek: dailyChecks.filter(c => {
+        const created = new Date(c.created_date);
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        return created >= weekAgo;
+      }).length,
+      totalLabel: "Total Check-ins",
+      weekLabel: "This Week"
+    },
+    {
+      label: "Style Pause Completions",
+      total: pauseCompletions.length,
+      completed: pauseCompletions.filter(p => p.completion_status === "completed").length,
+      totalLabel: "Total Sessions",
+      completedLabel: "Completed"
     },
   ];
 
@@ -152,20 +193,42 @@ export default function StudioDashboard() {
               <div key={index} className="bg-white p-6">
                 <h3 className="font-medium text-[#1E3A32] mb-4">{content.label}</h3>
                 <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-[#2B2725]/60">Draft</span>
-                    <span className="font-medium">{content.draft}</span>
-                  </div>
+                  {content.draft !== undefined && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#2B2725]/60">{content.draftLabel || "Draft"}</span>
+                      <span className="font-medium">{content.draft}</span>
+                    </div>
+                  )}
                   {content.scheduled !== undefined && (
                     <div className="flex justify-between text-sm">
                       <span className="text-[#2B2725]/60">Scheduled</span>
                       <span className="font-medium">{content.scheduled}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-sm">
-                    <span className="text-[#2B2725]/60">Published</span>
-                    <span className="font-medium">{content.published}</span>
-                  </div>
+                  {content.published !== undefined && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#2B2725]/60">{content.publishedLabel || "Published"}</span>
+                      <span className="font-medium">{content.published}</span>
+                    </div>
+                  )}
+                  {content.total !== undefined && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#2B2725]/60">{content.totalLabel || "Total"}</span>
+                      <span className="font-medium">{content.total}</span>
+                    </div>
+                  )}
+                  {content.thisWeek !== undefined && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#2B2725]/60">{content.weekLabel || "This Week"}</span>
+                      <span className="font-medium">{content.thisWeek}</span>
+                    </div>
+                  )}
+                  {content.completed !== undefined && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-[#2B2725]/60">{content.completedLabel || "Completed"}</span>
+                      <span className="font-medium">{content.completed}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
