@@ -37,6 +37,8 @@ export default function AuthLayout({ children, currentPageName }) {
     if (user.role === "admin") {
       return [
         ...commonLinks,
+        { name: "Calendar", page: "ManagerCalendar" },
+        { name: "Staff", page: "StaffManagement" },
         { name: "Library", page: "Library" },
         { name: "Studio", page: "StudioDashboard" },
         { name: "Roadmap", page: "AdminRoadmap" },
@@ -48,6 +50,8 @@ export default function AuthLayout({ children, currentPageName }) {
     if (user.role === "manager") {
       return [
         ...commonLinks,
+        { name: "Calendar", page: "ManagerCalendar" },
+        { name: "Staff", page: "StaffManagement" },
         { name: "Library", page: "Library" },
         { name: "Blog", page: "BlogManager" },
         { name: "Author Profile", page: "AuthorProfile" },
@@ -60,6 +64,7 @@ export default function AuthLayout({ children, currentPageName }) {
     // Regular user
     return [
       ...commonLinks,
+      { name: "My Bookings", page: "ClientBookings" },
       { name: "Library", page: "Library" },
       { name: "Programs", page: "Programs" },
       { name: "Notes", page: "StudioNotes" },
