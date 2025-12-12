@@ -156,7 +156,7 @@ export default function AdminUsers() {
                       </td>
                       <td className="px-6 py-4">
                         <Select
-                          value={user.role}
+                          value={user.custom_role || user.role}
                           onValueChange={(newRole) => handleRoleChange(user.id, newRole)}
                         >
                           <SelectTrigger className="w-32">
