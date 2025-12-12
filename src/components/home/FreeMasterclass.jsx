@@ -67,7 +67,7 @@ export default function FreeMasterclass() {
                 contentKey="home.masterclass.label"
                 page="Home"
                 blockTitle="Masterclass Label"
-                defaultContent="Free Masterclass"
+                fallback="Free Masterclass"
                 contentType="short_text"
               />
             </span>
@@ -77,7 +77,7 @@ export default function FreeMasterclass() {
                 contentKey="home.masterclass.title"
                 page="Home"
                 blockTitle="Masterclass Title"
-                defaultContent="Imposter Syndrome & Other Myths to Ditch"
+                fallback="Imposter Syndrome & Other Myths to Ditch"
                 contentType="short_text"
               />
             </h2>
@@ -87,7 +87,7 @@ export default function FreeMasterclass() {
                 contentKey="home.masterclass.description"
                 page="Home"
                 blockTitle="Masterclass Description"
-                defaultContent="An on-demand masterclass for anyone who feels like they're 'faking it.' Learn what imposter syndrome really is, why it follows high performers, and how to break the loop for good."
+                fallback="An on-demand masterclass for anyone who feels like they're 'faking it.' Learn what imposter syndrome really is, why it follows high performers, and how to break the loop for good."
                 contentType="rich_text"
               />
             </p>
