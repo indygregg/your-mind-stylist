@@ -51,7 +51,14 @@ export default function FinalCTA() {
               to={createPageUrl("Contact")}
               className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
             >
-              Schedule Your Complimentary Consultation
+              <CmsText
+                contentKey="home.closing.cta1"
+                page="Home"
+                blockTitle="Closing CTA 1"
+                fallback="Schedule Your Complimentary Consultation"
+                contentType="short_text"
+                as="span"
+              />
               <ArrowRight
                 size={16}
                 className="group-hover:translate-x-1 transition-transform"
@@ -62,7 +69,14 @@ export default function FinalCTA() {
               className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
             >
               <Mail size={16} className="text-[#D8B46B]" />
-              Contact Roberta
+              <CmsText
+                contentKey="home.closing.cta2"
+                page="Home"
+                blockTitle="Closing CTA 2"
+                fallback="Contact Roberta"
+                contentType="short_text"
+                as="span"
+              />
             </Link>
           </div>
         </motion.div>

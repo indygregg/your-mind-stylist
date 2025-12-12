@@ -82,9 +82,15 @@ export default function Testimonials() {
               />
 
               {/* Quote Text */}
-              <p className="font-serif text-xl text-[#2B2725] leading-relaxed mb-8 italic">
-                "{testimonial.quote}"
-              </p>
+              <CmsText
+                contentKey={`home.testimonials.${index}.quote`}
+                page="Home"
+                blockTitle={`Testimonial ${index + 1} - Quote`}
+                fallback={`"${testimonial.quote}"`}
+                contentType="rich_text"
+                className="font-serif text-xl text-[#2B2725] leading-relaxed mb-8 italic"
+                as="p"
+              />
 
               {/* Attribution */}
               <div className="flex items-center gap-4">
@@ -94,8 +100,24 @@ export default function Testimonials() {
                   </span>
                 </div>
                 <div>
-                  <p className="font-medium text-[#1E3A32]">{testimonial.name}</p>
-                  <p className="text-sm text-[#2B2725]/60">{testimonial.role}</p>
+                  <CmsText
+                    contentKey={`home.testimonials.${index}.name`}
+                    page="Home"
+                    blockTitle={`Testimonial ${index + 1} - Name`}
+                    fallback={testimonial.name}
+                    contentType="short_text"
+                    className="font-medium text-[#1E3A32]"
+                    as="p"
+                  />
+                  <CmsText
+                    contentKey={`home.testimonials.${index}.role`}
+                    page="Home"
+                    blockTitle={`Testimonial ${index + 1} - Role`}
+                    fallback={testimonial.role}
+                    contentType="short_text"
+                    className="text-sm text-[#2B2725]/60"
+                    as="p"
+                  />
                 </div>
               </div>
             </motion.div>

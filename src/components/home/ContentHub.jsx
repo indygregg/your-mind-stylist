@@ -92,12 +92,35 @@ export default function ContentHub() {
                 </div>
 
                 {/* Content */}
-                <h3 className="font-serif text-2xl text-[#1E3A32] mb-3">{item.title}</h3>
-                <p className="text-[#2B2725]/70 leading-relaxed mb-8">{item.description}</p>
+                <CmsText
+                  contentKey={`home.content_hub.${index}.title`}
+                  page="Home"
+                  blockTitle={`${item.title} - Title`}
+                  fallback={item.title}
+                  contentType="short_text"
+                  className="font-serif text-2xl text-[#1E3A32] mb-3"
+                  as="h3"
+                />
+                <CmsText
+                  contentKey={`home.content_hub.${index}.description`}
+                  page="Home"
+                  blockTitle={`${item.title} - Description`}
+                  fallback={item.description}
+                  contentType="short_text"
+                  className="text-[#2B2725]/70 leading-relaxed mb-8"
+                  as="p"
+                />
 
                 {/* CTA */}
                 <div className="flex items-center gap-2 text-[#1E3A32] font-medium group-hover:text-[#D8B46B] transition-colors">
-                  {item.cta}
+                  <CmsText
+                    contentKey={`home.content_hub.${index}.cta`}
+                    page="Home"
+                    blockTitle={`${item.title} - CTA`}
+                    fallback={item.cta}
+                    contentType="short_text"
+                    as="span"
+                  />
                   <ArrowUpRight
                     size={18}
                     className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
