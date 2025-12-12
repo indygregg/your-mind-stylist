@@ -4,7 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, Calendar, XCircle, StickyNote } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { CheckCircle, Calendar, XCircle, StickyNote, Video, RefreshCw, AlertCircle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 export default function ManagerBookingActions({ booking, onSuccess }) {
@@ -213,6 +214,7 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
           </DialogContent>
         </Dialog>
       )}
+      </div>
     </div>
   );
 }

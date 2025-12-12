@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Calendar, ChevronLeft, ChevronRight, Video, Mail, Phone, Clock, DollarSign, ExternalLink } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, Video, Mail, Phone, Clock, DollarSign, ExternalLink, AlertCircle } from "lucide-react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek, isToday } from "date-fns";
 import ManagerBookingActions from "@/components/manager/ManagerBookingActions";
 
@@ -134,10 +134,13 @@ export default function ManagerCalendar() {
                       <button
                         key={booking.id}
                         onClick={() => setSelectedBooking(booking)}
-                        className="w-full text-left px-2 py-1 bg-[#1E3A32]/10 hover:bg-[#1E3A32]/20 transition-colors text-xs"
+                        className="w-full text-left px-2 py-1 bg-[#1E3A32]/10 hover:bg-[#1E3A32]/20 transition-colors text-xs relative"
                       >
-                        <div className="font-medium text-[#1E3A32] truncate">
+                        <div className="font-medium text-[#1E3A32] truncate flex items-center gap-1">
                           {booking.user_name}
+                          {booking.zoom_status === 'failed' && (
+                            <AlertCircle size={10} className="text-red-500 flex-shrink-0" />
+                          )}
                         </div>
                         <div className="text-[#2B2725]/60 text-[10px]">
                           {booking.scheduled_date && format(new Date(booking.scheduled_date), "h:mm a")}
