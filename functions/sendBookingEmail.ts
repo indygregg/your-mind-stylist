@@ -19,22 +19,78 @@ Deno.serve(async (req) => {
 
         const bookingData = booking[0];
 
-        // Import email components
-        const BookingConfirmationClient = (await import('../components/email/BookingConfirmationClient.js')).default;
-        const BookingConfirmationManager = (await import('../components/email/BookingConfirmationManager.js')).default;
-
+        // Get custom email template if exists
+        const templateKey = recipient_type === 'manager' 
+            ? 'booking_confirmation_manager'
+            : 'booking_confirmation_client';
+        
+        const templates = await base44.asServiceRole.entities.EmailTemplate.filter({
+            template_key: templateKey,
+            active: true
+        });
+        
         let emailHtml, subject, recipient;
 
-        if (recipient_type === 'client') {
-            emailHtml = renderToStaticMarkup(React.createElement(BookingConfirmationClient, { booking: bookingData }));
-            subject = 'Your Private Session Booking is Confirmed';
-            recipient = bookingData.user_email;
-        } else if (recipient_type === 'manager') {
-            emailHtml = renderToStaticMarkup(React.createElement(BookingConfirmationManager, { booking: bookingData }));
-            subject = `New Booking: ${bookingData.user_name} - ${bookingData.service_type}`;
-            recipient = 'roberta@yourmindstylist.com'; // Manager email
+        if (templates.length > 0) {
+            // Use custom template
+            const template = templates[0];
+            subject = template.subject;
+            emailHtml = template.body_html;
+
+            // Helper functions
+            const formatAmount = (amount) => {
+                return new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                }).format(amount / 100);
+            };
+
+            const formatDate = (date) => {
+                if (!date) return "Not scheduled yet";
+                return new Date(date).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit"
+                });
+            };
+
+            // Replace variables
+            emailHtml = emailHtml
+                .replace(/\{\{user_name\}\}/g, bookingData.user_name || '')
+                .replace(/\{\{user_email\}\}/g, bookingData.user_email || '')
+                .replace(/\{\{service_type\}\}/g, bookingData.service_type?.replace(/_/g, " ").toUpperCase() || '')
+                .replace(/\{\{amount\}\}/g, formatAmount(bookingData.amount))
+                .replace(/\{\{session_count\}\}/g, bookingData.session_count || '1')
+                .replace(/\{\{scheduled_date\}\}/g, formatDate(bookingData.scheduled_date))
+                .replace(/\{\{zoom_join_url\}\}/g, bookingData.zoom_join_url || '')
+                .replace(/\{\{zoom_start_url\}\}/g, bookingData.zoom_start_url || '')
+                .replace(/\{\{zoom_password\}\}/g, bookingData.zoom_password || '')
+                .replace(/\{\{notes\}\}/g, bookingData.notes || '')
+                .replace(/\{\{booking_id\}\}/g, bookingData.id || '');
+
+            recipient = recipient_type === 'manager' 
+                ? 'roberta@yourmindstylist.com'
+                : bookingData.user_email;
+
         } else {
-            return Response.json({ error: 'Invalid recipient_type' }, { status: 400 });
+            // Fallback to default React components
+            const BookingConfirmationClient = (await import('../components/email/BookingConfirmationClient.js')).default;
+            const BookingConfirmationManager = (await import('../components/email/BookingConfirmationManager.js')).default;
+
+            if (recipient_type === 'client') {
+                emailHtml = renderToStaticMarkup(React.createElement(BookingConfirmationClient, { booking: bookingData }));
+                subject = 'Your Private Session Booking is Confirmed';
+                recipient = bookingData.user_email;
+            } else if (recipient_type === 'manager') {
+                emailHtml = renderToStaticMarkup(React.createElement(BookingConfirmationManager, { booking: bookingData }));
+                subject = `New Booking: ${bookingData.user_name} - ${bookingData.service_type}`;
+                recipient = 'roberta@yourmindstylist.com';
+            } else {
+                return Response.json({ error: 'Invalid recipient_type' }, { status: 400 });
+            }
         }
 
         // Send email
