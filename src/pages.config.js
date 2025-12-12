@@ -55,6 +55,7 @@ import StudioSettings from './pages/StudioSettings';
 import WebinarPage from './pages/WebinarPage';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
+import PocketVisualizationPurchase from './pages/PocketVisualizationPurchase';
 import __Layout from './Layout.jsx';
 
 
@@ -116,6 +117,7 @@ export const PAGES = {
     "WebinarPage": WebinarPage,
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
+    "PocketVisualizationPurchase": PocketVisualizationPurchase,
 }
 
 export const pagesConfig = {
