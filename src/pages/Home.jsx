@@ -19,7 +19,12 @@ export default function Home() {
     const checkAuthAndRedirect = async () => {
       const isAuth = await base44.auth.isAuthenticated();
       if (isAuth) {
-        navigate(createPageUrl("Dashboard"));
+        const user = await base44.auth.me();
+        const userRole = user?.custom_role || user?.role;
+        // Only redirect regular users, let managers/admins view marketing pages
+        if (userRole !== "manager" && userRole !== "admin") {
+          navigate(createPageUrl("Dashboard"));
+        }
       }
     };
     checkAuthAndRedirect();
