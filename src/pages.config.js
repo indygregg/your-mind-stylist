@@ -71,6 +71,8 @@ import BookAppointment from './pages/BookAppointment';
 import ClientBookings from './pages/ClientBookings';
 import StaffManagement from './pages/StaffManagement';
 import Bookings from './pages/Bookings';
+import BookingPaymentFailed from './pages/BookingPaymentFailed';
+import BookingPaymentCancelled from './pages/BookingPaymentCancelled';
 import __Layout from './Layout.jsx';
 
 
@@ -148,6 +150,8 @@ export const PAGES = {
     "ClientBookings": ClientBookings,
     "StaffManagement": StaffManagement,
     "Bookings": Bookings,
+    "BookingPaymentFailed": BookingPaymentFailed,
+    "BookingPaymentCancelled": BookingPaymentCancelled,
 }
 
 export const pagesConfig = {
