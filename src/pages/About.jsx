@@ -5,7 +5,6 @@ import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Award, Users, Sparkles, Layers } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
-import CmsText from "../components/cms/CmsText";
 
 export default function About() {
   const beliefs = [
@@ -103,15 +102,30 @@ export default function About() {
               transition={{ duration: 0.6 }}
             >
               <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-                <CmsText contentKey="about.hero.subtitle" fallback="Roberta Fernandez" />
+                <CmsText 
+                  contentKey="about.hero.subtitle" 
+                  page="About"
+                  blockTitle="Hero Subtitle"
+                  fallback="Roberta Fernandez" 
+                  contentType="short_text"
+                />
               </span>
               <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
-                <CmsText contentKey="about.hero.title" fallback="Meet Your Mind Stylist" />
+                <CmsText 
+                  contentKey="about.hero.title" 
+                  page="About"
+                  blockTitle="Hero Title"
+                  fallback="Meet Your Mind Stylist" 
+                  contentType="short_text"
+                />
               </h1>
               <p className="text-[#2B2725]/80 text-xl leading-relaxed mb-10">
                 <CmsText 
                   contentKey="about.hero.description" 
+                  page="About"
+                  blockTitle="Hero Description"
                   fallback="Helping you rewrite old patterns, reclaim your emotional intelligence, and restyle your life from the inside out." 
+                  contentType="rich_text"
                 />
               </p>
               <Link
@@ -156,11 +170,19 @@ export default function About() {
             viewport={{ once: true }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              <CmsText contentKey="about.story.subtitle" fallback="The Mind Behind The Method" />
+              <CmsText 
+                contentKey="about.story.subtitle" 
+                page="About"
+                blockTitle="Story Subtitle"
+                fallback="The Mind Behind The Method" 
+                contentType="short_text"
+              />
             </span>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
               <CmsText 
                 contentKey="about.story.title" 
+                page="About"
+                blockTitle="Story Title"
                 fallback="A lifetime of helping people<br /><span class='italic'>think differently.</span>" 
                 contentType="rich_text"
               />
@@ -169,6 +191,8 @@ export default function About() {
             <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
               <CmsText 
                 contentKey="about.story.paragraph1" 
+                page="About"
+                blockTitle="Story Paragraph 1"
                 fallback="I've spent more than forty years studying how people think, feel, communicate, and change. My career has taken me into boardrooms, classrooms, small businesses, government agencies, and deeply personal one-on-one conversations. Across all of these environments, one truth emerged:" 
                 contentType="rich_text"
               />
@@ -176,24 +200,33 @@ export default function About() {
               <p className="font-serif text-2xl text-[#1E3A32] italic py-6">
                 <CmsText 
                   contentKey="about.story.quote" 
+                  page="About"
+                  blockTitle="Story Quote"
                   fallback="Your thinking determines your experience of everything else." 
+                  contentType="short_text"
                 />
               </p>
 
               <CmsText 
                 contentKey="about.story.paragraph2" 
+                page="About"
+                blockTitle="Story Paragraph 2"
                 fallback="When people understand their internal patterns, everything becomes easier — communication, decision-making, leadership, relationships, confidence, and self-worth. When they don't, life feels heavier than it needs to." 
                 contentType="rich_text"
               />
 
               <CmsText 
                 contentKey="about.story.paragraph3" 
+                page="About"
+                blockTitle="Story Paragraph 3"
                 fallback="This understanding became the foundation of my work — and the origin of Your Mind Stylist." 
                 contentType="rich_text"
               />
 
               <CmsText 
                 contentKey="about.story.paragraph4" 
+                page="About"
+                blockTitle="Story Paragraph 4"
                 fallback="I help you see what you've been too close to recognize, let go of patterns you've outgrown, and redesign your thinking so your life can finally match your intention." 
                 contentType="rich_text"
               />
@@ -211,15 +244,29 @@ export default function About() {
             viewport={{ once: true }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              <CmsText contentKey="about.philosophy.subtitle" fallback="Your Mind Stylist Philosophy" />
+              <CmsText 
+                contentKey="about.philosophy.subtitle" 
+                page="About"
+                blockTitle="Philosophy Subtitle"
+                fallback="Your Mind Stylist Philosophy" 
+                contentType="short_text"
+              />
             </span>
             <h2 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-8">
-              <CmsText contentKey="about.philosophy.title" fallback="Think From Where You Want to Be." />
+              <CmsText 
+                contentKey="about.philosophy.title" 
+                page="About"
+                blockTitle="Philosophy Title"
+                fallback="Think From Where You Want to Be." 
+                contentType="short_text"
+              />
             </h2>
 
             <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed mb-10">
               <CmsText 
                 contentKey="about.philosophy.intro" 
+                page="About"
+                blockTitle="Philosophy Intro"
                 fallback="<p>Most people try to change their lives by changing what they do.</p><p>But lasting transformation happens when you change <strong>how you think</strong> — the meaning you assign, the stories you carry, the emotional patterns you repeat, and the identity you operate from.</p>" 
                 contentType="rich_text"
               />
@@ -240,6 +287,8 @@ export default function About() {
             <div className="space-y-4 text-[#2B2725]/80 text-lg leading-relaxed">
               <CmsText 
                 contentKey="about.philosophy.closing" 
+                page="About"
+                blockTitle="Philosophy Closing"
                 fallback="<p>The work is profound, but it's not complicated.</p><p>It's simple, elegant, and deeply human.</p><p class='font-serif italic text-xl text-[#1E3A32]'>Just like great styling, it isn't about becoming someone else — it's about uncovering the version of yourself that has always been there.</p>" 
                 contentType="rich_text"
               />
@@ -258,10 +307,22 @@ export default function About() {
             className="text-center mb-16"
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              <CmsText contentKey="about.beliefs.subtitle" fallback="Core Principles" />
+              <CmsText 
+                contentKey="about.beliefs.subtitle" 
+                page="About"
+                blockTitle="Beliefs Subtitle"
+                fallback="Core Principles" 
+                contentType="short_text"
+              />
             </span>
             <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF]">
-              <CmsText contentKey="about.beliefs.title" fallback="What I Believe" />
+              <CmsText 
+                contentKey="about.beliefs.title" 
+                page="About"
+                blockTitle="Beliefs Title"
+                fallback="What I Believe" 
+                contentType="short_text"
+              />
             </h2>
           </motion.div>
 
@@ -304,16 +365,31 @@ export default function About() {
             viewport={{ once: true }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              <CmsText contentKey="about.credentials.subtitle" fallback="Credentials & Experience" />
+              <CmsText 
+                contentKey="about.credentials.subtitle" 
+                page="About"
+                blockTitle="Credentials Subtitle"
+                fallback="Credentials & Experience" 
+                contentType="short_text"
+              />
             </span>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              <CmsText contentKey="about.credentials.title" fallback="My Experience" />
+              <CmsText 
+                contentKey="about.credentials.title" 
+                page="About"
+                blockTitle="Credentials Title"
+                fallback="My Experience" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10">
               <CmsText 
                 contentKey="about.credentials.intro" 
+                page="About"
+                blockTitle="Credentials Intro"
                 fallback="I've helped thousands of individuals and teams transform how they think and communicate. My background includes:" 
+                contentType="rich_text"
               />
             </p>
 
@@ -331,7 +407,10 @@ export default function About() {
             <p className="font-serif text-xl text-[#1E3A32] italic">
               <CmsText 
                 contentKey="about.credentials.closing" 
+                page="About"
+                blockTitle="Credentials Closing"
                 fallback="From high-performing executives to individuals in transition, the real work is the same: Help people recognize their patterns and step into the version of themselves they've been waiting for." 
+                contentType="rich_text"
               />
             </p>
           </motion.div>
@@ -347,15 +426,29 @@ export default function About() {
             viewport={{ once: true }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              <CmsText contentKey="about.origin.subtitle" fallback="The Origin" />
+              <CmsText 
+                contentKey="about.origin.subtitle" 
+                page="About"
+                blockTitle="Origin Subtitle"
+                fallback="The Origin" 
+                contentType="short_text"
+              />
             </span>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              <CmsText contentKey="about.origin.title" fallback='Why "Your Mind Stylist"?' />
+              <CmsText 
+                contentKey="about.origin.title" 
+                page="About"
+                blockTitle="Origin Title"
+                fallback="Why &quot;Your Mind Stylist&quot;?" 
+                contentType="short_text"
+              />
             </h2>
 
             <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
               <CmsText 
                 contentKey="about.origin.content" 
+                page="About"
+                blockTitle="Origin Content"
                 fallback="<p>Because transformation isn't about starting over — it's about refining, tailoring, and redesigning the mindset you already have.</p><p>Just like personal style, your mental patterns can be:</p><ul class='list-none space-y-2 pl-6'><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>outdated</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>ill-fitting</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>inherited</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>misunderstood</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>or simply never chosen intentionally</li></ul><p>Mind Styling allows you to build a mental wardrobe that fits the life you want to live.</p><p class='font-serif text-xl text-[#1E3A32] italic'>It's elegant, intuitive, and profoundly effective.</p>" 
                 contentType="rich_text"
               />
@@ -374,15 +467,30 @@ export default function About() {
             className="text-center mb-16"
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              <CmsText contentKey="about.work.subtitle" fallback="How We Can Work Together" />
+              <CmsText 
+                contentKey="about.work.subtitle" 
+                page="About"
+                blockTitle="Work With Me Subtitle"
+                fallback="How We Can Work Together" 
+                contentType="short_text"
+              />
             </span>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-6">
-              <CmsText contentKey="about.work.title" fallback="Work With Me" />
+              <CmsText 
+                contentKey="about.work.title" 
+                page="About"
+                blockTitle="Work With Me Title"
+                fallback="Work With Me" 
+                contentType="short_text"
+              />
             </h2>
             <p className="text-[#2B2725]/80 text-lg max-w-2xl mx-auto">
               <CmsText 
                 contentKey="about.work.description" 
+                page="About"
+                blockTitle="Work With Me Description"
                 fallback="Whether you're an individual ready for personal reinvention or a leader looking to elevate your team's emotional intelligence, there is a Mind Styling path for you." 
+                contentType="rich_text"
               />
             </p>
           </motion.div>
@@ -424,6 +532,8 @@ export default function About() {
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
               <CmsText 
                 contentKey="about.cta.title" 
+                page="About"
+                blockTitle="CTA Title"
                 fallback="If You're Ready,<br /><span class='italic text-[#D8B46B]'>I'm Ready.</span>" 
                 contentType="rich_text"
               />
@@ -432,7 +542,10 @@ export default function About() {
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
               <CmsText 
                 contentKey="about.cta.description" 
+                page="About"
+                blockTitle="CTA Description"
                 fallback="Changing your life starts with changing how you think. If you're ready to step into clarity, calm, and confidence, let's begin." 
+                contentType="rich_text"
               />
             </p>
 
