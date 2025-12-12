@@ -49,7 +49,8 @@ export default function ProfileSettings() {
       
       await base44.auth.updateMe({ profile_photo: data.file_url });
       
-      setUser({ ...user, profile_photo: data.file_url });
+      // Reload page to update profile photo in header
+      window.location.reload();
     } catch (error) {
       console.error("Error uploading photo:", error);
       alert("Failed to upload photo");
