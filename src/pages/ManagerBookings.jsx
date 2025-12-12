@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 
 export default function ManagerBookings() {
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [creatingZoom, setCreatingZoom] = useState(false);
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["manager-bookings"],
@@ -51,6 +52,22 @@ export default function ManagerBookings() {
       style: "currency",
       currency: "USD",
     }).format(amount / 100);
+  };
+
+  const handleCreateZoomMeeting = async (booking) => {
+    setCreatingZoom(true);
+    try {
+      await base44.functions.invoke('createZoomMeeting', {
+        booking_id: booking.id
+      });
+      // Refresh bookings
+      window.location.reload();
+    } catch (error) {
+      console.error('Failed to create Zoom meeting:', error);
+      alert('Failed to create Zoom meeting. Please try again.');
+    } finally {
+      setCreatingZoom(false);
+    }
   };
 
   if (isLoading) {
@@ -386,6 +403,31 @@ export default function ManagerBookings() {
                           <p className="text-sm font-mono text-[#1E3A32]">{selectedBooking.zoom_password}</p>
                         </div>
                       )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Zoom Not Created / Failed */}
+                {selectedBooking.payment_status === 'paid' && (!selectedBooking.zoom_status || selectedBooking.zoom_status === 'pending' || selectedBooking.zoom_status === 'failed') && (
+                  <div>
+                    <h3 className="text-sm font-medium text-[#2B2725] mb-3 flex items-center gap-2">
+                      <AlertCircle size={16} className="text-yellow-600" />
+                      Zoom Meeting Status
+                    </h3>
+                    <div className="bg-yellow-50 border border-yellow-200 p-4 space-y-3">
+                      <p className="text-sm text-[#2B2725]/80">
+                        {selectedBooking.zoom_status === 'failed' 
+                          ? 'Zoom meeting creation failed. You can retry manually.'
+                          : 'No Zoom meeting has been created yet for this booking.'}
+                      </p>
+                      <Button
+                        onClick={() => handleCreateZoomMeeting(selectedBooking)}
+                        disabled={creatingZoom}
+                        className="w-full bg-[#2D8CFF] hover:bg-[#2D8CFF]/90"
+                      >
+                        <Video size={16} className="mr-2" />
+                        {creatingZoom ? 'Creating Meeting...' : 'Create Zoom Meeting'}
+                      </Button>
                     </div>
                   </div>
                 )}
