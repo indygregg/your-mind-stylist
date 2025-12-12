@@ -35,15 +35,30 @@ export default function Programs() {
             className="text-center"
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              <CmsText contentKey="programs.hero.subtitle" defaultText="Programs & Pricing" />
+              <CmsText 
+                contentKey="programs.hero.subtitle" 
+                page="Programs"
+                blockTitle="Hero Subtitle"
+                fallback="Programs & Pricing" 
+                contentType="short_text"
+              />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
-              <CmsText contentKey="programs.hero.title" defaultText="Your Mind Stylist Programs" />
+              <CmsText 
+                contentKey="programs.hero.title" 
+                page="Programs"
+                blockTitle="Hero Title"
+                fallback="Your Mind Stylist Programs" 
+                contentType="short_text"
+              />
             </h1>
             <p className="text-[#2B2725]/80 text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto">
               <CmsText 
                 contentKey="programs.hero.description" 
-                defaultText="Find your next step, whether you're just beginning or ready for deep transformation." 
+                page="Programs"
+                blockTitle="Hero Description"
+                fallback="Find your next step, whether you're just beginning or ready for deep transformation." 
+                contentType="rich_text"
               />
             </p>
           </motion.div>
@@ -63,8 +78,10 @@ export default function Programs() {
             <div className="text-[#2B2725]/80 text-lg leading-relaxed max-w-3xl mx-auto">
               <CmsText 
                 contentKey="programs.intro.content" 
-                defaultText="<p class='mb-6'><strong class='text-[#1E3A32]'>Your Mind Stylist offers transformational pathways for every phase of your inner journey.</strong></p><p class='mb-6'>From introductory tools that help you clear mental clutter to high-touch coaching that reshapes your emotional operating system — choose what aligns with you today.</p><p class='text-[#1E3A32] font-serif text-xl italic mt-8'>Every program below is designed to help you understand yourself better, shift patterns with awareness, and build emotional resilience that lasts.</p>" 
-                richText 
+                page="Programs"
+                blockTitle="Intro Content"
+                fallback="<p class='mb-6'><strong class='text-[#1E3A32]'>Your Mind Stylist offers transformational pathways for every phase of your inner journey.</strong></p><p class='mb-6'>From introductory tools that help you clear mental clutter to high-touch coaching that reshapes your emotional operating system — choose what aligns with you today.</p><p class='text-[#1E3A32] font-serif text-xl italic mt-8'>Every program below is designed to help you understand yourself better, shift patterns with awareness, and build emotional resilience that lasts.</p>" 
+                contentType="rich_text"
               />
             </div>
           </motion.div>
@@ -80,7 +97,13 @@ export default function Programs() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] text-center mb-16">
-              <CmsText contentKey="programs.path.title" defaultText="Choose Your Path" />
+              <CmsText 
+                contentKey="programs.path.title" 
+                page="Programs"
+                blockTitle="Path Section Title"
+                fallback="Choose Your Path" 
+                contentType="short_text"
+              />
             </h2>
 
             {/* Tier 1 — Foundations & Everyday Support */}
@@ -119,7 +142,7 @@ export default function Programs() {
                   </p>
                   <p className="text-2xl font-bold text-[#1E3A32] mb-2">$7/mo</p>
                   <p className="text-sm text-[#2B2725]/60 mb-6">or $70/year</p>
-                  <Link to={createPageUrl("InnerRehearsal")}>
+                  <Link to={createPageUrl("PocketVisualization")}>
                     <Button className="w-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-[#F9F5EF]">
                       Start for $7/mo
                     </Button>
@@ -310,11 +333,23 @@ export default function Programs() {
           >
             <Heart size={40} className="text-[#D8B46B] mx-auto mb-6" />
             <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] text-center mb-12">
-              <CmsText contentKey="programs.choose.title" defaultText="How to Choose What's Right" />
+              <CmsText 
+                contentKey="programs.choose.title" 
+                page="Programs"
+                blockTitle="How To Choose Title"
+                fallback="How to Choose What's Right" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg text-center mb-10">
-              <CmsText contentKey="programs.choose.subtitle" defaultText="Not sure what to start with?" />
+              <CmsText 
+                contentKey="programs.choose.subtitle" 
+                page="Programs"
+                blockTitle="How To Choose Subtitle"
+                fallback="Not sure what to start with?" 
+                contentType="short_text"
+              />
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
@@ -352,11 +387,23 @@ export default function Programs() {
             className="text-center"
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-8">
-              <CmsText contentKey="programs.pricing.title" defaultText="Pricing Philosophy & Support" />
+              <CmsText 
+                contentKey="programs.pricing.title" 
+                page="Programs"
+                blockTitle="Pricing Title"
+                fallback="Pricing Philosophy & Support" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
-              <CmsText contentKey="programs.pricing.intro" defaultText="At Your Mind Stylist, we price for:" />
+              <CmsText 
+                contentKey="programs.pricing.intro" 
+                page="Programs"
+                blockTitle="Pricing Intro"
+                fallback="At Your Mind Stylist, we price for:" 
+                contentType="short_text"
+              />
             </p>
 
             <div className="grid md:grid-cols-2 gap-4 mb-10 max-w-2xl mx-auto">
@@ -374,7 +421,13 @@ export default function Programs() {
             </div>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">
-              <CmsText contentKey="programs.pricing.offer_intro" defaultText="We also offer:" />
+              <CmsText 
+                contentKey="programs.pricing.offer_intro" 
+                page="Programs"
+                blockTitle="Pricing Offer Intro"
+                fallback="We also offer:" 
+                contentType="short_text"
+              />
             </p>
 
             <div className="space-y-3 max-w-2xl mx-auto">
@@ -402,11 +455,17 @@ export default function Programs() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] text-center mb-12">
-              <CmsText contentKey="programs.cta.title" defaultText="Ready to Begin?" />
+              <CmsText 
+                contentKey="programs.cta.title" 
+                page="Programs"
+                blockTitle="CTA Title"
+                fallback="Ready to Begin?" 
+                contentType="short_text"
+              />
             </h2>
 
             <div className="grid md:grid-cols-3 gap-4">
-              <Link to={createPageUrl("InnerRehearsal")}>
+              <Link to={createPageUrl("PocketVisualization")}>
                 <Button className="w-full h-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
                   <span className="text-sm font-normal">Pocket Visualization™</span>
                   <span className="text-lg font-bold">Start for $7/mo</span>
@@ -451,7 +510,13 @@ export default function Programs() {
 
             <div className="text-center mt-12">
               <p className="text-[#F9F5EF]/70 mb-4">
-                <CmsText contentKey="programs.cta.question" defaultText="Still have questions?" />
+                <CmsText 
+                  contentKey="programs.cta.question" 
+                  page="Programs"
+                  blockTitle="CTA Question"
+                  fallback="Still have questions?" 
+                  contentType="short_text"
+                />
               </p>
               <Link to={createPageUrl("Contact")}>
                 <Button variant="outline" className="border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32]">
