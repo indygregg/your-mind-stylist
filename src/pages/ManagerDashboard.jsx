@@ -138,11 +138,11 @@ export default function ManagerDashboard() {
               </div>
 
               <Link
-                to={createPageUrl("BlogEditor?mode=new")}
+                to={createPageUrl("ContentStudio")}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-[#D8B46B] text-[#1E3A32] font-medium hover:bg-[#F9F5EF] transition-all"
               >
-                <PenSquare size={18} />
-                Start Creating with Alchemy
+                <Sparkles size={18} />
+                Open Content Alchemy Suite
               </Link>
             </div>
           </div>
