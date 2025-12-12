@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, Mail, AlertCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, Mail, AlertCircle, Repeat } from "lucide-react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek } from "date-fns";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
+import RecurringBookingModal from "./RecurringBookingModal";
 
 export default function BookingCalendar({ appointmentType, onSlotSelected }) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -13,6 +14,8 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loading, setLoading] = useState(false);
   const [availableDates, setAvailableDates] = useState(new Set());
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [showRecurringModal, setShowRecurringModal] = useState(false);
 
   useEffect(() => {
     loadAvailableSlots();
@@ -49,8 +52,18 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
     }
   };
 
-  const handleSlotSelect = (slot) => {
-    onSlotSelected(slot);
+  const handleSlotSelect = (slot, recurring = false) => {
+    if (recurring) {
+      setSelectedSlot(slot);
+      setShowRecurringModal(true);
+    } else {
+      onSlotSelected(slot, false);
+    }
+  };
+
+  const handleRecurringConfirm = async (recurringData) => {
+    setShowRecurringModal(false);
+    onSlotSelected(selectedSlot, true, recurringData);
   };
 
   const monthDays = eachDayOfInterval({
@@ -178,20 +191,47 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
             No available times on this date
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto">
-            {selectedDateSlots.map((slot, idx) => (
-              <Button
-                key={idx}
-                variant="outline"
-                onClick={() => handleSlotSelect(slot)}
-                className="justify-start hover:bg-[#D8B46B]/10 hover:border-[#D8B46B]"
-              >
-                {format(new Date(slot.start), 'h:mm a')}
-              </Button>
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto mb-4">
+              {selectedDateSlots.map((slot, idx) => (
+                <Button
+                  key={idx}
+                  variant="outline"
+                  onClick={() => handleSlotSelect(slot)}
+                  className="justify-start hover:bg-[#D8B46B]/10 hover:border-[#D8B46B]"
+                >
+                  {format(new Date(slot.start), 'h:mm a')}
+                </Button>
+              ))}
+            </div>
+            
+            {selectedDateSlots.length > 0 && (
+              <div className="pt-4 border-t border-[#E4D9C4]">
+                <p className="text-xs text-[#2B2725]/70 mb-2">Need multiple sessions?</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleSlotSelect(selectedDateSlots[0], true)}
+                  className="w-full"
+                >
+                  <Repeat size={14} className="mr-2" />
+                  Book Recurring Sessions
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </Card>
+
+      {showRecurringModal && selectedSlot && (
+        <RecurringBookingModal
+          isOpen={showRecurringModal}
+          onClose={() => setShowRecurringModal(false)}
+          appointmentType={appointmentType}
+          selectedSlot={selectedSlot}
+          onConfirm={handleRecurringConfirm}
+        />
+      )}
     </div>
   );
 }

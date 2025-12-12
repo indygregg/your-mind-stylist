@@ -32,14 +32,35 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Manager not found' }, { status: 404 });
     }
 
-    const availabilityRules = await base44.asServiceRole.entities.AvailabilityRule.filter({ 
+    // Get appointment-specific rules first, fallback to default rules
+    let availabilityRules = await base44.asServiceRole.entities.AvailabilityRule.filter({ 
       manager_id: manager.id,
+      appointment_type_id: appointment_type_id,
       active: true 
     });
 
-    const availabilitySettings = await base44.asServiceRole.entities.AvailabilitySettings.filter({ 
-      manager_id: manager.id 
+    // If no specific rules, use default rules
+    if (availabilityRules.length === 0) {
+      availabilityRules = await base44.asServiceRole.entities.AvailabilityRule.filter({ 
+        manager_id: manager.id,
+        appointment_type_id: null,
+        active: true 
+      });
+    }
+
+    // Get appointment-specific settings first, fallback to default settings
+    let availabilitySettings = await base44.asServiceRole.entities.AvailabilitySettings.filter({ 
+      manager_id: manager.id,
+      appointment_type_id: appointment_type_id 
     });
+
+    if (availabilitySettings.length === 0) {
+      availabilitySettings = await base44.asServiceRole.entities.AvailabilitySettings.filter({ 
+        manager_id: manager.id,
+        appointment_type_id: null 
+      });
+    }
+
     const settings = availabilitySettings[0] || {
       buffer_minutes: 15,
       min_notice_hours: 24,

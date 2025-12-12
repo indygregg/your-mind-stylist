@@ -16,6 +16,7 @@ export default function ManagerAvailability() {
   }
 
   const [user, setUser] = useState(null);
+  const [selectedAppointmentType, setSelectedAppointmentType] = useState(null);
   const queryClient = useQueryClient();
 
   const daysOfWeek = [
@@ -39,15 +40,35 @@ export default function ManagerAvailability() {
 
   // Fetch availability rules
   const { data: rules = [], isLoading: rulesLoading } = useQuery({
-    queryKey: ['availability-rules', user?.id],
-    queryFn: () => base44.entities.AvailabilityRule.filter({ manager_id: user.id }),
+    queryKey: ['availability-rules', user?.id, selectedAppointmentType],
+    queryFn: () => {
+      const filter = { manager_id: user.id };
+      if (selectedAppointmentType) {
+        filter.appointment_type_id = selectedAppointmentType;
+      } else {
+        filter.appointment_type_id = null;
+      }
+      return base44.entities.AvailabilityRule.filter(filter);
+    },
     enabled: !!user,
+  });
+
+  // Fetch appointment types
+  const { data: appointmentTypes = [] } = useQuery({
+    queryKey: ['appointment-types'],
+    queryFn: () => base44.entities.AppointmentType.filter({ active: true }),
   });
 
   // Fetch availability settings
   const { data: settings = [], isLoading: settingsLoading } = useQuery({
-    queryKey: ['availability-settings', user?.id],
-    queryFn: () => base44.entities.AvailabilitySettings.filter({ manager_id: user.id }),
+    queryKey: ['availability-settings', user?.id, selectedAppointmentType],
+    queryFn: () => {
+      const filter = { manager_id: user.id };
+      if (selectedAppointmentType) {
+        filter.appointment_type_id = selectedAppointmentType;
+      }
+      return base44.entities.AvailabilitySettings.filter(filter);
+    },
     enabled: !!user,
   });
 
@@ -103,6 +124,7 @@ export default function ManagerAvailability() {
   const handleAddTimeSlot = (dayOfWeek) => {
     createRuleMutation.mutate({
       manager_id: user.id,
+      appointment_type_id: selectedAppointmentType || null,
       day_of_week: dayOfWeek,
       start_time: "09:00",
       end_time: "17:00",
@@ -123,7 +145,11 @@ export default function ManagerAvailability() {
   };
 
   const handleSaveSettings = () => {
-    saveSettingsMutation.mutate(editingSettings);
+    const settingsData = {
+      ...editingSettings,
+      appointment_type_id: selectedAppointmentType || null
+    };
+    saveSettingsMutation.mutate(settingsData);
   };
 
   if (!user || rulesLoading || settingsLoading) {
@@ -143,13 +169,46 @@ export default function ManagerAvailability() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="flex items-center gap-3 mb-3">
-            <Calendar className="w-8 h-8 text-[#D8B46B]" />
-            <h1 className="font-serif text-4xl text-[#1E3A32]">Availability Management</h1>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-3 mb-3">
+                <Calendar className="w-8 h-8 text-[#D8B46B]" />
+                <h1 className="font-serif text-4xl text-[#1E3A32]">Availability Management</h1>
+              </div>
+              <p className="text-[#2B2725]/70 text-lg">
+                Set your weekly schedule and booking rules
+              </p>
+            </div>
           </div>
-          <p className="text-[#2B2725]/70 text-lg">
-            Set your weekly schedule and booking rules
-          </p>
+
+          {/* Appointment Type Filter */}
+          <div className="mt-6 bg-white p-4 rounded-lg border border-[#E4D9C4]">
+            <Label className="mb-2 block">Configure availability for:</Label>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant={!selectedAppointmentType ? "default" : "outline"}
+                onClick={() => setSelectedAppointmentType(null)}
+                size="sm"
+              >
+                All Appointment Types (Default)
+              </Button>
+              {appointmentTypes.map((type) => (
+                <Button
+                  key={type.id}
+                  variant={selectedAppointmentType === type.id ? "default" : "outline"}
+                  onClick={() => setSelectedAppointmentType(type.id)}
+                  size="sm"
+                >
+                  {type.name}
+                </Button>
+              ))}
+            </div>
+            <p className="text-xs text-[#2B2725]/60 mt-2">
+              {selectedAppointmentType 
+                ? "Setting specific availability for this appointment type" 
+                : "Setting default availability for all appointment types"}
+            </p>
+          </div>
         </motion.div>
 
         {/* Global Settings */}
