@@ -72,6 +72,40 @@ Deno.serve(async (req) => {
                     }
                 }
                 
+                // Handle Webinar Purchase
+                else if (session.metadata.type === 'webinar_purchase' && session.metadata.webinar_id && session.metadata.user_id) {
+                    // Grant webinar access
+                    await base44.asServiceRole.entities.UserWebinarAccess.create({
+                        user_id: session.metadata.user_id,
+                        webinar_id: session.metadata.webinar_id,
+                        access_type: 'purchased',
+                        access_granted_date: new Date().toISOString(),
+                        purchase_date: new Date().toISOString(),
+                        stripe_payment_intent_id: session.payment_intent
+                    });
+
+                    // Increment registration count
+                    const webinars = await base44.asServiceRole.entities.Webinar.filter({ id: session.metadata.webinar_id });
+                    if (webinars.length > 0) {
+                        const webinar = webinars[0];
+                        await base44.asServiceRole.entities.Webinar.update(webinar.id, {
+                            registration_count: (webinar.registration_count || 0) + 1
+                        });
+                    }
+
+                    await base44.asServiceRole.integrations.Core.SendEmail({
+                        to: session.customer_email,
+                        subject: 'Webinar Access Granted',
+                        body: `
+                            <h2>Welcome! Your webinar access is confirmed.</h2>
+                            <p>Your payment has been processed and you now have access to watch anytime.</p>
+                            <p>Access your webinar: https://yourmindstylist.com/WebinarPage?slug=${session.metadata.webinar_slug || ''}</p>
+                            <br>
+                            <p>Roberta Fernandez<br>Your Mind Stylist</p>
+                        `
+                    });
+                }
+                
                 // Handle Course Purchase
                 else if (session.metadata.course_id && session.metadata.user_id) {
                     // Grant course access by creating UserCourseProgress

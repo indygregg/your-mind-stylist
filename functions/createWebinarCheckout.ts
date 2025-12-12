@@ -65,6 +65,7 @@ Deno.serve(async (req) => {
       client_reference_id: user.id,
       metadata: {
         webinar_id: webinar.id,
+        webinar_slug: webinar.slug,
         user_id: user.id,
         user_email: user.email,
         type: 'webinar_purchase'
