@@ -4,50 +4,53 @@ Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
         
-        // Verify admin/manager access
-        const user = await base44.auth.me();
-        if (!user || (user.role !== 'admin' && user.role !== 'manager')) {
-            return Response.json({ error: 'Unauthorized' }, { status: 401 });
+        const { user_id } = await req.json();
+        
+        if (!user_id) {
+            return Response.json({ error: 'user_id required' }, { status: 400 });
         }
 
-        const ZOOM_ACCOUNT_ID = Deno.env.get('ZOOM_ACCOUNT_ID');
-        const ZOOM_CLIENT_ID = Deno.env.get('ZOOM_CLIENT_ID');
-        const ZOOM_CLIENT_SECRET = Deno.env.get('ZOOM_CLIENT_SECRET');
+        // Get user's Zoom tokens
+        const users = await base44.asServiceRole.entities.User.filter({ id: user_id });
+        if (!users || users.length === 0) {
+            return Response.json({ error: 'User not found' }, { status: 404 });
+        }
 
-        if (!ZOOM_ACCOUNT_ID || !ZOOM_CLIENT_ID || !ZOOM_CLIENT_SECRET) {
+        const user = users[0];
+
+        if (!user.zoom_connected || !user.zoom_access_token) {
             return Response.json({ 
-                error: 'Zoom credentials not configured',
-                details: 'Missing ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, or ZOOM_CLIENT_SECRET'
-            }, { status: 500 });
+                error: 'Zoom not connected',
+                message: 'User needs to connect their Zoom account'
+            }, { status: 403 });
         }
 
-        // Server-to-Server OAuth token request
-        const tokenUrl = `https://zoom.us/oauth/token?grant_type=account_credentials&account_id=${ZOOM_ACCOUNT_ID}`;
-        const credentials = btoa(`${ZOOM_CLIENT_ID}:${ZOOM_CLIENT_SECRET}`);
+        // Check if token is expired or about to expire (within 5 minutes)
+        const tokenExpiresAt = new Date(user.zoom_token_expires_at);
+        const now = new Date();
+        const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60 * 1000);
 
-        const response = await fetch(tokenUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Basic ${credentials}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
+        if (tokenExpiresAt <= fiveMinutesFromNow) {
+            // Token expired or expiring soon, refresh it
+            const refreshResponse = await base44.asServiceRole.functions.invoke('refreshZoomToken', {
+                user_id: user_id
+            });
+
+            if (refreshResponse.data.error) {
+                return Response.json({ 
+                    error: 'Token refresh failed',
+                    details: refreshResponse.data
+                }, { status: 500 });
             }
-        });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Zoom token error:', errorText);
-            return Response.json({ 
-                error: 'Failed to get Zoom token',
-                details: errorText
-            }, { status: response.status });
+            return Response.json({
+                access_token: refreshResponse.data.access_token
+            });
         }
 
-        const tokenData = await response.json();
-
+        // Token is still valid
         return Response.json({
-            access_token: tokenData.access_token,
-            expires_in: tokenData.expires_in,
-            token_type: tokenData.token_type
+            access_token: user.zoom_access_token
         });
 
     } catch (error) {

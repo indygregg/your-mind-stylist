@@ -11,24 +11,29 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'booking_id required' }, { status: 400 });
         }
 
-        // Get Zoom access token
-        const tokenResponse = await base44.asServiceRole.functions.invoke('getZoomToken', {});
+        // Get booking to find assigned manager
+        const bookings = await base44.asServiceRole.entities.Booking.filter({ id: booking_id });
+        if (!bookings || bookings.length === 0) {
+            return Response.json({ error: 'Booking not found' }, { status: 404 });
+        }
+        const booking = bookings[0];
+
+        // Get manager's Zoom access token (use created_by or assigned manager)
+        const managerId = booking.created_by;
+        const tokenResponse = await base44.asServiceRole.functions.invoke('getZoomToken', {
+            user_id: managerId
+        });
+        
         if (!tokenResponse.data.access_token) {
             return Response.json({ 
-                error: 'Failed to get Zoom token',
+                error: 'Manager Zoom not connected',
                 details: tokenResponse.data
             }, { status: 500 });
         }
 
         const accessToken = tokenResponse.data.access_token;
 
-        // Get booking details for meeting configuration
-        const bookings = await base44.asServiceRole.entities.Booking.filter({ id: booking_id });
-        if (!bookings || bookings.length === 0) {
-            return Response.json({ error: 'Booking not found' }, { status: 404 });
-        }
 
-        const booking = bookings[0];
 
         // Configure meeting details
         const meetingData = {

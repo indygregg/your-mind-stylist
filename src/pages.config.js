@@ -58,6 +58,8 @@ import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import BookingSuccess from './pages/BookingSuccess';
 import ManagerBookings from './pages/ManagerBookings';
+import ZoomConnect from './pages/ZoomConnect';
+import ZoomCallback from './pages/ZoomCallback';
 import __Layout from './Layout.jsx';
 
 
@@ -122,6 +124,8 @@ export const PAGES = {
     "WorkWithMe": WorkWithMe,
     "BookingSuccess": BookingSuccess,
     "ManagerBookings": ManagerBookings,
+    "ZoomConnect": ZoomConnect,
+    "ZoomCallback": ZoomCallback,
 }
 
 export const pagesConfig = {

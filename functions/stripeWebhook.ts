@@ -43,6 +43,16 @@ Deno.serve(async (req) => {
                         stripe_payment_intent_id: session.payment_intent
                     });
 
+                    // Auto-create Zoom meeting
+                    try {
+                        await base44.asServiceRole.functions.invoke('createZoomMeeting', {
+                            booking_id: session.metadata.booking_id
+                        });
+                    } catch (zoomError) {
+                        console.error('Zoom meeting creation failed:', zoomError);
+                        // Continue even if Zoom fails
+                    }
+
                     // Send professional booking confirmation emails
                     try {
                         // Send client confirmation
