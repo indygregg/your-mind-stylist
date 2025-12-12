@@ -295,7 +295,32 @@ export default function Bookings() {
         {step === 1 && (
           <section className="py-20 px-6">
           <div className="max-w-6xl mx-auto">
-            {Object.entries(groupedServices).map(([type, services]) => {
+            {appointmentTypes.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-20"
+              >
+                <div className="bg-white p-12 shadow-md max-w-2xl mx-auto">
+                  <Calendar size={64} className="mx-auto mb-6 text-[#D8B46B]" />
+                  <h3 className="font-serif text-2xl text-[#1E3A32] mb-4">
+                    Booking Setup Required
+                  </h3>
+                  <p className="text-[#2B2725]/70 mb-6">
+                    No appointment types are available yet. Set up your services to start accepting bookings.
+                  </p>
+                  {isManager && (
+                    <Button
+                      onClick={() => window.location.href = createPageUrl('ManagerAppointments')}
+                      className="bg-[#1E3A32] hover:bg-[#2B4A40]"
+                    >
+                      Create Appointment Types
+                    </Button>
+                  )}
+                </div>
+              </motion.div>
+            ) : (
+              Object.entries(groupedServices).map(([type, services]) => {
               const category = serviceCategories[type];
               if (!category) return null;
 
@@ -379,7 +404,8 @@ export default function Bookings() {
                   </div>
                 </div>
               );
-            })}
+              })
+            )}
           </div>
         </section>
         )}
