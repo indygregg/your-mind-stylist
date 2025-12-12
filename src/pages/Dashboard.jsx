@@ -136,7 +136,13 @@ export default function Dashboard() {
       {showStyleCheck && (
         <DailyStyleCheck
           onClose={() => setShowStyleCheck(false)}
-          onComplete={() => setShowStyleCheck(false)}
+          onComplete={(data) => {
+            setShowStyleCheck(false);
+            if (data?.showPauseSuggestion) {
+              // Could show pause suggestion modal here
+              // For now, user can navigate to Style Pauses via quick link
+            }
+          }}
         />
       )}
       
@@ -297,13 +303,13 @@ export default function Dashboard() {
           <div>
             <h2 className="font-serif text-xl text-[#1E3A32] mb-6">Quick Links</h2>
             <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
-              {[
+              [
+                { label: "Style Pauses™", page: "StylePauses", icon: Sparkles, description: "1-3 minute resets." },
                 { label: "Library", page: "Library", icon: Layers, description: "Access your programs." },
                 { label: "Pocket Visualization™", page: "PocketVisualization", icon: Sparkles, description: "Daily emotional reset tools." },
                 { label: "Notes", page: "StudioNotes", icon: Edit3, description: "Capture insights as you learn." },
                 { label: "Free Masterclass", page: "FreeMasterclass", icon: Play, description: "Watch anytime." },
                 { label: "Read Blog", page: "Blog", icon: BookOpen, description: "Articles and insights." },
-                { label: "Account Settings", page: "StudioSettings", icon: User, description: "Manage your profile." },
               ].map((link) => (
                 <Link
                   key={link.label}

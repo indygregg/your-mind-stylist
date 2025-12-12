@@ -303,11 +303,34 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                     </Button>
                     
                     <div className="pt-4 border-t border-[#E4D9C4]">
-                      <p className="text-xs text-[#2B2725]/60 mb-3">Would you like a Style Pause™?</p>
-                      <Button variant="outline" size="sm" className="w-full" onClick={onClose}>
-                        <Sparkles size={14} className="mr-2" />
-                        Maybe later
-                      </Button>
+                      <p className="text-sm text-[#1E3A32] mb-2 font-medium">Your Stylist's Pick™</p>
+                      <p className="text-xs text-[#2B2725]/60 mb-3">
+                        {checkInData.state_value > 70 && checkInData.state_key === "calm_activated"
+                          ? "Want a quick reset to bring your system down a notch?"
+                          : checkInData.state_key === "grounded_scattered" && checkInData.state_value > 60
+                          ? "Want a 2-minute pause to help you land back in your body?"
+                          : "Want a 2-minute pause to lock in the state you want to carry forward?"
+                        }
+                      </p>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex-1"
+                          onClick={() => {
+                            if (onComplete) {
+                              onComplete({ showPauseSuggestion: true, checkInData });
+                            }
+                            onClose();
+                          }}
+                        >
+                          <Sparkles size={14} className="mr-2" />
+                          Start a Style Pause™
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={onClose}>
+                          Skip
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </motion.div>

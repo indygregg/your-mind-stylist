@@ -77,6 +77,7 @@ import ProfileSettings from './pages/ProfileSettings';
 import Diary from './pages/Diary';
 import StudioRevisions from './pages/StudioRevisions';
 import CoursePreview from './pages/CoursePreview';
+import StylePauses from './pages/StylePauses';
 import __Layout from './Layout.jsx';
 
 
@@ -160,6 +161,7 @@ export const PAGES = {
     "Diary": Diary,
     "StudioRevisions": StudioRevisions,
     "CoursePreview": CoursePreview,
+    "StylePauses": StylePauses,
 }
 
 export const pagesConfig = {
