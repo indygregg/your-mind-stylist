@@ -28,7 +28,7 @@ export default function MindStylingSuite() {
         },
       ],
       cta: "Explore Cleaning Out Your Closet",
-      link: "Evolution",
+      link: "CleaningOutYourCloset",
       accent: "#1E3A32",
       bg: "bg-white",
     },

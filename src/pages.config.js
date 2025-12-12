@@ -79,6 +79,7 @@ import StudioRevisions from './pages/StudioRevisions';
 import CoursePreview from './pages/CoursePreview';
 import StylePauses from './pages/StylePauses';
 import BuyPrograms from './pages/BuyPrograms';
+import CleaningOutYourCloset from './pages/CleaningOutYourCloset';
 import __Layout from './Layout.jsx';
 
 
@@ -164,6 +165,7 @@ export const PAGES = {
     "CoursePreview": CoursePreview,
     "StylePauses": StylePauses,
     "BuyPrograms": BuyPrograms,
+    "CleaningOutYourCloset": CleaningOutYourCloset,
 }
 
 export const pagesConfig = {
