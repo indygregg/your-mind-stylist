@@ -61,6 +61,7 @@ import ManagerBookings from './pages/ManagerBookings';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomCallback from './pages/ZoomCallback';
 import ManagerAppointments from './pages/ManagerAppointments';
+import ManagerCalendar from './pages/ManagerCalendar';
 import __Layout from './Layout.jsx';
 
 
@@ -128,6 +129,7 @@ export const PAGES = {
     "ZoomConnect": ZoomConnect,
     "ZoomCallback": ZoomCallback,
     "ManagerAppointments": ManagerAppointments,
+    "ManagerCalendar": ManagerCalendar,
 }
 
 export const pagesConfig = {
