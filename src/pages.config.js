@@ -75,6 +75,7 @@ import BookingPaymentFailed from './pages/BookingPaymentFailed';
 import BookingPaymentCancelled from './pages/BookingPaymentCancelled';
 import ProfileSettings from './pages/ProfileSettings';
 import Diary from './pages/Diary';
+import StudioRevisions from './pages/StudioRevisions';
 import __Layout from './Layout.jsx';
 
 
@@ -156,6 +157,7 @@ export const PAGES = {
     "BookingPaymentCancelled": BookingPaymentCancelled,
     "ProfileSettings": ProfileSettings,
     "Diary": Diary,
+    "StudioRevisions": StudioRevisions,
 }
 
 export const pagesConfig = {

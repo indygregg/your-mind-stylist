@@ -192,43 +192,72 @@ export default function InlineEditor({
 
           {/* History */}
           {block && (
-            <div className="mt-6">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowHistory(!showHistory)}
-              >
-                <Clock size={16} className="mr-2" />
-                {showHistory ? "Hide History" : "View History"}
-              </Button>
+            <div className="mt-6 border-t pt-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-medium text-[#1E3A32]">Version History</h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowHistory(!showHistory)}
+                >
+                  <Clock size={16} className="mr-2" />
+                  {showHistory ? "Hide" : "Show"} ({revisions.length})
+                </Button>
+              </div>
 
               {showHistory && (
-                <div className="mt-4 space-y-2 max-h-48 overflow-y-auto">
+                <div className="space-y-3 max-h-64 overflow-y-auto">
                   {revisions.length === 0 ? (
-                    <p className="text-sm text-gray-500">No previous versions yet.</p>
+                    <div className="text-center py-6">
+                      <Clock size={32} className="mx-auto text-[#D8B46B] mb-2" />
+                      <p className="text-sm text-gray-500">No previous versions yet.</p>
+                    </div>
                   ) : (
-                    revisions.map((revision) => (
+                    revisions.map((revision, idx) => (
                       <div
                         key={revision.id}
-                        className="border rounded p-3 flex items-start justify-between"
+                        className="border-l-4 border-[#D8B46B] bg-[#F9F5EF] rounded p-3"
                       >
-                        <div className="flex-1">
-                          <p className="text-xs text-gray-500">
-                            {new Date(revision.created_date).toLocaleString()} by {revision.edited_by}
-                          </p>
-                          <p className="text-sm mt-1 line-clamp-2">{revision.content}</p>
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <span
+                              className={`inline-block px-2 py-0.5 text-xs rounded mb-1 ${
+                                revision.action === "created"
+                                  ? "bg-green-100 text-green-800"
+                                  : revision.action === "restored"
+                                  ? "bg-purple-100 text-purple-800"
+                                  : "bg-blue-100 text-blue-800"
+                              }`}
+                            >
+                              {revision.action}
+                            </span>
+                            <p className="text-xs text-gray-600">
+                              {new Date(revision.created_date).toLocaleString()}
+                            </p>
+                            <p className="text-xs text-gray-500">by {revision.edited_by}</p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              if (
+                                confirm(
+                                  "Restore this version? Current content will be saved in history."
+                                )
+                              ) {
+                                restoreMutation.mutate(revision.content);
+                              }
+                            }}
+                            disabled={restoreMutation.isPending}
+                            className="text-[#1E3A32] hover:text-[#D8B46B]"
+                          >
+                            <RotateCcw size={14} className="mr-1" />
+                            Restore
+                          </Button>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
-                            if (confirm("Restore this version?")) {
-                              restoreMutation.mutate(revision.content);
-                            }
-                          }}
-                        >
-                          <RotateCcw size={14} />
-                        </Button>
+                        <div className="mt-2 p-2 bg-white rounded text-sm text-gray-700 line-clamp-2">
+                          {revision.content}
+                        </div>
                       </div>
                     ))
                   )}
