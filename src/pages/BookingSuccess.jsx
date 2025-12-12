@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Calendar, Mail } from "lucide-react";
+import { CheckCircle, Calendar, Mail, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function BookingSuccess() {
   const [sessionId, setSessionId] = useState(null);
@@ -21,6 +23,37 @@ export default function BookingSuccess() {
       origin: { y: 0.6 }
     });
   }, []);
+
+  // Fetch booking details
+  const { data: booking, isLoading } = useQuery({
+    queryKey: ["booking-success", sessionId],
+    queryFn: async () => {
+      if (!sessionId) return null;
+      const bookings = await base44.entities.Booking.filter({
+        stripe_checkout_session_id: sessionId,
+      });
+      return bookings[0] || null;
+    },
+    enabled: !!sessionId,
+  });
+
+  const formatAmount = (amount) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount / 100);
+  };
+
+  if (isLoading && sessionId) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 size={48} className="animate-spin text-[#D8B46B] mx-auto mb-4" />
+          <p className="text-[#2B2725]/70">Loading your booking details...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F9F5EF] pt-32 pb-24">
@@ -39,10 +72,37 @@ export default function BookingSuccess() {
             Your Booking is Confirmed!
           </h1>
 
-          <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-12 max-w-2xl mx-auto">
+          <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
             Thank you for investing in your transformation. Your payment has been received, 
             and your private Mind Styling sessions are confirmed.
           </p>
+
+          {/* Booking Summary */}
+          {booking && (
+            <div className="bg-[#F9F5EF] p-6 mb-8 max-w-xl mx-auto">
+              <h3 className="font-medium text-[#1E3A32] mb-4">Booking Summary</h3>
+              <div className="space-y-2 text-left">
+                <div className="flex justify-between">
+                  <span className="text-[#2B2725]/70">Service:</span>
+                  <span className="text-[#1E3A32] font-medium">
+                    {booking.service_type?.replace("_", " ").toUpperCase()}
+                  </span>
+                </div>
+                {booking.session_count && (
+                  <div className="flex justify-between">
+                    <span className="text-[#2B2725]/70">Sessions:</span>
+                    <span className="text-[#1E3A32] font-medium">{booking.session_count}</span>
+                  </div>
+                )}
+                <div className="flex justify-between pt-2 border-t border-[#E4D9C4]">
+                  <span className="text-[#2B2725]/70">Total:</span>
+                  <span className="text-[#1E3A32] font-medium text-lg">
+                    {formatAmount(booking.amount)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Next Steps */}
           <div className="bg-white p-8 mb-12 text-left">
