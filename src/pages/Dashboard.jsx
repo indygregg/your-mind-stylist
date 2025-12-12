@@ -12,6 +12,8 @@ import ConstellationMap from "@/components/studio/ConstellationMap";
 import InnerMomentumMeter from "@/components/studio/InnerMomentumMeter";
 import NotesDrawer from "@/components/studio/NotesDrawer";
 import RecommendationCard from "@/components/studio/RecommendationCard";
+import UpcomingSessions from "@/components/dashboard/UpcomingSessions";
+import BookingHistory from "@/components/dashboard/BookingHistory";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -20,6 +22,8 @@ export default function Dashboard() {
   const [dailyPrompt, setDailyPrompt] = useState(null);
   const [notesDrawerOpen, setNotesDrawerOpen] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
+  const [upcomingBookings, setUpcomingBookings] = useState([]);
+  const [pastBookings, setPastBookings] = useState([]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -59,6 +63,30 @@ export default function Dashboard() {
         if (recs?.data?.recommendations) {
           setRecommendations(recs.data.recommendations);
         }
+        
+        // Fetch bookings
+        const allBookings = await base44.entities.Booking.filter({ user_email: currentUser.email });
+        const now = new Date();
+        
+        // Split into upcoming and past
+        const upcoming = allBookings.filter(b => 
+          ['confirmed', 'scheduled', 'pending_payment'].includes(b.booking_status) &&
+          (!b.scheduled_date || new Date(b.scheduled_date) >= now)
+        ).sort((a, b) => {
+          if (!a.scheduled_date) return 1;
+          if (!b.scheduled_date) return -1;
+          return new Date(a.scheduled_date) - new Date(b.scheduled_date);
+        });
+        
+        const past = allBookings.filter(b => 
+          b.booking_status === 'completed' || 
+          b.booking_status === 'cancelled' ||
+          b.booking_status === 'expired' ||
+          (b.scheduled_date && new Date(b.scheduled_date) < now)
+        ).sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+        
+        setUpcomingBookings(upcoming);
+        setPastBookings(past);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -134,6 +162,14 @@ export default function Dashboard() {
             <InnerMomentumMeter weeklyPoints={studioStats?.momentum?.weeklyPoints || 0} />
           </div>
 
+          {/* Upcoming Sessions */}
+          {upcomingBookings.length > 0 && (
+            <div className="mb-12">
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Your Upcoming Sessions</h2>
+              <UpcomingSessions bookings={upcomingBookings} />
+            </div>
+          )}
+
           {/* Personalized Recommendations */}
           {recommendations.length > 0 && (
             <div className="mb-12">
@@ -150,6 +186,14 @@ export default function Dashboard() {
                   />
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Booking History */}
+          {pastBookings.length > 0 && (
+            <div className="mb-12">
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Booking History</h2>
+              <BookingHistory bookings={pastBookings} />
             </div>
           )}
 
