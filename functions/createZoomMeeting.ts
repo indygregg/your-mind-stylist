@@ -35,19 +35,53 @@ Deno.serve(async (req) => {
 
 
 
-        // Configure meeting details
-        const meetingData = {
-            topic: topic || `Private Mind Styling Session - ${booking.user_name}`,
-            type: 2, // Scheduled meeting
-            start_time: start_time || new Date().toISOString(),
-            duration: duration || 60, // Default 60 minutes
-            timezone: timezone || 'America/Los_Angeles',
-            settings: {
+        // Configure meeting details based on service type
+        const serviceType = booking.service_type || 'private_sessions';
+        const meetingConfigs = {
+            'private_sessions': {
+                duration: 60,
                 host_video: true,
                 participant_video: true,
-                join_before_host: false,
-                mute_upon_entry: false,
                 waiting_room: true,
+                mute_upon_entry: false,
+            },
+            'consultation': {
+                duration: 30,
+                host_video: true,
+                participant_video: true,
+                waiting_room: true,
+                mute_upon_entry: false,
+            },
+            'certification': {
+                duration: 90,
+                host_video: true,
+                participant_video: true,
+                waiting_room: false,
+                mute_upon_entry: false,
+            },
+            'other': {
+                duration: 60,
+                host_video: true,
+                participant_video: true,
+                waiting_room: true,
+                mute_upon_entry: false,
+            }
+        };
+
+        const config = meetingConfigs[serviceType] || meetingConfigs['other'];
+
+        const meetingData = {
+            topic: topic || `${serviceType.replace('_', ' ').toUpperCase()} - ${booking.user_name}`,
+            type: 2, // Scheduled meeting
+            start_time: start_time || new Date().toISOString(),
+            duration: duration || config.duration,
+            timezone: timezone || 'America/Los_Angeles',
+            settings: {
+                host_video: config.host_video,
+                participant_video: config.participant_video,
+                join_before_host: false,
+                mute_upon_entry: config.mute_upon_entry,
+                waiting_room: config.waiting_room,
                 audio: 'both',
                 auto_recording: 'none',
                 approval_type: 2 // No registration required
