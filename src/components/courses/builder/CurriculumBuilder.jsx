@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, GripVertical, Edit, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function CurriculumBuilder({ modules, onUpdate }) {
   const [expandedModules, setExpandedModules] = useState({});
@@ -69,6 +70,39 @@ export default function CurriculumBuilder({ modules, onUpdate }) {
     setExpandedModules({ ...expandedModules, [moduleId]: !expandedModules[moduleId] });
   };
 
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const { source, destination, type } = result;
+
+    // Reorder modules
+    if (type === "MODULE") {
+      const reordered = Array.from(modules);
+      const [removed] = reordered.splice(source.index, 1);
+      reordered.splice(destination.index, 0, removed);
+      
+      // Update order numbers
+      const updatedModules = reordered.map((mod, idx) => ({ ...mod, order: idx + 1 }));
+      onUpdate(updatedModules);
+      return;
+    }
+
+    // Reorder lessons within a module
+    if (type === "LESSON") {
+      const moduleId = result.draggableId.split("-")[0];
+      const updatedModules = modules.map(mod => {
+        if (mod.id === moduleId) {
+          const reordered = Array.from(mod.lessons || []);
+          const [removed] = reordered.splice(source.index, 1);
+          reordered.splice(destination.index, 0, removed);
+          return { ...mod, lessons: reordered.map((l, idx) => ({ ...l, order: idx + 1 })) };
+        }
+        return mod;
+      });
+      onUpdate(updatedModules);
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
@@ -80,19 +114,33 @@ export default function CurriculumBuilder({ modules, onUpdate }) {
         </p>
       </div>
 
-      <div className="space-y-4 mb-6">
-        <AnimatePresence>
-          {modules.map((module, moduleIndex) => (
-            <motion.div
-              key={module.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="bg-white border border-[#E4D9C4] rounded-lg overflow-hidden"
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <Droppable droppableId="modules" type="MODULE">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="space-y-4 mb-6"
             >
-              {/* Module Header */}
-              <div className="flex items-start gap-3 p-4 bg-[#F9F5EF]">
-                <GripVertical className="text-[#2B2725]/40 mt-1 cursor-move" size={20} />
+              <AnimatePresence>
+                {modules.map((module, moduleIndex) => (
+                  <Draggable key={module.id} draggableId={module.id} index={moduleIndex}>
+                    {(provided, snapshot) => (
+                      <motion.div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        className={`bg-white border border-[#E4D9C4] rounded-lg overflow-hidden ${
+                          snapshot.isDragging ? "shadow-xl" : ""
+                        }`}
+                      >
+                        {/* Module Header */}
+                        <div className="flex items-start gap-3 p-4 bg-[#F9F5EF]">
+                          <div {...provided.dragHandleProps}>
+                            <GripVertical className="text-[#2B2725]/40 mt-1 cursor-move" size={20} />
+                          </div>
                 <div className="flex-1">
                   {editingModule === module.id ? (
                     <div className="space-y-2">
@@ -156,22 +204,35 @@ export default function CurriculumBuilder({ modules, onUpdate }) {
                 </div>
               </div>
 
-              {/* Lessons */}
-              <AnimatePresence>
-                {expandedModules[module.id] && (
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: "auto" }}
-                    exit={{ height: 0 }}
-                    className="border-t border-[#E4D9C4]"
-                  >
-                    <div className="p-4 space-y-2">
-                      {(module.lessons || []).map((lesson, lessonIndex) => (
-                        <div
-                          key={lesson.id}
-                          className="flex items-center gap-3 p-3 bg-[#F9F5EF] rounded"
-                        >
-                          <GripVertical className="text-[#2B2725]/40 cursor-move" size={16} />
+                        {/* Lessons */}
+                        <AnimatePresence>
+                          {expandedModules[module.id] && (
+                            <motion.div
+                              initial={{ height: 0 }}
+                              animate={{ height: "auto" }}
+                              exit={{ height: 0 }}
+                              className="border-t border-[#E4D9C4]"
+                            >
+                              <Droppable droppableId={module.id} type="LESSON">
+                                {(provided) => (
+                                  <div
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}
+                                    className="p-4 space-y-2"
+                                  >
+                                    {(module.lessons || []).map((lesson, lessonIndex) => (
+                                      <Draggable key={lesson.id} draggableId={`${module.id}-${lesson.id}`} index={lessonIndex}>
+                                        {(provided, snapshot) => (
+                                          <div
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            className={`flex items-center gap-3 p-3 bg-[#F9F5EF] rounded ${
+                                              snapshot.isDragging ? "shadow-md" : ""
+                                            }`}
+                                          >
+                                            <div {...provided.dragHandleProps}>
+                                              <GripVertical className="text-[#2B2725]/40 cursor-move" size={16} />
+                                            </div>
                           <div className="flex-1">
                             <p className="text-sm font-medium text-[#1E3A32]">
                               {lessonIndex + 1}. {lesson.title}
@@ -194,9 +255,12 @@ export default function CurriculumBuilder({ modules, onUpdate }) {
                           >
                             <Trash2 size={14} />
                           </Button>
-                        </div>
-                      ))}
-                      <Button
+                                          </div>
+                                        )}
+                                      </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                    <Button
                         type="button"
                         variant="outline"
                         size="sm"
@@ -205,15 +269,23 @@ export default function CurriculumBuilder({ modules, onUpdate }) {
                       >
                         <Plus size={16} className="mr-2" />
                         Add Lesson
-                      </Button>
-                    </div>
-                  </motion.div>
-                )}
+                                    </Button>
+                                  </div>
+                                )}
+                              </Droppable>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    )}
+                  </Draggable>
+                ))}
               </AnimatePresence>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
 
       <Button
         type="button"

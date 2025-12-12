@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Save, Eye } from "lucide-react";
+import { ArrowLeft, ArrowRight, Save, Eye, Sparkles, BookTemplate } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CourseTypeSelector from "../components/courses/builder/CourseTypeSelector";
 import CourseBasicsForm from "../components/courses/builder/CourseBasicsForm";
 import CurriculumBuilder from "../components/courses/builder/CurriculumBuilder";
 import LessonEditor from "../components/courses/builder/LessonEditor";
 import CourseSettings from "../components/courses/builder/CourseSettings";
+import AICourseGenerator from "../components/courses/builder/AICourseGenerator";
+import CourseTemplates from "../components/courses/builder/CourseTemplates";
 import { createPageUrl } from "../utils";
 import { useNavigate } from "react-router-dom";
 
@@ -23,6 +25,8 @@ export default function CourseBuilder() {
   });
   const [modules, setModules] = useState([]);
   const [editingLesson, setEditingLesson] = useState(null);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
 
   // Get course ID from URL if editing
   const urlParams = new URLSearchParams(window.location.search);
@@ -159,6 +163,18 @@ export default function CourseBuilder() {
     }
   };
 
+  const handleAIGenerate = (generatedCourse) => {
+    setFormData({ ...formData, ...generatedCourse });
+    setModules(generatedCourse.modules);
+    setStep(2); // Go to basics to review
+  };
+
+  const handleTemplateSelect = (template) => {
+    setFormData({ ...formData, ...template });
+    setModules(template.modules);
+    setStep(2); // Go to basics to review
+  };
+
   const steps = [
     { number: 1, title: "Type" },
     { number: 2, title: "Basics" },
@@ -192,9 +208,30 @@ export default function CourseBuilder() {
             <ArrowLeft size={16} className="mr-2" />
             Back to Courses
           </Button>
-          <h1 className="font-serif text-4xl text-[#1E3A32]">
-            {courseId ? "Edit Course" : "Create New Course"}
-          </h1>
+          <div className="flex justify-between items-center">
+            <h1 className="font-serif text-4xl text-[#1E3A32]">
+              {courseId ? "Edit Course" : "Create New Course"}
+            </h1>
+            {!courseId && step === 1 && (
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowTemplates(true)}
+                  className="border-[#D8B46B] hover:bg-[#D8B46B]/10"
+                >
+                  <BookTemplate size={16} className="mr-2" />
+                  Use Template
+                </Button>
+                <Button
+                  onClick={() => setShowAIGenerator(true)}
+                  className="bg-gradient-to-r from-[#6E4F7D] to-[#8B659B] hover:from-[#5D3E6C] hover:to-[#7A5487] text-white"
+                >
+                  <Sparkles size={16} className="mr-2" />
+                  AI Generate
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Progress Steps */}
@@ -301,6 +338,22 @@ export default function CourseBuilder() {
           </div>
         </div>
       </div>
+
+      {/* AI Generator */}
+      {showAIGenerator && (
+        <AICourseGenerator
+          onGenerate={handleAIGenerate}
+          onClose={() => setShowAIGenerator(false)}
+        />
+      )}
+
+      {/* Templates */}
+      {showTemplates && (
+        <CourseTemplates
+          onSelectTemplate={handleTemplateSelect}
+          onClose={() => setShowTemplates(false)}
+        />
+      )}
 
       {/* Lesson Editor Modal */}
       {editingLesson && currentLesson && (
