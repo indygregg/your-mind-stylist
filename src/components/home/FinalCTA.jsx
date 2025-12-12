@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Mail } from "lucide-react";
+import CmsText from "../cms/CmsText";
 
 export default function FinalCTA() {
   return (
@@ -22,16 +23,27 @@ export default function FinalCTA() {
             <div className="w-16 h-[2px] bg-[#D8B46B]" />
           </div>
 
-          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] leading-tight mb-8">
-            When You Change Your Thinking,
-            <br />
-            <span className="italic text-[#2B2725]">Everything Changes.</span>
-          </h2>
+          <CmsText
+            contentKey="home.closing.title"
+            page="home"
+            blockTitle="Homepage Closing Title"
+            contentType="short_text"
+            maxLength={120}
+            fallback="When You Change Your Thinking, Everything Changes."
+            as="h2"
+            className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] leading-tight mb-8"
+          />
 
-          <p className="text-[#2B2725]/80 text-lg md:text-xl leading-relaxed mb-12 max-w-2xl mx-auto">
-            If you're ready to release old patterns, elevate your emotional intelligence, and build
-            a life that feels aligned, grounded, and emotionally clear—I'd love to support you.
-          </p>
+          <CmsText
+            contentKey="home.closing.body"
+            page="home"
+            blockTitle="Homepage Closing Body"
+            contentType="rich_text"
+            maxLength={500}
+            fallback="If you're ready to release old patterns, elevate your emotional intelligence, and build a life that feels aligned, grounded, and emotionally clear—I'd love to support you."
+            as="p"
+            className="text-[#2B2725]/80 text-lg md:text-xl leading-relaxed mb-12 max-w-2xl mx-auto"
+          />
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row justify-center gap-4">

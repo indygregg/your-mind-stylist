@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import CmsText from "../cms/CmsText";
 
 export default function WhatIDo() {
   return (
@@ -19,26 +20,27 @@ export default function WhatIDo() {
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
               The Approach
             </span>
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] leading-tight mb-8">
-              Helping You Think From
-              <br />
-              <span className="italic">Where You Want to Be</span>
-            </h2>
+            <CmsText
+              contentKey="home.intro.title"
+              page="home"
+              blockTitle="Homepage Intro Title"
+              contentType="short_text"
+              maxLength={120}
+              fallback="Helping You Think From Where You Want to Be"
+              as="h2"
+              className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] leading-tight mb-8"
+            />
 
-            <p className="text-[#2B2725]/80 text-xl leading-relaxed mb-6">
-              Hi, I'm <span className="font-medium">Roberta Fernandez — Your Mind Stylist.</span>
-            </p>
-
-            <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
-              I'm an Integrative Emotional Intelligence Specialist, Master Practitioner of NLP, and
-              Board-certified Hypnotherapist with decades of experience helping individuals and
-              teams transform the way they think, communicate, and lead.
-            </p>
-
-            <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10">
-              My work blends neuroscience, emotional intelligence, inner pattern work, and guided
-              mental rehearsal to create meaningful, sustainable change.
-            </p>
+            <CmsText
+              contentKey="home.intro.body"
+              page="home"
+              blockTitle="Homepage Intro Body"
+              contentType="rich_text"
+              maxLength={1000}
+              fallback="<p>Hi, I'm <strong>Roberta Fernandez — Your Mind Stylist.</strong></p><p>I'm an Integrative Emotional Intelligence Specialist, Master Practitioner of NLP, and Board-certified Hypnotherapist with decades of experience helping individuals and teams transform the way they think, communicate, and lead.</p><p>My work blends neuroscience, emotional intelligence, inner pattern work, and guided mental rehearsal to create meaningful, sustainable change.</p>"
+              as="div"
+              className="text-[#2B2725]/80 text-lg leading-relaxed mb-10"
+            />
 
             {/* Micro Links */}
             <div className="flex flex-col sm:flex-row gap-4">

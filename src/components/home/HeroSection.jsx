@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
+import CmsText from "../cms/CmsText";
 
 export default function HeroSection() {
   return (
@@ -48,19 +49,28 @@ export default function HeroSection() {
             </motion.div>
 
             {/* Headline */}
-            <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-[#1E3A32] leading-[1.1] mb-8">
-              Rewrite Your Mind.
-              <br />
-              <span className="italic text-[#2B2725]">Restyle Your Life.</span>
-            </h1>
+            <CmsText
+              contentKey="home.hero.title"
+              page="home"
+              blockTitle="Homepage Hero Title"
+              contentType="short_text"
+              maxLength={120}
+              fallback="Rewrite Your Mind. Restyle Your Life."
+              as="h1"
+              className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-[#1E3A32] leading-[1.1] mb-8"
+            />
 
             {/* Subheadline */}
-            <p className="text-[#2B2725]/80 text-lg md:text-xl leading-relaxed mb-10 max-w-xl">
-              Your thinking shapes everything—your choices, confidence, relationships, and leadership.
-              When your thoughts evolve, so does your entire life. I help you identify the patterns
-              that no longer fit, release the ones holding you back, and redesign your mindset so
-              you can move forward with clarity, confidence, and emotional intelligence.
-            </p>
+            <CmsText
+              contentKey="home.hero.subtitle"
+              page="home"
+              blockTitle="Homepage Hero Subtitle"
+              contentType="rich_text"
+              maxLength={500}
+              fallback="Your thinking shapes everything—your choices, confidence, relationships, and leadership. When your thoughts evolve, so does your entire life. I help you identify the patterns that no longer fit, release the ones holding you back, and redesign your mindset so you can move forward with clarity, confidence, and emotional intelligence."
+              as="p"
+              className="text-[#2B2725]/80 text-lg md:text-xl leading-relaxed mb-10 max-w-xl"
+            />
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
@@ -68,7 +78,15 @@ export default function HeroSection() {
                 to={createPageUrl("Contact")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                Book Your Complimentary Consultation
+                <CmsText
+                  contentKey="home.hero.cta_primary"
+                  page="home"
+                  blockTitle="Homepage Hero Primary CTA"
+                  contentType="short_text"
+                  maxLength={60}
+                  fallback="Book Your Complimentary Consultation"
+                  as="span"
+                />
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
@@ -79,7 +97,15 @@ export default function HeroSection() {
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
               >
                 <Play size={16} className="text-[#D8B46B]" />
-                Watch the Free Masterclass
+                <CmsText
+                  contentKey="home.hero.cta_secondary"
+                  page="home"
+                  blockTitle="Homepage Hero Secondary CTA"
+                  contentType="short_text"
+                  maxLength={60}
+                  fallback="Watch the Free Masterclass"
+                  as="span"
+                />
               </Link>
             </div>
           </motion.div>
