@@ -229,14 +229,13 @@ export default function Evolution() {
 
             <div className="bg-[#F9F5EF] p-8 mb-8">
               <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-6">Perfect for:</p>
-              <div className="space-y-3">
-                {perfectFor.map((item) => (
-                  <div key={item} className="flex items-center gap-3">
-                    <Check size={20} className="text-[#D8B46B] flex-shrink-0" />
-                    <span className="text-[#2B2725]/80 text-lg">{item}</span>
-                  </div>
-                ))}
-              </div>
+              <CmsText 
+                contentKey="evolution.for.list"
+                page="Evolution"
+                blockTitle="Perfect For List"
+                fallback={`<div class='space-y-3'>${perfectFor.map(item => `<div class='flex items-center gap-3'><svg class='lucide lucide-check' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg><span class='text-[#2B2725]/80 text-lg'>${item}</span></div>`).join('')}</div>`}
+                contentType="rich_text"
+              />
             </div>
 
             <p className="font-serif text-xl text-[#1E3A32] italic">
@@ -298,53 +297,75 @@ export default function Evolution() {
                 />
 
                 <div className="relative z-10">
-                  {/* Header */}
-                  <div className="flex items-start gap-6 mb-8">
-                    <div
-                      className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0"
-                      style={{ backgroundColor: `${phase.color}15` }}
-                    >
-                      <phase.icon size={32} style={{ color: phase.color }} />
-                    </div>
-                    <div>
-                      <span
-                        className="text-sm tracking-[0.2em] uppercase mb-2 block"
-                        style={{ color: phase.color }}
-                      >
-                        {phase.number}
-                      </span>
-                      <h3 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-3">
-                        {phase.name}
-                      </h3>
-                      <p className="font-serif text-xl md:text-2xl text-[#2B2725]/70 italic">
-                        {phase.tagline}
-                      </p>
-                    </div>
+                {/* Header */}
+                <div className="flex items-start gap-6 mb-8">
+                  <div
+                    className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: `${phase.color}15` }}
+                  >
+                    <phase.icon size={32} style={{ color: phase.color }} />
                   </div>
+                  <div>
+                    <span
+                      className="text-sm tracking-[0.2em] uppercase mb-2 block"
+                      style={{ color: phase.color }}
+                    >
+                      <CmsText 
+                        contentKey={`evolution.phase${index + 1}.number`}
+                        page="Evolution"
+                        blockTitle={`Phase ${index + 1} Number`}
+                        fallback={phase.number}
+                        contentType="short_text"
+                        as="span"
+                      />
+                    </span>
+                    <h3 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-3">
+                      <CmsText 
+                        contentKey={`evolution.phase${index + 1}.name`}
+                        page="Evolution"
+                        blockTitle={`Phase ${index + 1} Name`}
+                        fallback={phase.name}
+                        contentType="short_text"
+                        as="span"
+                      />
+                    </h3>
+                    <p className="font-serif text-xl md:text-2xl text-[#2B2725]/70 italic">
+                      <CmsText 
+                        contentKey={`evolution.phase${index + 1}.tagline`}
+                        page="Evolution"
+                        blockTitle={`Phase ${index + 1} Tagline`}
+                        fallback={phase.tagline}
+                        contentType="short_text"
+                      />
+                    </p>
+                  </div>
+                </div>
 
                   {/* Content Grid */}
                   <div className="grid lg:grid-cols-2 gap-10">
                     {/* Left - Description & Learnings */}
                     <div>
                       <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
-                        {phase.description}
+                        <CmsText 
+                          contentKey={`evolution.phase${index + 1}.description`}
+                          page="Evolution"
+                          blockTitle={`Phase ${index + 1} Description`}
+                          fallback={phase.description}
+                          contentType="rich_text"
+                        />
                       </p>
 
                       <div className="border-l-2 border-[#D8B46B] pl-6 mb-8">
                         <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-4">
                           You'll learn:
                         </p>
-                        <ul className="space-y-2">
-                          {phase.learnings.map((learning) => (
-                            <li
-                              key={learning}
-                              className="text-[#2B2725]/80 flex items-start gap-2"
-                            >
-                              <span className="text-[#D8B46B] mt-1">•</span>
-                              {learning}
-                            </li>
-                          ))}
-                        </ul>
+                        <CmsText 
+                          contentKey={`evolution.phase${index + 1}.learnings`}
+                          page="Evolution"
+                          blockTitle={`Phase ${index + 1} Learnings`}
+                          fallback={`<ul class='space-y-2'>${phase.learnings.map(learning => `<li class='text-[#2B2725]/80 flex items-start gap-2'><span class='text-[#D8B46B] mt-1'>•</span>${learning}</li>`).join('')}</ul>`}
+                          contentType="rich_text"
+                        />
                       </div>
                     </div>
 
@@ -355,7 +376,13 @@ export default function Evolution() {
                           Outcome:
                         </p>
                         <p className="text-[#2B2725]/80 text-lg leading-relaxed italic">
-                          {phase.outcome}
+                          <CmsText 
+                            contentKey={`evolution.phase${index + 1}.outcome`}
+                            page="Evolution"
+                            blockTitle={`Phase ${index + 1} Outcome`}
+                            fallback={phase.outcome}
+                            contentType="rich_text"
+                          />
                         </p>
                       </div>
 
@@ -396,14 +423,13 @@ export default function Evolution() {
               />
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-4">
-              {included.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <Check size={20} className="text-[#D8B46B] mt-1 flex-shrink-0" />
-                  <span className="text-[#2B2725]/80 text-lg">{item}</span>
-                </div>
-              ))}
-            </div>
+            <CmsText 
+              contentKey="evolution.included.list"
+              page="Evolution"
+              blockTitle="What's Included List"
+              fallback={`<div class='grid md:grid-cols-2 gap-4'>${included.map(item => `<div class='flex items-start gap-3'><svg class='lucide lucide-check' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='margin-top: 4px; flex-shrink: 0;'><path d='M20 6 9 17l-5-5'/></svg><span class='text-[#2B2725]/80 text-lg'>${item}</span></div>`).join('')}</div>`}
+              contentType="rich_text"
+            />
           </motion.div>
         </div>
       </section>
@@ -436,14 +462,13 @@ export default function Evolution() {
               />
             </p>
 
-            <div className="grid md:grid-cols-2 gap-4 mb-10">
-              {outcomes.map((outcome) => (
-                <div key={outcome} className="flex items-start gap-3">
-                  <Check size={20} className="text-[#D8B46B] mt-1 flex-shrink-0" />
-                  <span className="text-[#F9F5EF]/90 text-lg">{outcome}</span>
-                </div>
-              ))}
-            </div>
+            <CmsText 
+              contentKey="evolution.outcomes.list"
+              page="Evolution"
+              blockTitle="Outcomes List"
+              fallback={`<div class='grid md:grid-cols-2 gap-4 mb-10'>${outcomes.map(outcome => `<div class='flex items-start gap-3'><svg class='lucide lucide-check' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='margin-top: 4px; flex-shrink: 0;'><path d='M20 6 9 17l-5-5'/></svg><span class='text-[#F9F5EF]/90 text-lg'>${outcome}</span></div>`).join('')}</div>`}
+              contentType="rich_text"
+            />
 
             <p className="font-serif text-2xl text-[#D8B46B] italic text-center">
               <CmsText 
@@ -477,19 +502,33 @@ export default function Evolution() {
             </h2>
 
             <div className="space-y-8">
-              {faqs.map((faq, index) => (
+              {faqs.map((faq, idx) => (
                 <motion.div
                   key={faq.question}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: idx * 0.1 }}
                   className="bg-white p-8"
                 >
                   <h3 className="font-serif text-xl md:text-2xl text-[#1E3A32] mb-4">
-                    {faq.question}
+                    <CmsText 
+                      contentKey={`evolution.faq${idx + 1}.question`}
+                      page="Evolution"
+                      blockTitle={`FAQ ${idx + 1} Question`}
+                      fallback={faq.question}
+                      contentType="short_text"
+                    />
                   </h3>
-                  <p className="text-[#2B2725]/80 text-lg leading-relaxed">{faq.answer}</p>
+                  <p className="text-[#2B2725]/80 text-lg leading-relaxed">
+                    <CmsText 
+                      contentKey={`evolution.faq${idx + 1}.answer`}
+                      page="Evolution"
+                      blockTitle={`FAQ ${idx + 1} Answer`}
+                      fallback={faq.answer}
+                      contentType="rich_text"
+                    />
+                  </p>
                 </motion.div>
               ))}
             </div>
