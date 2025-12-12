@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { 
   PenSquare, FileVideo, Headphones, Mail, Users, FileText, 
-  ShoppingCart, ListTodo, Settings, BarChart3, Shield, Sparkles, Target, Image, Download 
+  ShoppingCart, ListTodo, Settings, BarChart3, Shield, Sparkles, Target, Image, Download, Calendar 
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -30,7 +30,13 @@ export default function AdminDashboard() {
     queryFn: () => base44.entities.User.list("-created_date", 10),
   });
 
+  const { data: bookings = [] } = useQuery({
+    queryKey: ["admin-bookings-count"],
+    queryFn: () => base44.entities.Booking.list(),
+  });
+
   const quickActions = [
+    { icon: Calendar, label: "Manage Bookings", link: "ManagerBookings", color: "#D8B46B" },
     { icon: ListTodo, label: "Manage Roadmap", link: "AdminRoadmap", color: "#6E4F7D" },
     { icon: FileText, label: "Dev Docs", link: "StudioDevDocs", color: "#6E4F7D" },
     { icon: PenSquare, label: "Manage Blog Posts", link: "BlogManager", color: "#D8B46B" },
@@ -43,8 +49,8 @@ export default function AdminDashboard() {
   ];
 
   const snapshotCards = [
+    { icon: Calendar, label: "Confirmed Bookings", value: bookings.filter(b => b.booking_status === 'confirmed').length, color: "#D8B46B", link: "ManagerBookings" },
     { icon: Users, label: "Total Users", value: allUsers.length, color: "#A6B7A3" },
-    { icon: FileText, label: "Published Posts", value: blogPosts.filter(p => p.status === "published").length, color: "#D8B46B" },
     { icon: Mail, label: "New Messages", value: messages.length, color: "#6E4F7D", link: "MessagesManager" },
     { icon: ListTodo, label: "Active Roadmap Items", value: roadmapItems.length, color: "#1E3A32", link: "AdminRoadmap" },
   ];

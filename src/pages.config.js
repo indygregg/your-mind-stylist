@@ -57,6 +57,7 @@ import WebinarPage from './pages/WebinarPage';
 import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import BookingSuccess from './pages/BookingSuccess';
+import ManagerBookings from './pages/ManagerBookings';
 import __Layout from './Layout.jsx';
 
 
@@ -120,6 +121,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "WorkWithMe": WorkWithMe,
     "BookingSuccess": BookingSuccess,
+    "ManagerBookings": ManagerBookings,
 }
 
 export const pagesConfig = {

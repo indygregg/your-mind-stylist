@@ -4,7 +4,7 @@ import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download } from "lucide-react";
+import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar } from "lucide-react";
 
 export default function ManagerDashboard() {
   // Set auth layout
@@ -27,6 +27,11 @@ export default function ManagerDashboard() {
     queryFn: () => base44.entities.BlogPost.filter({ status: "draft" }),
   });
 
+  const { data: bookings = [] } = useQuery({
+    queryKey: ["manager-bookings-count"],
+    queryFn: () => base44.entities.Booking.list(),
+  });
+
   const quickActions = [
     { icon: PenSquare, label: "Create New Blog Post", link: "BlogEditor?mode=new" },
     { icon: FileVideo, label: "Create New Course", link: "CourseEditor?mode=new" },
@@ -37,8 +42,8 @@ export default function ManagerDashboard() {
   ];
 
   const snapshotCards = [
-    { icon: Users, label: "New users this week", value: 12, color: "#A6B7A3" },
-    { icon: ShoppingCart, label: "New purchases this week", value: 5, color: "#D8B46B" },
+    { icon: Calendar, label: "Active Bookings", value: bookings.filter(b => b.booking_status === 'confirmed').length, color: "#D8B46B", link: "ManagerBookings" },
+    { icon: ShoppingCart, label: "New purchases this week", value: 5, color: "#A6B7A3" },
     { icon: Mail, label: "Unanswered messages", value: messages.length, color: "#6E4F7D", link: "MessagesManager" },
     { icon: FileText, label: "Drafts waiting to publish", value: drafts.length, color: "#1E3A32", link: "BlogManager" },
   ];
