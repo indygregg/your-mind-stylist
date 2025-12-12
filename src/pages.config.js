@@ -73,6 +73,7 @@ import StaffManagement from './pages/StaffManagement';
 import Bookings from './pages/Bookings';
 import BookingPaymentFailed from './pages/BookingPaymentFailed';
 import BookingPaymentCancelled from './pages/BookingPaymentCancelled';
+import ProfileSettings from './pages/ProfileSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -152,6 +153,7 @@ export const PAGES = {
     "Bookings": Bookings,
     "BookingPaymentFailed": BookingPaymentFailed,
     "BookingPaymentCancelled": BookingPaymentCancelled,
+    "ProfileSettings": ProfileSettings,
 }
 
 export const pagesConfig = {

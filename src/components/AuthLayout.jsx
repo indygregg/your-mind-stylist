@@ -2,13 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut, User, Settings, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MobileBottomNav from "./MobileBottomNav";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function AuthLayout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -145,16 +153,63 @@ export default function AuthLayout({ children, currentPageName }) {
 
             {/* User Menu */}
             <div className="flex items-center gap-4 border-l border-[#F9F5EF]/20 pl-6">
-              <span className="text-[#F9F5EF]/70 text-sm">
-                {user?.full_name || user?.email}
-              </span>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-4 py-2 bg-[#F9F5EF]/10 hover:bg-[#F9F5EF]/20 text-[#F9F5EF] text-sm rounded transition-all"
-              >
-                <LogOut size={14} />
-                Logout
-              </button>
+              <DropdownMenu open={profileDropdownOpen} onOpenChange={setProfileDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <div className="w-9 h-9 rounded-full bg-[#D8B46B]/30 flex items-center justify-center overflow-hidden">
+                      {user?.profile_photo ? (
+                        <img
+                          src={user.profile_photo}
+                          alt={user.full_name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <User size={18} className="text-[#F9F5EF]" />
+                      )}
+                    </div>
+                    <span className="text-[#F9F5EF] text-sm font-medium">
+                      {user?.full_name || user?.email}
+                    </span>
+                    <ChevronDown size={16} className="text-[#F9F5EF]/70" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-white">
+                  <div className="px-3 py-2 border-b border-[#E4D9C4]">
+                    <p className="text-sm font-medium text-[#1E3A32]">
+                      {user?.full_name || "User"}
+                    </p>
+                    <p className="text-xs text-[#2B2725]/60">{user?.email}</p>
+                  </div>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      to={createPageUrl("ProfileSettings")}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <User size={16} />
+                      Profile Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  {(user?.role === "admin" || user?.role === "manager") && (
+                    <DropdownMenuItem asChild>
+                      <Link
+                        to={createPageUrl("StudioSettings")}
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
+                        <Settings size={16} />
+                        Studio Settings
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 cursor-pointer text-red-600"
+                  >
+                    <LogOut size={16} />
+                    Logout
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 
