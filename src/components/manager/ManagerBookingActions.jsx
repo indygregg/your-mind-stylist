@@ -289,7 +289,7 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
           </DialogContent>
         </Dialog>
       )}
-      </div>
+    </div>
     </div>
   );
 }
