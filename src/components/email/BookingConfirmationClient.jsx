@@ -36,8 +36,20 @@ export default function BookingConfirmationClient({ booking }) {
         </p>
 
         <p style={{ color: "#2B2725", fontSize: "16px", lineHeight: "1.6" }}>
-          Thank you for booking private Mind Styling sessions. Your payment has been confirmed and your sessions are now scheduled.
+          Thank you for booking your session! Your payment has been confirmed and your appointment is scheduled.
         </p>
+
+        {/* Session Date/Time - Prominent */}
+        {booking.scheduled_date && (
+          <div style={{ backgroundColor: "#1E3A32", padding: "30px", marginTop: "30px", marginBottom: "20px", textAlign: "center" }}>
+            <p style={{ color: "#D8B46B", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase", margin: "0 0 10px 0" }}>
+              Your Session
+            </p>
+            <p style={{ color: "#F9F5EF", fontFamily: "Georgia, serif", fontSize: "24px", margin: 0, lineHeight: "1.4" }}>
+              {formatDate(booking.scheduled_date)}
+            </p>
+          </div>
+        )}
 
         {/* Booking Details Box */}
         <div style={{ backgroundColor: "#F9F5EF", border: "2px solid #D8B46B", padding: "25px", marginTop: "30px", marginBottom: "30px" }}>
@@ -96,7 +108,7 @@ export default function BookingConfirmationClient({ booking }) {
               1
             </div>
             <p style={{ color: "#2B2725", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              <strong>Scheduling:</strong> You'll receive a personalized email from Roberta within 24-48 hours to schedule your first session at a time that works for you.
+              <strong>Confirmation:</strong> You'll receive reminder emails 24 hours and 1 hour before your session.
             </p>
           </div>
 
@@ -105,7 +117,7 @@ export default function BookingConfirmationClient({ booking }) {
               2
             </div>
             <p style={{ color: "#2B2725", fontSize: "14px", lineHeight: "1.6", margin: 0 }}>
-              <strong>Preparation:</strong> Before your first session, take some time to reflect on what you'd like to work on and what patterns you'd like to shift.
+              <strong>Preparation:</strong> Before your session, take some time to reflect on what you'd like to work on and what patterns you'd like to shift.
             </p>
           </div>
 

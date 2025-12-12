@@ -38,8 +38,20 @@ export default function BookingConfirmationManager({ booking }) {
         </p>
 
         <p style={{ color: "#2B2725", fontSize: "16px", lineHeight: "1.6" }}>
-          You have a new confirmed booking for private Mind Styling sessions.
+          You have a new confirmed booking.
         </p>
+
+        {/* Session Date/Time - Prominent */}
+        {booking.scheduled_date && (
+          <div style={{ backgroundColor: "#D8B46B", padding: "25px", marginTop: "20px", marginBottom: "20px", textAlign: "center" }}>
+            <p style={{ color: "#1E3A32", fontSize: "12px", letterSpacing: "2px", textTransform: "uppercase", margin: "0 0 8px 0", fontWeight: "600" }}>
+              Scheduled For
+            </p>
+            <p style={{ color: "#1E3A32", fontFamily: "Georgia, serif", fontSize: "22px", margin: 0, lineHeight: "1.4" }}>
+              {formatDate(booking.scheduled_date)}
+            </p>
+          </div>
+        )}
 
         {/* Client Details */}
         <div style={{ backgroundColor: "#F9F5EF", border: "2px solid #D8B46B", padding: "25px", marginTop: "30px", marginBottom: "30px" }}>
@@ -188,12 +200,13 @@ export default function BookingConfirmationManager({ booking }) {
         {/* Action Items */}
         <div style={{ backgroundColor: "#F9F5EF", padding: "25px", marginBottom: "20px" }}>
           <h3 style={{ color: "#1E3A32", fontFamily: "Georgia, serif", fontSize: "18px", marginTop: 0, marginBottom: "15px" }}>
-            Next Steps
+            Booking Details
           </h3>
           <ul style={{ color: "#2B2725", fontSize: "14px", lineHeight: "1.8", paddingLeft: "20px", margin: 0 }}>
-            <li>Review client information and any notes provided</li>
-            <li>Reach out within 24-48 hours to schedule the first session</li>
-            <li>Confirm time zone and preferred meeting method (Zoom/in-person)</li>
+            <li>Session has been scheduled and client notified</li>
+            <li>Zoom meeting created automatically {booking.zoom_status === 'created' ? '✓' : '(pending)'}</li>
+            <li>Client will receive reminders 24h and 1h before the session</li>
+            <li>Review client notes if provided above</li>
           </ul>
         </div>
 
