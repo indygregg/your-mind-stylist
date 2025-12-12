@@ -70,6 +70,7 @@ import ManagerAvailability from './pages/ManagerAvailability';
 import BookAppointment from './pages/BookAppointment';
 import ClientBookings from './pages/ClientBookings';
 import StaffManagement from './pages/StaffManagement';
+import Bookings from './pages/Bookings';
 import __Layout from './Layout.jsx';
 
 
@@ -146,6 +147,7 @@ export const PAGES = {
     "BookAppointment": BookAppointment,
     "ClientBookings": ClientBookings,
     "StaffManagement": StaffManagement,
+    "Bookings": Bookings,
 }
 
 export const pagesConfig = {
