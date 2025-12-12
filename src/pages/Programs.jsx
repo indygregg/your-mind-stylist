@@ -14,6 +14,7 @@ import {
   Heart,
   CheckCircle
 } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function Programs() {
   return (
@@ -34,13 +35,16 @@ export default function Programs() {
             className="text-center"
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              Programs & Pricing
+              <CmsText contentKey="programs.hero.subtitle" defaultText="Programs & Pricing" />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
-              Your Mind Stylist Programs
+              <CmsText contentKey="programs.hero.title" defaultText="Your Mind Stylist Programs" />
             </h1>
             <p className="text-[#2B2725]/80 text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto">
-              Find your next step, whether you're just beginning or ready for deep transformation.
+              <CmsText 
+                contentKey="programs.hero.description" 
+                defaultText="Find your next step, whether you're just beginning or ready for deep transformation." 
+              />
             </p>
           </motion.div>
         </div>
@@ -56,15 +60,13 @@ export default function Programs() {
             className="text-center"
           >
             <Sparkles size={40} className="text-[#D8B46B] mx-auto mb-6" />
-            <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6 max-w-3xl mx-auto">
-              <strong className="text-[#1E3A32]">Your Mind Stylist offers transformational pathways for every phase of your inner journey.</strong>
-            </p>
-            <p className="text-[#2B2725]/80 text-lg leading-relaxed max-w-3xl mx-auto">
-              From introductory tools that help you clear mental clutter to high-touch coaching that reshapes your emotional operating system — choose what aligns with you today.
-            </p>
-            <p className="text-[#1E3A32] font-serif text-xl italic mt-8">
-              Every program below is designed to help you understand yourself better, shift patterns with awareness, and build emotional resilience that lasts.
-            </p>
+            <div className="text-[#2B2725]/80 text-lg leading-relaxed max-w-3xl mx-auto">
+              <CmsText 
+                contentKey="programs.intro.content" 
+                defaultText="<p class='mb-6'><strong class='text-[#1E3A32]'>Your Mind Stylist offers transformational pathways for every phase of your inner journey.</strong></p><p class='mb-6'>From introductory tools that help you clear mental clutter to high-touch coaching that reshapes your emotional operating system — choose what aligns with you today.</p><p class='text-[#1E3A32] font-serif text-xl italic mt-8'>Every program below is designed to help you understand yourself better, shift patterns with awareness, and build emotional resilience that lasts.</p>" 
+                richText 
+              />
+            </div>
           </motion.div>
         </div>
       </section>
@@ -78,7 +80,7 @@ export default function Programs() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] text-center mb-16">
-              Choose Your Path
+              <CmsText contentKey="programs.path.title" defaultText="Choose Your Path" />
             </h2>
 
             {/* Tier 1 — Foundations & Everyday Support */}
@@ -308,10 +310,12 @@ export default function Programs() {
           >
             <Heart size={40} className="text-[#D8B46B] mx-auto mb-6" />
             <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] text-center mb-12">
-              How to Choose What's Right
+              <CmsText contentKey="programs.choose.title" defaultText="How to Choose What's Right" />
             </h2>
 
-            <p className="text-[#2B2725]/80 text-lg text-center mb-10">Not sure what to start with?</p>
+            <p className="text-[#2B2725]/80 text-lg text-center mb-10">
+              <CmsText contentKey="programs.choose.subtitle" defaultText="Not sure what to start with?" />
+            </p>
 
             <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#D8B46B]">
@@ -348,11 +352,11 @@ export default function Programs() {
             className="text-center"
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-8">
-              Pricing Philosophy & Support
+              <CmsText contentKey="programs.pricing.title" defaultText="Pricing Philosophy & Support" />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
-              At Your Mind Stylist, we price for:
+              <CmsText contentKey="programs.pricing.intro" defaultText="At Your Mind Stylist, we price for:" />
             </p>
 
             <div className="grid md:grid-cols-2 gap-4 mb-10 max-w-2xl mx-auto">
@@ -370,7 +374,7 @@ export default function Programs() {
             </div>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">
-              We also offer:
+              <CmsText contentKey="programs.pricing.offer_intro" defaultText="We also offer:" />
             </p>
 
             <div className="space-y-3 max-w-2xl mx-auto">
@@ -398,7 +402,7 @@ export default function Programs() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] text-center mb-12">
-              Ready to Begin?
+              <CmsText contentKey="programs.cta.title" defaultText="Ready to Begin?" />
             </h2>
 
             <div className="grid md:grid-cols-3 gap-4">
@@ -446,7 +450,9 @@ export default function Programs() {
             </div>
 
             <div className="text-center mt-12">
-              <p className="text-[#F9F5EF]/70 mb-4">Still have questions?</p>
+              <p className="text-[#F9F5EF]/70 mb-4">
+                <CmsText contentKey="programs.cta.question" defaultText="Still have questions?" />
+              </p>
               <Link to={createPageUrl("Contact")}>
                 <Button variant="outline" className="border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32]">
                   Contact Us
