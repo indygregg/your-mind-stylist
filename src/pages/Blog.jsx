@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -104,22 +105,40 @@ export default function Blog() {
             className="text-center"
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              Your Mind Styling Journal
+              <CmsText 
+                contentKey="blog.hero.subtitle" 
+                page="Blog"
+                blockTitle="Hero Subtitle"
+                fallback="Your Mind Styling Journal" 
+                contentType="short_text"
+              />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
-              Articles, Thoughts & Tools
-              <br />
-              <span className="italic text-[#6E4F7D]">for a Calmer, Clearer Mind</span>
+              <CmsText 
+                contentKey="blog.hero.title" 
+                page="Blog"
+                blockTitle="Hero Title"
+                fallback='Articles, Thoughts & Tools<br /><span class="italic text-[#6E4F7D]">for a Calmer, Clearer Mind</span>' 
+                contentType="rich_text"
+              />
             </h1>
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8 max-w-3xl mx-auto">
-              Weekly reflections, tools, and perspectives to help you understand your patterns, soften
-              your internal dialogue, and think from where you want to be.
+              <CmsText 
+                contentKey="blog.hero.description" 
+                page="Blog"
+                blockTitle="Hero Description"
+                fallback="Weekly reflections, tools, and perspectives to help you understand your patterns, soften your internal dialogue, and think from where you want to be." 
+                contentType="rich_text"
+              />
             </p>
             <p className="text-[#2B2725]/70 text-lg mb-10">
-              This is where I share short ideas, deeper essays, and practical tools about emotional
-              intelligence, mindset, communication, and identity.
-              <br />
-              Come here when you want to think differently — gently.
+              <CmsText 
+                contentKey="blog.hero.tagline" 
+                page="Blog"
+                blockTitle="Hero Tagline"
+                fallback="This is where I share short ideas, deeper essays, and practical tools about emotional intelligence, mindset, communication, and identity.<br />Come here when you want to think differently — gently." 
+                contentType="rich_text"
+              />
             </p>
             <a
               href="#latest"
@@ -144,7 +163,13 @@ export default function Blog() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-2xl text-[#1E3A32] mb-6 text-center">
-              Explore by Theme
+              <CmsText 
+                contentKey="blog.filters.title" 
+                page="Blog"
+                blockTitle="Filter Section Title"
+                fallback="Explore by Theme" 
+                contentType="short_text"
+              />
             </h2>
             <div className="flex flex-wrap justify-center gap-3">
               {categories.map((category) => (
@@ -173,7 +198,15 @@ export default function Blog() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl text-[#1E3A32] mb-10">Featured</h2>
+            <h2 className="font-serif text-3xl text-[#1E3A32] mb-10">
+              <CmsText 
+                contentKey="blog.featured.title" 
+                page="Blog"
+                blockTitle="Featured Section Title"
+                fallback="Featured" 
+                contentType="short_text"
+              />
+            </h2>
             <div className="bg-white p-10 md:p-12 hover:shadow-lg transition-shadow">
               <div className="flex items-center gap-3 mb-4">
                 <span className="px-3 py-1 bg-[#D8B46B]/20 text-[#2B2725] text-xs tracking-wide uppercase">
@@ -276,11 +309,22 @@ export default function Blog() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-6">
-              Monday Mentions
+              <CmsText 
+                contentKey="blog.monday.title" 
+                page="Blog"
+                blockTitle="Monday Mentions Title"
+                fallback="Monday Mentions" 
+                contentType="short_text"
+              />
             </h2>
             <p className="text-[#F9F5EF]/90 text-lg leading-relaxed mb-8">
-              Short, focused pieces to help you begin your week with one clear thought, question, or
-              tool.
+              <CmsText 
+                contentKey="blog.monday.description" 
+                page="Blog"
+                blockTitle="Monday Mentions Description"
+                fallback="Short, focused pieces to help you begin your week with one clear thought, question, or tool." 
+                contentType="rich_text"
+              />
             </p>
             <button
               onClick={() => setSelectedCategory("Monday Mentions")}
@@ -305,11 +349,22 @@ export default function Blog() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-6">
-              Thursday Thoughts
+              <CmsText 
+                contentKey="blog.thursday.title" 
+                page="Blog"
+                blockTitle="Thursday Thoughts Title"
+                fallback="Thursday Thoughts" 
+                contentType="short_text"
+              />
             </h2>
             <p className="text-[#F9F5EF]/90 text-lg leading-relaxed mb-8">
-              A reflective note to carry into the weekend — something to notice, try on, or gently
-              shift in your internal world.
+              <CmsText 
+                contentKey="blog.thursday.description" 
+                page="Blog"
+                blockTitle="Thursday Thoughts Description"
+                fallback="A reflective note to carry into the weekend — something to notice, try on, or gently shift in your internal world." 
+                contentType="rich_text"
+              />
             </p>
             <button
               onClick={() => setSelectedCategory("Thursday Thoughts")}
@@ -334,10 +389,22 @@ export default function Blog() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              Want to Take This Work Deeper?
+              <CmsText 
+                contentKey="blog.cta.title" 
+                page="Blog"
+                blockTitle="CTA Title"
+                fallback="Want to Take This Work Deeper?" 
+                contentType="short_text"
+              />
             </h2>
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10">
-              If something you read here resonates, there are several ways we can work together:
+              <CmsText 
+                contentKey="blog.cta.description" 
+                page="Blog"
+                blockTitle="CTA Description"
+                fallback="If something you read here resonates, there are several ways we can work together:" 
+                contentType="rich_text"
+              />
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
