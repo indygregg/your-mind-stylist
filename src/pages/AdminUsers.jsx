@@ -138,14 +138,14 @@ export default function AdminUsers() {
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex px-3 py-1 text-xs uppercase tracking-wide ${
-                            user.role === "admin"
+                            (user.custom_role || user.role) === "admin"
                               ? "bg-[#6E4F7D]/20 text-[#6E4F7D]"
-                              : user.role === "manager"
+                              : (user.custom_role || user.role) === "manager"
                               ? "bg-[#D8B46B]/20 text-[#D8B46B]"
                               : "bg-[#A6B7A3]/20 text-[#1E3A32]"
                           }`}
                         >
-                          {user.role}
+                          {user.custom_role || user.role}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-[#2B2725]/70">
