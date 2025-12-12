@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, Mail, AlertCircle } from "lucide-react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek } from "date-fns";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "../../utils";
 
 export default function BookingCalendar({ appointmentType, onSlotSelected }) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -59,6 +61,8 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
   const selectedDateSlots = selectedDate
     ? availableSlots.filter(slot => slot.date === format(selectedDate, 'yyyy-MM-dd'))
     : [];
+
+  const hasAnyAvailability = availableDates.size > 0;
 
   return (
     <div className="grid lg:grid-cols-2 gap-6">
@@ -141,6 +145,30 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
 
         {loading ? (
           <div className="text-center py-8 text-[#2B2725]/60">Loading available times...</div>
+        ) : !hasAnyAvailability ? (
+          <div className="bg-[#FFF9F0] border border-[#D8B46B]/30 p-6 text-center">
+            <AlertCircle size={40} className="text-[#D8B46B] mx-auto mb-4" />
+            <h4 className="font-medium text-[#1E3A32] mb-2">No Availability This Month</h4>
+            <p className="text-sm text-[#2B2725]/70 mb-6">
+              There are no available time slots for {format(currentMonth, 'MMMM yyyy')}. 
+              Try selecting a different month or reach out directly.
+            </p>
+            <div className="flex flex-col gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                className="w-full"
+              >
+                Check Next Month
+              </Button>
+              <Link to={createPageUrl('Contact')}>
+                <Button className="w-full bg-[#1E3A32] hover:bg-[#2B4A40]">
+                  <Mail size={16} className="mr-2" />
+                  Contact Roberta Directly
+                </Button>
+              </Link>
+            </div>
+          </div>
         ) : !selectedDate ? (
           <div className="text-center py-8 text-[#2B2725]/60">
             Select a date to see available times
