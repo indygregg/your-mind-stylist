@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Users, Mail, TrendingUp, Play, CheckCircle, DollarSign, Search, Filter } from "lucide-react";
+import { Users, Mail, TrendingUp, Play, CheckCircle, DollarSign, Search, Filter, MousePointer } from "lucide-react";
 import MasterclassConversionChart from "@/components/masterclass/MasterclassConversionChart";
 import EmailSequenceStatus from "@/components/masterclass/EmailSequenceStatus";
 import LeadsList from "@/components/masterclass/LeadsList";
+import FunnelVisualization from "@/components/masterclass/FunnelVisualization";
 
 export default function ManagerMasterclass() {
   const [timeRange, setTimeRange] = useState("30");
@@ -80,6 +81,10 @@ export default function ManagerMasterclass() {
   const postEmail2Sent = filteredSignups.filter(s => s.post_email_2_sent).length;
   const postEmail3Sent = filteredSignups.filter(s => s.post_email_3_sent).length;
 
+  // CTA metrics
+  const ctaClicks = filteredSignups.filter(s => s.clicked_cta).length;
+  const ctaClickRate = watchedCount > 0 ? ((ctaClicks / watchedCount) * 100).toFixed(1) : 0;
+
   // Calculate revenue from conversions
   const conversionRevenue = filteredSignups
     .filter(s => s.converted_to)
@@ -125,7 +130,7 @@ export default function ManagerMasterclass() {
         </div>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -160,6 +165,20 @@ export default function ManagerMasterclass() {
             className="bg-white p-6 shadow-md"
           >
             <div className="flex items-center justify-between mb-4">
+              <MousePointer className="w-8 h-8 text-[#D8B46B]" />
+              <span className="text-xs text-[#2B2725]/60 uppercase tracking-wide">CTA Clicks</span>
+            </div>
+            <div className="font-serif text-3xl text-[#1E3A32] mb-1">{ctaClickRate}%</div>
+            <p className="text-sm text-[#2B2725]/60">{ctaClicks} clicked</p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white p-6 shadow-md"
+          >
+            <div className="flex items-center justify-between mb-4">
               <CheckCircle className="w-8 h-8 text-[#A6B7A3]" />
               <span className="text-xs text-[#2B2725]/60 uppercase tracking-wide">Conversion</span>
             </div>
@@ -170,11 +189,11 @@ export default function ManagerMasterclass() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.4 }}
             className="bg-white p-6 shadow-md"
           >
             <div className="flex items-center justify-between mb-4">
-              <DollarSign className="w-8 h-8 text-[#D8B46B]" />
+              <DollarSign className="w-8 h-8 text-[#1E3A32]" />
               <span className="text-xs text-[#2B2725]/60 uppercase tracking-wide">Revenue</span>
             </div>
             <div className="font-serif text-3xl text-[#1E3A32] mb-1">
@@ -255,8 +274,9 @@ export default function ManagerMasterclass() {
           </div>
         </div>
 
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Funnel & Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <FunnelVisualization signups={filteredSignups} />
           <MasterclassConversionChart signups={filteredSignups} />
           <EmailSequenceStatus signups={filteredSignups} />
         </div>

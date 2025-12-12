@@ -4,6 +4,7 @@ import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { Play, CheckCircle, Calendar, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ExitIntentPopup from "@/components/masterclass/ExitIntentPopup";
 
 export default function Masterclass() {
   const [user, setUser] = useState(null);
@@ -64,6 +65,24 @@ export default function Masterclass() {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [isPlaying]);
 
+  // Track watch segments
+  const trackWatchSegment = async (action, timestamp = 0) => {
+    if (!signup) return;
+
+    const newSegment = {
+      timestamp,
+      action,
+      date: new Date().toISOString()
+    };
+
+    const currentSegments = signup.watch_segments || [];
+    const updatedSegments = [...currentSegments, newSegment];
+
+    await base44.entities.MasterclassSignup.update(signup.id, {
+      watch_segments: updatedSegments
+    });
+  };
+
   // Auto-track at 90%+ watched
   const handleVideoProgress = async (currentTime, duration) => {
     const percentage = (currentTime / duration) * 100;
@@ -75,7 +94,27 @@ export default function Masterclass() {
         watch_percentage: Math.floor(percentage)
       });
       setSignup({ ...signup, watched: true, watch_percentage: Math.floor(percentage) });
+      trackWatchSegment('complete', currentTime);
     }
+  };
+
+  // Track CTA clicks
+  const trackCTAClick = async (ctaType, source = 'masterclass_page') => {
+    if (!signup) return;
+
+    const newClick = {
+      cta_type: ctaType,
+      source,
+      date: new Date().toISOString()
+    };
+
+    const currentClicks = signup.cta_clicks || [];
+    const updatedClicks = [...currentClicks, newClick];
+
+    await base44.entities.MasterclassSignup.update(signup.id, {
+      clicked_cta: true,
+      cta_clicks: updatedClicks
+    });
   };
 
   const togglePlay = () => {
@@ -219,6 +258,7 @@ export default function Masterclass() {
           <div className="space-y-3">
             <Link
               to={createPageUrl("Evolution")}
+              onClick={() => trackCTAClick('certification')}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
               <h3 className="font-medium text-[#1E3A32] mb-1">The Mind Styling Certification™</h3>
@@ -228,6 +268,7 @@ export default function Masterclass() {
             </Link>
             <Link
               to={createPageUrl("PrivateSessions")}
+              onClick={() => trackCTAClick('private_sessions')}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
               <h3 className="font-medium text-[#1E3A32] mb-1">Private Mind Styling (1:1)</h3>
@@ -237,6 +278,7 @@ export default function Masterclass() {
             </Link>
             <Link
               to={createPageUrl("InnerRehearsal")}
+              onClick={() => trackCTAClick('inner_rehearsal')}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
               <h3 className="font-medium text-[#1E3A32] mb-1">The Inner Rehearsal Sessions™</h3>
@@ -246,6 +288,14 @@ export default function Masterclass() {
             </Link>
           </div>
         </div>
+
+        {/* Exit Intent Popup */}
+        <ExitIntentPopup
+          signup={signup}
+          onCaptured={(email) => {
+            console.log('Exit intent captured:', email);
+          }}
+        />
       </div>
     </div>
   );
