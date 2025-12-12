@@ -462,13 +462,23 @@ export default function Evolution() {
               />
             </p>
 
-            <CmsText 
-              contentKey="evolution.outcomes.list"
-              page="Evolution"
-              blockTitle="Outcomes List"
-              fallback={`<div class='grid md:grid-cols-2 gap-4 mb-10'>${outcomes.map(outcome => `<div class='flex items-start gap-3'><svg class='lucide lucide-check' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='margin-top: 4px; flex-shrink: 0;'><path d='M20 6 9 17l-5-5'/></svg><span class='text-[#F9F5EF]/90 text-lg'>${outcome}</span></div>`).join('')}</div>`}
-              contentType="rich_text"
-            />
+            <div className="grid md:grid-cols-2 gap-4 mb-10">
+              {outcomes.map((outcome, idx) => (
+                <div key={idx} className="flex items-start gap-3">
+                  <Check size={20} className="text-[#D8B46B] mt-1 flex-shrink-0" />
+                  <span className="text-[#F9F5EF]/90 text-lg">
+                    <CmsText 
+                      contentKey={`evolution.outcome${idx + 1}`}
+                      page="Evolution"
+                      blockTitle={`Outcome ${idx + 1}`}
+                      fallback={outcome}
+                      contentType="short_text"
+                      as="span"
+                    />
+                  </span>
+                </div>
+              ))}
+            </div>
 
             <p className="font-serif text-2xl text-[#D8B46B] italic text-center">
               <CmsText 
