@@ -64,6 +64,7 @@ import ManagerAppointments from './pages/ManagerAppointments';
 import ManagerCalendar from './pages/ManagerCalendar';
 import ManagerEmailTemplates from './pages/ManagerEmailTemplates';
 import ManagerAnalytics from './pages/ManagerAnalytics';
+import ManagerMasterclass from './pages/ManagerMasterclass';
 import __Layout from './Layout.jsx';
 
 
@@ -134,6 +135,7 @@ export const PAGES = {
     "ManagerCalendar": ManagerCalendar,
     "ManagerEmailTemplates": ManagerEmailTemplates,
     "ManagerAnalytics": ManagerAnalytics,
+    "ManagerMasterclass": ManagerMasterclass,
 }
 
 export const pagesConfig = {
