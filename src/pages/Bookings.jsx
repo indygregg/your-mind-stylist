@@ -11,6 +11,7 @@ import { createPageUrl } from "../utils";
 import SEO from "../components/SEO";
 import BookingCalendar from "@/components/booking/BookingCalendar";
 import { format } from "date-fns";
+import CmsText from "@/components/cms/CmsText";
 
 export default function Bookings() {
   const [step, setStep] = useState(1); // 1: Browse types, 2: Select slot, 3: Enter details, 4: Confirming
@@ -185,15 +186,22 @@ export default function Bookings() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <p className="text-[#D8B46B] text-sm tracking-[0.3em] uppercase mb-4">
-                Book Your Session
-              </p>
-              <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6">
-                Begin Your Transformation
-              </h1>
-              <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-                Choose the session type that fits your needs. Every journey starts with a single step.
-              </p>
+              <CmsText
+                id="bookings_hero_eyebrow"
+                defaultValue="Book Your Session"
+                className="text-[#D8B46B] text-sm tracking-[0.3em] uppercase mb-4 block"
+              />
+              <CmsText
+                id="bookings_hero_title"
+                defaultValue="Begin Your Transformation"
+                as="h1"
+                className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6"
+              />
+              <CmsText
+                id="bookings_hero_subtitle"
+                defaultValue="Choose the session type that fits your needs. Every journey starts with a single step."
+                className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed block"
+              />
             </motion.div>
           </div>
         </section>
@@ -243,9 +251,12 @@ export default function Bookings() {
         {step === 1 && (
           <section className="py-16 px-6 bg-white">
           <div className="max-w-5xl mx-auto">
-            <h2 className="font-serif text-3xl text-[#1E3A32] text-center mb-12">
-              How It Works
-            </h2>
+            <CmsText
+              id="bookings_how_it_works_title"
+              defaultValue="How It Works"
+              as="h2"
+              className="font-serif text-3xl text-[#1E3A32] text-center mb-12"
+            />
             <div className="grid md:grid-cols-3 gap-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -257,8 +268,17 @@ export default function Bookings() {
                 <div className="w-16 h-16 rounded-full bg-[#D8B46B] text-white flex items-center justify-center text-2xl font-serif mx-auto mb-4">
                   1
                 </div>
-                <h3 className="font-serif text-xl text-[#1E3A32] mb-2">Choose Your Session</h3>
-                <p className="text-[#2B2725]/70">Select the type of session that aligns with your goals</p>
+                <CmsText
+                  id="bookings_step1_title"
+                  defaultValue="Choose Your Session"
+                  as="h3"
+                  className="font-serif text-xl text-[#1E3A32] mb-2"
+                />
+                <CmsText
+                  id="bookings_step1_desc"
+                  defaultValue="Select the type of session that aligns with your goals"
+                  className="text-[#2B2725]/70 block"
+                />
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -270,8 +290,17 @@ export default function Bookings() {
                 <div className="w-16 h-16 rounded-full bg-[#D8B46B] text-white flex items-center justify-center text-2xl font-serif mx-auto mb-4">
                   2
                 </div>
-                <h3 className="font-serif text-xl text-[#1E3A32] mb-2">Pick Your Time</h3>
-                <p className="text-[#2B2725]/70">Select from available dates and times that work for you</p>
+                <CmsText
+                  id="bookings_step2_title"
+                  defaultValue="Pick Your Time"
+                  as="h3"
+                  className="font-serif text-xl text-[#1E3A32] mb-2"
+                />
+                <CmsText
+                  id="bookings_step2_desc"
+                  defaultValue="Select from available dates and times that work for you"
+                  className="text-[#2B2725]/70 block"
+                />
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -283,8 +312,17 @@ export default function Bookings() {
                 <div className="w-16 h-16 rounded-full bg-[#D8B46B] text-white flex items-center justify-center text-2xl font-serif mx-auto mb-4">
                   3
                 </div>
-                <h3 className="font-serif text-xl text-[#1E3A32] mb-2">Get Started</h3>
-                <p className="text-[#2B2725]/70">Receive confirmation and prepare for your transformation</p>
+                <CmsText
+                  id="bookings_step3_title"
+                  defaultValue="Get Started"
+                  as="h3"
+                  className="font-serif text-xl text-[#1E3A32] mb-2"
+                />
+                <CmsText
+                  id="bookings_step3_desc"
+                  defaultValue="Receive confirmation and prepare for your transformation"
+                  className="text-[#2B2725]/70 block"
+                />
               </motion.div>
             </div>
           </div>
@@ -529,12 +567,17 @@ export default function Bookings() {
         {step === 1 && (
           <section className="py-20 px-6 bg-[#1E3A32] text-white">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="font-serif text-4xl md:text-5xl mb-6">
-              Not Sure Where to Start?
-            </h2>
-            <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-              Book a complimentary consultation to discuss your goals and find the right path forward.
-            </p>
+            <CmsText
+              id="bookings_cta_title"
+              defaultValue="Not Sure Where to Start?"
+              as="h2"
+              className="font-serif text-4xl md:text-5xl mb-6"
+            />
+            <CmsText
+              id="bookings_cta_subtitle"
+              defaultValue="Book a complimentary consultation to discuss your goals and find the right path forward."
+              className="text-xl text-white/80 mb-8 max-w-2xl mx-auto block"
+            />
             <Button 
               size="lg"
               className="bg-[#D8B46B] hover:bg-[#C9A55B] text-[#1E3A32] font-medium px-8 py-6 text-lg"
