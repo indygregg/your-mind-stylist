@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search, MoreVertical, Edit, Copy, Archive, Trash2, Eye, BarChart3 } from "lucide-react";
+import { Plus, Search, MoreVertical, Edit, Copy, Archive, Trash2, Eye, BarChart3, Monitor } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import CourseAnalytics from "@/components/courses/CourseAnalytics";
 import { createPageUrl } from "../utils";
@@ -295,6 +295,12 @@ export default function CourseManager() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() => navigate(createPageUrl(`CoursePreview?id=${course.id}`))}
+                            >
+                              <Monitor size={14} className="mr-2" />
+                              Preview
+                            </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => navigate(createPageUrl(`CourseBuilder?id=${course.id}`))}
                             >
