@@ -53,8 +53,15 @@ export default function BookAppointment() {
     setStep(2);
   };
 
-  const handleSlotSelect = (slot) => {
+  const handleSlotSelect = (slot, recurring = false, recurringData = null) => {
     setSelectedSlot(slot);
+    if (recurring && recurringData) {
+      setIsRecurring(true);
+      setRecurringFrequency(recurringData.frequency);
+      setRecurringOccurrences(recurringData.occurrences);
+    } else {
+      setIsRecurring(false);
+    }
     setStep(3);
   };
 
@@ -228,10 +235,29 @@ export default function BookAppointment() {
                   <span className="font-medium text-[#1E3A32]">{selectedAppointment.duration} minutes</span>
                 </div>
 
+                {isRecurring && (
+                  <>
+                    <div className="flex justify-between pb-3 border-b border-[#E4D9C4]">
+                      <span className="text-[#2B2725]/70">Frequency</span>
+                      <span className="font-medium text-[#1E3A32] capitalize">{recurringFrequency}</span>
+                    </div>
+                    
+                    <div className="flex justify-between pb-3 border-b border-[#E4D9C4]">
+                      <span className="text-[#2B2725]/70">Number of Sessions</span>
+                      <span className="font-medium text-[#1E3A32]">{recurringOccurrences}</span>
+                    </div>
+                  </>
+                )}
+
                 <div className="flex justify-between pb-3 border-b border-[#E4D9C4]">
                   <span className="text-[#2B2725]/70">Investment</span>
                   <span className="font-medium text-[#1E3A32] text-xl">
-                    ${(selectedAppointment.price / 100).toFixed(0)} {selectedAppointment.currency.toUpperCase()}
+                    ${((isRecurring ? selectedAppointment.price * recurringOccurrences : selectedAppointment.price) / 100).toFixed(0)} {selectedAppointment.currency.toUpperCase()}
+                    {isRecurring && (
+                      <span className="text-sm font-normal text-[#2B2725]/70 ml-2">
+                        ({recurringOccurrences} sessions)
+                      </span>
+                    )}
                   </span>
                 </div>
               </div>
