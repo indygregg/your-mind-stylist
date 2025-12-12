@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Award, Users, Sparkles, Layers } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function About() {
   const beliefs = [
@@ -101,14 +102,16 @@ export default function About() {
               transition={{ duration: 0.6 }}
             >
               <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-                Roberta Fernandez
+                <CmsText contentKey="about.hero.subtitle" defaultText="Roberta Fernandez" />
               </span>
               <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
-                Meet Your Mind Stylist
+                <CmsText contentKey="about.hero.title" defaultText="Meet Your Mind Stylist" />
               </h1>
               <p className="text-[#2B2725]/80 text-xl leading-relaxed mb-10">
-                Helping you rewrite old patterns, reclaim your emotional intelligence, and restyle
-                your life from the inside out.
+                <CmsText 
+                  contentKey="about.hero.description" 
+                  defaultText="Helping you rewrite old patterns, reclaim your emotional intelligence, and restyle your life from the inside out." 
+                />
               </p>
               <Link
                 to={createPageUrl("WorkWithMe")}
@@ -152,41 +155,47 @@ export default function About() {
             viewport={{ once: true }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              The Mind Behind The Method
+              <CmsText contentKey="about.story.subtitle" defaultText="The Mind Behind The Method" />
             </span>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              A lifetime of helping people
-              <br />
-              <span className="italic">think differently.</span>
+              <CmsText 
+                contentKey="about.story.title" 
+                defaultText="A lifetime of helping people<br /><span class='italic'>think differently.</span>" 
+                richText 
+              />
             </h2>
 
             <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
-              <p>
-                I've spent more than forty years studying how people think, feel, communicate, and
-                change. My career has taken me into boardrooms, classrooms, small businesses,
-                government agencies, and deeply personal one-on-one conversations. Across all of
-                these environments, one truth emerged:
-              </p>
+              <CmsText 
+                contentKey="about.story.paragraph1" 
+                defaultText="I've spent more than forty years studying how people think, feel, communicate, and change. My career has taken me into boardrooms, classrooms, small businesses, government agencies, and deeply personal one-on-one conversations. Across all of these environments, one truth emerged:" 
+                richText 
+              />
 
               <p className="font-serif text-2xl text-[#1E3A32] italic py-6">
-                Your thinking determines your experience of everything else.
+                <CmsText 
+                  contentKey="about.story.quote" 
+                  defaultText="Your thinking determines your experience of everything else." 
+                />
               </p>
 
-              <p>
-                When people understand their internal patterns, everything becomes easier —
-                communication, decision-making, leadership, relationships, confidence, and
-                self-worth. When they don't, life feels heavier than it needs to.
-              </p>
+              <CmsText 
+                contentKey="about.story.paragraph2" 
+                defaultText="When people understand their internal patterns, everything becomes easier — communication, decision-making, leadership, relationships, confidence, and self-worth. When they don't, life feels heavier than it needs to." 
+                richText 
+              />
 
-              <p>
-                This understanding became the foundation of my work — and the origin of Your Mind
-                Stylist.
-              </p>
+              <CmsText 
+                contentKey="about.story.paragraph3" 
+                defaultText="This understanding became the foundation of my work — and the origin of Your Mind Stylist." 
+                richText 
+              />
 
-              <p>
-                I help you see what you've been too close to recognize, let go of patterns you've
-                outgrown, and redesign your thinking so your life can finally match your intention.
-              </p>
+              <CmsText 
+                contentKey="about.story.paragraph4" 
+                defaultText="I help you see what you've been too close to recognize, let go of patterns you've outgrown, and redesign your thinking so your life can finally match your intention." 
+                richText 
+              />
             </div>
           </motion.div>
         </div>
@@ -201,19 +210,18 @@ export default function About() {
             viewport={{ once: true }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              Your Mind Stylist Philosophy
+              <CmsText contentKey="about.philosophy.subtitle" defaultText="Your Mind Stylist Philosophy" />
             </span>
             <h2 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-8">
-              Think From Where You Want to Be.
+              <CmsText contentKey="about.philosophy.title" defaultText="Think From Where You Want to Be." />
             </h2>
 
             <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed mb-10">
-              <p>Most people try to change their lives by changing what they do.</p>
-              <p>
-                But lasting transformation happens when you change <strong>how you think</strong> —
-                the meaning you assign, the stories you carry, the emotional patterns you repeat,
-                and the identity you operate from.
-              </p>
+              <CmsText 
+                contentKey="about.philosophy.intro" 
+                defaultText="<p>Most people try to change their lives by changing what they do.</p><p>But lasting transformation happens when you change <strong>how you think</strong> — the meaning you assign, the stories you carry, the emotional patterns you repeat, and the identity you operate from.</p>" 
+                richText 
+              />
             </div>
 
             <div className="bg-white p-8 md:p-10 mb-10">
@@ -229,12 +237,11 @@ export default function About() {
             </div>
 
             <div className="space-y-4 text-[#2B2725]/80 text-lg leading-relaxed">
-              <p>The work is profound, but it's not complicated.</p>
-              <p>It's simple, elegant, and deeply human.</p>
-              <p className="font-serif italic text-xl text-[#1E3A32]">
-                Just like great styling, it isn't about becoming someone else — it's about
-                uncovering the version of yourself that has always been there.
-              </p>
+              <CmsText 
+                contentKey="about.philosophy.closing" 
+                defaultText="<p>The work is profound, but it's not complicated.</p><p>It's simple, elegant, and deeply human.</p><p class='font-serif italic text-xl text-[#1E3A32]'>Just like great styling, it isn't about becoming someone else — it's about uncovering the version of yourself that has always been there.</p>" 
+                richText 
+              />
             </div>
           </motion.div>
         </div>
@@ -250,9 +257,11 @@ export default function About() {
             className="text-center mb-16"
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              Core Principles
+              <CmsText contentKey="about.beliefs.subtitle" defaultText="Core Principles" />
             </span>
-            <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF]">What I Believe</h2>
+            <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF]">
+              <CmsText contentKey="about.beliefs.title" defaultText="What I Believe" />
+            </h2>
           </motion.div>
 
           <div className="space-y-8">
@@ -294,15 +303,17 @@ export default function About() {
             viewport={{ once: true }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              Credentials & Experience
+              <CmsText contentKey="about.credentials.subtitle" defaultText="Credentials & Experience" />
             </span>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              My Experience
+              <CmsText contentKey="about.credentials.title" defaultText="My Experience" />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10">
-              I've helped thousands of individuals and teams transform how they think and
-              communicate. My background includes:
+              <CmsText 
+                contentKey="about.credentials.intro" 
+                defaultText="I've helped thousands of individuals and teams transform how they think and communicate. My background includes:" 
+              />
             </p>
 
             <div className="bg-white p-8 md:p-10 mb-10">
@@ -317,9 +328,10 @@ export default function About() {
             </div>
 
             <p className="font-serif text-xl text-[#1E3A32] italic">
-              From high-performing executives to individuals in transition, the real work is the
-              same: Help people recognize their patterns and step into the version of themselves
-              they've been waiting for.
+              <CmsText 
+                contentKey="about.credentials.closing" 
+                defaultText="From high-performing executives to individuals in transition, the real work is the same: Help people recognize their patterns and step into the version of themselves they've been waiting for." 
+              />
             </p>
           </motion.div>
         </div>
@@ -334,51 +346,18 @@ export default function About() {
             viewport={{ once: true }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              The Origin
+              <CmsText contentKey="about.origin.subtitle" defaultText="The Origin" />
             </span>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              Why "Your Mind Stylist"?
+              <CmsText contentKey="about.origin.title" defaultText='Why "Your Mind Stylist"?' />
             </h2>
 
             <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
-              <p>
-                Because transformation isn't about starting over — it's about refining, tailoring,
-                and redesigning the mindset you already have.
-              </p>
-
-              <p>Just like personal style, your mental patterns can be:</p>
-
-              <ul className="list-none space-y-2 pl-6">
-                <li className="flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-[#D8B46B]" />
-                  outdated
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-[#D8B46B]" />
-                  ill-fitting
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-[#D8B46B]" />
-                  inherited
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-[#D8B46B]" />
-                  misunderstood
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-[#D8B46B]" />
-                  or simply never chosen intentionally
-                </li>
-              </ul>
-
-              <p>
-                Mind Styling allows you to build a mental wardrobe that fits the life you want to
-                live.
-              </p>
-
-              <p className="font-serif text-xl text-[#1E3A32] italic">
-                It's elegant, intuitive, and profoundly effective.
-              </p>
+              <CmsText 
+                contentKey="about.origin.content" 
+                defaultText="<p>Because transformation isn't about starting over — it's about refining, tailoring, and redesigning the mindset you already have.</p><p>Just like personal style, your mental patterns can be:</p><ul class='list-none space-y-2 pl-6'><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>outdated</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>ill-fitting</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>inherited</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>misunderstood</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>or simply never chosen intentionally</li></ul><p>Mind Styling allows you to build a mental wardrobe that fits the life you want to live.</p><p class='font-serif text-xl text-[#1E3A32] italic'>It's elegant, intuitive, and profoundly effective.</p>" 
+                richText 
+              />
             </div>
           </motion.div>
         </div>
@@ -394,14 +373,16 @@ export default function About() {
             className="text-center mb-16"
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              How We Can Work Together
+              <CmsText contentKey="about.work.subtitle" defaultText="How We Can Work Together" />
             </span>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-6">
-              Work With Me
+              <CmsText contentKey="about.work.title" defaultText="Work With Me" />
             </h2>
             <p className="text-[#2B2725]/80 text-lg max-w-2xl mx-auto">
-              Whether you're an individual ready for personal reinvention or a leader looking to
-              elevate your team's emotional intelligence, there is a Mind Styling path for you.
+              <CmsText 
+                contentKey="about.work.description" 
+                defaultText="Whether you're an individual ready for personal reinvention or a leader looking to elevate your team's emotional intelligence, there is a Mind Styling path for you." 
+              />
             </p>
           </motion.div>
 
@@ -440,14 +421,18 @@ export default function About() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
-              If You're Ready,
-              <br />
-              <span className="italic text-[#D8B46B]">I'm Ready.</span>
+              <CmsText 
+                contentKey="about.cta.title" 
+                defaultText="If You're Ready,<br /><span class='italic text-[#D8B46B]'>I'm Ready.</span>" 
+                richText 
+              />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
-              Changing your life starts with changing how you think. If you're ready to step into
-              clarity, calm, and confidence, let's begin.
+              <CmsText 
+                contentKey="about.cta.description" 
+                defaultText="Changing your life starts with changing how you think. If you're ready to step into clarity, calm, and confidence, let's begin." 
+              />
             </p>
 
             <Link
