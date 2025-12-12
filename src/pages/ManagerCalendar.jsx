@@ -1,16 +1,18 @@
 import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Calendar, ChevronLeft, ChevronRight, Video, Mail, Phone, Clock, DollarSign, ExternalLink } from "lucide-react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek, isToday } from "date-fns";
+import ManagerBookingActions from "@/components/manager/ManagerBookingActions";
 
 export default function ManagerCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["bookings"],
@@ -272,6 +274,31 @@ export default function ManagerCalendar() {
                   </div>
                 )}
 
+                {/* Manager Notes */}
+                {selectedBooking.manager_notes && (
+                  <div className="bg-[#FFF9F0] p-4 border-l-4 border-[#D8B46B]">
+                    <div className="text-sm text-[#2B2725]/60 mb-2">Manager Notes (Private):</div>
+                    <p className="text-[#2B2725]">{selectedBooking.manager_notes}</p>
+                  </div>
+                )}
+
+                {/* Session Notes */}
+                {selectedBooking.session_notes && (
+                  <div className="bg-[#F0F9FF] p-4 border-l-4 border-[#2D8CFF]">
+                    <div className="text-sm text-[#2B2725]/60 mb-2">Session Notes:</div>
+                    <p className="text-[#2B2725]">{selectedBooking.session_notes}</p>
+                  </div>
+                )}
+
+                {/* Manager Actions */}
+                <ManagerBookingActions 
+                  booking={selectedBooking} 
+                  onSuccess={() => {
+                    queryClient.invalidateQueries({ queryKey: ["bookings"] });
+                    setSelectedBooking(null);
+                  }} 
+                />
+
                 {/* Metadata */}
                 <div className="text-xs text-[#2B2725]/50 space-y-1 pt-4 border-t border-[#E4D9C4]">
                   <div>Booking ID: {selectedBooking.id}</div>
@@ -280,10 +307,10 @@ export default function ManagerCalendar() {
                     <div>Stripe Session: {selectedBooking.stripe_checkout_session_id}</div>
                   )}
                 </div>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
+                </div>
+                )}
+                </DialogContent>
+                </Dialog>
 
         {/* Upcoming Bookings List */}
         <div className="bg-white p-6">
