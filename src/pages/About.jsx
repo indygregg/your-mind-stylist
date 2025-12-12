@@ -41,8 +41,8 @@ export default function About() {
     "Certified Integrative Emotional Intelligence Specialist",
     "Decades of executive, team, and leadership coaching",
     "Corporate consulting with Fortune-level and mid-size organizations",
-    "Creator of the Mind Styling Certification™",
-    "Creator of The Inner Rehearsal Sessions™",
+    "Creator of The Mind Styling Evolution™",
+    "Creator of The Pocket Visualization™ Sessions",
     "Host of Activated Dialogue — a podcast on emotional intelligence and conscious change",
   ];
 
@@ -72,9 +72,9 @@ export default function About() {
     },
     {
       icon: Sparkles,
-      title: "The Inner Rehearsal Sessions™",
+      title: "The Pocket Visualization™ Sessions",
       description: "Short, powerful guided experiences to shift your emotional state in minutes.",
-      link: "InnerRehearsal",
+      link: "PocketVisualization",
     },
     {
       icon: Award,
