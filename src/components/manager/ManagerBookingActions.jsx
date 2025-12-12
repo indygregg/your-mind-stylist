@@ -40,13 +40,88 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
     }
   };
 
+  const handleRetryZoom = async () => {
+    setLoading(true);
+    try {
+      const response = await base44.functions.invoke('retryZoomCreation', {
+        booking_id: booking.id
+      });
+
+      if (response.data.success) {
+        alert('Zoom meeting created successfully!');
+        if (onSuccess) onSuccess();
+      } else {
+        alert(response.data.error || 'Failed to create Zoom meeting');
+      }
+    } catch (error) {
+      alert(error.response?.data?.error || 'Failed to retry Zoom creation');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getMinDateTime = () => {
     const now = new Date();
     return now.toISOString().slice(0, 16);
   };
 
+  const getZoomStatusBadge = () => {
+    const status = booking.zoom_status || 'pending';
+    const colors = {
+      created: 'bg-green-100 text-green-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      failed: 'bg-red-100 text-red-800'
+    };
+    return (
+      <Badge className={colors[status]}>
+        Zoom: {status}
+      </Badge>
+    );
+  };
+
   return (
-    <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-[#E4D9C4]">
+    <div className="space-y-4">
+      {/* Zoom Status Section */}
+      {booking.scheduled_date && (
+        <div className="pt-4 border-t border-[#E4D9C4]">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Video size={16} className="text-[#2D8CFF]" />
+              <span className="text-sm font-medium text-[#1E3A32]">Virtual Meeting</span>
+            </div>
+            {getZoomStatusBadge()}
+          </div>
+          
+          {booking.zoom_status === 'failed' && (
+            <div className="bg-red-50 border border-red-200 p-3 rounded flex items-start gap-2 mb-2">
+              <AlertCircle size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm text-red-800 mb-2">Zoom meeting creation failed</p>
+                <Button size="sm" onClick={handleRetryZoom} disabled={loading} variant="outline">
+                  <RefreshCw size={14} className="mr-2" />
+                  {loading ? 'Retrying...' : 'Retry Zoom Creation'}
+                </Button>
+              </div>
+            </div>
+          )}
+          
+          {booking.zoom_status === 'pending' && booking.scheduled_date && (
+            <div className="bg-yellow-50 border border-yellow-200 p-3 rounded flex items-start gap-2 mb-2">
+              <AlertCircle size={16} className="text-yellow-600 mt-0.5 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm text-yellow-800 mb-2">Zoom meeting not created yet</p>
+                <Button size="sm" onClick={handleRetryZoom} disabled={loading} variant="outline">
+                  <Video size={14} className="mr-2" />
+                  {loading ? 'Creating...' : 'Create Zoom Meeting'}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-2 pt-4 border-t border-[#E4D9C4]">
       {/* Complete Session */}
       {['confirmed', 'scheduled'].includes(booking.booking_status) && (
         <Dialog open={dialogOpen === 'complete'} onOpenChange={(open) => setDialogOpen(open ? 'complete' : null)}>
