@@ -25,6 +25,7 @@ export default function ManagerAppointments() {
     session_count: 1,
     price: 0,
     currency: "usd",
+    zoom_enabled: true,
     zoom_settings: {
       host_video: true,
       participant_video: true,
@@ -74,6 +75,7 @@ export default function ManagerAppointments() {
       session_count: 1,
       price: 0,
       currency: "usd",
+      zoom_enabled: true,
       zoom_settings: {
         host_video: true,
         participant_video: true,
@@ -280,10 +282,25 @@ export default function ManagerAppointments() {
 
                 {/* Zoom Settings */}
                 <div className="space-y-4 pt-4 border-t border-[#E4D9C4]">
-                  <h3 className="font-medium text-[#1E3A32]">Zoom Meeting Settings</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label>Host video on</Label>
+                  <div className="flex items-center justify-between mb-4">
+                    <div>
+                      <h3 className="font-medium text-[#1E3A32] flex items-center gap-2">
+                        <Video size={20} className="text-[#2D8CFF]" />
+                        Zoom Meeting Settings
+                      </h3>
+                      <p className="text-xs text-[#2B2725]/60 mt-1">
+                        Auto-create virtual meeting links for bookings
+                      </p>
+                    </div>
+                    <Switch
+                      checked={formData.zoom_enabled}
+                      onCheckedChange={(v) => setFormData({ ...formData, zoom_enabled: v })}
+                    />
+                  </div>
+                  {formData.zoom_enabled && (
+                    <div className="space-y-3 pl-4 border-l-2 border-[#E4D9C4]">
+                      <div className="flex items-center justify-between">
+                        <Label>Host video on</Label>
                       <Switch
                         checked={formData.zoom_settings.host_video}
                         onCheckedChange={(v) =>
@@ -331,6 +348,7 @@ export default function ManagerAppointments() {
                       />
                     </div>
                   </div>
+                  )}
                 </div>
 
                 {/* Active Status */}
@@ -401,8 +419,8 @@ export default function ManagerAppointments() {
                         </span>
                       )}
                       <div className="flex items-center gap-2">
-                        <Video size={16} className="text-[#2D8CFF]" />
-                        Zoom enabled
+                        <Video size={16} className={item.zoom_enabled ? "text-[#2D8CFF]" : "text-[#2B2725]/30"} />
+                        {item.zoom_enabled ? "Zoom enabled" : "Zoom disabled"}
                       </div>
                     </div>
                   </div>
