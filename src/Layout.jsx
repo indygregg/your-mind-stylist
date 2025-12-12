@@ -135,7 +135,7 @@ export default function Layout({ children, currentPageName }) {
               Las Vegas • Emotional Intelligence • Mind Styling • Leadership & Personal Transformation
             </p>
             <Link
-              to={createPageUrl("Contact")}
+              to={createPageUrl("Bookings")}
               className="text-xs tracking-wide text-[#1E3A32] hover:text-[#D8B46B] transition-colors font-medium"
             >
               Schedule Your Complimentary Consultation
