@@ -63,6 +63,7 @@ import ZoomCallback from './pages/ZoomCallback';
 import ManagerAppointments from './pages/ManagerAppointments';
 import ManagerCalendar from './pages/ManagerCalendar';
 import ManagerEmailTemplates from './pages/ManagerEmailTemplates';
+import ManagerAnalytics from './pages/ManagerAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -132,6 +133,7 @@ export const PAGES = {
     "ManagerAppointments": ManagerAppointments,
     "ManagerCalendar": ManagerCalendar,
     "ManagerEmailTemplates": ManagerEmailTemplates,
+    "ManagerAnalytics": ManagerAnalytics,
 }
 
 export const pagesConfig = {
