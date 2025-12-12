@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
 import { Scale } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function LegalPage() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -64,7 +65,13 @@ export default function LegalPage() {
               </span>
             </div>
             <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-8">
-              {page.title}
+              <CmsText 
+                contentKey={`legal.${slug}.title`}
+                page="LegalPage"
+                blockTitle={`${slug} Title`}
+                fallback={page.title}
+                contentType="short_text"
+              />
             </h1>
             {page.last_reviewed && (
               <p className="text-[#2B2725]/60 text-sm">
@@ -83,9 +90,13 @@ export default function LegalPage() {
             transition={{ delay: 0.2 }}
             className="bg-white p-8 md:p-12"
           >
-            <div
+            <CmsText 
+              contentKey={`legal.${slug}.content`}
+              page="LegalPage"
+              blockTitle={`${slug} Content`}
+              fallback={page.content}
+              contentType="rich_text"
               className="prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: page.content }}
               style={{
                 color: "#2B2725",
                 lineHeight: "1.8",
