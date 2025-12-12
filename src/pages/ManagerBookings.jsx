@@ -3,6 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Calendar, DollarSign, Mail, Phone, User, Clock, CheckCircle, XCircle, AlertCircle, Video, Copy, Filter, Search } from "lucide-react";
+import RecurringSessionManager from "../components/manager/RecurringSessionManager";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -544,6 +545,11 @@ export default function ManagerBookings() {
                       </Button>
                     </div>
                   </div>
+                )}
+
+                {/* Recurring Session Manager */}
+                {selectedBooking.is_recurring && (
+                  <RecurringSessionManager booking={selectedBooking} />
                 )}
 
                 {/* Notes */}
