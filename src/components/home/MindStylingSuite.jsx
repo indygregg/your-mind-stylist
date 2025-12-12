@@ -146,15 +146,36 @@ export default function MindStylingSuite() {
                   {/* Left Content */}
                   <div>
                     <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32] mb-4">
-                      {service.title}
+                      <CmsText
+                        contentKey={`home.suite.${index}.title`}
+                        page="Home"
+                        blockTitle={`${service.title} - Title`}
+                        fallback={service.title}
+                        contentType="short_text"
+                        as="span"
+                      />
                     </h3>
                     <p
                       className="font-serif italic text-lg mb-6"
                       style={{ color: service.accent }}
                     >
-                      {service.tagline}
+                      <CmsText
+                        contentKey={`home.suite.${index}.tagline`}
+                        page="Home"
+                        blockTitle={`${service.title} - Tagline`}
+                        fallback={service.tagline}
+                        contentType="short_text"
+                        as="span"
+                      />
                     </p>
-                    <p className="text-[#2B2725]/80 leading-relaxed">{service.description}</p>
+                    <CmsText
+                      contentKey={`home.suite.${index}.description`}
+                      page="Home"
+                      blockTitle={`${service.title} - Description`}
+                      fallback={service.description}
+                      contentType="rich_text"
+                      className="text-[#2B2725]/80 leading-relaxed"
+                    />
                   </div>
 
                   {/* Right Content */}
@@ -162,12 +183,27 @@ export default function MindStylingSuite() {
                     {/* Phases for Certification */}
                     {service.phases && (
                       <div className="space-y-6 mb-8">
-                        {service.phases.map((phase) => (
+                        {service.phases.map((phase, phaseIndex) => (
                           <div key={phase.name} className="border-l-2 border-[#D8B46B] pl-6">
                             <h4 className="font-serif text-lg text-[#1E3A32] mb-1">
-                              {phase.name}
+                              <CmsText
+                                contentKey={`home.suite.${index}.phase${phaseIndex}.name`}
+                                page="Home"
+                                blockTitle={`${service.title} - ${phase.name}`}
+                                fallback={phase.name}
+                                contentType="short_text"
+                                as="span"
+                              />
                             </h4>
-                            <p className="text-[#2B2725]/70 text-sm">{phase.text}</p>
+                            <CmsText
+                              contentKey={`home.suite.${index}.phase${phaseIndex}.text`}
+                              page="Home"
+                              blockTitle={`${service.title} - ${phase.name} Text`}
+                              fallback={phase.text}
+                              contentType="short_text"
+                              className="text-[#2B2725]/70 text-sm"
+                              as="p"
+                            />
                           </div>
                         ))}
                       </div>
@@ -192,7 +228,15 @@ export default function MindStylingSuite() {
 
                     {/* Bottom Note */}
                     {service.bottomNote && (
-                      <p className="text-[#2B2725]/60 text-sm italic mb-8">{service.bottomNote}</p>
+                      <CmsText
+                        contentKey={`home.suite.${index}.bottomNote`}
+                        page="Home"
+                        blockTitle={`${service.title} - Bottom Note`}
+                        fallback={service.bottomNote}
+                        contentType="short_text"
+                        className="text-[#2B2725]/60 text-sm italic mb-8"
+                        as="p"
+                      />
                     )}
 
                     {/* CTA */}
@@ -200,7 +244,14 @@ export default function MindStylingSuite() {
                       to={createPageUrl(service.link)}
                       className="group/link inline-flex items-center gap-3 text-[#1E3A32] font-medium hover:gap-4 transition-all"
                     >
-                      {service.cta}
+                      <CmsText
+                        contentKey={`home.suite.${index}.cta`}
+                        page="Home"
+                        blockTitle={`${service.title} - CTA`}
+                        fallback={service.cta}
+                        contentType="short_text"
+                        as="span"
+                      />
                       <ArrowRight
                         size={18}
                         className="group-hover/link:translate-x-1 transition-transform"
