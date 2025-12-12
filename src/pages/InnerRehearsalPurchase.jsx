@@ -160,7 +160,7 @@ export default function InnerRehearsalPurchase() {
             Subscribe
           </span>
           <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-4">
-            The Inner Rehearsal Sessions™
+            The Pocket Visualization Sessions™
           </h1>
           <p className="text-[#2B2725] text-xl md:text-2xl font-serif italic mb-6">
             Guided audio sessions to regulate your nervous system, release doubt, and rehearse your future self.

@@ -3,7 +3,7 @@ import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
-import { Eye, Mail } from "lucide-react";
+import { Eye } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 
 export default function Accessibility() {
