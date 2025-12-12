@@ -1,20 +1,41 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Mail, Calendar } from "lucide-react";
 import { format } from "date-fns";
+import toast from "react-hot-toast";
 
 export default function AdminUsers() {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
+  const queryClient = useQueryClient();
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["admin-all-users"],
     queryFn: () => base44.entities.User.list("-created_date"),
   });
+
+  const updateRoleMutation = useMutation({
+    mutationFn: async ({ userId, newRole }) => {
+      return await base44.asServiceRole.entities.User.update(userId, { role: newRole });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-all-users"] });
+      toast.success("User role updated successfully");
+    },
+    onError: (error) => {
+      toast.error(`Failed to update role: ${error.message}`);
+    },
+  });
+
+  const handleRoleChange = (userId, newRole) => {
+    if (window.confirm(`Are you sure you want to change this user's role to ${newRole}?`)) {
+      updateRoleMutation.mutate({ userId, newRole });
+    }
+  };
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch = 
@@ -54,6 +75,7 @@ export default function AdminUsers() {
                 <SelectContent>
                   <SelectItem value="all">All Roles</SelectItem>
                   <SelectItem value="admin">Admin</SelectItem>
+                  <SelectItem value="manager">Manager</SelectItem>
                   <SelectItem value="user">User</SelectItem>
                 </SelectContent>
               </Select>
@@ -84,6 +106,9 @@ export default function AdminUsers() {
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">
                       Joined
                     </th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E4D9C4]">
@@ -110,6 +135,8 @@ export default function AdminUsers() {
                           className={`inline-flex px-3 py-1 text-xs uppercase tracking-wide ${
                             user.role === "admin"
                               ? "bg-[#6E4F7D]/20 text-[#6E4F7D]"
+                              : user.role === "manager"
+                              ? "bg-[#D8B46B]/20 text-[#D8B46B]"
                               : "bg-[#A6B7A3]/20 text-[#1E3A32]"
                           }`}
                         >
@@ -121,6 +148,21 @@ export default function AdminUsers() {
                           <Calendar size={14} />
                           {format(new Date(user.created_date), "MMM d, yyyy")}
                         </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <Select
+                          value={user.role}
+                          onValueChange={(newRole) => handleRoleChange(user.id, newRole)}
+                        >
+                          <SelectTrigger className="w-32">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="admin">Admin</SelectItem>
+                            <SelectItem value="manager">Manager</SelectItem>
+                            <SelectItem value="user">User</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </td>
                     </motion.tr>
                   ))}
