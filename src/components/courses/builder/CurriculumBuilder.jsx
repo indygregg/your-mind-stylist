@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, GripVertical, Edit, Trash2, ChevronDown, ChevronRight } from "lucide-react";
+import { Plus, GripVertical, Edit, Trash2, ChevronDown, ChevronRight, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import AILessonOutlineGenerator from "./AILessonOutlineGenerator";
 
 export default function CurriculumBuilder({ modules, onUpdate }) {
   const [expandedModules, setExpandedModules] = useState({});
   const [editingModule, setEditingModule] = useState(null);
   const [editingLesson, setEditingLesson] = useState(null);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
 
   const addModule = () => {
     const newModule = {
@@ -103,6 +105,17 @@ export default function CurriculumBuilder({ modules, onUpdate }) {
     }
   };
 
+  const handleAIGenerate = (generatedModules) => {
+    onUpdate(generatedModules);
+    setShowAIGenerator(false);
+    // Expand all modules after generation
+    const expanded = {};
+    generatedModules.forEach(mod => {
+      expanded[mod.id] = true;
+    });
+    setExpandedModules(expanded);
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
@@ -112,6 +125,16 @@ export default function CurriculumBuilder({ modules, onUpdate }) {
         <p className="text-[#2B2725]/70">
           Organize your course into modules and lessons
         </p>
+        {modules.length === 0 && (
+          <Button
+            type="button"
+            onClick={() => setShowAIGenerator(true)}
+            className="mt-4 bg-gradient-to-r from-[#6E4F7D] to-[#8B659B] hover:from-[#5D3E6C] hover:to-[#7A5487] text-white"
+          >
+            <Sparkles size={16} className="mr-2" />
+            Generate with AI
+          </Button>
+        )}
       </div>
 
       <DragDropContext onDragEnd={handleDragEnd}>
@@ -295,6 +318,13 @@ export default function CurriculumBuilder({ modules, onUpdate }) {
         <Plus size={16} className="mr-2" />
         Add Module
       </Button>
+
+      {showAIGenerator && (
+        <AILessonOutlineGenerator
+          onGenerate={handleAIGenerate}
+          onClose={() => setShowAIGenerator(false)}
+        />
+      )}
     </div>
   );
 }

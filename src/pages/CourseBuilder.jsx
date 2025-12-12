@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Save, Eye, Sparkles, BookTemplate } from "lucide-react";
+import { ArrowLeft, ArrowRight, Save, Eye, Sparkles, BookTemplate, Monitor } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CourseTypeSelector from "../components/courses/builder/CourseTypeSelector";
 import CourseBasicsForm from "../components/courses/builder/CourseBasicsForm";
@@ -315,6 +315,20 @@ export default function CourseBuilder() {
               <Save size={16} className="mr-2" />
               Save Draft
             </Button>
+
+            {courseId && (
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  await handleSave();
+                  navigate(createPageUrl("CoursePreview?id=" + courseId));
+                }}
+                disabled={saveMutation.isPending}
+              >
+                <Monitor size={16} className="mr-2" />
+                Preview
+              </Button>
+            )}
 
             {step < 4 ? (
               <Button
