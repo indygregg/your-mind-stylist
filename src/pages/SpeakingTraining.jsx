@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Users, Presentation, Lightbulb, TrendingUp, MessageSquare, Brain, Shield, Target, Check, Quote } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function SpeakingTraining() {
   const teamBenefits = [
@@ -126,21 +127,42 @@ export default function SpeakingTraining() {
             transition={{ duration: 0.6 }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block text-center">
-              For Teams & Leaders
+              <CmsText 
+                contentKey="speaking.hero.subtitle"
+                page="SpeakingTraining"
+                blockTitle="Hero Subtitle"
+                fallback="For Teams & Leaders"
+                contentType="short_text"
+                as="span"
+              />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6 text-center">
-              Organizational Mind Styling
+              <CmsText 
+                contentKey="speaking.hero.title"
+                page="SpeakingTraining"
+                blockTitle="Hero Title"
+                fallback="Organizational Mind Styling"
+                contentType="short_text"
+              />
             </h1>
             <p className="text-[#1E3A32] font-serif text-2xl md:text-3xl italic mb-8 text-center">
-              Emotional intelligence, clarity, and communication — brought into your organization
-              with intention and impact.
+              <CmsText 
+                contentKey="speaking.hero.tagline"
+                page="SpeakingTraining"
+                blockTitle="Hero Tagline"
+                fallback="Emotional intelligence, clarity, and communication — brought into your organization with intention and impact."
+                contentType="rich_text"
+              />
             </p>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-3xl mx-auto text-center">
-              Healthy teams think clearly, communicate openly, and navigate change with resilience.
-              Through keynotes, workshops, and leadership trainings, I teach teams how to understand
-              their internal patterns, dissolve resistance, and create cultures that support both
-              performance and well-being.
+              <CmsText 
+                contentKey="speaking.hero.description"
+                page="SpeakingTraining"
+                blockTitle="Hero Description"
+                fallback="Healthy teams think clearly, communicate openly, and navigate change with resilience. Through keynotes, workshops, and leadership trainings, I teach teams how to understand their internal patterns, dissolve resistance, and create cultures that support both performance and well-being."
+                contentType="rich_text"
+              />
             </p>
 
             <div className="text-center">
@@ -168,18 +190,33 @@ export default function SpeakingTraining() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              Better Thinking Creates Better Teams
+              <CmsText 
+                contentKey="speaking.why.title"
+                page="SpeakingTraining"
+                blockTitle="Why Section Title"
+                fallback="Better Thinking Creates Better Teams"
+                contentType="short_text"
+              />
             </h2>
 
             <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed mb-10">
               <p>
-                Organizations often focus on systems, processes, and goals — but the real work begins
-                inside the human mind. When people understand their emotional patterns and
-                communication tendencies, they collaborate more effectively and make better decisions.
+                <CmsText 
+                  contentKey="speaking.why.paragraph1"
+                  page="SpeakingTraining"
+                  blockTitle="Why Paragraph 1"
+                  fallback="Organizations often focus on systems, processes, and goals — but the real work begins inside the human mind. When people understand their emotional patterns and communication tendencies, they collaborate more effectively and make better decisions."
+                  contentType="rich_text"
+                />
               </p>
               <p>
-                Mind Styling brings emotional intelligence, self-awareness, and internal clarity into
-                professional environments, where they make the biggest difference.
+                <CmsText 
+                  contentKey="speaking.why.paragraph2"
+                  page="SpeakingTraining"
+                  blockTitle="Why Paragraph 2"
+                  fallback="Mind Styling brings emotional intelligence, self-awareness, and internal clarity into professional environments, where they make the biggest difference."
+                  contentType="rich_text"
+                />
               </p>
             </div>
 
@@ -187,18 +224,23 @@ export default function SpeakingTraining() {
               <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-6">
                 Teams learn to:
               </p>
-              <div className="space-y-3">
-                {teamBenefits.map((benefit) => (
-                  <div key={benefit} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#1E3A32] mt-2.5 flex-shrink-0" />
-                    <span className="text-[#2B2725]/80 text-lg">{benefit}</span>
-                  </div>
-                ))}
-              </div>
+              <CmsText 
+                contentKey="speaking.why.benefits"
+                page="SpeakingTraining"
+                blockTitle="Team Benefits List"
+                fallback={`<div class='space-y-3'>${teamBenefits.map(benefit => `<div class='flex items-start gap-3'><div class='w-1.5 h-1.5 rounded-full bg-[#1E3A32] mt-2.5 flex-shrink-0'></div><span class='text-[#2B2725]/80 text-lg'>${benefit}</span></div>`).join('')}</div>`}
+                contentType="rich_text"
+              />
             </div>
 
             <p className="font-serif text-2xl text-[#1E3A32] italic text-center">
-              Healthy culture begins with healthy thinking.
+              <CmsText 
+                contentKey="speaking.why.closing"
+                page="SpeakingTraining"
+                blockTitle="Why Closing"
+                fallback="Healthy culture begins with healthy thinking."
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -214,10 +256,22 @@ export default function SpeakingTraining() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
-              Trainings, Workshops, and Keynotes
+              <CmsText 
+                contentKey="speaking.formats.title"
+                page="SpeakingTraining"
+                blockTitle="Formats Title"
+                fallback="Trainings, Workshops, and Keynotes"
+                contentType="short_text"
+              />
             </h2>
             <p className="text-[#2B2725]/70 text-lg">
-              I offer several formats to support your team depending on your needs, group size, and goals.
+              <CmsText 
+                contentKey="speaking.formats.description"
+                page="SpeakingTraining"
+                blockTitle="Formats Description"
+                fallback="I offer several formats to support your team depending on your needs, group size, and goals."
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
 
@@ -236,9 +290,24 @@ export default function SpeakingTraining() {
                 </div>
                 <h3 className="font-serif text-xl md:text-2xl text-[#1E3A32] mb-3 flex items-start gap-2">
                   <span className="text-[#D8B46B] mt-1">✦</span>
-                  {format.title}
+                  <CmsText 
+                    contentKey={`speaking.format${index + 1}.title`}
+                    page="SpeakingTraining"
+                    blockTitle={`Format ${index + 1} Title`}
+                    fallback={format.title}
+                    contentType="short_text"
+                    as="span"
+                  />
                 </h3>
-                <p className="text-[#2B2725]/70 leading-relaxed">{format.description}</p>
+                <p className="text-[#2B2725]/70 leading-relaxed">
+                  <CmsText 
+                    contentKey={`speaking.format${index + 1}.description`}
+                    page="SpeakingTraining"
+                    blockTitle={`Format ${index + 1} Description`}
+                    fallback={format.description}
+                    contentType="rich_text"
+                  />
+                </p>
               </motion.div>
             ))}
           </div>
@@ -259,7 +328,13 @@ export default function SpeakingTraining() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
-              Topics I Teach
+              <CmsText 
+                contentKey="speaking.topics.title"
+                page="SpeakingTraining"
+                blockTitle="Topics Title"
+                fallback="Topics I Teach"
+                contentType="short_text"
+              />
             </h2>
           </motion.div>
 
@@ -278,9 +353,24 @@ export default function SpeakingTraining() {
                 </div>
                 <h3 className="font-serif text-lg text-[#1E3A32] mb-2 flex items-start gap-2">
                   <span className="text-[#D8B46B]">✦</span>
-                  {topic.title}
+                  <CmsText 
+                    contentKey={`speaking.topic${index + 1}.title`}
+                    page="SpeakingTraining"
+                    blockTitle={`Topic ${index + 1} Title`}
+                    fallback={topic.title}
+                    contentType="short_text"
+                    as="span"
+                  />
                 </h3>
-                <p className="text-[#2B2725]/70 text-sm leading-relaxed">{topic.description}</p>
+                <p className="text-[#2B2725]/70 text-sm leading-relaxed">
+                  <CmsText 
+                    contentKey={`speaking.topic${index + 1}.description`}
+                    page="SpeakingTraining"
+                    blockTitle={`Topic ${index + 1} Description`}
+                    fallback={topic.description}
+                    contentType="rich_text"
+                  />
+                </p>
               </motion.div>
             ))}
           </div>
@@ -331,20 +421,31 @@ export default function SpeakingTraining() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] mb-10">
-              What Your Team Will Walk Away With
+              <CmsText 
+                contentKey="speaking.outcomes.title"
+                page="SpeakingTraining"
+                blockTitle="Outcomes Title"
+                fallback="What Your Team Will Walk Away With"
+                contentType="short_text"
+              />
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-4 mb-10">
-              {outcomes.map((outcome) => (
-                <div key={outcome} className="flex items-start gap-3">
-                  <Check size={20} className="text-[#D8B46B] mt-1 flex-shrink-0" />
-                  <span className="text-[#F9F5EF]/90 text-lg">{outcome}</span>
-                </div>
-              ))}
-            </div>
+            <CmsText 
+              contentKey="speaking.outcomes.list"
+              page="SpeakingTraining"
+              blockTitle="Outcomes List"
+              fallback={`<div class='grid md:grid-cols-2 gap-4 mb-10'>${outcomes.map(outcome => `<div class='flex items-start gap-3'><svg class='lucide lucide-check' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='margin-top: 4px; flex-shrink: 0;'><path d='M20 6 9 17l-5-5'/></svg><span class='text-[#F9F5EF]/90 text-lg'>${outcome}</span></div>`).join('')}</div>`}
+              contentType="rich_text"
+            />
 
             <p className="font-serif text-xl text-[#D8B46B] italic text-center">
-              Mind Styling creates the conditions for people to do their best work — and enjoy doing it.
+              <CmsText 
+                contentKey="speaking.outcomes.closing"
+                page="SpeakingTraining"
+                blockTitle="Outcomes Closing"
+                fallback="Mind Styling creates the conditions for people to do their best work — and enjoy doing it."
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -399,14 +500,23 @@ export default function SpeakingTraining() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
-              Bring Mind Styling Into
-              <br />
-              <span className="italic text-[#D8B46B]">Your Organization</span>
+              <CmsText 
+                contentKey="speaking.cta.title"
+                page="SpeakingTraining"
+                blockTitle="CTA Title"
+                fallback="Bring Mind Styling Into<br /><span class='italic text-[#D8B46B]'>Your Organization</span>"
+                contentType="rich_text"
+              />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
-              If you're ready to support your team with clarity, emotional intelligence, and
-              sustainable performance, let's design the right experience for your organization.
+              <CmsText 
+                contentKey="speaking.cta.description"
+                page="SpeakingTraining"
+                blockTitle="CTA Description"
+                fallback="If you're ready to support your team with clarity, emotional intelligence, and sustainable performance, let's design the right experience for your organization."
+                contentType="rich_text"
+              />
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

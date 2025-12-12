@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Heart, Brain, Shield, Users, Compass, MessageCircle, Sparkles } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function PrivateSessions() {
   const workAreas = [
@@ -103,20 +104,42 @@ export default function PrivateSessions() {
             transition={{ duration: 0.6 }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block text-center">
-              Personalized Transformation
+              <CmsText 
+                contentKey="private.hero.subtitle"
+                page="PrivateSessions"
+                blockTitle="Hero Subtitle"
+                fallback="Personalized Transformation"
+                contentType="short_text"
+                as="span"
+              />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6 text-center">
-              Private Mind Styling
+              <CmsText 
+                contentKey="private.hero.title"
+                page="PrivateSessions"
+                blockTitle="Hero Title"
+                fallback="Private Mind Styling"
+                contentType="short_text"
+              />
             </h1>
             <p className="text-[#6E4F7D] font-serif text-2xl md:text-3xl italic mb-8 text-center">
-              A highly tailored, one-on-one process to help you understand your patterns, release
-              what no longer fits, and redesign the way you think.
+              <CmsText 
+                contentKey="private.hero.tagline"
+                page="PrivateSessions"
+                blockTitle="Hero Tagline"
+                fallback="A highly tailored, one-on-one process to help you understand your patterns, release what no longer fits, and redesign the way you think."
+                contentType="rich_text"
+              />
             </p>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-3xl mx-auto text-center">
-              Private Mind Styling is for those who want a deeper, more intimate level of support — a
-              space where you can explore your mindset, experiences, beliefs, and emotional patterns
-              with clarity, compassion, and guidance.
+              <CmsText 
+                contentKey="private.hero.description"
+                page="PrivateSessions"
+                blockTitle="Hero Description"
+                fallback="Private Mind Styling is for those who want a deeper, more intimate level of support — a space where you can explore your mindset, experiences, beliefs, and emotional patterns with clarity, compassion, and guidance."
+                contentType="rich_text"
+              />
             </p>
 
             <div className="text-center">
@@ -144,40 +167,53 @@ export default function PrivateSessions() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              Sometimes You Need a Space
-              <br />
-              <span className="italic">That's Fully Yours</span>
+              <CmsText 
+                contentKey="private.why.title"
+                page="PrivateSessions"
+                blockTitle="Why Section Title"
+                fallback="Sometimes You Need a Space<br /><span class='italic'>That's Fully Yours</span>"
+                contentType="rich_text"
+              />
             </h2>
 
             <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
               <p>
-                Group programs and self-paced learning are powerful, but some transformations require
-                a quieter room — one where the attention is entirely on you, your life, your patterns,
-                and the shifts you're ready to make.
+                <CmsText 
+                  contentKey="private.why.intro"
+                  page="PrivateSessions"
+                  blockTitle="Why Intro"
+                  fallback="Group programs and self-paced learning are powerful, but some transformations require a quieter room — one where the attention is entirely on you, your life, your patterns, and the shifts you're ready to make."
+                  contentType="rich_text"
+                />
               </p>
 
-              <p className="font-medium text-[#1E3A32]">Private Mind Styling is designed to help you:</p>
+              <p className="font-medium text-[#1E3A32]">
+                <CmsText 
+                  contentKey="private.why.designed"
+                  page="PrivateSessions"
+                  blockTitle="Why Designed For"
+                  fallback="Private Mind Styling is designed to help you:"
+                  contentType="rich_text"
+                />
+              </p>
             </div>
 
-            <div className="mt-8 grid md:grid-cols-2 gap-4">
-              {[
-                "Understand why certain patterns keep repeating",
-                "Gain clarity on what you want and what's in the way",
-                "Regulate your emotional and mental state",
-                "Strengthen emotional intelligence",
-                "Release old stories and self-concepts",
-                "Move through transitions with calm and confidence",
-                "Build a mindset that supports your goals",
-              ].map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#6E4F7D] mt-2.5 flex-shrink-0" />
-                  <span className="text-[#2B2725]/80">{item}</span>
-                </div>
-              ))}
-            </div>
+            <CmsText 
+              contentKey="private.why.helps"
+              page="PrivateSessions"
+              blockTitle="Why Helps List"
+              fallback={`<div class='mt-8 grid md:grid-cols-2 gap-4'>${["Understand why certain patterns keep repeating", "Gain clarity on what you want and what's in the way", "Regulate your emotional and mental state", "Strengthen emotional intelligence", "Release old stories and self-concepts", "Move through transitions with calm and confidence", "Build a mindset that supports your goals"].map(item => `<div class='flex items-start gap-3'><div class='w-1.5 h-1.5 rounded-full bg-[#6E4F7D] mt-2.5 flex-shrink-0'></div><span class='text-[#2B2725]/80'>${item}</span></div>`).join('')}</div>`}
+              contentType="rich_text"
+            />
 
             <p className="mt-8 font-serif text-xl text-[#1E3A32] italic">
-              This work is personal, gentle, and deeply impactful.
+              <CmsText 
+                contentKey="private.why.closing"
+                page="PrivateSessions"
+                blockTitle="Why Closing"
+                fallback="This work is personal, gentle, and deeply impactful."
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -193,9 +229,23 @@ export default function PrivateSessions() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
-              What We Can Explore Together
+              <CmsText 
+                contentKey="private.explore.title"
+                page="PrivateSessions"
+                blockTitle="Explore Title"
+                fallback="What We Can Explore Together"
+                contentType="short_text"
+              />
             </h2>
-            <p className="text-[#2B2725]/70 text-lg">Every session is tailored, but we often work on:</p>
+            <p className="text-[#2B2725]/70 text-lg">
+              <CmsText 
+                contentKey="private.explore.description"
+                page="PrivateSessions"
+                blockTitle="Explore Description"
+                fallback="Every session is tailored, but we often work on:"
+                contentType="rich_text"
+              />
+            </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -213,9 +263,24 @@ export default function PrivateSessions() {
                 </div>
                 <h3 className="font-serif text-xl text-[#1E3A32] mb-3 flex items-start gap-2">
                   <span className="text-[#D8B46B] mt-1">✦</span>
-                  {area.title}
+                  <CmsText 
+                    contentKey={`private.area${index + 1}.title`}
+                    page="PrivateSessions"
+                    blockTitle={`Area ${index + 1} Title`}
+                    fallback={area.title}
+                    contentType="short_text"
+                    as="span"
+                  />
                 </h3>
-                <p className="text-[#2B2725]/70 leading-relaxed">{area.description}</p>
+                <p className="text-[#2B2725]/70 leading-relaxed">
+                  <CmsText 
+                    contentKey={`private.area${index + 1}.description`}
+                    page="PrivateSessions"
+                    blockTitle={`Area ${index + 1} Description`}
+                    fallback={area.description}
+                    contentType="rich_text"
+                  />
+                </p>
               </motion.div>
             ))}
           </div>
@@ -243,7 +308,13 @@ export default function PrivateSessions() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-12">
-              What Private Mind Styling Looks Like
+              <CmsText 
+                contentKey="private.how.title"
+                page="PrivateSessions"
+                blockTitle="How Section Title"
+                fallback="What Private Mind Styling Looks Like"
+                contentType="short_text"
+              />
             </h2>
 
             <div className="space-y-8">
@@ -258,9 +329,24 @@ export default function PrivateSessions() {
                 >
                   <h3 className="font-serif text-xl md:text-2xl text-[#1E3A32] mb-2 flex items-start gap-2">
                     <span className="text-[#D8B46B]">✦</span>
-                    {item.title}
+                    <CmsText 
+                      contentKey={`private.how.step${index + 1}.title`}
+                      page="PrivateSessions"
+                      blockTitle={`How Step ${index + 1} Title`}
+                      fallback={item.title}
+                      contentType="short_text"
+                      as="span"
+                    />
                   </h3>
-                  <p className="text-[#2B2725]/80 text-lg leading-relaxed">{item.description}</p>
+                  <p className="text-[#2B2725]/80 text-lg leading-relaxed">
+                    <CmsText 
+                      contentKey={`private.how.step${index + 1}.description`}
+                      page="PrivateSessions"
+                      blockTitle={`How Step ${index + 1} Description`}
+                      fallback={item.description}
+                      contentType="rich_text"
+                    />
+                  </p>
                 </motion.div>
               ))}
             </div>
@@ -281,29 +367,41 @@ export default function PrivateSessions() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] mb-8">
-              Is Private Mind Styling Right for You?
+              <CmsText 
+                contentKey="private.for.title"
+                page="PrivateSessions"
+                blockTitle="For Section Title"
+                fallback="Is Private Mind Styling Right for You?"
+                contentType="short_text"
+              />
             </h2>
 
-            <p className="text-[#F9F5EF]/90 text-lg mb-8">This path is ideal if you:</p>
+            <p className="text-[#F9F5EF]/90 text-lg mb-8">
+              <CmsText 
+                contentKey="private.for.intro"
+                page="PrivateSessions"
+                blockTitle="For Intro"
+                fallback="This path is ideal if you:"
+                contentType="rich_text"
+              />
+            </p>
 
-            <div className="space-y-4 mb-10">
-              {idealFor.map((item, index) => (
-                <motion.div
-                  key={item}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                  className="flex items-start gap-3"
-                >
-                  <div className="w-2 h-2 rounded-full bg-[#D8B46B] mt-2.5 flex-shrink-0" />
-                  <span className="text-[#F9F5EF]/90 text-lg">{item}</span>
-                </motion.div>
-              ))}
-            </div>
+            <CmsText 
+              contentKey="private.for.list"
+              page="PrivateSessions"
+              blockTitle="For List"
+              fallback={`<div class='space-y-4 mb-10'>${idealFor.map(item => `<div class='flex items-start gap-3'><div class='w-2 h-2 rounded-full bg-[#D8B46B] mt-2.5 flex-shrink-0'></div><span class='text-[#F9F5EF]/90 text-lg'>${item}</span></div>`).join('')}</div>`}
+              contentType="rich_text"
+            />
 
             <p className="font-serif text-xl text-[#F9F5EF] italic">
-              If you want a space to explore your mind, your story, and your next steps — this is it.
+              <CmsText 
+                contentKey="private.for.closing"
+                page="PrivateSessions"
+                blockTitle="For Closing"
+                fallback="If you want a space to explore your mind, your story, and your next steps — this is it."
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -318,27 +416,31 @@ export default function PrivateSessions() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-10">
-              What You Can Expect to Leave With
+              <CmsText 
+                contentKey="private.outcomes.title"
+                page="PrivateSessions"
+                blockTitle="Outcomes Title"
+                fallback="What You Can Expect to Leave With"
+                contentType="short_text"
+              />
             </h2>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              {outcomes.map((outcome, index) => (
-                <motion.div
-                  key={outcome}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-[#F9F5EF] p-6 flex items-start gap-3"
-                >
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#6E4F7D] mt-2.5 flex-shrink-0" />
-                  <span className="text-[#2B2725]/80 text-lg">{outcome}</span>
-                </motion.div>
-              ))}
-            </div>
+            <CmsText 
+              contentKey="private.outcomes.list"
+              page="PrivateSessions"
+              blockTitle="Outcomes List"
+              fallback={`<div class='grid md:grid-cols-2 gap-6'>${outcomes.map(outcome => `<div class='bg-[#F9F5EF] p-6 flex items-start gap-3'><div class='w-1.5 h-1.5 rounded-full bg-[#6E4F7D] mt-2.5 flex-shrink-0'></div><span class='text-[#2B2725]/80 text-lg'>${outcome}</span></div>`).join('')}</div>`}
+              contentType="rich_text"
+            />
 
             <p className="mt-10 font-serif text-xl text-[#1E3A32] italic text-center">
-              This work creates transformation that doesn't fade when things get hard.
+              <CmsText 
+                contentKey="private.outcomes.closing"
+                page="PrivateSessions"
+                blockTitle="Outcomes Closing"
+                fallback="This work creates transformation that doesn't fade when things get hard."
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -353,14 +455,23 @@ export default function PrivateSessions() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
-              Your Private Work Begins
-              <br />
-              <span className="italic text-[#D8B46B]">With a Conversation</span>
+              <CmsText 
+                contentKey="private.cta.title"
+                page="PrivateSessions"
+                blockTitle="CTA Title"
+                fallback="Your Private Work Begins<br /><span class='italic text-[#D8B46B]'>With a Conversation</span>"
+                contentType="rich_text"
+              />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
-              Private Mind Styling is a collaborative process. The best way to know if it's the right
-              path is to speak directly.
+              <CmsText 
+                contentKey="private.cta.description"
+                page="PrivateSessions"
+                blockTitle="CTA Description"
+                fallback="Private Mind Styling is a collaborative process. The best way to know if it's the right path is to speak directly."
+                contentType="rich_text"
+              />
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
