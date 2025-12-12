@@ -81,6 +81,7 @@ import StylePauses from './pages/StylePauses';
 import BuyPrograms from './pages/BuyPrograms';
 import CleaningOutYourCloset from './pages/CleaningOutYourCloset';
 import ManagerWebinarEditor from './pages/ManagerWebinarEditor';
+import ManagerResourceEditor from './pages/ManagerResourceEditor';
 import __Layout from './Layout.jsx';
 
 
@@ -168,6 +169,7 @@ export const PAGES = {
     "BuyPrograms": BuyPrograms,
     "CleaningOutYourCloset": CleaningOutYourCloset,
     "ManagerWebinarEditor": ManagerWebinarEditor,
+    "ManagerResourceEditor": ManagerResourceEditor,
 }
 
 export const pagesConfig = {
