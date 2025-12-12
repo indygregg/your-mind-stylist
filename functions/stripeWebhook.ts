@@ -43,18 +43,23 @@ Deno.serve(async (req) => {
                         stripe_payment_intent_id: session.payment_intent
                     });
 
-                    await base44.asServiceRole.integrations.Core.SendEmail({
-                        to: session.customer_email,
-                        subject: 'Private Session Booking Confirmed',
-                        body: `
-                            <h2>Your booking is confirmed!</h2>
-                            <p>Thank you for booking private Mind Styling sessions with Roberta.</p>
-                            <p>You'll receive a follow-up email within 24-48 hours to schedule your sessions.</p>
-                            <p>Looking forward to working with you!</p>
-                            <br>
-                            <p>Roberta Fernandez<br>Your Mind Stylist</p>
-                        `
-                    });
+                    // Send professional booking confirmation emails
+                    try {
+                        // Send client confirmation
+                        await base44.asServiceRole.functions.invoke('sendBookingEmail', {
+                            booking_id: session.metadata.booking_id,
+                            recipient_type: 'client'
+                        });
+
+                        // Send manager notification
+                        await base44.asServiceRole.functions.invoke('sendBookingEmail', {
+                            booking_id: session.metadata.booking_id,
+                            recipient_type: 'manager'
+                        });
+                    } catch (emailError) {
+                        console.error('Email send failed:', emailError);
+                        // Don't fail the webhook if emails fail
+                    }
                 }
                 
                 // Handle Course Purchase

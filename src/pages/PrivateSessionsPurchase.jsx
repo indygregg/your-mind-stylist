@@ -143,6 +143,10 @@ export default function PrivateSessionsPurchase() {
           {/* Pricing Options */}
           <div className="bg-white p-8 mb-8">
             <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Choose Your Package</h2>
+            <p className="text-[#2B2725]/70 text-sm mb-6 flex items-center gap-2">
+              <CheckCircle size={16} className="text-[#A6B7A3]" />
+              Payment required • Secure checkout via Stripe
+            </p>
             <RadioGroup value={selectedPackage} onValueChange={setSelectedPackage}>
               <div className="space-y-4">
                 {packages.map((pkg) => (
@@ -193,13 +197,13 @@ export default function PrivateSessionsPurchase() {
                   </>
                 ) : (
                   <>
-                    Purchase Sessions
+                    Continue to Secure Checkout
                     <ArrowRight size={18} className="ml-2" />
                   </>
                 )}
               </Button>
-              <p className="text-[#2B2725]/60 text-sm mt-4">
-                Secure checkout powered by Stripe
+              <p className="text-[#2B2725]/60 text-sm mt-4 flex items-center justify-center gap-2">
+                🔒 Secure payment powered by Stripe • You'll receive confirmation immediately
               </p>
             </div>
 
