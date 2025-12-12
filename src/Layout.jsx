@@ -249,18 +249,18 @@ export default function Layout({ children, currentPageName }) {
                 ))}
 
                 <div className="flex items-center gap-3 ml-6 pl-6 border-l border-[#D8B46B]/20">
-                  <Link
-                    to="/login"
+                  <a
+                    href="https://yourmindstylist.com/login"
                     className="text-sm tracking-wide text-[#2B2725]/70 hover:text-[#1E3A32] transition-colors"
                   >
                     Login
-                  </Link>
-                  <Link
-                    to="/login"
+                  </a>
+                  <a
+                    href="https://yourmindstylist.com/login"
                     className="px-5 py-2 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
                   >
                     Get Started
-                  </Link>
+                  </a>
                 </div>
                 </div>
 
@@ -307,26 +307,18 @@ export default function Layout({ children, currentPageName }) {
                   </Link>
                 ))}
                 <div className="mt-6 pt-4 border-t border-[#E4D9C4] flex flex-col gap-3">
-                  <Link
-                    to="/login"
-                    onClick={() => {
-                      if (navigator.vibrate) navigator.vibrate(10);
-                      setMobileMenuOpen(false);
-                    }}
+                  <a
+                    href="https://yourmindstylist.com/login"
                     className="px-6 py-3 border border-[#1E3A32] text-[#1E3A32] text-center text-sm tracking-wide"
                   >
                     Login
-                  </Link>
-                  <Link
-                    to="/login"
-                    onClick={() => {
-                      if (navigator.vibrate) navigator.vibrate(10);
-                      setMobileMenuOpen(false);
-                    }}
+                  </a>
+                  <a
+                    href="https://yourmindstylist.com/login"
                     className="px-6 py-3 bg-[#1E3A32] text-[#F9F5EF] text-center text-sm tracking-wide"
                   >
                     Get Started
-                  </Link>
+                  </a>
                 </div>
               </div>
             </motion.div>
