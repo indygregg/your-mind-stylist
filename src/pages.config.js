@@ -24,7 +24,7 @@ import Error500 from './pages/Error500';
 import Evolution from './pages/Evolution';
 import FreeMasterclass from './pages/FreeMasterclass';
 import GuestAuthorInvite from './pages/GuestAuthorInvite';
-import InnerRehearsal from './pages/InnerRehearsal';
+import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
 import LearnHypnosis from './pages/LearnHypnosis';
 import LegalPage from './pages/LegalPage';
 import Library from './pages/Library';
@@ -85,7 +85,7 @@ export const PAGES = {
     "Evolution": Evolution,
     "FreeMasterclass": FreeMasterclass,
     "GuestAuthorInvite": GuestAuthorInvite,
-    "InnerRehearsal": InnerRehearsal,
+    "InnerRehearsalPurchase": InnerRehearsalPurchase,
     "LearnHypnosis": LearnHypnosis,
     "LegalPage": LegalPage,
     "Library": Library,
