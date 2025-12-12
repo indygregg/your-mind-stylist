@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Brain, Heart, Zap, Shield, Sparkles, Moon, Target, RefreshCw } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function PocketVisualization() {
   const whatItCombines = [
@@ -141,20 +142,42 @@ export default function PocketVisualization() {
             transition={{ duration: 0.6 }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block text-center">
-              Guided Experiences
+              <CmsText 
+                contentKey="pocket.hero.subtitle"
+                page="PocketVisualization"
+                blockTitle="Hero Subtitle"
+                fallback="Guided Experiences"
+                contentType="short_text"
+                as="span"
+              />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6 text-center">
-              Pocket Visualization™
+              <CmsText 
+                contentKey="pocket.hero.title"
+                page="PocketVisualization"
+                blockTitle="Hero Title"
+                fallback="Pocket Visualization™"
+                contentType="short_text"
+              />
             </h1>
             <p className="text-[#A6B7A3] font-serif text-2xl md:text-3xl italic mb-8 text-center">
-              Reset your mind, regulate your nervous system, and rehearse your future self — in minutes.
+              <CmsText 
+                contentKey="pocket.hero.tagline"
+                page="PocketVisualization"
+                blockTitle="Hero Tagline"
+                fallback="Reset your mind, regulate your nervous system, and rehearse your future self — in minutes."
+                contentType="rich_text"
+              />
             </p>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-3xl mx-auto text-center">
-              These short, powerful audio-guided experiences help you shift your emotional state, calm
-              your mind, dissolve overwhelm, and embody new patterns with ease. They're designed for
-              real people with real lives — people who want to feel better, think clearly, and step
-              into a more aligned version of themselves.
+              <CmsText 
+                contentKey="pocket.hero.description"
+                page="PocketVisualization"
+                blockTitle="Hero Description"
+                fallback="These short, powerful audio-guided experiences help you shift your emotional state, calm your mind, dissolve overwhelm, and embody new patterns with ease. They're designed for real people with real lives — people who want to feel better, think clearly, and step into a more aligned version of themselves."
+                contentType="rich_text"
+              />
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -188,30 +211,51 @@ export default function PocketVisualization() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              What Is Pocket Visualization™?
+              <CmsText 
+                contentKey="pocket.what.title"
+                page="PocketVisualization"
+                blockTitle="What Section Title"
+                fallback="What Is Pocket Visualization™?"
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
-              Unlike meditation, motivation, or passive relaxation, Pocket Visualization™ combines:
+              <CmsText 
+                contentKey="pocket.what.intro"
+                page="PocketVisualization"
+                blockTitle="What Section Intro"
+                fallback="Unlike meditation, motivation, or passive relaxation, Pocket Visualization™ combines:"
+                contentType="rich_text"
+              />
             </p>
 
-            <div className="grid md:grid-cols-2 gap-3 mb-10">
-              {whatItCombines.map((item) => (
-                <div key={item} className="flex items-center gap-3 bg-[#F9F5EF] p-4">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#A6B7A3]" />
-                  <span className="text-[#2B2725]/80">{item}</span>
-                </div>
-              ))}
-            </div>
+            <CmsText 
+              contentKey="pocket.what.combines"
+              page="PocketVisualization"
+              blockTitle="What It Combines List"
+              fallback={`<div class='grid md:grid-cols-2 gap-3 mb-10'>${whatItCombines.map(item => `<div class='flex items-center gap-3 bg-[#F9F5EF] p-4'><div class='w-1.5 h-1.5 rounded-full bg-[#A6B7A3]'></div><span class='text-[#2B2725]/80'>${item}</span></div>`).join('')}</div>`}
+              contentType="rich_text"
+            />
 
             <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
               <p className="font-serif text-xl text-[#1E3A32] italic">
-                This isn't about escaping life — it's about preparing your mind and body to engage
-                with it more clearly.
+                <CmsText 
+                  contentKey="pocket.what.quote"
+                  page="PocketVisualization"
+                  blockTitle="What Section Quote"
+                  fallback="This isn't about escaping life — it's about preparing your mind and body to engage with it more clearly."
+                  contentType="rich_text"
+                />
               </p>
               <p>
-                Each session guides you into a quiet, receptive mental space where your subconscious
-                becomes open to new ways of thinking, feeling, and responding.
+                <CmsText 
+                  contentKey="pocket.what.explanation"
+                  page="PocketVisualization"
+                  blockTitle="What Section Explanation"
+                  fallback="Each session guides you into a quiet, receptive mental space where your subconscious becomes open to new ways of thinking, feeling, and responding."
+                  contentType="rich_text"
+                />
               </p>
             </div>
           </motion.div>
@@ -228,12 +272,22 @@ export default function PocketVisualization() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-6">
-              Why Pocket Visualization™ Works
+              <CmsText 
+                contentKey="pocket.why.title"
+                page="PocketVisualization"
+                blockTitle="Why Section Title"
+                fallback="Why Pocket Visualization™ Works"
+                contentType="short_text"
+              />
             </h2>
             <p className="text-[#2B2725]/80 text-lg leading-relaxed max-w-3xl mx-auto">
-              Your subconscious mind doesn't distinguish vividly imagined experience from lived
-              experience. This is why elite performers, executives, athletes, and creators use mental
-              rehearsal to achieve peak clarity.
+              <CmsText 
+                contentKey="pocket.why.description"
+                page="PocketVisualization"
+                blockTitle="Why Section Description"
+                fallback="Your subconscious mind doesn't distinguish vividly imagined experience from lived experience. This is why elite performers, executives, athletes, and creators use mental rehearsal to achieve peak clarity."
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
 
@@ -252,15 +306,36 @@ export default function PocketVisualization() {
                 </div>
                 <h3 className="font-serif text-xl text-[#1E3A32] mb-3 flex items-start gap-2">
                   <span className="text-[#D8B46B] mt-1">✦</span>
-                  {benefit.title}
+                  <CmsText 
+                    contentKey={`pocket.benefit${index + 1}.title`}
+                    page="PocketVisualization"
+                    blockTitle={`Benefit ${index + 1} Title`}
+                    fallback={benefit.title}
+                    contentType="short_text"
+                    as="span"
+                  />
                 </h3>
-                <p className="text-[#2B2725]/70 leading-relaxed">{benefit.description}</p>
+                <p className="text-[#2B2725]/70 leading-relaxed">
+                  <CmsText 
+                    contentKey={`pocket.benefit${index + 1}.description`}
+                    page="PocketVisualization"
+                    blockTitle={`Benefit ${index + 1} Description`}
+                    fallback={benefit.description}
+                    contentType="rich_text"
+                  />
+                </p>
               </motion.div>
             ))}
           </div>
 
           <p className="text-center font-serif text-xl text-[#1E3A32] italic">
-            This is transformation through repetition, safety, and inner alignment.
+            <CmsText 
+              contentKey="pocket.why.closing"
+              page="PocketVisualization"
+              blockTitle="Why Section Closing"
+              fallback="This is transformation through repetition, safety, and inner alignment."
+              contentType="rich_text"
+            />
           </p>
         </div>
       </section>
@@ -274,37 +349,61 @@ export default function PocketVisualization() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-10">
-              When to Use Pocket Visualization™
+              <CmsText 
+                contentKey="pocket.when.title"
+                page="PocketVisualization"
+                blockTitle="When Section Title"
+                fallback="When to Use Pocket Visualization™"
+                contentType="short_text"
+              />
             </h2>
 
             <div className="bg-[#F9F5EF] p-10 mb-10">
               <p className="text-[#2B2725]/80 text-lg mb-6">
-                You can use these sessions any time you want to feel:
+                <CmsText 
+                  contentKey="pocket.when.intro"
+                  page="PocketVisualization"
+                  blockTitle="When Section Intro"
+                  fallback="You can use these sessions any time you want to feel:"
+                  contentType="rich_text"
+                />
               </p>
-              <div className="grid md:grid-cols-2 gap-4">
-                {useCases.feelings.map((feeling) => (
-                  <div key={feeling} className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-[#A6B7A3]" />
-                    <span className="text-[#2B2725]/80 text-lg">{feeling}</span>
-                  </div>
-                ))}
-              </div>
+              <CmsText 
+                contentKey="pocket.when.feelings"
+                page="PocketVisualization"
+                blockTitle="When Section Feelings"
+                fallback={`<div class='grid md:grid-cols-2 gap-4'>${useCases.feelings.map(feeling => `<div class='flex items-center gap-3'><div class='w-2 h-2 rounded-full bg-[#A6B7A3]'></div><span class='text-[#2B2725]/80 text-lg'>${feeling}</span></div>`).join('')}</div>`}
+                contentType="rich_text"
+              />
             </div>
 
             <div className="mb-10">
-              <p className="text-[#2B2725]/80 text-lg mb-6 font-medium">They're perfect for:</p>
-              <div className="grid md:grid-cols-2 gap-4">
-                {useCases.moments.map((moment) => (
-                  <div key={moment} className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#D8B46B] mt-2.5 flex-shrink-0" />
-                    <span className="text-[#2B2725]/80">{moment}</span>
-                  </div>
-                ))}
-              </div>
+              <p className="text-[#2B2725]/80 text-lg mb-6 font-medium">
+                <CmsText 
+                  contentKey="pocket.when.perfect"
+                  page="PocketVisualization"
+                  blockTitle="When Perfect For Intro"
+                  fallback="They're perfect for:"
+                  contentType="rich_text"
+                />
+              </p>
+              <CmsText 
+                contentKey="pocket.when.moments"
+                page="PocketVisualization"
+                blockTitle="When Perfect Moments"
+                fallback={`<div class='grid md:grid-cols-2 gap-4'>${useCases.moments.map(moment => `<div class='flex items-start gap-3'><div class='w-1.5 h-1.5 rounded-full bg-[#D8B46B] mt-2.5 flex-shrink-0'></div><span class='text-[#2B2725]/80'>${moment}</span></div>`).join('')}</div>`}
+                contentType="rich_text"
+              />
             </div>
 
             <p className="font-serif text-2xl text-[#1E3A32] italic text-center">
-              A few minutes can shift your entire day.
+              <CmsText 
+                contentKey="pocket.when.closing"
+                page="PocketVisualization"
+                blockTitle="When Section Closing"
+                fallback="A few minutes can shift your entire day."
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -320,10 +419,22 @@ export default function PocketVisualization() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
-              What You'll Find Inside
+              <CmsText 
+                contentKey="pocket.library.title"
+                page="PocketVisualization"
+                blockTitle="Library Section Title"
+                fallback="What You'll Find Inside"
+                contentType="short_text"
+              />
             </h2>
             <p className="text-[#2B2725]/70 text-lg">
-              The Pocket Visualization™ library includes categories like:
+              <CmsText 
+                contentKey="pocket.library.description"
+                page="PocketVisualization"
+                blockTitle="Library Section Description"
+                fallback="The Pocket Visualization™ library includes categories like:"
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
 
@@ -342,15 +453,36 @@ export default function PocketVisualization() {
                 </div>
                 <h3 className="font-serif text-xl text-[#1E3A32] mb-3 flex items-start gap-2">
                   <span className="text-[#D8B46B] mt-1">✦</span>
-                  {category.title}
+                  <CmsText 
+                    contentKey={`pocket.category${index + 1}.title`}
+                    page="PocketVisualization"
+                    blockTitle={`Category ${index + 1} Title`}
+                    fallback={category.title}
+                    contentType="short_text"
+                    as="span"
+                  />
                 </h3>
-                <p className="text-[#2B2725]/70 leading-relaxed">{category.description}</p>
+                <p className="text-[#2B2725]/70 leading-relaxed">
+                  <CmsText 
+                    contentKey={`pocket.category${index + 1}.description`}
+                    page="PocketVisualization"
+                    blockTitle={`Category ${index + 1} Description`}
+                    fallback={category.description}
+                    contentType="rich_text"
+                  />
+                </p>
               </motion.div>
             ))}
           </div>
 
           <p className="text-center text-[#2B2725]/70 text-lg italic">
-            New sessions are added regularly.
+            <CmsText 
+              contentKey="pocket.library.note"
+              page="PocketVisualization"
+              blockTitle="Library Note"
+              fallback="New sessions are added regularly."
+              contentType="rich_text"
+            />
           </p>
         </div>
       </section>
@@ -364,7 +496,13 @@ export default function PocketVisualization() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-12">
-              How It Works
+              <CmsText 
+                contentKey="pocket.how.title"
+                page="PocketVisualization"
+                blockTitle="How Section Title"
+                fallback="How It Works"
+                contentType="short_text"
+              />
             </h2>
 
             <div className="space-y-8 mb-10">
@@ -383,9 +521,24 @@ export default function PocketVisualization() {
                   <div className="pt-2">
                     <h3 className="font-serif text-xl text-[#1E3A32] mb-2 flex items-start gap-2">
                       <span className="text-[#D8B46B]">✦</span>
-                      {step.step}
+                      <CmsText 
+                        contentKey={`pocket.how.step${index + 1}.title`}
+                        page="PocketVisualization"
+                        blockTitle={`Step ${index + 1} Title`}
+                        fallback={step.step}
+                        contentType="short_text"
+                        as="span"
+                      />
                     </h3>
-                    <p className="text-[#2B2725]/80 text-lg">{step.description}</p>
+                    <p className="text-[#2B2725]/80 text-lg">
+                      <CmsText 
+                        contentKey={`pocket.how.step${index + 1}.description`}
+                        page="PocketVisualization"
+                        blockTitle={`Step ${index + 1} Description`}
+                        fallback={step.description}
+                        contentType="rich_text"
+                      />
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -393,7 +546,13 @@ export default function PocketVisualization() {
 
             <div className="bg-[#F9F5EF] p-8 mb-10">
               <p className="text-[#2B2725]/80 text-lg text-center">
-                Pocket Visualization™ lives inside your private Your Mind Stylist Portal.
+                <CmsText 
+                  contentKey="pocket.how.note"
+                  page="PocketVisualization"
+                  blockTitle="How Section Note"
+                  fallback="Pocket Visualization™ lives inside your private Your Mind Stylist Portal."
+                  contentType="rich_text"
+                />
               </p>
             </div>
 
@@ -421,20 +580,44 @@ export default function PocketVisualization() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-8">A Personal Note</h2>
+            <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-8">
+              <CmsText 
+                contentKey="pocket.note.title"
+                page="PocketVisualization"
+                blockTitle="Personal Note Title"
+                fallback="A Personal Note"
+                contentType="short_text"
+              />
+            </h2>
 
             <div className="space-y-6 text-[#F9F5EF]/95 text-lg leading-relaxed">
               <p>
-                Pocket Visualization™ sessions are the tools I wish more people had access to — simple,
-                calming, and deeply effective. You don't need an hour of meditation or a week-long
-                retreat to shift your internal state. You just need a few quiet minutes and a gentle
-                guide.
+                <CmsText 
+                  contentKey="pocket.note.paragraph1"
+                  page="PocketVisualization"
+                  blockTitle="Personal Note Paragraph 1"
+                  fallback="Pocket Visualization™ sessions are the tools I wish more people had access to — simple, calming, and deeply effective. You don't need an hour of meditation or a week-long retreat to shift your internal state. You just need a few quiet minutes and a gentle guide."
+                  contentType="rich_text"
+                />
               </p>
               <p>
-                This work changes people because it helps them change how they feel — and when that
-                changes, everything else follows.
+                <CmsText 
+                  contentKey="pocket.note.paragraph2"
+                  page="PocketVisualization"
+                  blockTitle="Personal Note Paragraph 2"
+                  fallback="This work changes people because it helps them change how they feel — and when that changes, everything else follows."
+                  contentType="rich_text"
+                />
               </p>
-              <p className="font-serif text-xl italic pt-4">— Roberta Fernandez, Your Mind Stylist</p>
+              <p className="font-serif text-xl italic pt-4">
+                <CmsText 
+                  contentKey="pocket.note.signature"
+                  page="PocketVisualization"
+                  blockTitle="Personal Note Signature"
+                  fallback="— Roberta Fernandez, Your Mind Stylist"
+                  contentType="rich_text"
+                />
+              </p>
             </div>
           </motion.div>
         </div>
@@ -449,11 +632,23 @@ export default function PocketVisualization() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
-              Ready to Reset?
+              <CmsText 
+                contentKey="pocket.cta.title"
+                page="PocketVisualization"
+                blockTitle="CTA Title"
+                fallback="Ready to Reset?"
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
-              Experience what it feels like to shift your state quickly, calmly, and intentionally.
+              <CmsText 
+                contentKey="pocket.cta.description"
+                page="PocketVisualization"
+                blockTitle="CTA Description"
+                fallback="Experience what it feels like to shift your state quickly, calmly, and intentionally."
+                contentType="rich_text"
+              />
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
