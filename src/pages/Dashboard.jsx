@@ -14,6 +14,7 @@ import NotesDrawer from "@/components/studio/NotesDrawer";
 import RecommendationCard from "@/components/studio/RecommendationCard";
 import UpcomingSessions from "@/components/dashboard/UpcomingSessions";
 import BookingHistory from "@/components/dashboard/BookingHistory";
+import NextSessionWidget from "@/components/dashboard/NextSessionWidget";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -149,6 +150,13 @@ export default function Dashboard() {
               Here's what's unfolding in your inner world today.
             </p>
           </div>
+
+          {/* Next Session Widget - Featured */}
+          {upcomingBookings.length > 0 && (
+            <div className="mb-12">
+              <NextSessionWidget booking={upcomingBookings[0]} />
+            </div>
+          )}
 
           {/* Mind Styling Studio Hub */}
           <div className="grid lg:grid-cols-2 gap-6 mb-12">
