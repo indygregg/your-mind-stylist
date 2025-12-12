@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
+import CmsText from "../cms/CmsText";
 
 export default function Testimonials() {
   const testimonials = [
@@ -41,10 +42,22 @@ export default function Testimonials() {
           className="text-center mb-16"
         >
           <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-            Testimonials
+            <CmsText
+              contentKey="home.testimonials.label"
+              page="Home"
+              blockTitle="Testimonials Label"
+              defaultContent="Testimonials"
+              contentType="short_text"
+            />
           </span>
           <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32]">
-            What Clients Are Saying
+            <CmsText
+              contentKey="home.testimonials.title"
+              page="Home"
+              blockTitle="Testimonials Title"
+              defaultContent="What Clients Are Saying"
+              contentType="short_text"
+            />
           </h2>
         </motion.div>
 

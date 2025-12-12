@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import CmsText from "../cms/CmsText";
 
 export default function SocialProofStrip() {
   const logos = [
@@ -22,7 +23,13 @@ export default function SocialProofStrip() {
           viewport={{ once: true }}
           className="text-center text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-10"
         >
-          Trusted by leaders and teams at
+          <CmsText
+            contentKey="home.social_proof.title"
+            page="Home"
+            blockTitle="Social Proof Title"
+            defaultContent="Trusted by leaders and teams at"
+            contentType="short_text"
+          />
         </motion.p>
 
         <motion.div
