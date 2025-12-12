@@ -9,14 +9,14 @@ export default function MindStylingSuite() {
   const services = [
     {
       icon: Layers,
-      title: "Mind Styling Evolution™",
-      tagline: "A three-part inner redesign for people ready for a new mental operating system.",
+      title: "Cleaning Out Your Closet",
+      tagline: "One-on-one hypnosis work to help you release old patterns and step into your future self.",
       description:
-        "Most people try to change their lives from the outside in. This program helps you transform from the inside out.",
+        "This is where deep transformation happens. Working privately with Roberta, you'll identify the patterns that no longer serve you, release outdated beliefs, and redesign your mindset from the inside out.",
       phases: [
         {
           name: "Part I — Edit",
-          text: "See the patterns. Name the truth. Reestablish your mental baseline.",
+          text: "See the patterns. Name the truth. Understand what's been driving your choices.",
         },
         {
           name: "Part II — Tailor",
@@ -24,21 +24,21 @@ export default function MindStylingSuite() {
         },
         {
           name: "Part III — Design",
-          text: "Rehearse your future self. Build identity-level change.",
+          text: "Rehearse your future self. Build identity-level change that lasts.",
         },
       ],
-      cta: "Explore Mind Styling Evolution",
+      cta: "Explore Cleaning Out Your Closet",
       link: "Evolution",
       accent: "#1E3A32",
       bg: "bg-white",
     },
     {
       icon: User,
-      title: "Private Mind Styling (1:1)",
-      tagline: "Your personalized mind edit.",
+      title: "Expanding Your Mind Style",
+      tagline: "Different Thinkers. Innovative Problem Solvers. Better Human Beings.",
       description:
-        "This is the most intimate way to work with me. Together, we identify your core patterns, release outdated beliefs, and rebuild the mindset that matches the life you want to create. Ideal for tailored, accelerated transformation.",
-      cta: "Learn About Private Mind Styling",
+        "Transform how you think, communicate, and lead. This is for individuals ready to expand their emotional intelligence, strengthen their identity, and step into their next level of personal and professional growth.",
+      cta: "Explore Expanding Your Mind Style",
       link: "PrivateSessions",
       accent: "#6E4F7D",
       bg: "bg-[#F9F5EF]",
@@ -50,18 +50,18 @@ export default function MindStylingSuite() {
       description:
         "Short, powerful guided experiences that help you regulate your nervous system, dissolve stress, and embody the identity you're growing into.",
       bullets: [
-        "Overwhelm",
-        "Emotional reactivity",
-        "Confidence building",
-        "Clarity & decision-making",
-        "Performance preparation",
-        "Identity expansion",
+        "Calm overwhelm",
+        "Reduce emotional reactivity",
+        "Build confidence",
+        "Enhance clarity & decision-making",
+        "Prepare for performance",
+        "Cultivate balanced well-being",
         "Deep rest & inner regulation",
       ],
       bottomNote:
         "Not meditation. Not napping. This is inner rehearsal—a fast, elegant way to shift your state and reset your mind.",
-      cta: "Explore the Pocket Mindset Library",
-      link: "InnerRehearsal",
+      cta: "Explore Pocket Mindset",
+      link: "PocketVisualization",
       accent: "#A6B7A3",
       bg: "bg-[#A6B7A3]/10",
     },
@@ -96,7 +96,7 @@ export default function MindStylingSuite() {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+          <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block font-bold">
             <CmsText
               contentKey="home.mind_styling_suite.label"
               page="Home"

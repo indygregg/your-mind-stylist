@@ -75,7 +75,7 @@ export default function HeroSection() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                to={createPageUrl("Contact")}
+                to={createPageUrl("Bookings")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
                 <CmsText
@@ -93,7 +93,7 @@ export default function HeroSection() {
                 />
               </Link>
               <Link
-                to={createPageUrl("FreeMasterclass")}
+                to={createPageUrl("PocketVisualization")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
               >
                 <Play size={16} className="text-[#D8B46B]" />
@@ -103,7 +103,7 @@ export default function HeroSection() {
                   blockTitle="Homepage Hero Secondary CTA"
                   contentType="short_text"
                   maxLength={60}
-                  fallback="Watch the Free Masterclass"
+                  fallback="Explore Pocket Visualization"
                   as="span"
                 />
               </Link>

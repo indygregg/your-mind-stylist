@@ -17,7 +17,7 @@ export default function WhatIDo() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+            <span className="text-[#C27BA0] text-sm font-bold tracking-[0.2em] uppercase mb-4 block">
               The Approach
             </span>
             <CmsText
@@ -58,7 +58,7 @@ export default function WhatIDo() {
                 to={createPageUrl("Evolution")}
                 className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:text-[#D8B46B] transition-colors"
               >
-                Explore Mind Styling Evolution™
+                Cleaning Out Your Closet
                 <ArrowUpRight
                   size={18}
                   className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
@@ -88,6 +88,7 @@ export default function WhatIDo() {
                     { number: "30+", label: "Years of Experience" },
                     { number: "NLP", label: "Master Practitioner" },
                     { number: "EI", label: "Emotional Intelligence Specialist" },
+                    { number: "", label: "Board Certified Hypnotherapist" },
                   ].map((item, index) => (
                     <motion.div
                       key={item.label}
@@ -97,9 +98,11 @@ export default function WhatIDo() {
                       transition={{ delay: 0.3 + index * 0.1 }}
                       className="flex items-start gap-6 pb-8 border-b border-[#E4D9C4] last:border-0 last:pb-0"
                     >
-                      <span className="font-serif text-3xl md:text-4xl text-[#D8B46B]">
-                        {item.number}
-                      </span>
+                      {item.number && (
+                        <span className="font-serif text-3xl md:text-4xl text-[#D8B46B]">
+                          {item.number}
+                        </span>
+                      )}
                       <span className="text-[#2B2725]/70 text-sm tracking-wide pt-3">
                         {item.label}
                       </span>
