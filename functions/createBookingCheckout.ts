@@ -12,9 +12,13 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { service_type, session_count, amount, notes } = await req.json();
+        const { service_type, session_count, amount, notes, scheduled_date } = await req.json();
 
-        // Create booking record
+        // Calculate checkout expiry (30 minutes from now)
+        const expiresAt = new Date();
+        expiresAt.setMinutes(expiresAt.getMinutes() + 30);
+
+        // Create booking record with soft-hold
         const booking = await base44.asServiceRole.entities.Booking.create({
             user_email: user.email,
             user_name: user.full_name,
@@ -24,6 +28,8 @@ Deno.serve(async (req) => {
             currency: 'usd',
             payment_status: 'pending',
             booking_status: 'pending_payment',
+            scheduled_date,
+            checkout_expires_at: expiresAt.toISOString(),
             notes
         });
 
