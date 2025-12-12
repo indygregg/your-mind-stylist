@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import SEO from "../components/SEO";
 import HeroSection from "../components/home/HeroSection";
 import SocialProofStrip from "../components/home/SocialProofStrip";
@@ -8,8 +9,21 @@ import FreeMasterclass from "../components/home/FreeMasterclass";
 import Testimonials from "../components/home/Testimonials";
 import ContentHub from "../components/home/ContentHub";
 import FinalCTA from "../components/home/FinalCTA";
+import { base44 } from "@/api/base44Client";
+import { createPageUrl } from "../utils";
 
 export default function Home() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthAndRedirect = async () => {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (isAuth) {
+        navigate(createPageUrl("Dashboard"));
+      }
+    };
+    checkAuthAndRedirect();
+  }, [navigate]);
   return (
     <div className="bg-[#F9F5EF]">
       <SEO
