@@ -29,6 +29,18 @@ export default function BookAppointment() {
     } catch (error) {
       // User not logged in - will redirect to login at checkout
     }
+
+    // Check for pre-selected appointment type from URL
+    const params = new URLSearchParams(window.location.search);
+    const typeId = params.get('type');
+    if (typeId) {
+      // Find and select the appointment type
+      const types = await base44.entities.AppointmentType.filter({ id: typeId });
+      if (types.length > 0) {
+        setSelectedAppointment(types[0]);
+        setStep(2); // Jump to time selection
+      }
+    }
   };
 
   const { data: appointmentTypes = [], isLoading } = useQuery({
