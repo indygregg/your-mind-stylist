@@ -4,7 +4,7 @@ import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp } from "lucide-react";
+import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings } from "lucide-react";
 
 export default function ManagerDashboard() {
   // Set auth layout
@@ -34,11 +34,13 @@ export default function ManagerDashboard() {
 
   const quickActions = [
     { icon: PenSquare, label: "Create New Blog Post", link: "BlogEditor?mode=new" },
-    { icon: FileVideo, label: "Create New Course", link: "CourseEditor?mode=new" },
-    { icon: Headphones, label: "Upload Pocket Visualization™ Track", link: "AudioEditor?mode=new" },
-    { icon: Mail, label: "View Messages", link: "MessagesManager" },
+    { icon: Calendar, label: "Booking Calendar", link: "ManagerCalendar" },
+    { icon: Settings, label: "Manage Appointment Types", link: "ManagerAppointments" },
+    { icon: Mail, label: "Email Templates", link: "ManagerEmailTemplates" },
     { icon: BarChart3, label: "Booking Analytics", link: "ManagerAnalytics" },
     { icon: TrendingUp, label: "Masterclass Funnel", link: "ManagerMasterclass" },
+    { icon: Video, label: "Zoom Integration", link: "ZoomConnect" },
+    { icon: Users, label: "View Messages", link: "MessagesManager" },
   ];
 
   const snapshotCards = [
