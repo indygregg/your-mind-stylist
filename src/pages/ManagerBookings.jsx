@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Calendar, DollarSign, Mail, Phone, User, Clock, CheckCircle, XCircle, AlertCircle, Video, Copy } from "lucide-react";
+import { Calendar, DollarSign, Mail, Phone, User, Clock, CheckCircle, XCircle, AlertCircle, Video, Copy, Filter, Search } from "lucide-react";
 import { format } from "date-fns";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Dialog,
   DialogContent,
@@ -17,10 +19,53 @@ import { Button } from "@/components/ui/button";
 export default function ManagerBookings() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [creatingZoom, setCreatingZoom] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [serviceFilter, setServiceFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dateRangeFilter, setDateRangeFilter] = useState("all");
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["manager-bookings"],
     queryFn: () => base44.entities.Booking.list("-created_date"),
+  });
+
+  // Get unique service types
+  const serviceTypes = [...new Set(bookings.map(b => b.service_type))];
+
+  // Filter bookings
+  const filteredBookings = bookings.filter(booking => {
+    // Status filter
+    if (statusFilter !== "all" && booking.booking_status !== statusFilter) {
+      return false;
+    }
+
+    // Service filter
+    if (serviceFilter !== "all" && booking.service_type !== serviceFilter) {
+      return false;
+    }
+
+    // Search filter (name or email)
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      const nameMatch = booking.user_name?.toLowerCase().includes(query);
+      const emailMatch = booking.user_email?.toLowerCase().includes(query);
+      if (!nameMatch && !emailMatch) {
+        return false;
+      }
+    }
+
+    // Date range filter
+    if (dateRangeFilter !== "all") {
+      const bookingDate = new Date(booking.created_date);
+      const now = new Date();
+      const daysAgo = parseInt(dateRangeFilter);
+      const cutoffDate = new Date(now.setDate(now.getDate() - daysAgo));
+      if (bookingDate < cutoffDate) {
+        return false;
+      }
+    }
+
+    return true;
   });
 
   const getStatusColor = (status) => {
@@ -98,13 +143,82 @@ export default function ManagerBookings() {
           </p>
         </motion.div>
 
+        {/* Filters */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white shadow-md p-6 mb-8"
+        >
+          <div className="flex items-center gap-2 mb-4">
+            <Filter size={18} className="text-[#D8B46B]" />
+            <h3 className="font-medium text-[#1E3A32]">Filter Bookings</h3>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="relative">
+              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" />
+              <Input
+                placeholder="Search by name or email..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="confirmed">Confirmed</SelectItem>
+                <SelectItem value="scheduled">Scheduled</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
+                <SelectItem value="pending_payment">Pending Payment</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={serviceFilter} onValueChange={setServiceFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Service Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Services</SelectItem>
+                {serviceTypes.map(type => (
+                  <SelectItem key={type} value={type}>
+                    {type?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Select value={dateRangeFilter} onValueChange={setDateRangeFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Date Range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Time</SelectItem>
+                <SelectItem value="7">Last 7 Days</SelectItem>
+                <SelectItem value="30">Last 30 Days</SelectItem>
+                <SelectItem value="90">Last 90 Days</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="flex items-center text-sm text-[#2B2725]/70">
+              Showing {filteredBookings.length} of {bookings.length}
+            </div>
+          </div>
+        </motion.div>
+
         {/* Stats Overview */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white p-6">
             <div className="flex items-center justify-between mb-2">
               <Calendar className="text-[#D8B46B]" size={24} />
               <span className="text-2xl font-serif text-[#1E3A32]">
-                {bookings.filter((b) => b.booking_status === "confirmed").length}
+                {filteredBookings.filter((b) => b.booking_status === "confirmed").length}
               </span>
             </div>
             <p className="text-sm text-[#2B2725]/70">Confirmed Bookings</p>
@@ -115,20 +229,20 @@ export default function ManagerBookings() {
               <DollarSign className="text-[#A6B7A3]" size={24} />
               <span className="text-2xl font-serif text-[#1E3A32]">
                 {formatAmount(
-                  bookings
+                  filteredBookings
                     .filter((b) => b.payment_status === "paid")
                     .reduce((sum, b) => sum + (b.amount || 0), 0)
                 )}
               </span>
             </div>
-            <p className="text-sm text-[#2B2725]/70">Total Revenue</p>
+            <p className="text-sm text-[#2B2725]/70">Filtered Revenue</p>
           </div>
 
           <div className="bg-white p-6">
             <div className="flex items-center justify-between mb-2">
               <Clock className="text-[#6E4F7D]" size={24} />
               <span className="text-2xl font-serif text-[#1E3A32]">
-                {bookings.filter((b) => b.booking_status === "pending_payment").length}
+                {filteredBookings.filter((b) => b.booking_status === "pending_payment").length}
               </span>
             </div>
             <p className="text-sm text-[#2B2725]/70">Pending Payment</p>
@@ -138,7 +252,7 @@ export default function ManagerBookings() {
             <div className="flex items-center justify-between mb-2">
               <CheckCircle className="text-[#1E3A32]" size={24} />
               <span className="text-2xl font-serif text-[#1E3A32]">
-                {bookings.filter((b) => b.booking_status === "completed").length}
+                {filteredBookings.filter((b) => b.booking_status === "completed").length}
               </span>
             </div>
             <p className="text-sm text-[#2B2725]/70">Completed</p>
@@ -180,14 +294,14 @@ export default function ManagerBookings() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#E4D9C4]">
-                {bookings.length === 0 ? (
+                {filteredBookings.length === 0 ? (
                   <tr>
                     <td colSpan="7" className="px-6 py-12 text-center text-[#2B2725]/50">
-                      No bookings yet
+                      {bookings.length === 0 ? 'No bookings yet' : 'No bookings match your filters'}
                     </td>
                   </tr>
                 ) : (
-                  bookings.map((booking) => (
+                  filteredBookings.map((booking) => (
                     <tr
                       key={booking.id}
                       onClick={() => setSelectedBooking(booking)}
