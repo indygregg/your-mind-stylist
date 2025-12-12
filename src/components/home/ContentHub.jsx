@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Calendar, BookOpen, Headphones } from "lucide-react";
+import CmsText from "../cms/CmsText";
 
 export default function ContentHub() {
   const content = [
@@ -43,10 +44,22 @@ export default function ContentHub() {
           className="text-center mb-16"
         >
           <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-            Resources
+            <CmsText
+              contentKey="home.content_hub.label"
+              page="Home"
+              blockTitle="Content Hub Label"
+              defaultContent="Resources"
+              contentType="short_text"
+            />
           </span>
           <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32]">
-            Stay Connected
+            <CmsText
+              contentKey="home.content_hub.title"
+              page="Home"
+              blockTitle="Content Hub Title"
+              defaultContent="Stay Connected"
+              contentType="short_text"
+            />
           </h2>
         </motion.div>
 

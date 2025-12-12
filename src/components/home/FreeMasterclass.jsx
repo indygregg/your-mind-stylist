@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion } from "framer-motion";
 import { Play, Sparkles } from "lucide-react";
+import CmsText from "../cms/CmsText";
 
 export default function FreeMasterclass() {
   return (
@@ -62,19 +63,33 @@ export default function FreeMasterclass() {
             transition={{ duration: 0.6 }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              Free Masterclass
+              <CmsText
+                contentKey="home.masterclass.label"
+                page="Home"
+                blockTitle="Masterclass Label"
+                defaultContent="Free Masterclass"
+                contentType="short_text"
+              />
             </span>
 
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
-              Imposter Syndrome
-              <br />
-              <span className="italic text-[#D8B46B]">& Other Myths to Ditch</span>
+              <CmsText
+                contentKey="home.masterclass.title"
+                page="Home"
+                blockTitle="Masterclass Title"
+                defaultContent="Imposter Syndrome & Other Myths to Ditch"
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-8">
-              An on-demand masterclass for anyone who feels like they're "faking it." Learn what
-              imposter syndrome really is, why it follows high performers, and how to break the loop
-              for good.
+              <CmsText
+                contentKey="home.masterclass.description"
+                page="Home"
+                blockTitle="Masterclass Description"
+                defaultContent="An on-demand masterclass for anyone who feels like they're 'faking it.' Learn what imposter syndrome really is, why it follows high performers, and how to break the loop for good."
+                contentType="rich_text"
+              />
             </p>
 
             <Link

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, User, Layers, Users } from "lucide-react";
+import CmsText from "../cms/CmsText";
 
 export default function MindStylingSuite() {
   const services = [
@@ -96,10 +97,22 @@ export default function MindStylingSuite() {
           className="text-center mb-20"
         >
           <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-            Signature Services
+            <CmsText
+              contentKey="home.mind_styling_suite.label"
+              page="Home"
+              blockTitle="Mind Styling Suite Label"
+              defaultContent="Signature Services"
+              contentType="short_text"
+            />
           </span>
           <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32]">
-            The Mind Styling Suite
+            <CmsText
+              contentKey="home.mind_styling_suite.title"
+              page="Home"
+              blockTitle="Mind Styling Suite Title"
+              defaultContent="The Mind Styling Suite"
+              contentType="short_text"
+            />
           </h2>
         </motion.div>
 
