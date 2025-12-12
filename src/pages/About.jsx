@@ -60,7 +60,7 @@ export default function About() {
   const offerings = [
     {
       icon: Layers,
-      title: "The Mind Styling Certification™",
+      title: "The Mind Styling Evolution™",
       description: "A three-part redesign of your mental operating system.",
       link: "Evolution",
     },
