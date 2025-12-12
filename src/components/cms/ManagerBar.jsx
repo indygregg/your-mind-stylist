@@ -10,6 +10,23 @@ export default function ManagerBar() {
 
   if (!isManager) return null;
 
+  // Show minimal button when in View Mode
+  if (!isEditMode) {
+    return (
+      <div className="fixed top-4 left-4 z-[100]">
+        <Button
+          size="sm"
+          onClick={() => setIsEditMode(true)}
+          className="bg-[#1E3A32] text-white hover:bg-[#2B2725] shadow-lg"
+        >
+          <Eye size={16} className="mr-2" />
+          View Mode
+        </Button>
+      </div>
+    );
+  }
+
+  // Show full banner when in Manager Mode
   return (
     <AnimatePresence>
       <motion.div
@@ -22,18 +39,14 @@ export default function ManagerBar() {
           <div className="flex items-center gap-4">
             <span className="font-medium text-sm">Manager Mode</span>
             <div className="h-4 w-px bg-white/20" />
-            {isEditMode ? (
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#D8B46B] animate-pulse" />
-                <span className="text-sm text-white/90">You're Editing This Page</span>
-              </div>
-            ) : (
-              <span className="text-sm text-white/70">View Mode</span>
-            )}
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-[#D8B46B] animate-pulse" />
+              <span className="text-sm text-white/90">You're Editing This Page</span>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {isEditMode && hasUnsaved && (
+            {hasUnsaved && (
               <Button
                 size="sm"
                 variant="ghost"
@@ -46,32 +59,20 @@ export default function ManagerBar() {
             
             <Button
               size="sm"
-              variant={isEditMode ? "secondary" : "ghost"}
-              onClick={() => setIsEditMode(!isEditMode)}
-              className={isEditMode ? "" : "text-white hover:bg-white/10"}
+              variant="secondary"
+              onClick={() => setIsEditMode(false)}
             >
-              {isEditMode ? (
-                <>
-                  <X size={16} className="mr-2" />
-                  Exit Edit Mode
-                </>
-              ) : (
-                <>
-                  <Edit3 size={16} className="mr-2" />
-                  Edit Page
-                </>
-              )}
+              <X size={16} className="mr-2" />
+              Exit Edit Mode
             </Button>
           </div>
         </div>
 
-        {isEditMode && (
-          <div className="bg-[#D8B46B]/20 px-6 py-2 border-t border-white/10">
-            <p className="text-xs text-white/80">
-              Click any highlighted area to edit its text.
-            </p>
-          </div>
-        )}
+        <div className="bg-[#D8B46B]/20 px-6 py-2 border-t border-white/10">
+          <p className="text-xs text-white/80">
+            Click any highlighted area to edit its text.
+          </p>
+        </div>
       </motion.div>
     </AnimatePresence>
   );
