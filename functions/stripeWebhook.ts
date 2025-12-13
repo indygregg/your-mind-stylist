@@ -106,27 +106,60 @@ Deno.serve(async (req) => {
                     });
                 }
                 
-                // Handle Course Purchase
-                else if (session.metadata.course_id && session.metadata.user_id) {
-                    // Grant course access by creating UserCourseProgress
-                    await base44.asServiceRole.entities.UserCourseProgress.create({
-                        user_id: session.metadata.user_id,
-                        course_id: session.metadata.course_id,
-                        status: 'not_started',
-                        completion_percentage: 0
+                // Handle Product Purchase (universal)
+                else if (session.metadata.product_id && session.metadata.user_id) {
+                    // Get the product to see what access it grants
+                    const products = await base44.asServiceRole.entities.Product.filter({ 
+                        id: session.metadata.product_id 
                     });
+                    
+                    if (products.length > 0) {
+                        const product = products[0];
+                        
+                        // Grant access based on product configuration
+                        const courseIds = [];
+                        
+                        // Add related course if exists
+                        if (product.related_course_id) {
+                            courseIds.push(product.related_course_id);
+                        }
+                        
+                        // Add all access grants
+                        if (product.access_grants && product.access_grants.length > 0) {
+                            courseIds.push(...product.access_grants);
+                        }
+                        
+                        // Grant course access for each course
+                        for (const courseId of courseIds) {
+                            // Check if access already exists
+                            const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
+                                user_id: session.metadata.user_id,
+                                course_id: courseId
+                            });
+                            
+                            if (existing.length === 0) {
+                                await base44.asServiceRole.entities.UserCourseProgress.create({
+                                    user_id: session.metadata.user_id,
+                                    course_id: courseId,
+                                    status: 'not_started',
+                                    completion_percentage: 0
+                                });
+                            }
+                        }
 
-                    await base44.asServiceRole.integrations.Core.SendEmail({
-                        to: session.customer_email,
-                        subject: 'Course Access Granted',
-                        body: `
-                            <h2>Welcome to your new course!</h2>
-                            <p>Your payment has been confirmed and you now have access to your course.</p>
-                            <p>Log in to your dashboard to start learning: https://yourmindstylist.com/login</p>
-                            <br>
-                            <p>Roberta Fernandez<br>Your Mind Stylist</p>
-                        `
-                    });
+                        await base44.asServiceRole.integrations.Core.SendEmail({
+                            to: session.customer_email,
+                            subject: `Welcome to ${product.name}`,
+                            body: `
+                                <h2>Your purchase is confirmed!</h2>
+                                <p>Thank you for purchasing ${product.name}.</p>
+                                <p>You now have access to all included content.</p>
+                                <p>Log in to your dashboard to get started: https://yourmindstylist.com/login</p>
+                                <br>
+                                <p>Roberta Fernandez<br>Your Mind Stylist</p>
+                            `
+                        });
+                    }
                 }
                 
                 // Handle Subscription Start (e.g., Pocket Visualization)

@@ -34,11 +34,18 @@ export default function ManagerProducts() {
     status: "draft",
     ui_group: "standard",
     display_order: 0,
+    related_course_id: "",
+    access_grants: [],
   });
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: () => base44.entities.Product.list("-created_date"),
+  });
+
+  const { data: courses = [] } = useQuery({
+    queryKey: ["courses"],
+    queryFn: () => base44.entities.Course.list("title"),
   });
 
   const createMutation = useMutation({
@@ -173,6 +180,8 @@ export default function ManagerProducts() {
       status: "draft",
       ui_group: "standard",
       display_order: 0,
+      related_course_id: "",
+      access_grants: [],
     });
     setEditingProduct(null);
   };
@@ -183,6 +192,8 @@ export default function ManagerProducts() {
       ...product,
       price: product.price ? (product.price / 100).toString() : "",
       features: product.features || [""],
+      related_course_id: product.related_course_id || "",
+      access_grants: product.access_grants || [],
     });
     setDialogOpen(true);
   };
@@ -520,6 +531,46 @@ export default function ManagerProducts() {
                 <Plus size={14} className="mr-1" />
                 Add Feature
               </Button>
+            </div>
+
+            {/* Access Control */}
+            <div>
+              <Label>Related Course (optional)</Label>
+              <Select
+                value={formData.related_course_id}
+                onValueChange={(value) => setFormData({ ...formData, related_course_id: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a course" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={null}>None</SelectItem>
+                  {courses.map((course) => (
+                    <SelectItem key={course.id} value={course.id}>
+                      {course.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-[#2B2725]/60 mt-1">
+                Link this product to a single course (for simple products)
+              </p>
+            </div>
+
+            <div>
+              <Label>Access Grants (Course IDs)</Label>
+              <Textarea
+                value={formData.access_grants.join("\n")}
+                onChange={(e) => setFormData({ 
+                  ...formData, 
+                  access_grants: e.target.value.split("\n").filter(id => id.trim()) 
+                })}
+                placeholder="693a6b978867f6e147e25e8d&#10;693a6b978867f6e147e25e8e"
+                rows={4}
+              />
+              <p className="text-xs text-[#2B2725]/60 mt-1">
+                Course IDs this product unlocks (one per line). Used for bundles or multi-course products.
+              </p>
             </div>
 
             {/* Display Settings */}
