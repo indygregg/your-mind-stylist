@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
-import { Menu, X, LogOut, User, Settings, ChevronDown } from "lucide-react";
+import { Menu, X, LogOut, User, Settings, ChevronDown, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MobileBottomNav from "./MobileBottomNav";
+import GlobalSearch from "./GlobalSearch";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +18,7 @@ export default function AuthLayout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -153,6 +155,15 @@ export default function AuthLayout({ children, currentPageName }) {
                 />
               </Link>
             ))}
+
+            {/* Search Button */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="p-2 hover:bg-[#F9F5EF]/10 rounded-full transition-colors"
+              aria-label="Search"
+            >
+              <Search size={20} className="text-[#F9F5EF]/70" />
+            </button>
 
             {/* User Menu */}
             <div className="flex items-center gap-4 border-l border-[#F9F5EF]/20 pl-6">
@@ -299,6 +310,9 @@ export default function AuthLayout({ children, currentPageName }) {
         navLinks={navLinks}
         onLogout={handleLogout}
       />
+
+      {/* Global Search */}
+      <GlobalSearch isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 }
