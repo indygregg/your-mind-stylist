@@ -255,8 +255,11 @@ export default function AuthLayout({ children, currentPageName }) {
 
           {/* Mobile Menu Button */}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-[#F9F5EF]"
+            onClick={() => {
+              haptics.light();
+              setMobileMenuOpen(!mobileMenuOpen);
+            }}
+            className="lg:hidden p-3 text-[#F9F5EF] hover:bg-[#F9F5EF]/10 rounded-lg transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -271,16 +274,19 @@ export default function AuthLayout({ children, currentPageName }) {
               exit={{ opacity: 0, y: -20 }}
               className="lg:hidden bg-[#1E3A32] border-t border-[#F9F5EF]/10"
             >
-              <div className="px-6 py-8 flex flex-col gap-4 max-h-[calc(100vh-100px)] overflow-y-auto">
+              <div className="px-6 py-8 flex flex-col gap-2 max-h-[calc(100vh-100px)] overflow-y-auto">
                 {navLinks.map((link) => (
                   <Link
                     key={link.page}
                     to={createPageUrl(link.page)}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`text-base py-2 border-b border-[#F9F5EF]/10 ${
+                    onClick={() => {
+                      haptics.light();
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`text-base py-4 px-4 rounded-lg transition-colors active:scale-98 min-h-[52px] flex items-center ${
                       currentPageName === link.page
-                        ? "text-[#F9F5EF] font-medium"
-                        : "text-[#F9F5EF]/70"
+                        ? "text-[#F9F5EF] font-medium bg-[#F9F5EF]/20"
+                        : "text-[#F9F5EF]/70 hover:bg-[#F9F5EF]/10"
                     }`}
                   >
                     {link.name}
@@ -291,8 +297,11 @@ export default function AuthLayout({ children, currentPageName }) {
                     {user?.full_name || user?.email}
                   </p>
                   <button
-                    onClick={handleLogout}
-                    className="w-full px-4 py-3 bg-[#F9F5EF]/10 hover:bg-[#F9F5EF]/20 text-[#F9F5EF] text-sm rounded flex items-center justify-center gap-2"
+                    onClick={() => {
+                      haptics.medium();
+                      handleLogout();
+                    }}
+                    className="w-full px-4 py-4 bg-[#F9F5EF]/10 hover:bg-[#F9F5EF]/20 text-[#F9F5EF] text-sm rounded-lg flex items-center justify-center gap-2 active:scale-98 min-h-[52px] transition-all"
                   >
                     <LogOut size={16} />
                     Logout
