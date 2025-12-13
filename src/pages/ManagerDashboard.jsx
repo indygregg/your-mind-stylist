@@ -100,6 +100,7 @@ export default function ManagerDashboard() {
     { icon: Settings, label: "Manage Appointment Types", link: "ManagerAppointments" },
     { icon: Mail, label: "Email Templates", link: "ManagerEmailTemplates" },
     { icon: BarChart3, label: "Booking Analytics", link: "ManagerAnalytics" },
+    { icon: Sparkles, label: "Transformation Analytics", link: "ManagerTransformationAnalytics" },
     { icon: TrendingUp, label: "Masterclass Funnel", link: "ManagerMasterclass" },
     { icon: Video, label: "Zoom Integration", link: "ZoomConnect" },
     { icon: Users, label: "View Messages", link: "MessagesManager" },
