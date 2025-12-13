@@ -92,6 +92,7 @@ import ManagerCRM from './pages/ManagerCRM';
 import ManagerAppointmentTypes from './pages/ManagerAppointmentTypes';
 import ManagerCalendarSync from './pages/ManagerCalendarSync';
 import PurchaseSuccess from './pages/PurchaseSuccess';
+import ManagerProducts from './pages/ManagerProducts';
 import __Layout from './Layout.jsx';
 
 
@@ -190,6 +191,7 @@ export const PAGES = {
     "ManagerAppointmentTypes": ManagerAppointmentTypes,
     "ManagerCalendarSync": ManagerCalendarSync,
     "PurchaseSuccess": PurchaseSuccess,
+    "ManagerProducts": ManagerProducts,
 }
 
 export const pagesConfig = {
