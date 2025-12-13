@@ -4,7 +4,7 @@ import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings, Clock, CheckCircle, Circle, X, DollarSign, Play } from "lucide-react";
+import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings, Clock, CheckCircle, Circle, X, DollarSign, Play, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function ManagerDashboard() {
@@ -102,7 +102,8 @@ export default function ManagerDashboard() {
 
   const quickActions = [
     { icon: PenSquare, label: "Create New Blog Post", link: "BlogEditor?mode=new" },
-    { icon: ShoppingCart, label: "Product Manager", link: "ManagerProducts" },
+    { icon: Package, label: "Product Manager", link: "ManagerProducts" },
+    { icon: TrendingUp, label: "Product Analytics", link: "ManagerProductAnalytics" },
     { icon: Calendar, label: "Booking Calendar", link: "ManagerCalendar" },
     { icon: Clock, label: "Manage Availability", link: "ManagerAvailability" },
     { icon: Settings, label: "Manage Appointment Types", link: "ManagerAppointmentTypes" },
@@ -110,7 +111,7 @@ export default function ManagerDashboard() {
     { icon: BarChart3, label: "Booking Analytics", link: "ManagerAnalytics" },
     { icon: Sparkles, label: "Transformation Analytics", link: "ManagerTransformationAnalytics" },
     { icon: Play, label: "Demo Setup & Preview", link: "DemoSetup" },
-    { icon: TrendingUp, label: "Masterclass Funnel", link: "ManagerMasterclass" },
+    { icon: ShoppingCart, label: "Masterclass Funnel", link: "ManagerMasterclass" },
     { icon: Video, label: "Zoom Integration", link: "ZoomConnect" },
     { icon: Users, label: "CRM & Tags", link: "ManagerCRM" },
     { icon: FileVideo, label: "Course Manager", link: "CourseManager" },
