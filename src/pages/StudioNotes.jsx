@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { BookOpen, Plus } from "lucide-react";
+import { BookOpen, Plus, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import NotesTimeline from "@/components/studio/NotesTimeline";
 import NotesDrawer from "@/components/studio/NotesDrawer";
 import EmotionalTrends from "@/components/studio/EmotionalTrends";
+import { format } from "date-fns";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function StudioNotes() {
   const [notesDrawerOpen, setNotesDrawerOpen] = useState(false);
@@ -28,6 +35,42 @@ export default function StudioNotes() {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
     },
   });
+
+  const exportAsJSON = () => {
+    const dataStr = JSON.stringify(notes, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const exportFileDefaultName = `mind-styling-notes-${format(new Date(), 'yyyy-MM-dd')}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
+  const exportAsText = () => {
+    let content = `Mind Styling Studio - Your Notes\nExported: ${format(new Date(), 'MMMM d, yyyy')}\n\n`;
+    content += '='.repeat(60) + '\n\n';
+    
+    notes.forEach((note, index) => {
+      content += `${index + 1}. ${format(new Date(note.created_date), 'MMMM d, yyyy h:mm a')}\n`;
+      if (note.sentiment_primary) {
+        content += `   Emotion: ${note.sentiment_primary}\n`;
+      }
+      if (note.tags && note.tags.length > 0) {
+        content += `   Tags: ${note.tags.join(', ')}\n`;
+      }
+      content += `\n${note.content}\n\n`;
+      content += '-'.repeat(60) + '\n\n';
+    });
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `mind-styling-notes-${format(new Date(), 'yyyy-MM-dd')}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   // Format trends data for EmotionalTrends component
   const trendsData = notes
@@ -74,13 +117,33 @@ export default function StudioNotes() {
                 Your Notes
               </h1>
             </div>
-            <Button
-              onClick={() => setNotesDrawerOpen(true)}
-              className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
-            >
-              <Plus size={18} className="mr-2" />
-              New Note
-            </Button>
+            <div className="flex items-center gap-3">
+              {notes.length > 0 && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="border-[#E4D9C4]">
+                      <Download size={18} className="mr-2" />
+                      Export
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={exportAsText}>
+                      Export as Text (.txt)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={exportAsJSON}>
+                      Export as JSON (.json)
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
+              <Button
+                onClick={() => setNotesDrawerOpen(true)}
+                className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
+              >
+                <Plus size={18} className="mr-2" />
+                New Note
+              </Button>
+            </div>
           </div>
 
           {/* Emotional Trends */}
