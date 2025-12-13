@@ -20,6 +20,17 @@ export default function ProductPage() {
     setSlug(urlParams.get("slug") || "");
     setIsPreview(urlParams.get("preview") === "true");
   }, []);
+  
+  useEffect(() => {
+    if (product && !isPreview) {
+      // Track product detail view
+      base44.functions.invoke('trackPurchaseEvent', {
+        event_type: 'product.detail_viewed',
+        product_id: product.id,
+        product_key: product.key
+      }).catch(() => {});
+    }
+  }, [product, isPreview]);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["product", slug],
@@ -36,6 +47,18 @@ export default function ProductPage() {
 
   const handlePurchase = async () => {
     setCheckoutLoading(true);
+    
+    // Track checkout started event
+    try {
+      await base44.functions.invoke('trackPurchaseEvent', {
+        event_type: 'product.checkout_started',
+        product_id: product.id,
+        product_key: product.key
+      });
+    } catch (e) {
+      // Non-critical, continue with checkout
+    }
+    
     try {
       const response = await base44.functions.invoke('createProductCheckout', {
         product_id: product.id,

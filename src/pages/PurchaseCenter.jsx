@@ -22,6 +22,11 @@ export default function PurchaseCenter() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Track purchase center view
+        await base44.functions.invoke('trackPurchaseEvent', {
+          event_type: 'purchase_center.viewed'
+        });
       } finally {
         setLoading(false);
       }
@@ -62,6 +67,17 @@ export default function PurchaseCenter() {
   const handlePurchase = async (productId, priceId = null) => {
     setPurchasingProductId(productId);
     setCheckoutLoading(true);
+    
+    // Track checkout started event
+    try {
+      await base44.functions.invoke('trackPurchaseEvent', {
+        event_type: 'product.checkout_started',
+        product_id: productId
+      });
+    } catch (e) {
+      // Non-critical, continue with checkout
+    }
+    
     try {
       const response = await base44.functions.invoke('createProductCheckout', {
         product_id: productId,

@@ -65,7 +65,20 @@ export default function RecommendedProducts() {
                   </p>
                 )}
               </div>
-              <Link to={createPageUrl(`ProductPage?slug=${rec.product.slug}`)}>
+              <Link 
+                to={createPageUrl(`ProductPage?slug=${rec.product.slug}`)}
+                onClick={async () => {
+                  try {
+                    await base44.functions.invoke('trackPurchaseEvent', {
+                      event_type: 'product.card_clicked',
+                      product_id: rec.product.id,
+                      product_key: rec.product.key
+                    });
+                  } catch (e) {
+                    // Non-critical
+                  }
+                }}
+              >
                 <Button variant="outline" className="border-[#1E3A32] hover:bg-[#1E3A32] hover:text-white">
                   Learn More
                   <ArrowRight size={16} className="ml-2" />

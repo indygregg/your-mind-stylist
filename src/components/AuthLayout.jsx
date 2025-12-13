@@ -254,7 +254,7 @@ export default function AuthLayout({ children, currentPageName }) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden bg-[#1E3A32] border-t border-[#F9F5EF]/10"
+              className="lg:hidden bg-[#1E3A32] border-t border-[#F9F5EF]/10 max-h-[calc(100vh-80px)] overflow-y-auto"
             >
               <div className="px-6 py-8 flex flex-col gap-4">
                 {navLinks.map((link) => (
