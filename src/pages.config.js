@@ -89,6 +89,7 @@ import TransformationDemo from './pages/TransformationDemo';
 import DemoSetup from './pages/DemoSetup';
 import DepthDashboard from './pages/DepthDashboard';
 import ManagerCRM from './pages/ManagerCRM';
+import ManagerAppointmentTypes from './pages/ManagerAppointmentTypes';
 import __Layout from './Layout.jsx';
 
 
@@ -184,6 +185,7 @@ export const PAGES = {
     "DemoSetup": DemoSetup,
     "DepthDashboard": DepthDashboard,
     "ManagerCRM": ManagerCRM,
+    "ManagerAppointmentTypes": ManagerAppointmentTypes,
 }
 
 export const pagesConfig = {
