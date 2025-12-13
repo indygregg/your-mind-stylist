@@ -22,8 +22,19 @@ export default function AdminDashboard() {
 
   const { data: roadmapItems = [] } = useQuery({
     queryKey: ["admin-roadmap"],
-    queryFn: () => base44.entities.RoadmapItem.filter({ status: "In Progress" }),
+    queryFn: () => base44.entities.RoadmapItem.list(),
   });
+
+  const { data: courses = [] } = useQuery({
+    queryKey: ["admin-courses"],
+    queryFn: () => base44.entities.Course.list(),
+  });
+
+  const inProgressItems = roadmapItems.filter(i => i.status === "In Progress");
+  const completedItems = roadmapItems.filter(i => i.status === "Completed");
+  const roadmapProgress = roadmapItems.length > 0 
+    ? Math.round((completedItems.length / roadmapItems.length) * 100)
+    : 0;
 
   const { data: allUsers = [] } = useQuery({
     queryKey: ["admin-users"],
@@ -52,7 +63,7 @@ export default function AdminDashboard() {
     { icon: Calendar, label: "Confirmed Bookings", value: bookings.filter(b => b.booking_status === 'confirmed').length, color: "#D8B46B", link: "ManagerBookings" },
     { icon: Users, label: "Total Users", value: allUsers.length, color: "#A6B7A3" },
     { icon: Mail, label: "New Messages", value: messages.length, color: "#6E4F7D", link: "MessagesManager" },
-    { icon: ListTodo, label: "Active Roadmap Items", value: roadmapItems.length, color: "#1E3A32", link: "AdminRoadmap" },
+    { icon: FileVideo, label: "Total Courses", value: courses.length, color: "#1E3A32", link: "CourseManager" },
   ];
 
   return (
@@ -73,6 +84,57 @@ export default function AdminDashboard() {
           <p className="text-[#2B2725]/70 text-lg">
             Elevated access to manage all content, users, and system features.
           </p>
+        </motion.div>
+
+        {/* Roadmap Progress Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-12"
+        >
+          <div className="bg-gradient-to-br from-[#6E4F7D] to-[#8B659B] p-6 md:p-8 shadow-lg relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-white opacity-5 rounded-full -mr-24 -mt-24"></div>
+            
+            <div className="relative z-10">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <ListTodo size={24} className="text-white" />
+                    <span className="text-white/80 text-xs tracking-[0.2em] uppercase">Development Progress</span>
+                  </div>
+                  <h2 className="font-serif text-2xl md:text-3xl text-white mb-2">
+                    Platform Roadmap
+                  </h2>
+                  <p className="text-white/80 max-w-2xl">
+                    {completedItems.length} of {roadmapItems.length} items completed • {inProgressItems.length} in progress
+                  </p>
+                </div>
+                <div className="hidden md:flex flex-col items-center justify-center bg-white/20 backdrop-blur-sm rounded-lg p-4 min-w-[100px]">
+                  <span className="text-4xl font-serif text-white mb-1">{roadmapProgress}%</span>
+                  <span className="text-xs text-white/80 text-center">Complete</span>
+                </div>
+              </div>
+
+              <div className="h-3 bg-white/20 rounded-full overflow-hidden mb-4">
+                <motion.div
+                  initial={{ width: 0 }}
+                  animate={{ width: `${roadmapProgress}%` }}
+                  transition={{ duration: 1, delay: 0.3 }}
+                  className="h-full bg-white"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <a
+                  href={createPageUrl("AdminRoadmap")}
+                  className="inline-flex items-center gap-2 px-6 py-2 bg-white text-[#6E4F7D] font-medium hover:bg-white/90 transition-all text-sm"
+                >
+                  View Full Roadmap
+                </a>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Content Alchemy Suite - Featured */}
@@ -236,25 +298,28 @@ export default function AdminDashboard() {
               </Link>
             </div>
 
-            {/* Active Roadmap Items */}
+            {/* In Progress Items */}
             <div className="bg-white p-6">
               <h3 className="font-medium text-[#1E3A32] mb-4 flex items-center gap-2">
                 <ListTodo size={20} className="text-[#1E3A32]" />
-                Active Roadmap
+                In Progress
               </h3>
               <div className="space-y-3">
-                {roadmapItems.slice(0, 5).map((item) => (
-                  <div key={item.id} className="border-l-2 border-[#1E3A32] pl-3">
+                {inProgressItems.slice(0, 5).map((item) => (
+                  <div key={item.id} className="border-l-2 border-[#6E4F7D] pl-3">
                     <p className="text-sm text-[#1E3A32] font-medium">{item.title}</p>
                     <p className="text-xs text-[#2B2725]/60">{item.priority} • {item.category}</p>
                   </div>
                 ))}
+                {inProgressItems.length === 0 && (
+                  <p className="text-sm text-[#2B2725]/60 italic">No items in progress</p>
+                )}
               </div>
               <Link
                 to={createPageUrl("AdminRoadmap")}
                 className="text-sm text-[#1E3A32] hover:text-[#6E4F7D] mt-4 inline-block"
               >
-                View roadmap →
+                Manage roadmap →
               </Link>
             </div>
 
