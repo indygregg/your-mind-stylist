@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { Search, X, FileText, Package, Users, Loader2 } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -6,15 +6,17 @@ import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion, AnimatePresence } from "framer-motion";
+import useDebouncedValue from "./utils/useDebouncedValue";
 
 export default function GlobalSearch({ isOpen, onClose }) {
   const [query, setQuery] = useState("");
+  const debouncedQuery = useDebouncedValue(query, 300);
   const [results, setResults] = useState({ products: [], roadmap: [], users: [], blogPosts: [] });
   const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const search = async () => {
-      if (query.trim().length < 2) {
+      if (debouncedQuery.trim().length < 2) {
         setResults({ products: [], roadmap: [], users: [], blogPosts: [] });
         return;
       }
@@ -22,45 +24,53 @@ export default function GlobalSearch({ isOpen, onClose }) {
       setIsSearching(true);
       try {
         const user = await base44.auth.me();
-        const searchLower = query.toLowerCase();
+        const searchLower = debouncedQuery.toLowerCase();
 
-        // Search products
+        // Search products (limit results)
         const allProducts = await base44.entities.Product.list();
-        const products = allProducts.filter(
-          (p) =>
-            p.name?.toLowerCase().includes(searchLower) ||
-            p.short_description?.toLowerCase().includes(searchLower)
-        );
+        const products = allProducts
+          .filter(
+            (p) =>
+              p.name?.toLowerCase().includes(searchLower) ||
+              p.short_description?.toLowerCase().includes(searchLower)
+          )
+          .slice(0, 5);
 
-        // Search roadmap (admin/manager only)
+        // Search roadmap (admin/manager only, limit results)
         let roadmap = [];
         if (user.role === "admin" || user.role === "manager") {
           const allRoadmap = await base44.entities.RoadmapItem.list();
-          roadmap = allRoadmap.filter(
-            (r) =>
-              r.title?.toLowerCase().includes(searchLower) ||
-              r.description?.toLowerCase().includes(searchLower)
-          );
+          roadmap = allRoadmap
+            .filter(
+              (r) =>
+                r.title?.toLowerCase().includes(searchLower) ||
+                r.description?.toLowerCase().includes(searchLower)
+            )
+            .slice(0, 5);
         }
 
-        // Search users (admin only)
+        // Search users (admin only, limit results)
         let users = [];
         if (user.role === "admin") {
           const allUsers = await base44.entities.User.list();
-          users = allUsers.filter(
-            (u) =>
-              u.full_name?.toLowerCase().includes(searchLower) ||
-              u.email?.toLowerCase().includes(searchLower)
-          );
+          users = allUsers
+            .filter(
+              (u) =>
+                u.full_name?.toLowerCase().includes(searchLower) ||
+                u.email?.toLowerCase().includes(searchLower)
+            )
+            .slice(0, 5);
         }
 
-        // Search blog posts
+        // Search blog posts (limit results)
         const allPosts = await base44.entities.BlogPost.filter({ status: "published" });
-        const blogPosts = allPosts.filter(
-          (b) =>
-            b.title?.toLowerCase().includes(searchLower) ||
-            b.excerpt?.toLowerCase().includes(searchLower)
-        );
+        const blogPosts = allPosts
+          .filter(
+            (b) =>
+              b.title?.toLowerCase().includes(searchLower) ||
+              b.excerpt?.toLowerCase().includes(searchLower)
+          )
+          .slice(0, 5);
 
         setResults({ products, roadmap, users, blogPosts });
       } catch (error) {
@@ -70,21 +80,23 @@ export default function GlobalSearch({ isOpen, onClose }) {
       }
     };
 
-    const debounce = setTimeout(search, 300);
-    return () => clearTimeout(debounce);
-  }, [query]);
+    search();
+  }, [debouncedQuery]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setQuery("");
     setResults({ products: [], roadmap: [], users: [], blogPosts: [] });
     onClose();
-  };
+  }, [onClose]);
 
-  const totalResults =
-    results.products.length +
-    results.roadmap.length +
-    results.users.length +
-    results.blogPosts.length;
+  const totalResults = useMemo(
+    () =>
+      results.products.length +
+      results.roadmap.length +
+      results.users.length +
+      results.blogPosts.length,
+    [results]
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
