@@ -7,10 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Clock, Mail, Phone, Calendar, User, Filter, CheckCircle, X, MessageSquare, Zap, TrendingUp } from "lucide-react";
+import { Clock, Mail, Phone, Calendar, User, Filter, CheckCircle, X, MessageSquare, Zap, TrendingUp, Send } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "react-hot-toast";
-import WaitlistCommunication from "../components/waitlist/WaitlistCommunication";
 
 export default function ManagerWaitingList() {
   const queryClient = useQueryClient();
@@ -18,7 +17,10 @@ export default function ManagerWaitingList() {
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [contactNotes, setContactNotes] = useState("");
-  const [autoMatching, setAutoMatching] = useState(false);
+  const [communicationDialogOpen, setCommunicationDialogOpen] = useState(false);
+  const [communicationMessage, setCommunicationMessage] = useState("");
+  const [communicationMethod, setCommunicationMethod] = useState("note");
+  const [sendEmail, setSendEmail] = useState(false);
 
   const { data: waitingList = [], isLoading } = useQuery({
     queryKey: ["waitingList"],
@@ -86,6 +88,32 @@ export default function ManagerWaitingList() {
     },
   });
 
+  const calculatePriorityMutation = useMutation({
+    mutationFn: (waitlist_id) => base44.functions.invoke('calculateWaitlistPriority', { waitlist_id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["waitingList"] });
+      toast.success("Priority calculated");
+    },
+  });
+
+  const autoMatchMutation = useMutation({
+    mutationFn: () => base44.functions.invoke('autoMatchWaitlist', {}),
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ["waitingList"] });
+      toast.success(`Auto-match completed! ${result.data.matches_found} matches found.`);
+    },
+  });
+
+  const sendCommunicationMutation = useMutation({
+    mutationFn: (data) => base44.functions.invoke('sendWaitlistCommunication', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["waitingList"] });
+      setCommunicationDialogOpen(false);
+      setCommunicationMessage("");
+      toast.success('Communication logged');
+    },
+  });
+
   const handleViewDetails = (entry) => {
     setSelectedEntry(entry);
     setContactNotes(entry.manager_notes || "");
@@ -100,29 +128,6 @@ export default function ManagerWaitingList() {
       notes: contactNotes,
     });
     setDetailsOpen(false);
-  };
-
-  const handleCalculatePriority = async (entryId) => {
-    try {
-      await base44.functions.invoke("calculateWaitlistPriority", { waitlist_id: entryId });
-      queryClient.invalidateQueries({ queryKey: ["waitingList"] });
-      toast.success("Priority score calculated");
-    } catch (error) {
-      toast.error("Failed to calculate priority");
-    }
-  };
-
-  const handleAutoMatch = async () => {
-    setAutoMatching(true);
-    try {
-      const response = await base44.functions.invoke("autoMatchWaitlist", {});
-      toast.success(`Auto-matching complete! ${response.data.matches_found} matches found.`);
-      queryClient.invalidateQueries({ queryKey: ["waitingList"] });
-    } catch (error) {
-      toast.error("Auto-matching failed");
-    } finally {
-      setAutoMatching(false);
-    }
   };
 
   const filteredList = statusFilter === "all"
@@ -157,17 +162,7 @@ export default function ManagerWaitingList() {
               Manage clients waiting for appointment slots
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={handleAutoMatch}
-              disabled={autoMatching}
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <Zap size={16} />
-              {autoMatching ? "Matching..." : "Auto-Match"}
-            </Button>
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
             <Filter size={16} className="text-[#2B2725]/60" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-48">
@@ -182,7 +177,6 @@ export default function ManagerWaitingList() {
                 <SelectItem value="expired">Expired</SelectItem>
               </SelectContent>
             </Select>
-          </div>
           </div>
         </div>
 
@@ -212,6 +206,18 @@ export default function ManagerWaitingList() {
               {waitingList.length}
             </p>
           </div>
+        </div>
+
+        {/* Bulk Actions */}
+        <div className="bg-white p-4 mb-6 flex gap-3">
+          <Button
+            onClick={() => autoMatchMutation.mutate()}
+            disabled={autoMatchMutation.isPending}
+            className="bg-[#1E3A32] hover:bg-[#2B2725]"
+          >
+            <Zap size={16} className="mr-2" />
+            {autoMatchMutation.isPending ? 'Running...' : 'Run Auto-Match'}
+          </Button>
         </div>
 
         {/* Waiting List Table */}
@@ -268,6 +274,11 @@ export default function ManagerWaitingList() {
                         Flexible
                       </Badge>
                     )}
+                    {entry.priority_score !== undefined && entry.priority_score > 0 && (
+                      <Badge variant="outline" className="mt-1 text-xs bg-[#D8B46B]/10">
+                        Priority: {entry.priority_score}
+                      </Badge>
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2 text-sm text-[#2B2725]/80">
@@ -276,25 +287,18 @@ export default function ManagerWaitingList() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex gap-2">
-                      <Badge className={statusColors[entry.status]}>
-                        {entry.status}
-                      </Badge>
-                      {entry.priority_score !== undefined && (
-                        <Badge variant="outline" className="flex items-center gap-1">
-                          <TrendingUp size={12} />
-                          {entry.priority_score}
-                        </Badge>
-                      )}
-                    </div>
+                    <Badge className={statusColors[entry.status]}>
+                      {entry.status}
+                    </Badge>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex gap-2">
                       <Button
                         size="sm"
-                        variant="ghost"
-                        onClick={() => handleCalculatePriority(entry.id)}
-                        title="Calculate Priority"
+                        variant="outline"
+                        onClick={() => calculatePriorityMutation.mutate(entry.id)}
+                        disabled={calculatePriorityMutation.isPending}
+                        title="Calculate Priority Score"
                       >
                         <TrendingUp size={14} />
                       </Button>
@@ -391,18 +395,25 @@ export default function ManagerWaitingList() {
                 />
               </div>
 
-              {/* Communication Tools */}
-              <div className="mt-6 pt-6 border-t">
-                <WaitlistCommunication 
-                  entry={selectedEntry} 
-                  onUpdate={() => {
-                    queryClient.invalidateQueries({ queryKey: ["waitingList"] });
-                  }}
-                />
-              </div>
-
               {/* Actions */}
-              <div className="flex gap-3 pt-4 border-t">
+              <div className="flex gap-3 pt-4 border-t flex-wrap">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setCommunicationDialogOpen(true);
+                  }}
+                >
+                  <MessageSquare size={16} className="mr-2" />
+                  Add Communication
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => calculatePriorityMutation.mutate(selectedEntry.id)}
+                  disabled={calculatePriorityMutation.isPending}
+                >
+                  <TrendingUp size={16} className="mr-2" />
+                  Recalculate Priority
+                </Button>
                 {selectedEntry.status === "waiting" && (
                   <>
                     <Button
@@ -432,6 +443,71 @@ export default function ManagerWaitingList() {
                   </Button>
                 )}
               </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Communication Dialog */}
+      <Dialog open={communicationDialogOpen} onOpenChange={setCommunicationDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Communication</DialogTitle>
+          </DialogHeader>
+          {selectedEntry && (
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">Method</label>
+                <Select value={communicationMethod} onValueChange={setCommunicationMethod}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="note">Internal Note</SelectItem>
+                    <SelectItem value="email">Email</SelectItem>
+                    <SelectItem value="phone">Phone Call</SelectItem>
+                    <SelectItem value="text">Text Message</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Message</label>
+                <Textarea
+                  value={communicationMessage}
+                  onChange={(e) => setCommunicationMessage(e.target.value)}
+                  rows={4}
+                  placeholder="Enter your message or notes..."
+                />
+              </div>
+
+              {communicationMethod === 'email' && (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="sendEmailCheck"
+                    checked={sendEmail}
+                    onChange={(e) => setSendEmail(e.target.checked)}
+                  />
+                  <label htmlFor="sendEmailCheck" className="text-sm">Send email to client</label>
+                </div>
+              )}
+
+              <Button
+                onClick={() => {
+                  sendCommunicationMutation.mutate({
+                    waitlist_id: selectedEntry.id,
+                    method: communicationMethod,
+                    message: communicationMessage,
+                    send_email: sendEmail
+                  });
+                }}
+                disabled={!communicationMessage || sendCommunicationMutation.isPending}
+                className="w-full"
+              >
+                <Send size={16} className="mr-2" />
+                {sendCommunicationMutation.isPending ? 'Sending...' : 'Add Communication'}
+              </Button>
             </div>
           )}
         </DialogContent>
