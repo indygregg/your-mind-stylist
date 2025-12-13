@@ -1,0 +1,223 @@
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import Stripe from 'npm:stripe';
+
+const stripe = new Stripe(Deno.env.get('STRIPE_API_KEY'));
+
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { booking_id, notification_type } = await req.json();
+
+    // Fetch booking details
+    const bookings = await base44.asServiceRole.entities.Booking.filter({ id: booking_id });
+    const booking = bookings[0];
+
+    if (!booking) {
+      return Response.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    // Fetch appointment type for service details
+    let appointmentType = null;
+    if (booking.service_type) {
+      const types = await base44.asServiceRole.entities.AppointmentType.filter({
+        service_type: booking.service_type
+      });
+      appointmentType = types[0];
+    }
+
+    const formatDate = (dateString) => {
+      if (!dateString) return 'TBD';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit'
+      });
+    };
+
+    let emailSubject = '';
+    let emailBody = '';
+
+    switch (notification_type) {
+      case 'booking_confirmation_client':
+        emailSubject = `Your Session is Confirmed - ${formatDate(booking.scheduled_date)}`;
+        emailBody = `
+          <div style="font-family: 'Georgia', serif; max-width: 600px; margin: 0 auto; color: #2B2725;">
+            <div style="background: #1E3A32; padding: 40px 20px; text-align: center;">
+              <h1 style="color: #F9F5EF; font-size: 32px; margin: 0;">Session Confirmed</h1>
+            </div>
+            
+            <div style="padding: 40px 20px; background: #F9F5EF;">
+              <p style="font-size: 18px; color: #1E3A32; margin-bottom: 20px;">
+                Hi ${booking.user_name},
+              </p>
+              
+              <p style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                Your session with Roberta Fernandez has been confirmed. Here are the details:
+              </p>
+              
+              <div style="background: white; padding: 30px; margin: 20px 0; border-left: 4px solid #D8B46B;">
+                <p style="margin: 10px 0;"><strong style="color: #1E3A32;">Service:</strong> ${appointmentType?.name || booking.service_type}</p>
+                <p style="margin: 10px 0;"><strong style="color: #1E3A32;">Date & Time:</strong> ${formatDate(booking.scheduled_date)}</p>
+                <p style="margin: 10px 0;"><strong style="color: #1E3A32;">Duration:</strong> ${appointmentType?.duration || 60} minutes</p>
+                ${booking.zoom_join_url ? `<p style="margin: 10px 0;"><strong style="color: #1E3A32;">Zoom Link:</strong> <a href="${booking.zoom_join_url}" style="color: #D8B46B;">${booking.zoom_join_url}</a></p>` : ''}
+                ${booking.zoom_password ? `<p style="margin: 10px 0;"><strong style="color: #1E3A32;">Zoom Password:</strong> ${booking.zoom_password}</p>` : ''}
+              </div>
+              
+              <p style="font-size: 16px; line-height: 1.6; margin: 20px 0;">
+                You'll receive reminder emails 24 hours and 1 hour before your session.
+              </p>
+              
+              ${booking.notes ? `
+                <div style="background: #E4D9C4; padding: 20px; margin: 20px 0;">
+                  <p style="margin: 0; font-size: 14px;"><strong>Your Notes:</strong></p>
+                  <p style="margin: 10px 0 0 0; font-size: 14px;">${booking.notes}</p>
+                </div>
+              ` : ''}
+              
+              <p style="font-size: 14px; color: #2B2725; margin-top: 30px;">
+                If you need to reschedule or have any questions, please reply to this email or visit your client portal.
+              </p>
+              
+              <div style="text-align: center; margin-top: 40px;">
+                <a href="https://yourmindstylist.com/ClientBookings" style="background: #1E3A32; color: #F9F5EF; padding: 15px 40px; text-decoration: none; display: inline-block; font-size: 16px;">
+                  View My Bookings
+                </a>
+              </div>
+            </div>
+            
+            <div style="background: #2B2725; padding: 20px; text-align: center;">
+              <p style="color: #F9F5EF; font-size: 12px; margin: 0;">
+                © ${new Date().getFullYear()} Your Mind Stylist. All rights reserved.
+              </p>
+            </div>
+          </div>
+        `;
+        break;
+
+      case 'booking_confirmation_manager':
+        emailSubject = `New Booking: ${booking.user_name} - ${formatDate(booking.scheduled_date)}`;
+        emailBody = `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #1E3A32;">New Booking Received</h2>
+            
+            <div style="background: #F9F5EF; padding: 20px; margin: 20px 0;">
+              <p><strong>Client:</strong> ${booking.user_name}</p>
+              <p><strong>Email:</strong> ${booking.user_email}</p>
+              <p><strong>Phone:</strong> ${booking.client_phone || 'Not provided'}</p>
+              <p><strong>Service:</strong> ${appointmentType?.name || booking.service_type}</p>
+              <p><strong>Date & Time:</strong> ${formatDate(booking.scheduled_date)}</p>
+              <p><strong>Amount:</strong> $${(booking.amount / 100).toFixed(2)}</p>
+              <p><strong>Payment Status:</strong> ${booking.payment_status}</p>
+            </div>
+            
+            ${booking.notes ? `
+              <div style="background: #E4D9C4; padding: 20px; margin: 20px 0;">
+                <p><strong>Client Notes:</strong></p>
+                <p>${booking.notes}</p>
+              </div>
+            ` : ''}
+            
+            ${booking.client_goals ? `
+              <div style="background: #E4D9C4; padding: 20px; margin: 20px 0;">
+                <p><strong>Client Goals:</strong></p>
+                <p>${booking.client_goals}</p>
+              </div>
+            ` : ''}
+            
+            <a href="https://yourmindstylist.com/ManagerBookings" style="background: #1E3A32; color: white; padding: 12px 30px; text-decoration: none; display: inline-block; margin: 20px 0;">
+              View in Dashboard
+            </a>
+          </div>
+        `;
+        break;
+
+      case 'reminder_24h':
+        emailSubject = `Reminder: Your session tomorrow - ${formatDate(booking.scheduled_date)}`;
+        emailBody = `
+          <div style="font-family: 'Georgia', serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #1E3A32;">Session Tomorrow</h2>
+            <p>Hi ${booking.user_name},</p>
+            <p>This is a friendly reminder that your session with Roberta Fernandez is scheduled for tomorrow:</p>
+            
+            <div style="background: #F9F5EF; padding: 20px; margin: 20px 0;">
+              <p><strong>Date & Time:</strong> ${formatDate(booking.scheduled_date)}</p>
+              <p><strong>Service:</strong> ${appointmentType?.name || booking.service_type}</p>
+              ${booking.zoom_join_url ? `<p><strong>Zoom Link:</strong> <a href="${booking.zoom_join_url}">${booking.zoom_join_url}</a></p>` : ''}
+            </div>
+            
+            <p>Looking forward to connecting with you!</p>
+          </div>
+        `;
+        break;
+
+      case 'reminder_1h':
+        emailSubject = `Starting Soon: Your session in 1 hour`;
+        emailBody = `
+          <div style="font-family: 'Georgia', serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #1E3A32;">Session Starting Soon</h2>
+            <p>Hi ${booking.user_name},</p>
+            <p>Your session starts in 1 hour. Here's your Zoom link:</p>
+            
+            <div style="background: #F9F5EF; padding: 20px; margin: 20px 0; text-align: center;">
+              ${booking.zoom_join_url ? `
+                <a href="${booking.zoom_join_url}" style="background: #1E3A32; color: white; padding: 15px 40px; text-decoration: none; display: inline-block; font-size: 18px;">
+                  Join Zoom Meeting
+                </a>
+                ${booking.zoom_password ? `<p style="margin-top: 15px;">Password: <strong>${booking.zoom_password}</strong></p>` : ''}
+              ` : '<p>Meeting details will be provided shortly.</p>'}
+            </div>
+            
+            <p>See you soon!</p>
+          </div>
+        `;
+        break;
+
+      default:
+        return Response.json({ error: 'Invalid notification type' }, { status: 400 });
+    }
+
+    // Send email using Core integration
+    const recipientEmail = notification_type === 'booking_confirmation_manager' 
+      ? 'info@yourmindstylist.com' 
+      : booking.user_email;
+
+    await base44.asServiceRole.integrations.Core.SendEmail({
+      from_name: 'Your Mind Stylist',
+      to: recipientEmail,
+      subject: emailSubject,
+      body: emailBody
+    });
+
+    // Update booking to mark reminder as sent
+    if (notification_type === 'reminder_24h') {
+      await base44.asServiceRole.entities.Booking.update(booking_id, {
+        reminder_24h_sent: true
+      });
+    } else if (notification_type === 'reminder_1h') {
+      await base44.asServiceRole.entities.Booking.update(booking_id, {
+        reminder_1h_sent: true
+      });
+    }
+
+    return Response.json({ 
+      success: true, 
+      message: `Notification sent to ${recipientEmail}` 
+    });
+
+  } catch (error) {
+    console.error('Notification error:', error);
+    return Response.json({ 
+      error: error.message 
+    }, { status: 500 });
+  }
+});
