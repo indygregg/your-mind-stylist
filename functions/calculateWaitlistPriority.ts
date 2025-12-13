@@ -19,43 +19,42 @@ Deno.serve(async (req) => {
 
     const entry = entries[0];
 
-    // Calculate priority factors
+    // Calculate priority score (0-100)
+    let score = 0;
     const factors = {};
 
-    // 1. Wait time (0-40 points) - longer wait = higher priority
-    const waitDays = Math.floor((Date.now() - new Date(entry.requested_date).getTime()) / (1000 * 60 * 60 * 24));
-    factors.wait_time_days = waitDays;
-    const waitScore = Math.min(40, waitDays * 2); // 2 points per day, max 40
+    // 1. Wait time (max 40 points) - longer wait = higher priority
+    const requestDate = new Date(entry.requested_date || entry.created_date);
+    const waitTimeDays = Math.floor((Date.now() - requestDate.getTime()) / (1000 * 60 * 60 * 24));
+    factors.wait_time_days = waitTimeDays;
+    score += Math.min(40, waitTimeDays * 2); // 2 points per day, max 40
 
-    // 2. Flexibility (0-15 points) - more flexible = higher priority (easier to match)
-    const flexScore = entry.flexible ? 15 : 5;
-    factors.flexibility = flexScore;
+    // 2. Urgency level (max 30 points)
+    const urgencyMap = { low: 0, medium: 10, high: 20, urgent: 30 };
+    factors.urgency_level = entry.urgency_level || 'medium';
+    score += urgencyMap[factors.urgency_level];
 
-    // 3. Client history (0-25 points) - check for previous bookings
-    const previousBookings = await base44.asServiceRole.entities.Booking.filter({
+    // 3. Flexibility (max 15 points) - flexible clients get bonus
+    factors.flexibility_score = entry.flexible ? 15 : 5;
+    score += factors.flexibility_score;
+
+    // 4. Client value (max 15 points) - based on past bookings
+    const pastBookings = await base44.asServiceRole.entities.Booking.filter({
       user_email: entry.user_email,
       booking_status: 'completed'
     });
-    const historyScore = Math.min(25, previousBookings.length * 5); // 5 points per completed booking
-    factors.client_history = historyScore;
-
-    // 4. Urgency (0-20 points) - self-reported urgency
-    const urgencyMap = { low: 5, medium: 10, high: 15, critical: 20 };
-    const urgencyScore = urgencyMap[entry.urgency_level] || 10;
-    factors.urgency = urgencyScore;
-
-    // Total priority score (0-100)
-    const priorityScore = waitScore + flexScore + historyScore + urgencyScore;
+    factors.client_value_score = Math.min(15, pastBookings.length * 3); // 3 points per completed booking
+    score += factors.client_value_score;
 
     // Update waitlist entry
-    await base44.asServiceRole.entities.WaitingList.update(waitlist_id, {
-      priority_score: priorityScore,
+    await base44.asServiceRole.entities.WaitingList.update(entry.id, {
+      priority_score: Math.round(score),
       priority_factors: factors
     });
 
     return Response.json({
       success: true,
-      priority_score: priorityScore,
+      priority_score: Math.round(score),
       factors
     });
 
