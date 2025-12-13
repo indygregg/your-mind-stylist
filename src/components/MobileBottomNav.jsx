@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
-import { Home, BookOpen, ShoppingCart, Menu, X, Settings, Users, FileText, MessageSquare, Headphones, LayoutDashboard } from "lucide-react";
+import { Home, BookOpen, ShoppingCart, Menu, X, Settings, Users, FileText, MessageSquare, Headphones, LayoutDashboard, UsersRound } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function MobileBottomNav({ user, currentPageName, navLinks, onLogout }) {
@@ -27,6 +27,8 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
       Roadmap: FileText,
       AdminUsers: Users,
       Users: Users,
+      StaffManagement: UsersRound,
+      Staff: UsersRound,
       StudioSettings: Settings,
       Settings: Settings,
       BlogManager: FileText,
