@@ -183,6 +183,7 @@ export default function ManagerWaitingList() {
               </SelectContent>
             </Select>
           </div>
+          </div>
         </div>
 
         {/* Stats */}
