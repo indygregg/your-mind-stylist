@@ -29,6 +29,74 @@ const TEMPLATE_CONFIGS = {
   zoom_link_ready: {
     name: "Zoom Link Ready",
     variables: ["{{user_name}}", "{{scheduled_date}}", "{{zoom_join_url}}", "{{zoom_password}}"]
+  },
+  pv_onboarding_1: {
+    name: "PV Onboarding - Email 1 (Welcome)",
+    variables: ["{{user_name}}", "{{login_url}}", "{{first_session_url}}"]
+  },
+  pv_onboarding_2: {
+    name: "PV Onboarding - Email 2 (Getting Started)",
+    variables: ["{{user_name}}", "{{dashboard_url}}", "{{support_email}}"]
+  },
+  pv_onboarding_3: {
+    name: "PV Onboarding - Email 3 (Daily Practice)",
+    variables: ["{{user_name}}", "{{streak_count}}", "{{library_url}}"]
+  },
+  pv_onboarding_4: {
+    name: "PV Onboarding - Email 4 (Maximize Your Practice)",
+    variables: ["{{user_name}}", "{{completed_sessions}}", "{{resources_url}}"]
+  },
+  toolkit_onboarding_1: {
+    name: "Toolkit Onboarding - Email 1 (Welcome)",
+    variables: ["{{user_name}}", "{{program_name}}", "{{start_url}}"]
+  },
+  toolkit_onboarding_2: {
+    name: "Toolkit Onboarding - Email 2 (Progress Check)",
+    variables: ["{{user_name}}", "{{completion_percentage}}", "{{continue_url}}"]
+  },
+  toolkit_onboarding_3: {
+    name: "Toolkit Onboarding - Email 3 (Integration)",
+    variables: ["{{user_name}}", "{{resources_url}}", "{{community_url}}"]
+  },
+  salon_nurture_1: {
+    name: "Salon Nurture - Email 1 (Upgrade Invitation)",
+    variables: ["{{user_name}}", "{{current_tier}}", "{{salon_benefits}}", "{{upgrade_url}}"]
+  },
+  salon_nurture_2: {
+    name: "Salon Nurture - Email 2 (Member Stories)",
+    variables: ["{{user_name}}", "{{testimonial}}", "{{join_url}}"]
+  },
+  salon_nurture_3: {
+    name: "Salon Nurture - Email 3 (Special Offer)",
+    variables: ["{{user_name}}", "{{offer_details}}", "{{expiry_date}}", "{{claim_url}}"]
+  },
+  couture_vip_1: {
+    name: "Couture VIP - Email 1 (Welcome)",
+    variables: ["{{user_name}}", "{{vip_benefits}}", "{{concierge_email}}", "{{dashboard_url}}"]
+  },
+  couture_vip_2: {
+    name: "Couture VIP - Email 2 (Exclusive Access)",
+    variables: ["{{user_name}}", "{{exclusive_content}}", "{{private_session_link}}"]
+  },
+  couture_vip_3: {
+    name: "Couture VIP - Email 3 (Personalized Check-In)",
+    variables: ["{{user_name}}", "{{progress_summary}}", "{{next_steps}}", "{{book_call_url}}"]
+  },
+  couture_vip_4: {
+    name: "Couture VIP - Email 4 (Celebration)",
+    variables: ["{{user_name}}", "{{milestone}}", "{{achievement_details}}", "{{share_url}}"]
+  },
+  re_engagement_1: {
+    name: "Re-Engagement - Email 1 (We Miss You)",
+    variables: ["{{user_name}}", "{{last_activity}}", "{{return_incentive}}", "{{login_url}}"]
+  },
+  re_engagement_2: {
+    name: "Re-Engagement - Email 2 (What's New)",
+    variables: ["{{user_name}}", "{{new_features}}", "{{popular_content}}", "{{explore_url}}"]
+  },
+  re_engagement_3: {
+    name: "Re-Engagement - Email 3 (Final Invitation)",
+    variables: ["{{user_name}}", "{{personal_message}}", "{{special_offer}}", "{{comeback_url}}"]
   }
 };
 
@@ -125,7 +193,46 @@ export default function ManagerEmailTemplates() {
       "{{zoom_start_url}}": "https://zoom.us/s/123456789",
       "{{zoom_password}}": "abc123",
       "{{notes}}": "Looking forward to working on confidence and clarity.",
-      "{{booking_id}}": "abc-123-xyz"
+      "{{booking_id}}": "abc-123-xyz",
+      "{{login_url}}": "https://yourmindstylist.com/login",
+      "{{first_session_url}}": "https://yourmindstylist.com/library",
+      "{{dashboard_url}}": "https://yourmindstylist.com/dashboard",
+      "{{support_email}}": "support@yourmindstylist.com",
+      "{{streak_count}}": "7",
+      "{{library_url}}": "https://yourmindstylist.com/library",
+      "{{completed_sessions}}": "12",
+      "{{resources_url}}": "https://yourmindstylist.com/resources",
+      "{{program_name}}": "The Confidence Toolkit",
+      "{{start_url}}": "https://yourmindstylist.com/course/confidence",
+      "{{completion_percentage}}": "45%",
+      "{{continue_url}}": "https://yourmindstylist.com/library",
+      "{{community_url}}": "https://yourmindstylist.com/community",
+      "{{current_tier}}": "Pocket Visualization",
+      "{{salon_benefits}}": "Monthly live sessions, exclusive workshops, private community",
+      "{{upgrade_url}}": "https://yourmindstylist.com/upgrade",
+      "{{testimonial}}": "The Salon experience completely transformed my leadership approach. - Sarah K.",
+      "{{join_url}}": "https://yourmindstylist.com/join-salon",
+      "{{offer_details}}": "Save 20% on your first 3 months",
+      "{{expiry_date}}": "December 31, 2025",
+      "{{claim_url}}": "https://yourmindstylist.com/claim-offer",
+      "{{vip_benefits}}": "White-glove concierge support, private sessions, bespoke program design",
+      "{{concierge_email}}": "concierge@yourmindstylist.com",
+      "{{exclusive_content}}": "Unreleased masterclass on Executive Presence",
+      "{{private_session_link}}": "https://yourmindstylist.com/book-vip",
+      "{{progress_summary}}": "You've completed 5 deep work sessions and unlocked 3 advanced modules",
+      "{{next_steps}}": "Continue with Module 6: Embodying Your New Identity",
+      "{{book_call_url}}": "https://yourmindstylist.com/book-call",
+      "{{milestone}}": "30-Day Transformation Milestone",
+      "{{achievement_details}}": "You've maintained daily practice for 30 consecutive days",
+      "{{share_url}}": "https://yourmindstylist.com/share-achievement",
+      "{{last_activity}}": "3 weeks ago",
+      "{{return_incentive}}": "We've saved your progress and added a bonus session for your return",
+      "{{new_features}}": "New daily prompts, expanded audio library, transformation tracking",
+      "{{popular_content}}": "Most popular: Breaking Through Imposter Syndrome",
+      "{{explore_url}}": "https://yourmindstylist.com/explore",
+      "{{personal_message}}": "Your journey matters to us. We're here whenever you're ready.",
+      "{{special_offer}}": "Complimentary 1:1 consultation to help you restart your practice",
+      "{{comeback_url}}": "https://yourmindstylist.com/welcome-back"
     };
 
     config.variables.forEach(variable => {
