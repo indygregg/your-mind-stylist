@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ReflectionPrompt from "../transformation/ReflectionPrompt";
+import { base44 } from "@/api/base44Client";
 
 export default function LessonNavigation({ 
   currentLesson, 
@@ -68,10 +69,20 @@ export default function LessonNavigation({
 
           {/* Mark Complete */}
           <Button
-            onClick={() => {
+            onClick={async () => {
               if (!isCompleted) {
                 onMarkComplete();
                 setShowReflection(true);
+                
+                // Trigger milestone detection
+                try {
+                  await base44.functions.invoke('detectMilestones', {
+                    trigger_type: 'lesson_complete',
+                    related_id: currentLesson.id
+                  });
+                } catch (error) {
+                  console.error('Milestone detection failed:', error);
+                }
               }
             }}
             disabled={isCompleted}
