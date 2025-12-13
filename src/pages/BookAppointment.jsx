@@ -6,10 +6,11 @@ import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Calendar, Clock, ArrowRight, ArrowLeft } from "lucide-react";
 import BookingCalendar from "@/components/booking/BookingCalendar";
+import ClientIntakeForm from "@/components/booking/ClientIntakeForm";
 import { format } from "date-fns";
 
 export default function BookAppointment() {
-  const [step, setStep] = useState(1); // 1: Select service, 2: Select time, 3: Confirm
+  const [step, setStep] = useState(1); // 1: Select service, 2: Select time, 3: Intake form, 4: Confirm
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [selectedStaff, setSelectedStaff] = useState(null);
@@ -17,6 +18,7 @@ export default function BookAppointment() {
   const [recurringFrequency, setRecurringFrequency] = useState("weekly");
   const [recurringOccurrences, setRecurringOccurrences] = useState(4);
   const [user, setUser] = useState(null);
+  const [intakeData, setIntakeData] = useState(null);
 
   useEffect(() => {
     loadUser();
@@ -62,7 +64,12 @@ export default function BookAppointment() {
     } else {
       setIsRecurring(false);
     }
-    setStep(3);
+    setStep(3); // Go to intake form
+  };
+
+  const handleIntakeComplete = (data) => {
+    setIntakeData(data);
+    setStep(4); // Go to confirmation
   };
 
   const handleConfirmBooking = async () => {
@@ -75,13 +82,15 @@ export default function BookAppointment() {
           start_date: selectedSlot.start,
           frequency: recurringFrequency,
           occurrences: recurringOccurrences,
-          staff_id: selectedStaff?.id
+          staff_id: selectedStaff?.id,
+          intake_data: intakeData
         });
       } else {
         response = await base44.functions.invoke('createBookingCheckout', {
           appointment_type_id: selectedAppointment.id,
           scheduled_date: selectedSlot.start,
-          staff_id: selectedStaff?.id
+          staff_id: selectedStaff?.id,
+          intake_data: intakeData
         });
       }
 
@@ -115,26 +124,33 @@ export default function BookAppointment() {
           </p>
 
           {/* Progress steps */}
-          <div className="flex items-center gap-4 mt-6">
+          <div className="flex items-center gap-2 mt-6">
             <div className={`flex items-center gap-2 ${step >= 1 ? 'text-[#1E3A32]' : 'text-[#2B2725]/40'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-[#D8B46B]' : 'bg-[#2B2725]/20'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${step >= 1 ? 'bg-[#D8B46B] text-white' : 'bg-[#2B2725]/20'}`}>
                 1
               </div>
-              <span className="text-sm font-medium">Select Service</span>
+              <span className="text-xs md:text-sm font-medium hidden md:inline">Service</span>
             </div>
             <div className="flex-1 h-[2px] bg-[#2B2725]/20"></div>
             <div className={`flex items-center gap-2 ${step >= 2 ? 'text-[#1E3A32]' : 'text-[#2B2725]/40'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-[#D8B46B]' : 'bg-[#2B2725]/20'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${step >= 2 ? 'bg-[#D8B46B] text-white' : 'bg-[#2B2725]/20'}`}>
                 2
               </div>
-              <span className="text-sm font-medium">Choose Time</span>
+              <span className="text-xs md:text-sm font-medium hidden md:inline">Time</span>
             </div>
             <div className="flex-1 h-[2px] bg-[#2B2725]/20"></div>
             <div className={`flex items-center gap-2 ${step >= 3 ? 'text-[#1E3A32]' : 'text-[#2B2725]/40'}`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 3 ? 'bg-[#D8B46B]' : 'bg-[#2B2725]/20'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${step >= 3 ? 'bg-[#D8B46B] text-white' : 'bg-[#2B2725]/20'}`}>
                 3
               </div>
-              <span className="text-sm font-medium">Confirm</span>
+              <span className="text-xs md:text-sm font-medium hidden md:inline">Info</span>
+            </div>
+            <div className="flex-1 h-[2px] bg-[#2B2725]/20"></div>
+            <div className={`flex items-center gap-2 ${step >= 4 ? 'text-[#1E3A32]' : 'text-[#2B2725]/40'}`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${step >= 4 ? 'bg-[#D8B46B] text-white' : 'bg-[#2B2725]/20'}`}>
+                4
+              </div>
+              <span className="text-xs md:text-sm font-medium hidden md:inline">Confirm</span>
             </div>
           </div>
         </motion.div>
@@ -205,8 +221,16 @@ export default function BookAppointment() {
           </motion.div>
         )}
 
-        {/* Step 3: Confirm */}
+        {/* Step 3: Intake Form */}
         {step === 3 && selectedAppointment && selectedSlot && (
+          <ClientIntakeForm
+            onBack={() => setStep(2)}
+            onContinue={handleIntakeComplete}
+          />
+        )}
+
+        {/* Step 4: Confirm */}
+        {step === 4 && selectedAppointment && selectedSlot && intakeData && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -263,9 +287,9 @@ export default function BookAppointment() {
               </div>
 
               <div className="flex gap-3">
-                <Button variant="outline" onClick={() => setStep(2)} className="flex-1">
+                <Button variant="outline" onClick={() => setStep(3)} className="flex-1">
                   <ArrowLeft size={16} className="mr-2" />
-                  Change Time
+                  Edit Info
                 </Button>
                 <Button onClick={handleConfirmBooking} className="flex-1">
                   Proceed to Payment
