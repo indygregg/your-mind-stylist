@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar, Clock, Video, CheckCircle, ArrowRight, ArrowLeft, Settings } from "lucide-react";
 import { createPageUrl } from "../utils";
 import SEO from "../components/SEO";
@@ -21,7 +22,10 @@ export default function Bookings() {
   const [clientDetails, setClientDetails] = useState({
     name: "",
     email: "",
-    notes: ""
+    phone: "",
+    smsReminder: false,
+    briefIntro: "",
+    whyHelpful: ""
   });
 
   const { data: appointmentTypes = [], isLoading } = useQuery({
@@ -37,7 +41,10 @@ export default function Bookings() {
         setClientDetails({
           name: currentUser.full_name || "",
           email: currentUser.email || "",
-          notes: ""
+          phone: "",
+          smsReminder: false,
+          briefIntro: "",
+          whyHelpful: ""
         });
       } catch (error) {
         // User not logged in
@@ -57,8 +64,8 @@ export default function Bookings() {
   };
 
   const handleSubmitDetails = async () => {
-    if (!clientDetails.name || !clientDetails.email) {
-      alert("Please fill in your name and email");
+    if (!clientDetails.name || !clientDetails.email || !clientDetails.phone || !clientDetails.briefIntro || !clientDetails.whyHelpful) {
+      alert("Please fill in all required fields");
       return;
     }
 
@@ -70,7 +77,10 @@ export default function Bookings() {
         scheduled_date: selectedSlot.start,
         client_name: clientDetails.name,
         client_email: clientDetails.email,
-        client_notes: clientDetails.notes
+        client_phone: clientDetails.phone,
+        client_sms_reminder: clientDetails.smsReminder,
+        client_brief_intro: clientDetails.briefIntro,
+        client_why_helpful: clientDetails.whyHelpful
       });
 
       // Redirect to Stripe checkout
@@ -413,32 +423,114 @@ export default function Bookings() {
                   </div>
                 </div>
 
-                <div className="space-y-4 mb-6">
+                <div className="space-y-6 mb-6">
+                  {/* Your Information Section */}
                   <div>
-                    <Label>Name</Label>
-                    <Input
-                      value={clientDetails.name}
-                      onChange={(e) => setClientDetails({ ...clientDetails, name: e.target.value })}
-                      placeholder="Your full name"
-                    />
+                    <h3 className="font-medium text-[#1E3A32] mb-4 pb-2 border-b border-[#E4D9C4]">
+                      Your Information
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="firstName">First name *</Label>
+                        <Input
+                          id="firstName"
+                          value={clientDetails.name.split(' ')[0] || ''}
+                          onChange={(e) => {
+                            const firstName = e.target.value;
+                            const lastName = clientDetails.name.split(' ').slice(1).join(' ');
+                            setClientDetails({ ...clientDetails, name: `${firstName} ${lastName}`.trim() });
+                          }}
+                          placeholder="First name"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="lastName">Last name *</Label>
+                        <Input
+                          id="lastName"
+                          value={clientDetails.name.split(' ').slice(1).join(' ') || ''}
+                          onChange={(e) => {
+                            const firstName = clientDetails.name.split(' ')[0] || '';
+                            const lastName = e.target.value;
+                            setClientDetails({ ...clientDetails, name: `${firstName} ${lastName}`.trim() });
+                          }}
+                          placeholder="Last name"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="phone">Phone *</Label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          value={clientDetails.phone}
+                          onChange={(e) => setClientDetails({ ...clientDetails, phone: e.target.value })}
+                          placeholder="+1 (555) 000-0000"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">Email *</Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={clientDetails.email}
+                          onChange={(e) => setClientDetails({ ...clientDetails, email: e.target.value })}
+                          placeholder="your@email.com"
+                          required
+                        />
+                        <p className="text-xs text-[#2B2725]/60 mt-1">
+                          Use a current or valid email address to which additional email addresses can be sent.
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-3 pt-2">
+                        <Checkbox
+                          id="smsReminder"
+                          checked={clientDetails.smsReminder}
+                          onCheckedChange={(checked) => setClientDetails({ ...clientDetails, smsReminder: checked })}
+                        />
+                        <label htmlFor="smsReminder" className="text-sm text-[#2B2725]/80 leading-relaxed cursor-pointer">
+                          I would like to receive an SMS reminder before my appointment
+                          <span className="block text-xs text-[#2B2725]/60 mt-1">
+                            By checking this box, you agree to receive appointment reminder via SMS. Message and data rates apply. One message per appointment. Text STOP to opt out. Reply HELP for help/info.
+                          </span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
+
+                  {/* Brief Introduction Section */}
                   <div>
-                    <Label>Email</Label>
-                    <Input
-                      type="email"
-                      value={clientDetails.email}
-                      onChange={(e) => setClientDetails({ ...clientDetails, email: e.target.value })}
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                  <div>
-                    <Label>Optional Notes</Label>
-                    <Textarea
-                      value={clientDetails.notes}
-                      onChange={(e) => setClientDetails({ ...clientDetails, notes: e.target.value })}
-                      placeholder="If you'd like, share anything you want me to know before we meet. This is optional."
-                      rows={4}
-                    />
+                    <h3 className="font-medium text-[#1E3A32] mb-4 pb-2 border-b border-[#E4D9C4]">
+                      Brief Introduction
+                    </h3>
+                    <p className="text-sm text-[#2B2725]/70 mb-4">
+                      While you will be submitting forms directly from the initial consultation page of the website before your appointment, we'd like to ask just a couple of quick questions so we can set up a file for you.
+                    </p>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="briefIntro">Briefly describe your issue *</Label>
+                        <Textarea
+                          id="briefIntro"
+                          value={clientDetails.briefIntro}
+                          onChange={(e) => setClientDetails({ ...clientDetails, briefIntro: e.target.value })}
+                          placeholder="Share a brief description of what brings you here..."
+                          rows={4}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="whyHelpful">Why do you think my services will be helpful? *</Label>
+                        <Textarea
+                          id="whyHelpful"
+                          value={clientDetails.whyHelpful}
+                          onChange={(e) => setClientDetails({ ...clientDetails, whyHelpful: e.target.value })}
+                          placeholder="What drew you to Mind Styling? What are you hoping to achieve?"
+                          rows={4}
+                          required
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
 
