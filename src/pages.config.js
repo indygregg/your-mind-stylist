@@ -91,6 +91,7 @@ import DepthDashboard from './pages/DepthDashboard';
 import ManagerCRM from './pages/ManagerCRM';
 import ManagerAppointmentTypes from './pages/ManagerAppointmentTypes';
 import ManagerCalendarSync from './pages/ManagerCalendarSync';
+import PurchaseSuccess from './pages/PurchaseSuccess';
 import __Layout from './Layout.jsx';
 
 
@@ -188,6 +189,7 @@ export const PAGES = {
     "ManagerCRM": ManagerCRM,
     "ManagerAppointmentTypes": ManagerAppointmentTypes,
     "ManagerCalendarSync": ManagerCalendarSync,
+    "PurchaseSuccess": PurchaseSuccess,
 }
 
 export const pagesConfig = {
