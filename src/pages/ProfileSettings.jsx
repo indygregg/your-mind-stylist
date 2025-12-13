@@ -7,12 +7,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { User, Bell, Lock, Settings, Upload, CheckCircle } from "lucide-react";
+import { User, Bell, Lock, Settings, Upload, CheckCircle, CreditCard, ExternalLink } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 export default function ProfileSettings() {
   const queryClient = useQueryClient();
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [loadingPortal, setLoadingPortal] = useState(false);
 
   const { data: user, isLoading } = useQuery({
     queryKey: ["currentUser"],
@@ -87,6 +88,22 @@ export default function ProfileSettings() {
     }
   };
 
+  const handleManageSubscription = async () => {
+    setLoadingPortal(true);
+    try {
+      const response = await base44.functions.invoke("createCustomerPortalSession", {});
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      } else {
+        toast.error("Failed to open billing portal");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.error || "Failed to access billing portal");
+    } finally {
+      setLoadingPortal(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
@@ -101,8 +118,9 @@ export default function ProfileSettings() {
         <h1 className="font-serif text-4xl text-[#1E3A32] mb-8">Profile & Settings</h1>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-4">
             <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="billing">Billing</TabsTrigger>
             <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="preferences">Preferences</TabsTrigger>
           </TabsList>
@@ -183,6 +201,81 @@ export default function ProfileSettings() {
                     </Button>
                   </div>
                 </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Billing Tab */}
+          <TabsContent value="billing">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard size={20} />
+                  Billing & Subscriptions
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {user?.stripe_customer_id ? (
+                  <>
+                    <div className="bg-[#E4D9C4]/30 border border-[#D8B46B]/30 p-6 rounded-lg">
+                      <h3 className="font-medium text-[#1E3A32] mb-2">Manage Your Subscriptions</h3>
+                      <p className="text-[#2B2725]/70 text-sm mb-4">
+                        Access your Stripe Customer Portal to manage subscriptions, update payment methods, and view billing history.
+                      </p>
+                      <Button
+                        onClick={handleManageSubscription}
+                        disabled={loadingPortal}
+                        className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
+                      >
+                        {loadingPortal ? (
+                          "Opening Portal..."
+                        ) : (
+                          <>
+                            <CreditCard size={16} className="mr-2" />
+                            Manage Billing
+                            <ExternalLink size={14} className="ml-2" />
+                          </>
+                        )}
+                      </Button>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h3 className="font-medium text-[#1E3A32]">What You Can Do</h3>
+                      <ul className="space-y-2 text-sm text-[#2B2725]/70">
+                        <li className="flex items-start gap-2">
+                          <CheckCircle size={16} className="text-[#A6B7A3] mt-0.5 flex-shrink-0" />
+                          <span>Update payment methods and billing information</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle size={16} className="text-[#A6B7A3] mt-0.5 flex-shrink-0" />
+                          <span>View and download invoices</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle size={16} className="text-[#A6B7A3] mt-0.5 flex-shrink-0" />
+                          <span>Manage active subscriptions</span>
+                        </li>
+                        <li className="flex items-start gap-2">
+                          <CheckCircle size={16} className="text-[#A6B7A3] mt-0.5 flex-shrink-0" />
+                          <span>Cancel or pause subscriptions</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-12">
+                    <CreditCard size={48} className="mx-auto text-[#D8B46B] mb-4" />
+                    <h3 className="font-medium text-[#1E3A32] mb-2">No Active Subscriptions</h3>
+                    <p className="text-[#2B2725]/70 mb-6">
+                      You don't have any active subscriptions yet. Browse our programs to get started.
+                    </p>
+                    <Button
+                      onClick={() => window.location.href = "/app/Programs"}
+                      className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
+                    >
+                      View Programs
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
