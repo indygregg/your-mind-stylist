@@ -7,12 +7,15 @@ import ModuleNavigator from "../components/courses/ModuleNavigator";
 import LessonArea from "../components/courses/LessonArea";
 import LessonNavigation from "../components/courses/LessonNavigation";
 import NotesDrawer from "../components/studio/NotesDrawer";
+import EmotionalCheckIn from "../components/courses/EmotionalCheckIn";
 
 export default function CoursePage() {
   const queryClient = useQueryClient();
   const [currentLessonId, setCurrentLessonId] = useState(null);
   const [notesDrawerOpen, setNotesDrawerOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [showEmotionalCheckIn, setShowEmotionalCheckIn] = useState(false);
+  const [checkInType, setCheckInType] = useState("before"); // "before" or "after"
 
   // Get course slug from URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -204,6 +207,13 @@ export default function CoursePage() {
       }
     }
 
+    // Check if user hasn't tracked emotional state before for this lesson
+    const lessonProgress = userLessonProgress.find(p => p.lesson_id === lessonId);
+    if (!lessonProgress?.mood_before && !lessonProgress?.completed) {
+      setCheckInType("before");
+      setShowEmotionalCheckIn(true);
+    }
+
     setCurrentLessonId(lessonId);
     progressMutation.mutate({ 
       status: progress?.status === "completed" ? "completed" : "in_progress", 
@@ -212,7 +222,71 @@ export default function CoursePage() {
   };
 
   const handleMarkComplete = () => {
-    lessonCompleteMutation.mutate(currentLessonId);
+    // Show emotional check-in after completion
+    const lessonProgress = userLessonProgress.find(p => p.lesson_id === currentLessonId);
+    if (!lessonProgress?.mood_after) {
+      setCheckInType("after");
+      setShowEmotionalCheckIn(true);
+    } else {
+      lessonCompleteMutation.mutate(currentLessonId);
+    }
+  };
+
+  const handleEmotionalCheckInComplete = async ({ mood, energy }) => {
+    const lessonProgress = userLessonProgress.find(p => p.lesson_id === currentLessonId);
+    
+    if (checkInType === "before") {
+      if (lessonProgress) {
+        await base44.entities.UserLessonProgress.update(lessonProgress.id, {
+          mood_before: mood,
+          energy_before: energy
+        });
+      } else {
+        await base44.entities.UserLessonProgress.create({
+          user_id: user.id,
+          lesson_id: currentLessonId,
+          mood_before: mood,
+          energy_before: energy
+        });
+      }
+    } else {
+      // After - also mark as complete
+      if (lessonProgress) {
+        await base44.entities.UserLessonProgress.update(lessonProgress.id, {
+          mood_after: mood,
+          energy_after: energy,
+          completed: true,
+          completed_date: new Date().toISOString()
+        });
+      } else {
+        await base44.entities.UserLessonProgress.create({
+          user_id: user.id,
+          lesson_id: currentLessonId,
+          mood_after: mood,
+          energy_after: energy,
+          completed: true,
+          completed_date: new Date().toISOString()
+        });
+      }
+    }
+
+    queryClient.invalidateQueries({ queryKey: ["userLessonProgress"] });
+    setShowEmotionalCheckIn(false);
+
+    // If it was an after check-in, also trigger the completion logic
+    if (checkInType === "after") {
+      const completedCount = userLessonProgress.filter(p => p.completed).length + 1;
+      const percentage = (completedCount / allLessons.length) * 100;
+      const newStatus = percentage === 100 ? "completed" : "in_progress";
+      
+      if (progress) {
+        base44.entities.UserCourseProgress.update(progress.id, {
+          completion_percentage: percentage,
+          status: newStatus,
+          ...(newStatus === "completed" && { completed_date: new Date().toISOString() }),
+        });
+      }
+    }
   };
 
   const handleProgressUpdate = (watchTime) => {
@@ -297,6 +371,19 @@ export default function CoursePage() {
           source_id: currentLessonId,
         }}
       />
+      {showEmotionalCheckIn && currentLesson && (
+        <EmotionalCheckIn
+          type={checkInType}
+          lessonTitle={currentLesson.title}
+          onComplete={handleEmotionalCheckInComplete}
+          onSkip={() => {
+            setShowEmotionalCheckIn(false);
+            if (checkInType === "after") {
+              lessonCompleteMutation.mutate(currentLessonId);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
