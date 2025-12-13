@@ -90,7 +90,7 @@ export default function Layout({ children, currentPageName }) {
     <EditModeProvider>
       <Helmet>
         <title>Your Mind Stylist</title>
-        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%231E3A32'/%3E%3Ctext x='50' y='50' font-size='60' font-family='serif' font-weight='bold' text-anchor='middle' dominant-baseline='central' fill='%23F9F5EF'%3EY%3C/text%3E%3C/svg%3E" />
+        <link rel="icon" type="image/png" href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9ea03b99b_mind-stylist-icon2x.png" />
       </Helmet>
       <div className="min-h-screen bg-[#F9F5EF]">
         <ManagerBar />
@@ -152,9 +152,11 @@ export default function Layout({ children, currentPageName }) {
         {/* Main Nav */}
         <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link to={createPageUrl("Home")} className="group flex items-center gap-3">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-[#1E3A32] flex items-center justify-center flex-shrink-0">
-              <span className="font-serif font-bold text-xl md:text-2xl text-[#F9F5EF]">Y</span>
-            </div>
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9ea03b99b_mind-stylist-icon2x.png" 
+              alt="Your Mind Stylist Logo" 
+              className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 object-contain"
+            />
             <div className="flex flex-col">
               <span className="text-[10px] md:text-xs text-[#2B2725]/60 tracking-[0.2em] uppercase">
                 Roberta Fernandez
