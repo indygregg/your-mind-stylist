@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { service_type, session_count, amount, notes, scheduled_date } = await req.json();
+        const { service_type, session_count, amount, notes, scheduled_date, appointment_type_id, staff_id, intake_data } = await req.json();
 
         // Calculate checkout expiry (30 minutes from now)
         const expiresAt = new Date();
@@ -22,6 +22,7 @@ Deno.serve(async (req) => {
         const booking = await base44.asServiceRole.entities.Booking.create({
             user_email: user.email,
             user_name: user.full_name,
+            staff_id,
             service_type,
             session_count,
             amount,
@@ -30,7 +31,14 @@ Deno.serve(async (req) => {
             booking_status: 'pending_payment',
             scheduled_date,
             checkout_expires_at: expiresAt.toISOString(),
-            notes
+            notes,
+            client_phone: intake_data?.phone,
+            client_contact_preference: intake_data?.contact_preference,
+            client_how_heard: intake_data?.how_heard,
+            client_goals: intake_data?.goals,
+            client_concerns: intake_data?.concerns,
+            client_previous_experience: intake_data?.previous_experience,
+            client_health_considerations: intake_data?.health_considerations
         });
 
         // Create Stripe checkout session
