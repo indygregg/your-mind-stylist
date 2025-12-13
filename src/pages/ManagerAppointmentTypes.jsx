@@ -10,13 +10,15 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Edit, Trash2, Clock, DollarSign, Video } from "lucide-react";
+import { Plus, Edit, Trash2, Clock, DollarSign, Video, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
 
 export default function ManagerAppointmentTypes() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingType, setEditingType] = useState(null);
+  const [syncingAll, setSyncingAll] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -42,7 +44,34 @@ export default function ManagerAppointmentTypes() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.AppointmentType.create(data),
+    mutationFn: async (data) => {
+      const appointmentType = await base44.entities.AppointmentType.create(data);
+      
+      // Auto-sync with Stripe
+      try {
+        const syncResult = await base44.functions.invoke('syncAppointmentTypeStripe', {
+          appointment_type_id: appointmentType.id,
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          currency: data.currency,
+        });
+
+        if (syncResult.data.success) {
+          // Update with Stripe IDs
+          await base44.entities.AppointmentType.update(appointmentType.id, {
+            stripe_product_id: syncResult.data.product_id,
+            stripe_price_id: syncResult.data.price_id,
+          });
+          toast.success('Appointment type created and synced with Stripe');
+        }
+      } catch (error) {
+        console.error('Stripe sync failed:', error);
+        toast.error('Created but failed to sync with Stripe');
+      }
+      
+      return appointmentType;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointmentTypes"] });
       handleCloseDialog();
@@ -50,7 +79,34 @@ export default function ManagerAppointmentTypes() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.AppointmentType.update(id, data),
+    mutationFn: async ({ id, data }) => {
+      const updated = await base44.entities.AppointmentType.update(id, data);
+      
+      // Auto-sync with Stripe if name, description, or price changed
+      try {
+        const syncResult = await base44.functions.invoke('syncAppointmentTypeStripe', {
+          appointment_type_id: id,
+          name: data.name,
+          description: data.description,
+          price: data.price,
+          currency: data.currency,
+        });
+
+        if (syncResult.data.success) {
+          // Update with Stripe IDs if changed
+          await base44.entities.AppointmentType.update(id, {
+            stripe_product_id: syncResult.data.product_id,
+            stripe_price_id: syncResult.data.price_id,
+          });
+          toast.success('Updated and synced with Stripe');
+        }
+      } catch (error) {
+        console.error('Stripe sync failed:', error);
+        toast.error('Updated but failed to sync with Stripe');
+      }
+      
+      return updated;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointmentTypes"] });
       handleCloseDialog();
@@ -119,6 +175,47 @@ export default function ManagerAppointmentTypes() {
     });
   };
 
+  const handleSyncAll = async () => {
+    setSyncingAll(true);
+    let successCount = 0;
+    let errorCount = 0;
+
+    try {
+      for (const type of appointmentTypes) {
+        try {
+          const syncResult = await base44.functions.invoke('syncAppointmentTypeStripe', {
+            appointment_type_id: type.id,
+            name: type.name,
+            description: type.description,
+            price: type.price,
+            currency: type.currency,
+          });
+
+          if (syncResult.data.success) {
+            await base44.entities.AppointmentType.update(type.id, {
+              stripe_product_id: syncResult.data.product_id,
+              stripe_price_id: syncResult.data.price_id,
+            });
+            successCount++;
+          }
+        } catch (error) {
+          console.error(`Failed to sync ${type.name}:`, error);
+          errorCount++;
+        }
+      }
+
+      if (errorCount === 0) {
+        toast.success(`✓ Synced all ${successCount} appointment types with Stripe`);
+      } else {
+        toast.error(`Synced ${successCount}, failed ${errorCount}`);
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["appointmentTypes"] });
+    } finally {
+      setSyncingAll(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
       <div className="max-w-6xl mx-auto">
@@ -132,13 +229,26 @@ export default function ManagerAppointmentTypes() {
               Manage your service offerings and pricing
             </p>
           </div>
-          <Button
-            onClick={() => handleOpenDialog()}
-            className="bg-[#1E3A32] hover:bg-[#2B2725]"
-          >
-            <Plus size={18} className="mr-2" />
-            New Appointment Type
-          </Button>
+          <div className="flex gap-3">
+            {appointmentTypes.length > 0 && (
+              <Button
+                onClick={handleSyncAll}
+                disabled={syncingAll}
+                variant="outline"
+                className="border-[#D8B46B] text-[#1E3A32]"
+              >
+                <RefreshCw size={18} className={`mr-2 ${syncingAll ? 'animate-spin' : ''}`} />
+                {syncingAll ? 'Syncing...' : 'Sync All with Stripe'}
+              </Button>
+            )}
+            <Button
+              onClick={() => handleOpenDialog()}
+              className="bg-[#1E3A32] hover:bg-[#2B2725]"
+            >
+              <Plus size={18} className="mr-2" />
+              New Appointment Type
+            </Button>
+          </div>
         </div>
 
         {/* Appointment Types Grid */}
@@ -222,6 +332,13 @@ export default function ManagerAppointmentTypes() {
                       >
                         {type.service_type?.replace(/_/g, " ")}
                       </Badge>
+
+                      {type.stripe_product_id && (
+                        <div className="flex items-center gap-1 text-xs text-[#A6B7A3] mt-2">
+                          <RefreshCw size={12} />
+                          <span>Synced with Stripe</span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex gap-2">
