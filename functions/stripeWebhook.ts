@@ -56,15 +56,15 @@ Deno.serve(async (req) => {
                     // Send professional booking confirmation emails
                     try {
                         // Send client confirmation
-                        await base44.asServiceRole.functions.invoke('sendBookingEmail', {
+                        await base44.asServiceRole.functions.invoke('sendBookingNotifications', {
                             booking_id: session.metadata.booking_id,
-                            recipient_type: 'client'
+                            notification_type: 'booking_confirmation_client'
                         });
 
                         // Send manager notification
-                        await base44.asServiceRole.functions.invoke('sendBookingEmail', {
+                        await base44.asServiceRole.functions.invoke('sendBookingNotifications', {
                             booking_id: session.metadata.booking_id,
-                            recipient_type: 'manager'
+                            notification_type: 'booking_confirmation_manager'
                         });
                     } catch (emailError) {
                         console.error('Email send failed:', emailError);
