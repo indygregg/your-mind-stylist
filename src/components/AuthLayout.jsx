@@ -251,12 +251,12 @@ export default function AuthLayout({ children, currentPageName }) {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden bg-[#1E3A32] border-t border-[#F9F5EF]/10 max-h-[calc(100vh-80px)] overflow-y-auto"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="lg:hidden bg-[#1E3A32] border-t border-[#F9F5EF]/10"
             >
-              <div className="px-6 py-8 flex flex-col gap-4">
+              <div className="px-6 py-8 flex flex-col gap-4 max-h-[calc(100vh-100px)] overflow-y-auto">
                 {navLinks.map((link) => (
                   <Link
                     key={link.page}
