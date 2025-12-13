@@ -6,6 +6,7 @@ import { Layers, Sparkles, Play, Headphones, Users, Award, ChevronDown, ChevronU
 import { useQuery } from "@tanstack/react-query";
 import ProgramCard from "../components/library/ProgramCard";
 import StudentDashboard from "../components/library/StudentDashboard";
+import AILearningPathRecommender from "../components/library/AILearningPathRecommender";
 import { base44 } from "@/api/base44Client";
 
 export default function Library() {
@@ -375,6 +376,13 @@ export default function Library() {
               Everything you've unlocked lives here. Continue your journey at your own pace.
             </p>
           </div>
+
+          {/* AI Learning Path Recommender */}
+          {user && (
+            <div className="mb-8">
+              <AILearningPathRecommender />
+            </div>
+          )}
 
           {/* Student Dashboard View */}
           {showDashboard && userProgress.length > 0 && (
