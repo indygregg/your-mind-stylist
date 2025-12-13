@@ -83,6 +83,7 @@ import CleaningOutYourCloset from './pages/CleaningOutYourCloset';
 import ManagerWebinarEditor from './pages/ManagerWebinarEditor';
 import ManagerResourceEditor from './pages/ManagerResourceEditor';
 import Resources from './pages/Resources';
+import TransformationStory from './pages/TransformationStory';
 import __Layout from './Layout.jsx';
 
 
@@ -172,6 +173,7 @@ export const PAGES = {
     "ManagerWebinarEditor": ManagerWebinarEditor,
     "ManagerResourceEditor": ManagerResourceEditor,
     "Resources": Resources,
+    "TransformationStory": TransformationStory,
 }
 
 export const pagesConfig = {

@@ -24,6 +24,19 @@ export default function CoursePage() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Check if user should take start snapshot
+        if (currentUser && course) {
+          const existingSnapshots = await base44.entities.TransformationSnapshot.filter({
+            created_by: currentUser.email,
+            snapshot_type: 'course_start',
+            related_id: course.id
+          });
+          
+          if (existingSnapshots.length === 0 && courseProgress?.status === 'not_started') {
+            setShowStartSnapshot(true);
+          }
+        }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
