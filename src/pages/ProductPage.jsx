@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Check, Sparkles, ArrowRight, ShoppingCart, Loader2, Star } from "lucide-react";
 import { toast } from "react-hot-toast";
+import ProductOwnershipCheck from "../components/purchase/ProductOwnershipCheck";
 
 export default function ProductPage() {
   const [slug, setSlug] = useState("");
@@ -85,7 +86,8 @@ export default function ProductPage() {
   // Render different templates
   if (product.template_choice === "minimal") {
     return (
-      <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
+      <ProductOwnershipCheck productKey={product.key}>
+        <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
         <SEO
           title={`${product.name} | Your Mind Stylist`}
           description={product.short_description}
@@ -157,13 +159,14 @@ export default function ProductPage() {
             )}
           </motion.div>
         </div>
-      </div>
+      </ProductOwnershipCheck>
     );
   }
 
   if (product.template_choice === "immersive") {
     return (
-      <div className="bg-[#1E3A32] min-h-screen">
+      <ProductOwnershipCheck productKey={product.key}>
+        <div className="bg-[#1E3A32] min-h-screen">
         <SEO
           title={`${product.name} | Your Mind Stylist`}
           description={product.short_description}
@@ -288,13 +291,14 @@ export default function ProductPage() {
             </Button>
           </div>
         </section>
-      </div>
+      </ProductOwnershipCheck>
     );
   }
 
   // Default: Detailed Template
   return (
-    <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
+    <ProductOwnershipCheck productKey={product.key}>
+      <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
       <SEO
         title={`${product.name} | Your Mind Stylist`}
         description={product.short_description}
@@ -428,6 +432,6 @@ export default function ProductPage() {
           </motion.div>
         </div>
       </div>
-    </div>
+    </ProductOwnershipCheck>
   );
 }

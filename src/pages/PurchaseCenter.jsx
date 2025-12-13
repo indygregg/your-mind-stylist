@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Layers, Sparkles, Play, User, Check, ArrowRight, ShoppingCart, ExternalLink, Loader2, Package, BookOpen, Users, Crown } from "lucide-react";
 import { toast } from "react-hot-toast";
+import RecommendedProducts from "../components/purchase/RecommendedProducts";
 
 export default function PurchaseCenter() {
   const [user, setUser] = useState(null);
@@ -135,6 +136,9 @@ export default function PurchaseCenter() {
               Explore and purchase all Mind Stylist offerings.
             </p>
           </div>
+
+          {/* Recommended Products */}
+          <RecommendedProducts />
 
           {/* Products by Category */}
           {Object.entries(productsByCategory).map(([category, categoryProducts]) => {

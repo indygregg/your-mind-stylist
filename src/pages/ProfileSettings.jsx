@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { User, Upload, Save, Loader2 } from "lucide-react";
+import { User, Upload, Save, Loader2, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function ProfileSettings() {
@@ -216,6 +216,41 @@ export default function ProfileSettings() {
               </div>
             </div>
           </div>
+
+          {/* Subscription Management */}
+          {user?.pocket_visualization_active && (
+            <div className="bg-white p-8 mb-6">
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Subscription Management</h2>
+              
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                  <p className="text-[#2B2725]/70 mb-2">
+                    Manage your Pocket Visualization™ subscription
+                  </p>
+                  <p className="text-sm text-[#2B2725]/60">
+                    Update payment method, view invoices, or cancel subscription
+                  </p>
+                </div>
+                <Button
+                  onClick={async () => {
+                    try {
+                      const response = await base44.functions.invoke('createCustomerPortalSession', {});
+                      if (response.data?.url) {
+                        window.location.href = response.data.url;
+                      }
+                    } catch (error) {
+                      alert(error.message || 'Failed to open billing portal');
+                    }
+                  }}
+                  variant="outline"
+                  className="border-[#1E3A32] hover:bg-[#1E3A32] hover:text-white"
+                >
+                  <ExternalLink size={16} className="mr-2" />
+                  Manage Subscription
+                </Button>
+              </div>
+            </div>
+          )}
 
           {/* Save Button */}
           <div className="flex justify-end">
