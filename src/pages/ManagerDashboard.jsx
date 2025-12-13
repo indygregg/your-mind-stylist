@@ -102,6 +102,7 @@ export default function ManagerDashboard() {
 
   const quickActions = [
     { icon: PenSquare, label: "Create New Blog Post", link: "BlogEditor?mode=new" },
+    { icon: ShoppingCart, label: "Product Manager", link: "ManagerProducts" },
     { icon: Calendar, label: "Booking Calendar", link: "ManagerCalendar" },
     { icon: Clock, label: "Manage Availability", link: "ManagerAvailability" },
     { icon: Settings, label: "Manage Appointment Types", link: "ManagerAppointmentTypes" },
