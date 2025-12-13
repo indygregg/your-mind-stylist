@@ -334,7 +334,7 @@ export default function ManagerReports() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Clients</SelectItem>
-                    <SelectItem value="new">New (< 30 days)</SelectItem>
+                    <SelectItem value="new">New (&lt; 30 days)</SelectItem>
                     <SelectItem value="returning">Returning (2+ bookings)</SelectItem>
                   </SelectContent>
                 </Select>
