@@ -192,15 +192,37 @@ export default function AuthLayout({ children, currentPageName }) {
                     </Link>
                   </DropdownMenuItem>
                   {(user?.role === "admin" || user?.role === "manager") && (
-                    <DropdownMenuItem asChild>
-                      <Link
-                        to={createPageUrl("StudioSettings")}
-                        className="flex items-center gap-2 cursor-pointer"
-                      >
-                        <Settings size={16} />
-                        Studio Settings
-                      </Link>
-                    </DropdownMenuItem>
+                    <>
+                      <DropdownMenuItem asChild>
+                        <Link
+                          to={createPageUrl("StudioSettings")}
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+                          <Settings size={16} />
+                          Studio Settings
+                        </Link>
+                      </DropdownMenuItem>
+                      {user?.role === "admin" && (
+                        <DropdownMenuItem asChild>
+                          <Link
+                            to={createPageUrl("AdminDashboard")}
+                            className="flex items-center gap-2 cursor-pointer"
+                          >
+                            <Settings size={16} />
+                            Admin Dashboard
+                          </Link>
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuItem asChild>
+                        <Link
+                          to={createPageUrl("ManagerDashboard")}
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+                          <Settings size={16} />
+                          Manager Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
                   )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem

@@ -97,14 +97,14 @@ export default function ManagerDashboard() {
     { icon: PenSquare, label: "Create New Blog Post", link: "BlogEditor?mode=new" },
     { icon: Calendar, label: "Booking Calendar", link: "ManagerCalendar" },
     { icon: Clock, label: "Manage Availability", link: "ManagerAvailability" },
-    { icon: Settings, label: "Manage Appointment Types", link: "ManagerAppointments" },
+    { icon: Settings, label: "Manage Appointment Types", link: "ManagerAppointmentTypes" },
     { icon: Mail, label: "Email Templates", link: "ManagerEmailTemplates" },
     { icon: BarChart3, label: "Booking Analytics", link: "ManagerAnalytics" },
     { icon: Sparkles, label: "Transformation Analytics", link: "ManagerTransformationAnalytics" },
     { icon: Play, label: "Demo Setup & Preview", link: "DemoSetup" },
     { icon: TrendingUp, label: "Masterclass Funnel", link: "ManagerMasterclass" },
     { icon: Video, label: "Zoom Integration", link: "ZoomConnect" },
-    { icon: Users, label: "View Messages", link: "MessagesManager" },
+    { icon: Users, label: "CRM & Tags", link: "ManagerCRM" },
     { icon: FileVideo, label: "Course Manager", link: "CourseManager" },
     ];
 
