@@ -179,29 +179,22 @@ export default function Bookings() {
 
         {/* Hero Section - Only show on step 1 */}
         {step === 1 && (
-          <section className="relative pt-32 pb-20 px-6 bg-gradient-to-br from-[#1E3A32] to-[#2B4A40] text-white">
+          <section className="relative pt-32 pb-12 px-6 bg-gradient-to-br from-[#1E3A32] to-[#2B4A40] text-white">
           <div className="max-w-5xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <CmsText
-                id="bookings_hero_eyebrow"
-                defaultValue="Book Your Session"
-                className="text-[#D8B46B] text-sm tracking-[0.3em] uppercase mb-4 block"
-              />
-              <CmsText
-                id="bookings_hero_title"
-                defaultValue="Begin Your Transformation"
-                as="h1"
-                className="font-serif text-5xl md:text-6xl lg:text-7xl mb-6"
-              />
-              <CmsText
-                id="bookings_hero_subtitle"
-                defaultValue="Choose the session type that fits your needs. Every journey starts with a single step."
-                className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed block"
-              />
+              <span className="text-[#D8B46B] text-sm tracking-[0.3em] uppercase mb-4 block">
+                Book Your Session
+              </span>
+              <h1 className="font-serif text-4xl md:text-5xl mb-4">
+                Begin Your Transformation
+              </h1>
+              <p className="text-lg text-white/80 max-w-3xl mx-auto">
+                Choose the session type that fits your needs. Every journey starts with a single step.
+              </p>
             </motion.div>
           </div>
         </section>
@@ -247,91 +240,9 @@ export default function Bookings() {
           </div>
         )}
 
-        {/* How It Works - Only show on step 1 */}
-        {step === 1 && (
-          <section className="py-16 px-6 bg-white">
-          <div className="max-w-5xl mx-auto">
-            <CmsText
-              id="bookings_how_it_works_title"
-              defaultValue="How It Works"
-              as="h2"
-              className="font-serif text-3xl text-[#1E3A32] text-center mb-12"
-            />
-            <div className="grid md:grid-cols-3 gap-8">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="text-center"
-              >
-                <div className="w-16 h-16 rounded-full bg-[#D8B46B] text-white flex items-center justify-center text-2xl font-serif mx-auto mb-4">
-                  1
-                </div>
-                <CmsText
-                  id="bookings_step1_title"
-                  defaultValue="Choose Your Session"
-                  as="h3"
-                  className="font-serif text-xl text-[#1E3A32] mb-2"
-                />
-                <CmsText
-                  id="bookings_step1_desc"
-                  defaultValue="Select the type of session that aligns with your goals"
-                  className="text-[#2B2725]/70 block"
-                />
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="text-center"
-              >
-                <div className="w-16 h-16 rounded-full bg-[#D8B46B] text-white flex items-center justify-center text-2xl font-serif mx-auto mb-4">
-                  2
-                </div>
-                <CmsText
-                  id="bookings_step2_title"
-                  defaultValue="Pick Your Time"
-                  as="h3"
-                  className="font-serif text-xl text-[#1E3A32] mb-2"
-                />
-                <CmsText
-                  id="bookings_step2_desc"
-                  defaultValue="Select from available dates and times that work for you"
-                  className="text-[#2B2725]/70 block"
-                />
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 }}
-                className="text-center"
-              >
-                <div className="w-16 h-16 rounded-full bg-[#D8B46B] text-white flex items-center justify-center text-2xl font-serif mx-auto mb-4">
-                  3
-                </div>
-                <CmsText
-                  id="bookings_step3_title"
-                  defaultValue="Get Started"
-                  as="h3"
-                  className="font-serif text-xl text-[#1E3A32] mb-2"
-                />
-                <CmsText
-                  id="bookings_step3_desc"
-                  defaultValue="Receive confirmation and prepare for your transformation"
-                  className="text-[#2B2725]/70 block"
-                />
-              </motion.div>
-            </div>
-          </div>
-        </section>
-        )}
-
         {/* Step 1: Services Grid */}
         {step === 1 && (
-          <section className="py-20 px-6">
+          <section className="py-16 px-6">
           <div className="max-w-6xl mx-auto">
             {appointmentTypes.length === 0 ? (
               <motion.div
@@ -358,7 +269,10 @@ export default function Bookings() {
                 </div>
               </motion.div>
             ) : (
-              Object.entries(groupedServices).map(([type, services]) => {
+              // Reorder to show private_sessions first, then consultation
+              const orderedTypes = ['private_sessions', 'consultation', 'certification'];
+              orderedTypes.filter(type => groupedServices[type]).map((type) => {
+              const services = groupedServices[type];
               const category = serviceCategories[type];
               if (!category) return null;
 
@@ -565,22 +479,17 @@ export default function Bookings() {
 
         {/* CTA Section - Only show on step 1 */}
         {step === 1 && (
-          <section className="py-20 px-6 bg-[#1E3A32] text-white">
+          <section className="py-16 px-6 bg-[#1E3A32] text-white">
           <div className="max-w-4xl mx-auto text-center">
-            <CmsText
-              id="bookings_cta_title"
-              defaultValue="Not Sure Where to Start?"
-              as="h2"
-              className="font-serif text-4xl md:text-5xl mb-6"
-            />
-            <CmsText
-              id="bookings_cta_subtitle"
-              defaultValue="Book a complimentary consultation to discuss your goals and find the right path forward."
-              className="text-xl text-white/80 mb-8 max-w-2xl mx-auto block"
-            />
+            <h2 className="font-serif text-3xl md:text-4xl mb-4">
+              Not Sure Where to Start?
+            </h2>
+            <p className="text-lg text-white/80 mb-6 max-w-2xl mx-auto">
+              Book a complimentary consultation to discuss your goals and find the right path forward.
+            </p>
             <Button 
               size="lg"
-              className="bg-[#D8B46B] hover:bg-[#C9A55B] text-[#1E3A32] font-medium px-8 py-6 text-lg"
+              className="bg-[#D8B46B] hover:bg-[#C9A55B] text-[#1E3A32] font-medium px-8 py-4"
               onClick={() => window.location.href = createPageUrl('Contact')}
             >
               Schedule a Free Consultation
