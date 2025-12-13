@@ -100,6 +100,7 @@ import ManagerWaitingList from './pages/ManagerWaitingList';
 import ManagerClientAnalytics from './pages/ManagerClientAnalytics';
 import ManagerReports from './pages/ManagerReports';
 import ManagerCourseAnalytics from './pages/ManagerCourseAnalytics';
+import ManagerPurchaseFunnel from './pages/ManagerPurchaseFunnel';
 import __Layout from './Layout.jsx';
 
 
@@ -206,6 +207,7 @@ export const PAGES = {
     "ManagerClientAnalytics": ManagerClientAnalytics,
     "ManagerReports": ManagerReports,
     "ManagerCourseAnalytics": ManagerCourseAnalytics,
+    "ManagerPurchaseFunnel": ManagerPurchaseFunnel,
 }
 
 export const pagesConfig = {
