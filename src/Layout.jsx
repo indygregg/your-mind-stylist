@@ -134,15 +134,27 @@ export default function Layout({ children, currentPageName }) {
             : "bg-transparent"
         }`}
       >
+        {/* Determine if page has dark hero */}
+        {(() => {
+          const darkHeroPages = ['Bookings', 'Contact'];
+          const hasDarkHero = darkHeroPages.includes(currentPageName) && !isScrolled;
+          const textColorClass = hasDarkHero ? 'text-white' : 'text-[#2B2725]';
+          const textColorOpacity = hasDarkHero ? 'text-white/80' : 'text-[#2B2725]/60';
+          const logoSrc = hasDarkHero 
+            ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/7d481edb8_light-mind-stylist-icon2x.png'
+            : 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9ea03b99b_mind-stylist-icon2x.png';
+          
+          return (
+            <>
         {/* Micro Header */}
-        <div className="hidden lg:block border-b border-[#D8B46B]/20">
+        <div className={`hidden lg:block border-b ${hasDarkHero ? 'border-white/20' : 'border-[#D8B46B]/20'}`}>
           <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
-            <p className="text-xs tracking-[0.2em] text-[#2B2725]/60 uppercase font-light">
+            <p className={`text-xs tracking-[0.2em] ${textColorOpacity} uppercase font-light`}>
               Las Vegas • Emotional Intelligence • Mind Styling • Leadership & Personal Transformation
             </p>
             <Link
               to={createPageUrl("Bookings")}
-              className="text-xs tracking-wide text-[#1E3A32] hover:text-[#D8B46B] transition-colors font-medium"
+              className={`text-xs tracking-wide ${hasDarkHero ? 'text-white hover:text-[#D8B46B]' : 'text-[#1E3A32] hover:text-[#D8B46B]'} transition-colors font-medium`}
             >
               Schedule Your Complimentary Consultation
             </Link>
@@ -153,15 +165,15 @@ export default function Layout({ children, currentPageName }) {
         <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link to={createPageUrl("Home")} className="group flex items-center gap-3">
             <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9ea03b99b_mind-stylist-icon2x.png" 
+              src={logoSrc} 
               alt="Your Mind Stylist Logo" 
               className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 object-contain"
             />
             <div className="flex flex-col">
-              <span className="text-[10px] md:text-xs text-[#2B2725]/60 tracking-[0.2em] uppercase">
+              <span className={`text-[10px] md:text-xs ${textColorOpacity} tracking-[0.2em] uppercase`}>
                 Roberta Fernandez
               </span>
-              <span className="font-serif font-bold text-lg md:text-xl text-[#1E3A32] tracking-wide">
+              <span className={`font-serif font-bold text-lg md:text-xl ${hasDarkHero ? 'text-white' : 'text-[#1E3A32]'} tracking-wide`}>
                 Your Mind Stylist
               </span>
             </div>
@@ -173,8 +185,8 @@ export default function Layout({ children, currentPageName }) {
               to={createPageUrl("Home")}
               className={`text-sm tracking-wide transition-all duration-300 relative group ${
                 currentPageName === "Home"
-                  ? "text-[#1E3A32]"
-                  : "text-[#2B2725]/70 hover:text-[#1E3A32]"
+                  ? (hasDarkHero ? "text-white" : "text-[#1E3A32]")
+                  : (hasDarkHero ? "text-white/80 hover:text-white" : "text-[#2B2725]/70 hover:text-[#1E3A32]")
               }`}
             >
               Home
@@ -192,7 +204,9 @@ export default function Layout({ children, currentPageName }) {
               onMouseLeave={() => setServicesOpen(false)}
             >
               <button
-                className="text-sm tracking-wide transition-all duration-300 relative group text-[#2B2725]/70 hover:text-[#1E3A32]"
+                className={`text-sm tracking-wide transition-all duration-300 relative group ${
+                  hasDarkHero ? "text-white/80 hover:text-white" : "text-[#2B2725]/70 hover:text-[#1E3A32]"
+                }`}
               >
                 Services
                 <span
@@ -247,8 +261,8 @@ export default function Layout({ children, currentPageName }) {
                 to={createPageUrl(link.page)}
                 className={`text-sm tracking-wide transition-all duration-300 relative group ${
                   currentPageName === link.page
-                    ? "text-[#1E3A32]"
-                    : "text-[#2B2725]/70 hover:text-[#1E3A32]"
+                    ? (hasDarkHero ? "text-white" : "text-[#1E3A32]")
+                    : (hasDarkHero ? "text-white/80 hover:text-white" : "text-[#2B2725]/70 hover:text-[#1E3A32]")
                 }`}
                 >
                 {link.name}
@@ -260,16 +274,16 @@ export default function Layout({ children, currentPageName }) {
                 </Link>
                 ))}
 
-                <div className="flex items-center gap-3 ml-6 pl-6 border-l border-[#D8B46B]/20">
+                <div className={`flex items-center gap-3 ml-6 pl-6 border-l ${hasDarkHero ? 'border-white/20' : 'border-[#D8B46B]/20'}`}>
                   <a
                     href="https://yourmindstylist.com/login"
-                    className="text-sm tracking-wide text-[#2B2725]/70 hover:text-[#1E3A32] transition-colors"
+                    className={`text-sm tracking-wide ${hasDarkHero ? 'text-white/80 hover:text-white' : 'text-[#2B2725]/70 hover:text-[#1E3A32]'} transition-colors`}
                   >
                     Login
                   </a>
                   <a
                     href="https://yourmindstylist.com/login"
-                    className="px-5 py-2 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+                    className={`px-5 py-2 ${hasDarkHero ? 'bg-white text-[#1E3A32] hover:bg-[#F9F5EF]' : 'bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725]'} text-sm tracking-wide transition-all duration-300`}
                   >
                     Get Started
                   </a>
@@ -282,11 +296,14 @@ export default function Layout({ children, currentPageName }) {
                     haptics.light();
                     setMobileMenuOpen(!mobileMenuOpen);
                   }}
-                  className="lg:hidden p-3 text-[#1E3A32] hover:bg-[#1E3A32]/5 rounded-lg transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                  className={`lg:hidden p-3 ${hasDarkHero ? 'text-white hover:bg-white/10' : 'text-[#1E3A32] hover:bg-[#1E3A32]/5'} rounded-lg transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center`}
                 >
                   {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
-        </nav>
+                </nav>
+                </>
+                );
+                })()}
 
         <CookieBanner />
         <AccessibilityWidget />
@@ -349,12 +366,21 @@ export default function Layout({ children, currentPageName }) {
           <div className="grid md:grid-cols-3 gap-12 md:gap-8">
             {/* Brand */}
             <div>
-              <p className="text-[#F9F5EF]/60 text-xs tracking-[0.2em] uppercase mb-2">
-                Roberta Fernandez
-              </p>
-              <h3 className="font-serif font-bold text-3xl md:text-4xl text-[#F9F5EF] mb-6">
-                Your Mind Stylist
-              </h3>
+              <div className="flex items-center gap-3 mb-4">
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/7d481edb8_light-mind-stylist-icon2x.png" 
+                  alt="Your Mind Stylist Logo" 
+                  className="w-12 h-12 flex-shrink-0 object-contain"
+                />
+                <div>
+                  <p className="text-[#F9F5EF]/60 text-xs tracking-[0.2em] uppercase mb-1">
+                    Roberta Fernandez
+                  </p>
+                  <h3 className="font-serif font-bold text-2xl text-[#F9F5EF]">
+                    Your Mind Stylist
+                  </h3>
+                </div>
+              </div>
               <p className="text-[#F9F5EF]/70 text-sm leading-relaxed">
                 Emotional Intelligence • Mind Styling
                 <br />
