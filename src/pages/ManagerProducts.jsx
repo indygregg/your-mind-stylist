@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye, EyeOff, DollarSign, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, DollarSign, Sparkles, RefreshCw, ExternalLink, Download, Upload } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ReactQuill from "react-quill";
 
@@ -16,6 +16,8 @@ export default function ManagerProducts() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [syncing, setSyncing] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const fileInputRef = React.useRef(null);
 
   const [formData, setFormData] = useState({
     key: "",
@@ -233,6 +235,108 @@ export default function ManagerProducts() {
     setFormData({ ...formData, features: updated });
   };
 
+  const handleExportJSON = () => {
+    const dataStr = JSON.stringify(products, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `products-export-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success('Products exported as JSON');
+  };
+
+  const handleExportCSV = () => {
+    const headers = ['key', 'slug', 'name', 'tagline', 'short_description', 'type', 'category', 'price', 'currency', 'billing_interval', 'status', 'ui_group', 'template_choice'];
+    const csvContent = [
+      headers.join(','),
+      ...products.map(p => [
+        p.key || '',
+        p.slug || '',
+        `"${(p.name || '').replace(/"/g, '""')}"`,
+        `"${(p.tagline || '').replace(/"/g, '""')}"`,
+        `"${(p.short_description || '').replace(/"/g, '""')}"`,
+        p.type || '',
+        p.category || '',
+        p.price || 0,
+        p.currency || 'usd',
+        p.billing_interval || 'one_time',
+        p.status || 'draft',
+        p.ui_group || 'standard',
+        p.template_choice || 'detailed'
+      ].join(','))
+    ].join('\n');
+
+    const dataBlob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `products-export-${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast.success('Products exported as CSV');
+  };
+
+  const handleImport = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setImporting(true);
+    try {
+      const text = await file.text();
+      let importData = [];
+
+      if (file.name.endsWith('.json')) {
+        importData = JSON.parse(text);
+      } else if (file.name.endsWith('.csv')) {
+        const lines = text.split('\n').filter(line => line.trim());
+        const headers = lines[0].split(',');
+        importData = lines.slice(1).map(line => {
+          const values = line.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
+          const obj = {};
+          headers.forEach((header, i) => {
+            let value = values[i]?.trim().replace(/^"(.*)"$/, '$1').replace(/""/g, '"');
+            if (header === 'price') value = parseInt(value) || 0;
+            obj[header] = value;
+          });
+          return obj;
+        });
+      }
+
+      let created = 0;
+      let errors = [];
+
+      for (const item of importData) {
+        try {
+          const existing = products.find(p => p.key === item.key);
+          if (existing) {
+            await base44.entities.Product.update(existing.id, item);
+          } else {
+            await base44.entities.Product.create(item);
+            created++;
+          }
+        } catch (error) {
+          errors.push(`Failed to import ${item.key}: ${error.message}`);
+        }
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      
+      if (errors.length > 0) {
+        toast.error(`Imported with ${errors.length} errors. Check console.`);
+        console.error('Import errors:', errors);
+      } else {
+        toast.success(`Successfully imported ${created} new products`);
+      }
+    } catch (error) {
+      toast.error(`Import failed: ${error.message}`);
+    } finally {
+      setImporting(false);
+      event.target.value = '';
+    }
+  };
+
   const categoryLabels = {
     foundation: "Tier 1: Foundation",
     mid_level: "Tier 2: Mid-Level",
@@ -258,12 +362,61 @@ export default function ManagerProducts() {
           <div className="flex gap-3">
             <Button
               variant="outline"
+              onClick={() => {
+                const menu = document.createElement('div');
+                menu.style.cssText = 'position:absolute;background:white;border:1px solid #E4D9C4;border-radius:4px;padding:8px;z-index:100;';
+                menu.innerHTML = `
+                  <button class="export-json" style="display:block;width:100%;text-align:left;padding:8px;border:none;background:none;cursor:pointer;font-size:14px;">Export as JSON</button>
+                  <button class="export-csv" style="display:block;width:100%;text-align:left;padding:8px;border:none;background:none;cursor:pointer;font-size:14px;">Export as CSV</button>
+                `;
+                document.body.appendChild(menu);
+                const rect = event.target.getBoundingClientRect();
+                menu.style.top = rect.bottom + 5 + 'px';
+                menu.style.left = rect.left + 'px';
+
+                menu.querySelector('.export-json').onclick = () => {
+                  handleExportJSON();
+                  document.body.removeChild(menu);
+                };
+                menu.querySelector('.export-csv').onclick = () => {
+                  handleExportCSV();
+                  document.body.removeChild(menu);
+                };
+
+                setTimeout(() => {
+                  const closeMenu = () => document.body.contains(menu) && document.body.removeChild(menu);
+                  document.addEventListener('click', closeMenu, { once: true });
+                }, 100);
+              }}
+              className="border-[#D8B46B]"
+            >
+              <Download size={16} className="mr-2" />
+              Export
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={importing}
+              className="border-[#D8B46B]"
+            >
+              <Upload size={16} className={`mr-2 ${importing ? "animate-pulse" : ""}`} />
+              Import
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json,.csv"
+              onChange={handleImport}
+              style={{ display: 'none' }}
+            />
+            <Button
+              variant="outline"
               onClick={handleSyncAll}
               disabled={syncing}
               className="border-[#D8B46B]"
             >
               <RefreshCw size={16} className={`mr-2 ${syncing ? "animate-spin" : ""}`} />
-              Sync All with Stripe
+              Sync All
             </Button>
             <Button
               onClick={() => {
