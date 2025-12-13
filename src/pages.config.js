@@ -108,6 +108,7 @@ import Sitemap from './pages/Sitemap';
 import RobotsText from './pages/RobotsText';
 import ManageSubscription from './pages/ManageSubscription';
 import ManagerPaymentPlans from './pages/ManagerPaymentPlans';
+import CalendarSettings from './pages/CalendarSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -222,6 +223,7 @@ export const PAGES = {
     "RobotsText": RobotsText,
     "ManageSubscription": ManageSubscription,
     "ManagerPaymentPlans": ManagerPaymentPlans,
+    "CalendarSettings": CalendarSettings,
 }
 
 export const pagesConfig = {
