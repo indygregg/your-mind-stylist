@@ -98,6 +98,7 @@ import ManagerProductAnalytics from './pages/ManagerProductAnalytics';
 import ClientPortal from './pages/ClientPortal';
 import ManagerWaitingList from './pages/ManagerWaitingList';
 import ManagerClientAnalytics from './pages/ManagerClientAnalytics';
+import ManagerReports from './pages/ManagerReports';
 import __Layout from './Layout.jsx';
 
 
@@ -202,6 +203,7 @@ export const PAGES = {
     "ClientPortal": ClientPortal,
     "ManagerWaitingList": ManagerWaitingList,
     "ManagerClientAnalytics": ManagerClientAnalytics,
+    "ManagerReports": ManagerReports,
 }
 
 export const pagesConfig = {
