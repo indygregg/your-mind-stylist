@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { 
   Trophy, Sparkles, Heart, BookOpen, Calendar, 
-  Target, Zap, Star, Crown, Award 
+  Target, Zap, Star, Crown, Award, Share2 
 } from "lucide-react";
+import ShareAchievement from "./ShareAchievement";
 import confetti from "canvas-confetti";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
@@ -20,6 +21,7 @@ const MILESTONE_ICONS = {
 
 export default function MilestoneCelebration({ milestone, onClose }) {
   const queryClient = useQueryClient();
+  const [showShare, setShowShare] = useState(false);
   
   useEffect(() => {
     // Fire confetti
@@ -168,21 +170,38 @@ export default function MilestoneCelebration({ milestone, onClose }) {
             </motion.div>
           )}
 
-          {/* Action */}
+          {/* Actions */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
+            className="flex flex-col sm:flex-row gap-3"
           >
+            <Button
+              onClick={() => setShowShare(true)}
+              variant="outline"
+              className="border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B]/10"
+              size="lg"
+            >
+              <Share2 size={18} className="mr-2" />
+              Share Achievement
+            </Button>
             <Button
               onClick={() => markCelebratedMutation.mutate()}
               disabled={markCelebratedMutation.isPending}
-              className="bg-[#D8B46B] hover:bg-[#C9A55B] text-[#1E3A32] font-medium px-8 py-6 text-lg"
+              className="bg-[#D8B46B] hover:bg-[#C9A55B] text-[#1E3A32] font-medium px-8"
               size="lg"
             >
               {markCelebratedMutation.isPending ? "Saving..." : "Continue Your Journey"}
             </Button>
           </motion.div>
+          
+          {showShare && (
+            <ShareAchievement 
+              milestone={milestone} 
+              onClose={() => setShowShare(false)} 
+            />
+          )}
 
           <p className="text-white/60 text-xs mt-4">
             This achievement has been added to your transformation story

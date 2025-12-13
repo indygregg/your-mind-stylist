@@ -4,11 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { 
   Sparkles, Calendar, TrendingUp, Heart, BookOpen, 
-  Award, Target, Zap, Camera, ChevronDown, ChevronUp, Lightbulb
+  Award, Target, Zap, Camera, ChevronDown, ChevronUp, Lightbulb, Map
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
 import InsightsPanel from "../components/transformation/InsightsPanel";
+import JourneyMap from "../components/transformation/JourneyMap";
 import { format } from "date-fns";
 import {
   LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, 
@@ -35,10 +36,11 @@ export default function TransformationStory() {
   const [user, setUser] = useState(null);
   const [selectedTimeframe, setSelectedTimeframe] = useState("all"); // all, 30d, 90d, year
   const [expandedSections, setExpandedSections] = useState({
-    timeline: true,
+    journey: true,
+    timeline: false,
     trends: true,
     milestones: true,
-    snapshots: true
+    snapshots: false
   });
 
   useEffect(() => {
@@ -109,21 +111,25 @@ export default function TransformationStory() {
   // Build unified timeline
   const timelineEvents = [
     ...reflections.map(r => ({
-      type: 'reflection',
+      type: r.breakthrough_tagged ? 'breakthrough' : 'reflection',
       date: r.created_date,
       title: r.related_title || 'Personal Reflection',
+      preview: r.what_shifted,
+      tags: r.tags,
       data: r
     })),
     ...milestones.map(m => ({
       type: 'milestone',
       date: m.unlocked_date,
       title: m.milestone_name,
+      preview: m.milestone_description,
       data: m
     })),
     ...snapshots.map(s => ({
       type: 'snapshot',
       date: s.created_date,
       title: `${s.snapshot_type.replace(/_/g, ' ')} - ${s.related_title || ''}`,
+      preview: s.notes || s.intentions,
       data: s
     }))
   ].sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -334,65 +340,31 @@ export default function TransformationStory() {
             )}
           </motion.div>
 
-          {/* Timeline */}
+          {/* Journey Map */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-md overflow-hidden"
+            className="bg-white rounded-xl shadow-md overflow-hidden mb-8"
           >
             <button
-              onClick={() => toggleSection('timeline')}
+              onClick={() => toggleSection('journey')}
               className="w-full p-6 flex items-center justify-between hover:bg-[#F9F5EF] transition-colors"
             >
               <div className="flex items-center gap-3">
-                <Calendar size={24} className="text-[#D8B46B]" />
-                <h2 className="font-serif text-2xl text-[#1E3A32]">Complete Timeline</h2>
+                <Map size={24} className="text-[#D8B46B]" />
+                <h2 className="font-serif text-2xl text-[#1E3A32]">Your Journey</h2>
               </div>
-              {expandedSections.timeline ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+              {expandedSections.journey ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
             </button>
-            {expandedSections.timeline && (
+            {expandedSections.journey && (
               <div className="p-6 pt-0">
-                <div className="space-y-4">
-                  {timelineEvents.map((event, index) => (
-                    <div key={index} className="flex gap-4">
-                      <div className="flex flex-col items-center">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          event.type === 'milestone' ? 'bg-[#D8B46B]' :
-                          event.type === 'snapshot' ? 'bg-[#A6B7A3]' :
-                          'bg-[#6E4F7D]'
-                        }`}>
-                          {event.type === 'milestone' && <Award size={20} className="text-white" />}
-                          {event.type === 'snapshot' && <Camera size={20} className="text-white" />}
-                          {event.type === 'reflection' && <Heart size={20} className="text-white" />}
-                        </div>
-                        {index < timelineEvents.length - 1 && (
-                          <div className="w-0.5 h-full bg-[#E4D9C4] mt-2"></div>
-                        )}
-                      </div>
-                      <div className="flex-1 pb-8">
-                        <p className="text-xs text-[#2B2725]/50 mb-1">
-                          {format(new Date(event.date), 'MMM d, yyyy • h:mm a')}
-                        </p>
-                        <h3 className="font-medium text-[#1E3A32] mb-2">{event.title}</h3>
-                        {event.type === 'reflection' && event.data.what_shifted && (
-                          <p className="text-sm text-[#2B2725]/70 italic">
-                            "{event.data.what_shifted}"
-                          </p>
-                        )}
-                        {event.type === 'milestone' && event.data.points_awarded > 0 && (
-                          <p className="text-sm text-[#D8B46B] font-medium">
-                            +{event.data.points_awarded} points
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                  {timelineEvents.length === 0 && (
-                    <div className="text-center py-12 text-[#2B2725]/60">
-                      Your story begins here. Start with a reflection or check-in.
-                    </div>
-                  )}
-                </div>
+                {timelineEvents.length > 0 ? (
+                  <JourneyMap events={timelineEvents} />
+                ) : (
+                  <div className="text-center py-12 text-[#2B2725]/60">
+                    Your journey map will appear here as you create reflections, reach milestones, and track your progress.
+                  </div>
+                )}
               </div>
             )}
           </motion.div>
