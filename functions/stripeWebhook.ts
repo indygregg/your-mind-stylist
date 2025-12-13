@@ -186,6 +186,63 @@ Deno.serve(async (req) => {
                         });
                     }
                 }
+                
+                // Handle Masterclass Signup (free access)
+                else if (session.metadata.type === 'masterclass_signup' && session.metadata.user_id) {
+                    // Mark user as needing onboarding
+                    await base44.asServiceRole.entities.User.update(session.metadata.user_id, {
+                        needs_masterclass_onboarding: true,
+                        masterclass_signup_date: new Date().toISOString()
+                    });
+
+                    // Send welcome email with masterclass access
+                    await base44.asServiceRole.integrations.Core.SendEmail({
+                        to: session.customer_email,
+                        subject: 'Welcome! Your Masterclass Is Ready',
+                        body: `
+                            <div style="font-family: Inter, sans-serif; max-width: 600px; margin: 0 auto;">
+                                <h1 style="font-family: 'Playfair Display', serif; color: #1E3A32; font-size: 32px; margin-bottom: 16px;">Welcome to Your Mind Stylist</h1>
+                                
+                                <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                                    Thank you for signing up for the <strong>Imposter Syndrome & Other Myths to Ditch</strong> masterclass.
+                                </p>
+                                
+                                <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                                    Your masterclass is now available in your personal dashboard. You can watch it anytime, pause, rewatch sections, and take notes as you go.
+                                </p>
+                                
+                                <div style="background: #F9F5EF; padding: 24px; margin: 24px 0; border-left: 4px solid #D8B46B;">
+                                    <p style="color: #1E3A32; font-size: 16px; margin: 0;">
+                                        <strong>What's included:</strong>
+                                    </p>
+                                    <ul style="color: #2B2725; margin-top: 12px;">
+                                        <li>Full masterclass video (on-demand)</li>
+                                        <li>Your Mind Styling Studio™ dashboard</li>
+                                        <li>Progress tracking and notes</li>
+                                        <li>Access to Style Pauses™</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="text-align: center; margin: 32px 0;">
+                                    <a href="https://yourmindstylist.com/login?from_masterclass=true" 
+                                       style="display: inline-block; background: #1E3A32; color: #F9F5EF; padding: 16px 32px; text-decoration: none; font-weight: 500; letter-spacing: 0.5px;">
+                                        ACCESS YOUR DASHBOARD
+                                    </a>
+                                </div>
+                                
+                                <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                                    If the masterclass resonates with you, I'd love to continue supporting your work. You'll find information about private coaching, certification training, and group programs inside your dashboard.
+                                </p>
+                                
+                                <p style="color: #2B2725; font-size: 16px; line-height: 1.6;">
+                                    Welcome aboard,<br>
+                                    <strong>Roberta Fernandez</strong><br>
+                                    <span style="color: #D8B46B;">Your Mind Stylist</span>
+                                </p>
+                            </div>
+                        `
+                    });
+                }
                 break;
             }
 
