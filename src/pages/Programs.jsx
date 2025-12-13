@@ -15,8 +15,33 @@ import {
   CheckCircle
 } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
+import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Programs() {
+  // Fetch published products from database
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["published-products"],
+    queryFn: async () => {
+      const all = await base44.entities.Product.filter({ status: "published" }, "display_order");
+      return all;
+    },
+  });
+
+  // Group products by category
+  const productsByCategory = {
+    foundation: products.filter(p => p.category === "foundation"),
+    mid_level: products.filter(p => p.category === "mid_level"),
+    high_touch: products.filter(p => p.category === "high_touch"),
+    advanced: products.filter(p => p.category === "advanced"),
+  };
+
+  const formatPrice = (price, billing_interval) => {
+    const dollars = (price / 100).toFixed(2);
+    if (billing_interval === "monthly") return `$${dollars}/mo`;
+    if (billing_interval === "yearly") return `$${dollars}/yr`;
+    return `$${dollars}`;
+  };
   return (
     <div className="bg-[#F9F5EF]">
       <SEO
@@ -107,157 +132,201 @@ export default function Programs() {
             </h2>
 
             {/* Tier 1 — Foundations & Everyday Support */}
-            <div className="mb-20">
-              <div className="flex items-center gap-3 mb-8">
-                <Zap size={28} className="text-[#D8B46B]" />
-                <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
-                  Tier 1 — Foundations & Everyday Support
-                </h3>
-              </div>
-              <p className="text-[#2B2725]/70 mb-8">Entry-level offerings (low commitment, high accessibility)</p>
-
-              <div className="grid md:grid-cols-3 gap-6">
-                {/* Mind Declutter Audio Series */}
-                <div className="bg-white p-8 border border-[#E4D9C4] hover:border-[#D8B46B] transition-all">
-                  <h4 className="font-serif text-xl text-[#1E3A32] mb-3">Mind Declutter Audio Series</h4>
-                  <p className="text-[#2B2725]/70 text-sm mb-4">
-                    Introductory self-paced audio sessions for emotional reset and focus
-                  </p>
-                  <p className="text-2xl font-bold text-[#1E3A32] mb-6">$9–$19</p>
-                  <Link to={createPageUrl("PurchaseCenter")}>
-                    <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
-                      Browse Series
-                    </Button>
-                  </Link>
+            {productsByCategory.foundation.length > 0 && (
+              <div className="mb-20">
+                <div className="flex items-center gap-3 mb-8">
+                  <Zap size={28} className="text-[#D8B46B]" />
+                  <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
+                    Tier 1 — Foundations & Everyday Support
+                  </h3>
                 </div>
+                <p className="text-[#2B2725]/70 mb-8">Entry-level offerings (low commitment, high accessibility)</p>
 
-                {/* Pocket Visualization */}
-                <div className="bg-white p-8 border-2 border-[#D8B46B] relative">
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D8B46B] px-4 py-1 text-xs text-[#1E3A32] tracking-wide uppercase">
-                    Popular
-                  </div>
-                  <h4 className="font-serif text-xl text-[#1E3A32] mb-3">Pocket Visualization™</h4>
-                  <p className="text-[#2B2725]/70 text-sm mb-4">
-                    Daily emotional state guidance (Roberta in your pocket)
-                  </p>
-                  <p className="text-2xl font-bold text-[#1E3A32] mb-2">$7/mo</p>
-                  <p className="text-sm text-[#2B2725]/60 mb-6">or $70/year</p>
-                  <Link to={createPageUrl("PocketVisualization")}>
-                    <Button className="w-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-[#F9F5EF]">
-                      Start for $7/mo
-                    </Button>
-                  </Link>
-                </div>
-
-                {/* Mini-Series Webinars */}
-                <div className="bg-white p-8 border border-[#E4D9C4] hover:border-[#D8B46B] transition-all">
-                  <h4 className="font-serif text-xl text-[#1E3A32] mb-3">Mind Styling Mini-Series™ Webinars</h4>
-                  <p className="text-[#2B2725]/70 text-sm mb-4">
-                    Short lessons on specific psychological themes
-                  </p>
-                  <p className="text-2xl font-bold text-[#1E3A32] mb-6">$9 each</p>
-                  <Link to={createPageUrl("PurchaseCenter")}>
-                    <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
-                      Browse Webinars
-                    </Button>
-                  </Link>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {productsByCategory.foundation.map((product) => (
+                    <div
+                      key={product.id}
+                      className={`bg-white p-8 border transition-all ${
+                        product.ui_group === "hero"
+                          ? "border-2 border-[#D8B46B] relative"
+                          : "border border-[#E4D9C4] hover:border-[#D8B46B]"
+                      }`}
+                    >
+                      {product.ui_group === "hero" && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D8B46B] px-4 py-1 text-xs text-[#1E3A32] tracking-wide uppercase">
+                          Popular
+                        </div>
+                      )}
+                      <h4 className="font-serif text-xl text-[#1E3A32] mb-3">{product.name}</h4>
+                      {product.tagline && (
+                        <p className="text-[#2B2725]/60 text-sm mb-4">{product.tagline}</p>
+                      )}
+                      <p className="text-[#2B2725]/70 text-sm mb-4">{product.short_description}</p>
+                      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
+                        {formatPrice(product.price, product.billing_interval)}
+                      </p>
+                      <Link to={createPageUrl("PurchaseCenter")}>
+                        <Button
+                          className={`w-full ${
+                            product.ui_group === "hero"
+                              ? "bg-[#D8B46B] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-[#F9F5EF]"
+                              : "bg-[#1E3A32] hover:bg-[#2B2725]"
+                          }`}
+                        >
+                          Get Started
+                        </Button>
+                      </Link>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Tier 2 — Mid-Level Learning */}
-            <div className="mb-20">
-              <div className="flex items-center gap-3 mb-8">
-                <BookOpen size={28} className="text-[#6E4F7D]" />
-                <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
-                  Tier 2 — Mid-Level Learning
-                </h3>
-              </div>
-              <p className="text-[#2B2725]/70 mb-8">More structured, self-paced learning designed for deeper change</p>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* 5-Part Toolkit Series */}
-                <div className="bg-white p-8 border border-[#E4D9C4]">
-                  <h4 className="font-serif text-xl text-[#1E3A32] mb-3">5-Part Toolkit Series</h4>
-                  <p className="text-[#2B2725]/70 text-sm mb-4">
-                    Core modules teaching foundational Mind Styling principles
-                  </p>
-                  <p className="text-2xl font-bold text-[#1E3A32] mb-6">$189 per module</p>
-                  <Link to={createPageUrl("PurchaseCenter")}>
-                    <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
-                      Browse Modules
-                    </Button>
-                  </Link>
+            {productsByCategory.mid_level.length > 0 && (
+              <div className="mb-20">
+                <div className="flex items-center gap-3 mb-8">
+                  <BookOpen size={28} className="text-[#6E4F7D]" />
+                  <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
+                    Tier 2 — Mid-Level Learning
+                  </h3>
                 </div>
+                <p className="text-[#2B2725]/70 mb-8">More structured, self-paced learning designed for deeper change</p>
 
-                {/* Toolkit Full Bundle */}
-                <div className="bg-[#6E4F7D] text-white p-8 relative">
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D8B46B] px-4 py-1 text-xs text-[#1E3A32] tracking-wide uppercase">
-                    Best Value
-                  </div>
-                  <h4 className="font-serif text-xl mb-3">Toolkit Full Bundle</h4>
-                  <p className="text-white/90 text-sm mb-4">
-                    All 5 modules in one package
-                  </p>
-                  <p className="text-3xl font-bold mb-6">$719</p>
-                  <Link to={createPageUrl("PurchaseCenter")}>
-                    <Button className="w-full bg-[#D8B46B] text-[#1E3A32] hover:bg-white">
-                      Get Full Toolkit
-                    </Button>
-                  </Link>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {productsByCategory.mid_level.map((product) => (
+                    <div
+                      key={product.id}
+                      className={
+                        product.ui_group === "featured"
+                          ? "bg-[#6E4F7D] text-white p-8 relative"
+                          : "bg-white p-8 border border-[#E4D9C4]"
+                      }
+                    >
+                      {product.ui_group === "featured" && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D8B46B] px-4 py-1 text-xs text-[#1E3A32] tracking-wide uppercase">
+                          Best Value
+                        </div>
+                      )}
+                      <h4
+                        className={`font-serif text-xl mb-3 ${
+                          product.ui_group === "featured" ? "text-white" : "text-[#1E3A32]"
+                        }`}
+                      >
+                        {product.name}
+                      </h4>
+                      {product.tagline && (
+                        <p
+                          className={`text-sm mb-4 ${
+                            product.ui_group === "featured" ? "text-white/90" : "text-[#2B2725]/60"
+                          }`}
+                        >
+                          {product.tagline}
+                        </p>
+                      )}
+                      <p
+                        className={`text-sm mb-4 ${
+                          product.ui_group === "featured" ? "text-white/90" : "text-[#2B2725]/70"
+                        }`}
+                      >
+                        {product.short_description}
+                      </p>
+                      <p
+                        className={`text-3xl font-bold mb-6 ${
+                          product.ui_group === "featured" ? "text-white" : "text-[#1E3A32]"
+                        }`}
+                      >
+                        {formatPrice(product.price, product.billing_interval)}
+                      </p>
+                      <Link to={createPageUrl("PurchaseCenter")}>
+                        <Button
+                          className={`w-full ${
+                            product.ui_group === "featured"
+                              ? "bg-[#D8B46B] text-[#1E3A32] hover:bg-white"
+                              : "bg-[#1E3A32] hover:bg-[#2B2725]"
+                          }`}
+                        >
+                          Get Started
+                        </Button>
+                      </Link>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Tier 3 — High-Touch Coaching & Community */}
-            <div className="mb-20">
-              <div className="flex items-center gap-3 mb-8">
-                <Users size={28} className="text-[#A6B7A3]" />
-                <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
-                  Tier 3 — High-Touch Coaching & Community
-                </h3>
-              </div>
-              <p className="text-[#2B2725]/70 mb-8">Work with Roberta more directly — small group or 1:1 support</p>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Salon (Group Coaching) */}
-                <div className="bg-white p-8 border border-[#E4D9C4]">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Users size={24} className="text-[#A6B7A3]" />
-                    <h4 className="font-serif text-xl text-[#1E3A32]">Salon (Group Coaching)</h4>
-                  </div>
-                  <p className="text-[#2B2725]/70 text-sm mb-4">
-                    12 participants, monthly live sessions plus toolkit guidance
-                  </p>
-                  <p className="text-3xl font-bold text-[#1E3A32] mb-6">$1,995</p>
-                  <Link to={createPageUrl("PurchaseCenter")}>
-                    <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
-                      Book Salon Coaching
-                    </Button>
-                  </Link>
+            {productsByCategory.high_touch.length > 0 && (
+              <div className="mb-20">
+                <div className="flex items-center gap-3 mb-8">
+                  <Users size={28} className="text-[#A6B7A3]" />
+                  <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
+                    Tier 3 — High-Touch Coaching & Community
+                  </h3>
                 </div>
+                <p className="text-[#2B2725]/70 mb-8">Work with Roberta more directly — small group or 1:1 support</p>
 
-                {/* Couture (1:1 Premium Coaching) */}
-                <div className="bg-gradient-to-br from-[#1E3A32] to-[#2B2725] text-white p-8 relative">
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D8B46B] px-4 py-1 text-xs text-[#1E3A32] tracking-wide uppercase">
-                    Premium
-                  </div>
-                  <div className="flex items-center gap-2 mb-4">
-                    <Crown size={24} className="text-[#D8B46B]" />
-                    <h4 className="font-serif text-xl">Couture (1:1 Premium Coaching)</h4>
-                  </div>
-                  <p className="text-white/90 text-sm mb-4">
-                    Intensive personal coaching + journal + bespoke hypnosis
-                  </p>
-                  <p className="text-3xl font-bold mb-6">$7,995</p>
-                  <Link to={createPageUrl("PrivateSessions")}>
-                    <Button className="w-full bg-[#D8B46B] text-[#1E3A32] hover:bg-white">
-                      Begin Couture Coaching
-                    </Button>
-                  </Link>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {productsByCategory.high_touch.map((product) => (
+                    <div
+                      key={product.id}
+                      className={
+                        product.ui_group === "featured"
+                          ? "bg-gradient-to-br from-[#1E3A32] to-[#2B2725] text-white p-8 relative"
+                          : "bg-white p-8 border border-[#E4D9C4]"
+                      }
+                    >
+                      {product.ui_group === "featured" && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D8B46B] px-4 py-1 text-xs text-[#1E3A32] tracking-wide uppercase">
+                          Premium
+                        </div>
+                      )}
+                      <h4
+                        className={`font-serif text-xl mb-3 ${
+                          product.ui_group === "featured" ? "text-white" : "text-[#1E3A32]"
+                        }`}
+                      >
+                        {product.name}
+                      </h4>
+                      {product.tagline && (
+                        <p
+                          className={`text-sm mb-4 ${
+                            product.ui_group === "featured" ? "text-white/90" : "text-[#2B2725]/60"
+                          }`}
+                        >
+                          {product.tagline}
+                        </p>
+                      )}
+                      <p
+                        className={`text-sm mb-4 ${
+                          product.ui_group === "featured" ? "text-white/90" : "text-[#2B2725]/70"
+                        }`}
+                      >
+                        {product.short_description}
+                      </p>
+                      <p
+                        className={`text-3xl font-bold mb-6 ${
+                          product.ui_group === "featured" ? "text-white" : "text-[#1E3A32]"
+                        }`}
+                      >
+                        {formatPrice(product.price, product.billing_interval)}
+                      </p>
+                      <Link to={createPageUrl("PurchaseCenter")}>
+                        <Button
+                          className={`w-full ${
+                            product.ui_group === "featured"
+                              ? "bg-[#D8B46B] text-[#1E3A32] hover:bg-white"
+                              : "bg-[#1E3A32] hover:bg-[#2B2725]"
+                          }`}
+                        >
+                          Get Started
+                        </Button>
+                      </Link>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Advanced Opportunities */}
             <div>
