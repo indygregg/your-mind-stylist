@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
+import ReflectionPrompt from "../transformation/ReflectionPrompt";
 
 export default function LessonNavigation({ 
   currentLesson, 
@@ -11,6 +13,7 @@ export default function LessonNavigation({
   onMarkComplete,
   isCompleted 
 }) {
+  const [showReflection, setShowReflection] = useState(false);
   const currentIndex = allLessons.findIndex(l => l.id === currentLesson.id);
   const prevLesson = currentIndex > 0 ? allLessons[currentIndex - 1] : null;
   const nextLesson = currentIndex < allLessons.length - 1 ? allLessons[currentIndex + 1] : null;
@@ -65,13 +68,31 @@ export default function LessonNavigation({
 
           {/* Mark Complete */}
           <Button
-            onClick={onMarkComplete}
+            onClick={() => {
+              if (!isCompleted) {
+                onMarkComplete();
+                setShowReflection(true);
+              }
+            }}
             disabled={isCompleted}
             className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-6"
           >
             <CheckCircle size={16} className="mr-2" />
             {isCompleted ? "Completed" : "Mark Complete"}
           </Button>
+          
+          {showReflection && (
+            <ReflectionPrompt
+              reflectionType="lesson"
+              relatedId={currentLesson.id}
+              relatedTitle={currentLesson.title}
+              onComplete={() => setShowReflection(false)}
+              onSkip={() => setShowReflection(false)}
+              promptText="Before you move on... what resonated with you in this lesson?"
+              showMoodTracking={false}
+              showBreakthroughTag={true}
+            />
+          )}
 
           {/* Next Lesson */}
           <div className="flex-1">

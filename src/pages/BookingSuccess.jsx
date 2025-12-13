@@ -2,15 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Calendar, Mail, Loader2, Video, Download, Bell, Plus } from "lucide-react";
+import { CheckCircle, Calendar, Mail, Loader2, Video, Download, Bell, Plus, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import ReflectionPrompt from "../components/transformation/ReflectionPrompt";
 
 export default function BookingSuccess() {
   const [sessionId, setSessionId] = useState(null);
+  const [showReflection, setShowReflection] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -304,6 +306,20 @@ export default function BookingSuccess() {
             </ul>
           </div>
 
+          {/* Reflection Prompt */}
+          {booking && (
+            <div className="mb-8">
+              <Button
+                onClick={() => setShowReflection(true)}
+                variant="outline"
+                className="border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32]"
+              >
+                <Sparkles size={18} className="mr-2" />
+                Reflect on Your Decision
+              </Button>
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to={createPageUrl("Dashboard")}>
@@ -317,6 +333,19 @@ export default function BookingSuccess() {
               </Button>
             </Link>
           </div>
+          
+          {showReflection && booking && (
+            <ReflectionPrompt
+              reflectionType="consultation"
+              relatedId={booking.id}
+              relatedTitle={`${booking.service_type?.replace("_", " ")} Session - ${format(new Date(booking.scheduled_date || Date.now()), 'MMM d, yyyy')}`}
+              onComplete={() => setShowReflection(false)}
+              onSkip={() => setShowReflection(false)}
+              promptText="You've just committed to your transformation. What are you feeling right now?"
+              showMoodTracking={true}
+              showBreakthroughTag={false}
+            />
+          )}
 
           {sessionId && (
             <p className="text-[#2B2725]/40 text-xs mt-8">
