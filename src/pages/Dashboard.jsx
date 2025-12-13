@@ -22,9 +22,9 @@ import { Button } from "@/components/ui/button";
 import MilestoneChecker from "@/components/transformation/MilestoneChecker";
 import PostMasterclassOnboarding from "../components/onboarding/PostMasterclassOnboarding";
 import AIClientAssistant from "@/components/ai/AIClientAssistant";
-import { PersonalizedGreeting } from "@/components/ui/PersonalizedGreeting";
-import { SmartSuggestion } from "@/components/ui/SmartSuggestion";
-import { useSmartSuggestions } from "@/components/ui/useSmartSuggestions";
+import { PersonalizedGreeting } from "../components/ui/PersonalizedGreeting";
+import { SmartSuggestion } from "../components/ui/SmartSuggestion";
+import { useSmartSuggestions } from "../components/ui/useSmartSuggestions";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
