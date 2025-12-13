@@ -24,7 +24,7 @@ import PostMasterclassOnboarding from "../components/onboarding/PostMasterclassO
 import AIClientAssistant from "@/components/ai/AIClientAssistant";
 import { PersonalizedGreeting } from "@/components/ui/PersonalizedGreeting";
 import { SmartSuggestion } from "@/components/ui/SmartSuggestion";
-import { useSmartSuggestions } from "@/hooks/useSmartSuggestions";
+import { useSmartSuggestions } from "@/components/ui/useSmartSuggestions";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
