@@ -78,6 +78,13 @@ export default function ManagerDashboard() {
       link: 'ZoomConnect' 
     },
     { 
+      id: 'ical', 
+      label: 'Sync with Apple Calendar', 
+      completed: false, 
+      link: 'ManagerCalendarSync',
+      external: true
+    },
+    { 
       id: 'test', 
       label: 'Test a booking', 
       completed: hasTestedBooking, 
