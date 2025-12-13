@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Layers, Sparkles, BookOpen, Calendar, Play, User, Edit3 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -38,7 +38,7 @@ export default function Dashboard() {
   const [pastBookings, setPastBookings] = useState([]);
   const suggestions = useSmartSuggestions();
 
-  const fetchBookings = async (currentUser) => {
+  const fetchBookings = useCallback(async (currentUser) => {
     const allBookings = await base44.entities.Booking.filter({ user_email: currentUser.email });
     const now = new Date();
     
@@ -60,7 +60,7 @@ export default function Dashboard() {
     
     setUpcomingBookings(upcoming);
     setPastBookings(past);
-  };
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -115,7 +115,7 @@ export default function Dashboard() {
     // window.location.href = billingPortalUrl;
     console.log("Opening billing portal...");
   };
-  const programs = [
+  const programs = useMemo(() => [
     {
       icon: Layers,
       title: "The Mind Styling Evolution™",
@@ -128,7 +128,7 @@ export default function Dashboard() {
       status: "Not Enrolled",
       color: "#A6B7A3",
     },
-  ];
+  ], []);
 
   return (
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
