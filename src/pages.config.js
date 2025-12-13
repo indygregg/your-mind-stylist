@@ -85,6 +85,8 @@ import ManagerResourceEditor from './pages/ManagerResourceEditor';
 import Resources from './pages/Resources';
 import TransformationStory from './pages/TransformationStory';
 import ManagerTransformationAnalytics from './pages/ManagerTransformationAnalytics';
+import TransformationDemo from './pages/TransformationDemo';
+import DemoSetup from './pages/DemoSetup';
 import __Layout from './Layout.jsx';
 
 
@@ -176,6 +178,8 @@ export const PAGES = {
     "Resources": Resources,
     "TransformationStory": TransformationStory,
     "ManagerTransformationAnalytics": ManagerTransformationAnalytics,
+    "TransformationDemo": TransformationDemo,
+    "DemoSetup": DemoSetup,
 }
 
 export const pagesConfig = {
