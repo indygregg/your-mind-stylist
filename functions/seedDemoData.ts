@@ -120,7 +120,7 @@ Deno.serve(async (req) => {
       reflection_type: 'consultation',
       related_id: 'demo-session-1',
       related_title: 'Private Session with Roberta',
-      reflection_text: 'Today's session was transformative. Roberta helped me see how my need to control everything stems from childhood experiences. The reframe around "trusting the process" instead of forcing outcomes really landed.',
+      reflection_text: 'Today\'s session was transformative. Roberta helped me see how my need to control everything stems from childhood experiences. The reframe around "trusting the process" instead of forcing outcomes really landed.',
       what_shifted: 'I don\'t have to control everything to be safe',
       mood_before: 'anxious',
       mood_after: 'calm',
