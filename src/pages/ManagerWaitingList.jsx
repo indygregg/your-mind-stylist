@@ -240,9 +240,17 @@ export default function ManagerWaitingList() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <Badge className={statusColors[entry.status]}>
-                      {entry.status}
-                    </Badge>
+                    <div className="flex gap-2">
+                      <Badge className={statusColors[entry.status]}>
+                        {entry.status}
+                      </Badge>
+                      {entry.priority_score !== undefined && (
+                        <Badge variant="outline" className="flex items-center gap-1">
+                          <TrendingUp size={12} />
+                          {entry.priority_score}
+                        </Badge>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex gap-2">
