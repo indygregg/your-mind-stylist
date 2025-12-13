@@ -159,6 +159,7 @@ export default function ProductPage() {
             )}
           </motion.div>
         </div>
+        </div>
       </ProductOwnershipCheck>
     );
   }
@@ -291,6 +292,7 @@ export default function ProductPage() {
             </Button>
           </div>
         </section>
+        </div>
       </ProductOwnershipCheck>
     );
   }
@@ -431,6 +433,7 @@ export default function ProductPage() {
             </div>
           </motion.div>
         </div>
+      </div>
       </div>
     </ProductOwnershipCheck>
   );
