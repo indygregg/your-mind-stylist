@@ -14,6 +14,8 @@ export default function ProductPage() {
   const [slug, setSlug] = useState("");
   const [isPreview, setIsPreview] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [selectedPriceId, setSelectedPriceId] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState("full");
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -62,6 +64,7 @@ export default function ProductPage() {
     try {
       const response = await base44.functions.invoke('createProductCheckout', {
         product_id: product.id,
+        selected_price_id: selectedPriceId,
       });
 
       if (response.data.url) {
@@ -83,6 +86,29 @@ export default function ProductPage() {
     if (billing_interval === "monthly") return `$${dollars}/mo`;
     if (billing_interval === "yearly") return `$${dollars}/yr`;
     return `$${dollars}`;
+  };
+
+  const getSelectedPrice = () => {
+    if (selectedPlan === "full") {
+      return product.price;
+    }
+    const plan = product.payment_plan_options?.find(p => p.name === selectedPlan);
+    return plan ? plan.monthly_price : product.price;
+  };
+
+  const getSelectedPlanDetails = () => {
+    if (selectedPlan === "full") {
+      return { price: product.price, label: formatPrice(product.price, product.billing_interval) };
+    }
+    const plan = product.payment_plan_options?.find(p => p.name === selectedPlan);
+    if (plan) {
+      return { 
+        price: plan.monthly_price, 
+        label: `${formatPrice(plan.monthly_price, "monthly")} × ${plan.months} months`,
+        total: plan.monthly_price * plan.months
+      };
+    }
+    return { price: product.price, label: formatPrice(product.price, product.billing_interval) };
   };
 
   if (isLoading) {
@@ -139,11 +165,57 @@ export default function ProductPage() {
             </p>
 
             <div className="inline-block bg-white p-8 mb-8">
-              <div className="font-serif text-5xl text-[#1E3A32] mb-2">
-                {formatPrice(product.price, product.billing_interval)}
-              </div>
-              {product.type === "subscription" && (
-                <p className="text-[#D8B46B] text-sm">Cancel anytime</p>
+              {product.payment_plan_options && product.payment_plan_options.length > 0 && (
+                <div className="mb-6 space-y-3">
+                  <button
+                    onClick={() => {
+                      setSelectedPlan("full");
+                      setSelectedPriceId(null);
+                    }}
+                    className={`w-full p-4 border-2 rounded-lg transition-all ${
+                      selectedPlan === "full" 
+                        ? "border-[#D8B46B] bg-[#D8B46B]/5" 
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="font-medium text-[#1E3A32]">Pay in Full</div>
+                    <div className="text-2xl font-serif text-[#1E3A32] mt-1">
+                      {formatPrice(product.price, product.billing_interval)}
+                    </div>
+                  </button>
+                  {product.payment_plan_options.map((plan, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setSelectedPlan(plan.name);
+                        setSelectedPriceId(product.stripe_price_ids?.[idx + 1] || null);
+                      }}
+                      className={`w-full p-4 border-2 rounded-lg transition-all ${
+                        selectedPlan === plan.name 
+                          ? "border-[#D8B46B] bg-[#D8B46B]/5" 
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      <div className="font-medium text-[#1E3A32]">{plan.name}</div>
+                      <div className="text-2xl font-serif text-[#1E3A32] mt-1">
+                        {formatPrice(plan.monthly_price, "monthly")} × {plan.months}
+                      </div>
+                      <div className="text-sm text-[#2B2725]/60 mt-1">
+                        Total: {formatPrice(plan.monthly_price * plan.months, "one_time")}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+              {(!product.payment_plan_options || product.payment_plan_options.length === 0) && (
+                <>
+                  <div className="font-serif text-5xl text-[#1E3A32] mb-2">
+                    {formatPrice(product.price, product.billing_interval)}
+                  </div>
+                  {product.type === "subscription" && (
+                    <p className="text-[#D8B46B] text-sm">Cancel anytime</p>
+                  )}
+                </>
               )}
             </div>
 
@@ -390,11 +462,56 @@ export default function ProductPage() {
           >
             <div className="bg-white p-8 sticky top-32">
               <div className="text-center mb-8">
-                <div className="font-serif text-5xl text-[#1E3A32] mb-2">
-                  {formatPrice(product.price, product.billing_interval)}
-                </div>
-                {product.type === "subscription" && (
-                  <p className="text-[#D8B46B] text-sm">Cancel anytime</p>
+                {product.payment_plan_options && product.payment_plan_options.length > 0 ? (
+                  <div className="space-y-3 mb-6">
+                    <button
+                      onClick={() => {
+                        setSelectedPlan("full");
+                        setSelectedPriceId(null);
+                      }}
+                      className={`w-full p-4 border-2 rounded-lg transition-all text-left ${
+                        selectedPlan === "full" 
+                          ? "border-[#D8B46B] bg-[#D8B46B]/5" 
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      <div className="font-medium text-[#1E3A32]">Pay in Full</div>
+                      <div className="text-2xl font-serif text-[#1E3A32] mt-1">
+                        {formatPrice(product.price, product.billing_interval)}
+                      </div>
+                    </button>
+                    {product.payment_plan_options.map((plan, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setSelectedPlan(plan.name);
+                          setSelectedPriceId(product.stripe_price_ids?.[idx + 1] || null);
+                        }}
+                        className={`w-full p-4 border-2 rounded-lg transition-all text-left ${
+                          selectedPlan === plan.name 
+                            ? "border-[#D8B46B] bg-[#D8B46B]/5" 
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="font-medium text-[#1E3A32]">{plan.name}</div>
+                        <div className="text-2xl font-serif text-[#1E3A32] mt-1">
+                          {formatPrice(plan.monthly_price, "monthly")} × {plan.months}
+                        </div>
+                        <div className="text-sm text-[#2B2725]/60 mt-1">
+                          Total: {formatPrice(plan.monthly_price * plan.months, "one_time")}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <div className="font-serif text-5xl text-[#1E3A32] mb-2">
+                      {formatPrice(product.price, product.billing_interval)}
+                    </div>
+                    {product.type === "subscription" && (
+                      <p className="text-[#D8B46B] text-sm">Cancel anytime</p>
+                    )}
+                  </>
                 )}
               </div>
 
