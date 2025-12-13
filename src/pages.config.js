@@ -84,6 +84,7 @@ import ManagerWebinarEditor from './pages/ManagerWebinarEditor';
 import ManagerResourceEditor from './pages/ManagerResourceEditor';
 import Resources from './pages/Resources';
 import TransformationStory from './pages/TransformationStory';
+import ManagerTransformationAnalytics from './pages/ManagerTransformationAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -174,6 +175,7 @@ export const PAGES = {
     "ManagerResourceEditor": ManagerResourceEditor,
     "Resources": Resources,
     "TransformationStory": TransformationStory,
+    "ManagerTransformationAnalytics": ManagerTransformationAnalytics,
 }
 
 export const pagesConfig = {

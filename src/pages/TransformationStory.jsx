@@ -4,10 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { 
   Sparkles, Calendar, TrendingUp, Heart, BookOpen, 
-  Award, Target, Zap, Camera, ChevronDown, ChevronUp
+  Award, Target, Zap, Camera, ChevronDown, ChevronUp, Lightbulb
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
+import InsightsPanel from "../components/transformation/InsightsPanel";
 import { format } from "date-fns";
 import {
   LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, 
@@ -71,6 +72,17 @@ export default function TransformationStory() {
     queryFn: () => base44.entities.DailyStyleCheck.list("-created_date", 100),
     enabled: !!user
   });
+
+  const { data: insights = [], refetch: refetchInsights } = useQuery({
+    queryKey: ["insights", user?.id],
+    queryFn: () => base44.entities.GrowthInsight.filter({}, "-created_date"),
+    enabled: !!user
+  });
+
+  const handleGenerateInsights = async () => {
+    await base44.functions.invoke('generateGrowthInsights', {});
+    refetchInsights();
+  };
 
   // Calculate emotional trends from check-ins
   const emotionalTrends = checkIns
@@ -152,6 +164,31 @@ export default function TransformationStory() {
             <p className="text-[#2B2725]/70 text-lg max-w-2xl mx-auto">
               Every check-in, every lesson, every breakthrough—this is your evolution.
             </p>
+          </motion.div>
+
+          {/* AI Insights */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <Lightbulb size={28} className="text-[#D8B46B]" />
+                <h2 className="font-serif text-3xl text-[#1E3A32]">
+                  Your Insights
+                </h2>
+              </div>
+              <Button
+                onClick={handleGenerateInsights}
+                variant="outline"
+                className="border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32]"
+              >
+                <Sparkles size={16} className="mr-2" />
+                Generate New Insights
+              </Button>
+            </div>
+            <InsightsPanel insights={insights} onRefresh={handleGenerateInsights} />
           </motion.div>
 
           {/* Stats Overview */}
