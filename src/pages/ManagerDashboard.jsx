@@ -107,6 +107,7 @@ export default function ManagerDashboard() {
     { icon: Calendar, label: "Booking Calendar", link: "ManagerCalendar" },
     { icon: Clock, label: "Manage Availability", link: "ManagerAvailability" },
     { icon: Settings, label: "Manage Appointment Types", link: "ManagerAppointmentTypes" },
+    { icon: Clock, label: "Waiting List", link: "ManagerWaitingList" },
     { icon: Mail, label: "Email Templates", link: "ManagerEmailTemplates" },
     { icon: BarChart3, label: "Booking Analytics", link: "ManagerAnalytics" },
     { icon: Sparkles, label: "Transformation Analytics", link: "ManagerTransformationAnalytics" },
