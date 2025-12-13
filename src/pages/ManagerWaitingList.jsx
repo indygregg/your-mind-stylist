@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Clock, Mail, Phone, Calendar, User, Filter, CheckCircle, X, MessageSquare } from "lucide-react";
+import { Clock, Mail, Phone, Calendar, User, Filter, CheckCircle, X, MessageSquare, Zap, TrendingUp } from "lucide-react";
 import { format } from "date-fns";
 import { toast } from "react-hot-toast";
+import WaitlistCommunication from "../components/waitlist/WaitlistCommunication";
 
 export default function ManagerWaitingList() {
   const queryClient = useQueryClient();
@@ -17,6 +18,7 @@ export default function ManagerWaitingList() {
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [contactNotes, setContactNotes] = useState("");
+  const [autoMatching, setAutoMatching] = useState(false);
 
   const { data: waitingList = [], isLoading } = useQuery({
     queryKey: ["waitingList"],
@@ -100,6 +102,29 @@ export default function ManagerWaitingList() {
     setDetailsOpen(false);
   };
 
+  const handleCalculatePriority = async (entryId) => {
+    try {
+      await base44.functions.invoke("calculateWaitlistPriority", { waitlist_id: entryId });
+      queryClient.invalidateQueries({ queryKey: ["waitingList"] });
+      toast.success("Priority score calculated");
+    } catch (error) {
+      toast.error("Failed to calculate priority");
+    }
+  };
+
+  const handleAutoMatch = async () => {
+    setAutoMatching(true);
+    try {
+      const response = await base44.functions.invoke("autoMatchWaitlist", {});
+      toast.success(`Auto-matching complete! ${response.data.matches_found} matches found.`);
+      queryClient.invalidateQueries({ queryKey: ["waitingList"] });
+    } catch (error) {
+      toast.error("Auto-matching failed");
+    } finally {
+      setAutoMatching(false);
+    }
+  };
+
   const filteredList = statusFilter === "all"
     ? waitingList
     : waitingList.filter((entry) => entry.status === statusFilter);
@@ -132,7 +157,17 @@ export default function ManagerWaitingList() {
               Manage clients waiting for appointment slots
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleAutoMatch}
+              disabled={autoMatching}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <Zap size={16} />
+              {autoMatching ? "Matching..." : "Auto-Match"}
+            </Button>
+            <div className="flex items-center gap-2">
             <Filter size={16} className="text-[#2B2725]/60" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-48">
@@ -256,6 +291,14 @@ export default function ManagerWaitingList() {
                     <div className="flex gap-2">
                       <Button
                         size="sm"
+                        variant="ghost"
+                        onClick={() => handleCalculatePriority(entry.id)}
+                        title="Calculate Priority"
+                      >
+                        <TrendingUp size={14} />
+                      </Button>
+                      <Button
+                        size="sm"
                         variant="outline"
                         onClick={() => handleViewDetails(entry)}
                       >
@@ -344,6 +387,16 @@ export default function ManagerWaitingList() {
                   onChange={(e) => setContactNotes(e.target.value)}
                   placeholder="Add internal notes..."
                   rows={4}
+                />
+              </div>
+
+              {/* Communication Tools */}
+              <div className="mt-6 pt-6 border-t">
+                <WaitlistCommunication 
+                  entry={selectedEntry} 
+                  onUpdate={() => {
+                    queryClient.invalidateQueries({ queryKey: ["waitingList"] });
+                  }}
                 />
               </div>
 
