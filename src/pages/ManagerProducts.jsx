@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye, EyeOff, DollarSign, Sparkles, RefreshCw } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, DollarSign, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ReactQuill from "react-quill";
 
@@ -327,40 +327,60 @@ export default function ManagerProducts() {
                       )}
                     </div>
 
-                    <div className="flex gap-2 mt-4">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleEdit(product)}
-                        className="flex-1"
-                      >
-                        <Edit size={14} className="mr-1" />
-                        Edit
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                          toggleStatusMutation.mutate({
-                            id: product.id,
-                            status: product.status === "published" ? "draft" : "published",
-                          })
-                        }
-                      >
-                        {product.status === "published" ? "Unpublish" : "Publish"}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          if (confirm("Delete this product?")) {
-                            deleteMutation.mutate(product.id);
+                    <div className="flex flex-col gap-2 mt-4">
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleEdit(product)}
+                          className="flex-1"
+                        >
+                          <Edit size={14} className="mr-1" />
+                          Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            if (product.slug) {
+                              window.open(`/ProductPage?slug=${product.slug}&preview=true`, '_blank');
+                            } else {
+                              alert("Please add a slug to preview this product");
+                            }
+                          }}
+                          className="flex-1"
+                        >
+                          <ExternalLink size={14} className="mr-1" />
+                          Preview
+                        </Button>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            toggleStatusMutation.mutate({
+                              id: product.id,
+                              status: product.status === "published" ? "draft" : "published",
+                            })
                           }
-                        }}
-                        className="text-red-600"
-                      >
-                        <Trash2 size={14} />
-                      </Button>
+                          className="flex-1"
+                        >
+                          {product.status === "published" ? "Unpublish" : "Publish"}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            if (confirm("Delete this product?")) {
+                              deleteMutation.mutate(product.id);
+                            }
+                          }}
+                          className="text-red-600 flex-1"
+                        >
+                          <Trash2 size={14} />
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}

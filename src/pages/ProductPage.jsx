@@ -11,16 +11,23 @@ import { toast } from "react-hot-toast";
 
 export default function ProductPage() {
   const [slug, setSlug] = useState("");
+  const [isPreview, setIsPreview] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     setSlug(urlParams.get("slug") || "");
+    setIsPreview(urlParams.get("preview") === "true");
   }, []);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["product", slug],
-    queryFn: () => base44.entities.Product.filter({ slug, status: "published" }),
+    queryFn: () => {
+      if (isPreview) {
+        return base44.entities.Product.filter({ slug });
+      }
+      return base44.entities.Product.filter({ slug, status: "published" });
+    },
     enabled: !!slug,
   });
 
@@ -84,6 +91,11 @@ export default function ProductPage() {
           description={product.short_description}
           canonical={`/product?slug=${product.slug}`}
         />
+        {isPreview && (
+          <div className="fixed top-0 left-0 right-0 bg-[#D8B46B] text-[#1E3A32] text-center py-3 z-50 font-medium">
+            Preview Mode - This page is not yet published
+          </div>
+        )}
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -157,6 +169,11 @@ export default function ProductPage() {
           description={product.short_description}
           canonical={`/product?slug=${product.slug}`}
         />
+        {isPreview && (
+          <div className="fixed top-0 left-0 right-0 bg-[#D8B46B] text-[#1E3A32] text-center py-3 z-50 font-medium">
+            Preview Mode - This page is not yet published
+          </div>
+        )}
         {/* Hero */}
         <section className="pt-32 pb-20 px-6">
           <div className="max-w-5xl mx-auto text-center">
@@ -283,6 +300,11 @@ export default function ProductPage() {
         description={product.short_description}
         canonical={`/product?slug=${product.slug}`}
       />
+      {isPreview && (
+        <div className="fixed top-0 left-0 right-0 bg-[#D8B46B] text-[#1E3A32] text-center py-3 z-50 font-medium">
+          Preview Mode - This page is not yet published
+        </div>
+      )}
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-12 mb-16">
           {/* Left: Details */}
