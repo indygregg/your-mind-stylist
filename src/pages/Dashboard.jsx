@@ -22,6 +22,9 @@ import { Button } from "@/components/ui/button";
 import MilestoneChecker from "@/components/transformation/MilestoneChecker";
 import PostMasterclassOnboarding from "../components/onboarding/PostMasterclassOnboarding";
 import AIClientAssistant from "@/components/ai/AIClientAssistant";
+import { PersonalizedGreeting } from "@/components/ui/PersonalizedGreeting";
+import { SmartSuggestion } from "@/components/ui/SmartSuggestion";
+import { useSmartSuggestions } from "@/hooks/useSmartSuggestions";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -33,6 +36,7 @@ export default function Dashboard() {
   const [recommendations, setRecommendations] = useState([]);
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const [pastBookings, setPastBookings] = useState([]);
+  const suggestions = useSmartSuggestions();
 
   const fetchBookings = async (currentUser) => {
     const allBookings = await base44.entities.Booking.filter({ user_email: currentUser.email });
@@ -166,18 +170,8 @@ export default function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {/* Welcome Header */}
-          <div className="mb-12">
-            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              Welcome Back
-            </span>
-            <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-3">
-              The Mind Styling Studio™
-            </h1>
-            <p className="text-[#2B2725]/60 italic">
-              Here's what's unfolding in your inner world today.
-            </p>
-          </div>
+          {/* Personalized Greeting */}
+          <PersonalizedGreeting user={user} variant="dashboard" />
 
           {/* Next Session Widget - Featured */}
           {upcomingBookings.length > 0 && (
@@ -329,8 +323,20 @@ export default function Dashboard() {
               ))}
             </div>
           </div>
-        </motion.div>
-      </div>
-    </div>
-  );
-}
+          </motion.div>
+
+          {/* Smart Suggestions */}
+          {suggestions.slice(0, 1).map((suggestion) => (
+          <SmartSuggestion
+            key={suggestion.id}
+            trigger={suggestion.trigger}
+            title={suggestion.title}
+            description={suggestion.description}
+            actionLabel={suggestion.actionLabel}
+            actionLink={suggestion.actionLink}
+          />
+          ))}
+          </div>
+          </div>
+          );
+          }

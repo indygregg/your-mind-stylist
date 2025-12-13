@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings, Clock, CheckCircle, Circle, X, DollarSign, Play, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AIManagerAssistant from "../components/ai/AIManagerAssistant";
+import { PersonalizedGreeting } from "@/components/ui/PersonalizedGreeting";
 
 export default function ManagerDashboard() {
   // Set auth layout
@@ -136,19 +137,8 @@ export default function ManagerDashboard() {
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Welcome Panel */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
-        >
-          <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-3">
-            Welcome back, Roberta.
-          </h1>
-          <p className="text-[#2B2725]/70 text-lg">
-            Here's what's happening in your world today.
-          </p>
-        </motion.div>
+        {/* Personalized Welcome */}
+        <PersonalizedGreeting user={user} variant="dashboard" />
 
         {/* Booking Setup Checklist */}
         {!setupDismissed && !allComplete && (
