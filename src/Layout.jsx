@@ -10,6 +10,7 @@ import AccessibilityWidget from "./components/accessibility/AccessibilityWidget"
 import { base44 } from "@/api/base44Client";
 import { EditModeProvider } from "./components/cms/EditModeProvider";
 import ManagerBar from "./components/cms/ManagerBar";
+import haptics from "./components/utils/haptics";
 
 export default function Layout({ children, currentPageName }) {
   const [useAuthLayout, setUseAuthLayout] = useState(false);
@@ -268,10 +269,10 @@ export default function Layout({ children, currentPageName }) {
                 {/* Mobile Menu Button */}
                 <button
                   onClick={() => {
-                    if (navigator.vibrate) navigator.vibrate(10);
+                    haptics.light();
                     setMobileMenuOpen(!mobileMenuOpen);
                   }}
-                  className="lg:hidden p-2 text-[#1E3A32]"
+                  className="lg:hidden p-3 text-[#1E3A32] hover:bg-[#1E3A32]/5 rounded-lg transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
                 >
                   {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -289,19 +290,19 @@ export default function Layout({ children, currentPageName }) {
               exit={{ opacity: 0, height: 0 }}
               className="lg:hidden bg-[#F9F5EF] border-t border-[#D8B46B]/20 max-h-[calc(100vh-80px)] overflow-y-auto"
             >
-              <div className="px-6 py-8 flex flex-col gap-4">
+              <div className="px-6 py-8 flex flex-col gap-2">
                 {navLinks.map((link) => (
                   <Link
                     key={link.page}
                     to={createPageUrl(link.page)}
                     onClick={() => {
-                      if (navigator.vibrate) navigator.vibrate(10);
+                      haptics.light();
                       setMobileMenuOpen(false);
                     }}
-                    className={`text-lg py-2 border-b border-[#E4D9C4] ${
+                    className={`text-lg py-4 px-4 rounded-lg transition-colors active:scale-98 min-h-[52px] flex items-center ${
                       currentPageName === link.page
-                        ? "text-[#1E3A32] font-medium"
-                        : "text-[#2B2725]/70"
+                        ? "text-[#1E3A32] font-medium bg-[#D8B46B]/10"
+                        : "text-[#2B2725]/70 hover:bg-[#E4D9C4]/50"
                     }`}
                   >
                     {link.name}
@@ -310,13 +311,15 @@ export default function Layout({ children, currentPageName }) {
                 <div className="mt-6 pt-4 border-t border-[#E4D9C4] flex flex-col gap-3">
                   <a
                     href="https://yourmindstylist.com/login"
-                    className="px-6 py-3 border border-[#1E3A32] text-[#1E3A32] text-center text-sm tracking-wide"
+                    onClick={() => haptics.light()}
+                    className="px-6 py-4 border border-[#1E3A32] text-[#1E3A32] text-center text-sm tracking-wide rounded-lg hover:bg-[#1E3A32]/5 active:scale-98 transition-all min-h-[52px] flex items-center justify-center"
                   >
                     Login
                   </a>
                   <a
                     href="https://yourmindstylist.com/login"
-                    className="px-6 py-3 bg-[#1E3A32] text-[#F9F5EF] text-center text-sm tracking-wide"
+                    onClick={() => haptics.medium()}
+                    className="px-6 py-4 bg-[#1E3A32] text-[#F9F5EF] text-center text-sm tracking-wide rounded-lg hover:bg-[#2B2725] active:scale-98 transition-all min-h-[52px] flex items-center justify-center"
                   >
                     Get Started
                   </a>

@@ -6,6 +6,7 @@ import { Menu, X, LogOut, User, Settings, ChevronDown, Search } from "lucide-rea
 import { motion, AnimatePresence } from "framer-motion";
 import MobileBottomNav from "./MobileBottomNav";
 import GlobalSearch from "./GlobalSearch";
+import haptics from "./utils/haptics";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -158,8 +159,11 @@ export default function AuthLayout({ children, currentPageName }) {
 
             {/* Search Button */}
             <button
-              onClick={() => setSearchOpen(true)}
-              className="p-2 hover:bg-[#F9F5EF]/10 rounded-full transition-colors"
+              onClick={() => {
+                haptics.light();
+                setSearchOpen(true);
+              }}
+              className="p-3 hover:bg-[#F9F5EF]/10 rounded-full transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
               aria-label="Search"
             >
               <Search size={20} className="text-[#F9F5EF]/70" />
