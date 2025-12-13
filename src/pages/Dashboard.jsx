@@ -19,6 +19,7 @@ import BookingHistory from "@/components/dashboard/BookingHistory";
 import NextSessionWidget from "@/components/dashboard/NextSessionWidget";
 import DailyStyleCheck from "@/components/studio/DailyStyleCheck";
 import { Button } from "@/components/ui/button";
+import MilestoneChecker from "@/components/transformation/MilestoneChecker";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -125,6 +126,7 @@ export default function Dashboard() {
 
   return (
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
+      <MilestoneChecker />
       {user && <OnboardingModal role="user" />}
       <DashboardTooltips />
       <NotesDrawer
