@@ -1,26 +1,27 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Award, Download, Loader2, Sparkles } from "lucide-react";
-import { toast } from "react-hot-toast";
+import { Award, Download, Share2, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 
-export default function CertificateDownload({ courseId, courseTitle, completionDate }) {
-  const [isGenerating, setIsGenerating] = useState(false);
+export default function CertificateDownload({ courseId, courseName, completionDate }) {
+  const [generating, setGenerating] = useState(false);
   const [certificateUrl, setCertificateUrl] = useState(null);
+  const [certificateId, setCertificateId] = useState(null);
 
-  const handleGenerateCertificate = async () => {
-    setIsGenerating(true);
+  const handleGenerate = async () => {
+    setGenerating(true);
     try {
-      const response = await base44.functions.invoke('generateCertificate', {
+      const response = await base44.functions.invoke('generateCourseCertificate', {
         course_id: courseId
       });
 
       if (response.data.success) {
-        setCertificateUrl(response.data.certificate_url);
-        toast.success("Certificate generated!");
+        setCertificateUrl(response.data.download_url);
+        setCertificateId(response.data.certificate_id);
         
-        // Celebration confetti
+        // Celebrate!
         confetti({
           particleCount: 100,
           spread: 70,
@@ -28,10 +29,10 @@ export default function CertificateDownload({ courseId, courseTitle, completionD
         });
       }
     } catch (error) {
-      console.error("Certificate generation error:", error);
-      toast.error("Failed to generate certificate");
+      console.error('Error generating certificate:', error);
+      alert('Failed to generate certificate. Please try again.');
     } finally {
-      setIsGenerating(false);
+      setGenerating(false);
     }
   };
 
@@ -41,50 +42,90 @@ export default function CertificateDownload({ courseId, courseTitle, completionD
     }
   };
 
-  return (
-    <div className="bg-gradient-to-r from-[#D8B46B] to-[#C9A55A] p-8 rounded-lg text-white">
-      <div className="flex items-start gap-4">
-        <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-          <Award size={24} />
-        </div>
-        <div className="flex-1">
-          <h3 className="font-serif text-2xl mb-2">Congratulations!</h3>
-          <p className="text-white/90 mb-4">
-            You've completed <strong>{courseTitle}</strong>
-          </p>
-          <p className="text-sm text-white/80 mb-6">
-            Download your certificate of completion to showcase your achievement.
-          </p>
+  const handleShare = () => {
+    if (navigator.share && certificateId) {
+      navigator.share({
+        title: `Certificate of Completion - ${courseName}`,
+        text: `I've completed ${courseName}! Certificate ID: ${certificateId}`,
+        url: window.location.href
+      });
+    }
+  };
 
-          {!certificateUrl ? (
-            <Button
-              onClick={handleGenerateCertificate}
-              disabled={isGenerating}
-              className="bg-white text-[#1E3A32] hover:bg-white/90"
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 size={16} className="mr-2 animate-spin" />
-                  Generating Certificate...
-                </>
-              ) : (
-                <>
-                  <Sparkles size={16} className="mr-2" />
-                  Generate Certificate
-                </>
-              )}
-            </Button>
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="bg-gradient-to-br from-[#D8B46B]/20 to-[#A6B7A3]/20 p-8 rounded-lg text-center"
+    >
+      <div className="flex justify-center mb-4">
+        <Award size={64} className="text-[#D8B46B]" />
+      </div>
+      
+      <h2 className="font-serif text-3xl text-[#1E3A32] mb-3">
+        Congratulations!
+      </h2>
+      
+      <p className="text-[#2B2725]/80 mb-2">
+        You've completed <strong>{courseName}</strong>
+      </p>
+      
+      {completionDate && (
+        <p className="text-sm text-[#2B2725]/60 mb-6">
+          Completed on {new Date(completionDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </p>
+      )}
+
+      {!certificateUrl ? (
+        <Button
+          onClick={handleGenerate}
+          disabled={generating}
+          className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
+        >
+          {generating ? (
+            <>
+              <Loader2 size={16} className="mr-2 animate-spin" />
+              Generating Certificate...
+            </>
           ) : (
+            <>
+              <Award size={16} className="mr-2" />
+              Generate Certificate
+            </>
+          )}
+        </Button>
+      ) : (
+        <div className="space-y-3">
+          <p className="text-sm text-[#A6B7A3] font-medium">
+            ✓ Certificate Generated
+          </p>
+          {certificateId && (
+            <p className="text-xs text-[#2B2725]/60 mb-3">
+              Certificate ID: {certificateId}
+            </p>
+          )}
+          <div className="flex gap-3 justify-center">
             <Button
               onClick={handleDownload}
-              className="bg-white text-[#1E3A32] hover:bg-white/90"
+              className="bg-[#1E3A32] hover:bg-[#2B2725]"
             >
               <Download size={16} className="mr-2" />
-              Download Certificate
+              Download
             </Button>
-          )}
+            <Button
+              onClick={handleShare}
+              variant="outline"
+            >
+              <Share2 size={16} className="mr-2" />
+              Share
+            </Button>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </motion.div>
   );
 }
