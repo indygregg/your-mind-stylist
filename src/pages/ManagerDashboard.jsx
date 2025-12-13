@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings, Clock, CheckCircle, Circle, X, DollarSign, Play, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import AIManagerAssistant from "../components/ai/AIManagerAssistant";
 
 export default function ManagerDashboard() {
   // Set auth layout
@@ -108,6 +109,7 @@ export default function ManagerDashboard() {
     { icon: Clock, label: "Manage Availability", link: "ManagerAvailability" },
     { icon: Settings, label: "Manage Appointment Types", link: "ManagerAppointmentTypes" },
     { icon: Clock, label: "Waiting List", link: "ManagerWaitingList" },
+    { icon: Users, label: "Client Analytics", link: "ManagerClientAnalytics" },
     { icon: Mail, label: "Email Templates", link: "ManagerEmailTemplates" },
     { icon: BarChart3, label: "Booking Analytics", link: "ManagerAnalytics" },
     { icon: Sparkles, label: "Transformation Analytics", link: "ManagerTransformationAnalytics" },
@@ -478,6 +480,16 @@ export default function ManagerDashboard() {
               </motion.div>
             ))}
           </div>
+        </motion.div>
+
+        {/* AI Manager Assistant */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className="mb-12"
+        >
+          <AIManagerAssistant />
         </motion.div>
 
         {/* Recent Activity */}

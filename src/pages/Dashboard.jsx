@@ -21,6 +21,7 @@ import DailyStyleCheck from "@/components/studio/DailyStyleCheck";
 import { Button } from "@/components/ui/button";
 import MilestoneChecker from "@/components/transformation/MilestoneChecker";
 import PostMasterclassOnboarding from "../components/onboarding/PostMasterclassOnboarding";
+import AIClientAssistant from "@/components/ai/AIClientAssistant";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -127,6 +128,7 @@ export default function Dashboard() {
 
   return (
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
+      <AIClientAssistant variant="widget" />
       <PostMasterclassOnboarding />
       <MilestoneChecker />
       {user && <OnboardingModal role="user" />}
