@@ -64,7 +64,10 @@ export default function BlogPost() {
         article={true}
         author={post.author?.display_name || "Roberta Fernandez"}
         publishedTime={post.publish_date}
+        modifiedTime={post.updated_date}
         ogImage={post.featured_image}
+        tags={post.tags || []}
+        category={post.category}
       />
 
       {/* Back Link */}
