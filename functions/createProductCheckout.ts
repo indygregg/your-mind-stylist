@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { product_id, price_id } = await req.json();
+        const { product_id, selected_price_id } = await req.json();
 
         if (!product_id) {
             return Response.json({ error: 'product_id is required' }, { status: 400 });
@@ -27,7 +27,7 @@ Deno.serve(async (req) => {
         }
 
         // Determine which price to use
-        let stripePriceId = price_id || product.stripe_price_id;
+        let stripePriceId = selected_price_id || product.stripe_price_id;
         
         if (!stripePriceId) {
             return Response.json({ error: 'No Stripe price configured for this product' }, { status: 400 });
@@ -53,9 +53,14 @@ Deno.serve(async (req) => {
             });
         }
 
-        // Determine mode based on product type
-        const isSubscription = product.type === 'subscription';
-        const mode = isSubscription ? 'subscription' : 'payment';
+        // Check if selected price is recurring (payment plan)
+        let mode = 'payment';
+        if (selected_price_id) {
+            const priceDetails = await stripe.prices.retrieve(selected_price_id);
+            mode = priceDetails.recurring ? 'subscription' : 'payment';
+        } else if (product.type === 'subscription') {
+            mode = 'subscription';
+        }
 
         // Create checkout session
         const session = await stripe.checkout.sessions.create({
@@ -73,6 +78,8 @@ Deno.serve(async (req) => {
                 user_id: user.id,
                 product_id: product.id,
                 product_key: product.key,
+                selected_price_id: stripePriceId,
+                is_payment_plan: selected_price_id ? 'true' : 'false',
             },
         });
 
