@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, StickyNote, Download, FileText, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 import VideoPlayer from "./VideoPlayer";
 import CourseAudioPlayer from "./CourseAudioPlayer";
+import LessonComments from "./LessonComments";
 
 export default function LessonArea({ 
   lesson, 
@@ -193,6 +195,16 @@ export default function LessonArea({
                 </div>
               </div>
             )}
+
+            {/* Lesson Comments/Q&A */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="mt-12"
+            >
+              <LessonComments lessonId={lesson.id} courseId={lesson.course_id} />
+            </motion.div>
           </>
         )}
       </div>
