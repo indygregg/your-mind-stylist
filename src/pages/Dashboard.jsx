@@ -190,7 +190,7 @@ export default function Dashboard() {
                 </div>
                 <Button
                   onClick={() => setShowStyleCheck(true)}
-                  className="bg-white text-[#1E3A32] hover:bg-white/90"
+                  className="bg-white text-[#1E3A32] hover:bg-white/90 min-h-[48px] px-6"
                 >
                   Check In Now
                 </Button>
@@ -314,7 +314,7 @@ export default function Dashboard() {
                 <Link
                   key={link.label}
                   to={createPageUrl(link.page)}
-                  className="bg-white p-4 hover:shadow-md transition-shadow flex flex-col gap-2"
+                  className="bg-white p-4 hover:shadow-md transition-shadow flex flex-col gap-2 min-h-[100px] active:scale-98 touch-manipulation"
                 >
                   <link.icon size={20} className="text-[#D8B46B]" />
                   <span className="text-[#1E3A32] text-sm font-medium">{link.label}</span>

@@ -34,7 +34,7 @@ export default function RecommendedProducts() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 border-2 border-[#D8B46B]/20"
+            className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 border-2 border-[#D8B46B]/20 touch-manipulation active:scale-98"
           >
             <div className="mb-4">
               <span className="inline-block px-3 py-1 bg-[#D8B46B]/10 text-[#1E3A32] text-xs tracking-wider uppercase rounded-full mb-3">
@@ -79,7 +79,7 @@ export default function RecommendedProducts() {
                   }
                 }}
               >
-                <Button variant="outline" className="border-[#1E3A32] hover:bg-[#1E3A32] hover:text-white">
+                <Button variant="outline" className="border-[#1E3A32] hover:bg-[#1E3A32] hover:text-white min-h-[48px]">
                   Learn More
                   <ArrowRight size={16} className="ml-2" />
                 </Button>
