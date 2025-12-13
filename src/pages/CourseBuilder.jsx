@@ -13,6 +13,7 @@ import AICourseGenerator from "../components/courses/builder/AICourseGenerator";
 import CourseTemplates from "../components/courses/builder/CourseTemplates";
 import { createPageUrl } from "../utils";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 export default function CourseBuilder() {
   const navigate = useNavigate();
@@ -118,6 +119,24 @@ export default function CourseBuilder() {
         }
       }
 
+      // Auto-sync with Stripe
+      try {
+        const syncResult = await base44.functions.invoke('syncCourseStripe', {
+          course_id: savedCourse.id,
+          title: savedCourse.title,
+          description: savedCourse.short_description || savedCourse.long_description,
+        });
+
+        if (syncResult.data.success && syncResult.data.product_id) {
+          // Update course with Stripe product ID
+          await base44.entities.Course.update(savedCourse.id, {
+            product_linkage: [syncResult.data.product_id],
+          });
+        }
+      } catch (error) {
+        console.error('Stripe sync failed:', error);
+      }
+
       return savedCourse;
     },
     onSuccess: () => {
@@ -127,13 +146,13 @@ export default function CourseBuilder() {
 
   const handleSave = async () => {
     await saveMutation.mutateAsync();
-    alert("Course saved successfully!");
+    toast.success("Course saved and synced with Stripe!");
   };
 
   const handlePublish = async () => {
     setFormData({ ...formData, status: "published" });
     await saveMutation.mutateAsync();
-    alert("Course published successfully!");
+    toast.success("Course published and synced with Stripe!");
     navigate(createPageUrl("CourseManager"));
   };
 
