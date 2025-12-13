@@ -1,278 +1,278 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { User, Upload, Save, Loader2, ExternalLink } from "lucide-react";
-import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { User, Bell, Lock, Settings, Upload, CheckCircle } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function ProfileSettings() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [formData, setFormData] = useState({
-    full_name: "",
-    bio: "",
-    phone: "",
-    timezone: "America/Los_Angeles",
+  const queryClient = useQueryClient();
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: () => base44.auth.me(),
   });
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        setFormData({
-          full_name: currentUser.full_name || "",
-          bio: currentUser.bio || "",
-          phone: currentUser.phone || "",
-          timezone: currentUser.timezone || "America/Los_Angeles",
-        });
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUser();
-  }, []);
+  const [profileData, setProfileData] = useState({
+    full_name: user?.full_name || "",
+    email: user?.email || "",
+  });
+
+  const [notificationPrefs, setNotificationPrefs] = useState({
+    email_notifications: user?.email_notifications ?? true,
+    booking_reminders: user?.booking_reminders ?? true,
+    marketing_emails: user?.marketing_emails ?? false,
+    weekly_digest: user?.weekly_digest ?? true,
+  });
+
+  React.useEffect(() => {
+    if (user) {
+      setProfileData({
+        full_name: user.full_name || "",
+        email: user.email || "",
+      });
+      setNotificationPrefs({
+        email_notifications: user.email_notifications ?? true,
+        booking_reminders: user.booking_reminders ?? true,
+        marketing_emails: user.marketing_emails ?? false,
+        weekly_digest: user.weekly_digest ?? true,
+      });
+    }
+  }, [user]);
+
+  const updateProfileMutation = useMutation({
+    mutationFn: (data) => base44.auth.updateMe(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+      toast.success("Profile updated successfully");
+    },
+    onError: () => {
+      toast.error("Failed to update profile");
+    },
+  });
+
+  const handleProfileSubmit = (e) => {
+    e.preventDefault();
+    updateProfileMutation.mutate(profileData);
+  };
+
+  const handleNotificationUpdate = (key, value) => {
+    const newPrefs = { ...notificationPrefs, [key]: value };
+    setNotificationPrefs(newPrefs);
+    updateProfileMutation.mutate(newPrefs);
+  };
 
   const handlePhotoUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    setUploading(true);
+    setUploadingPhoto(true);
     try {
-      const { data } = await base44.functions.invoke("uploadProfilePhoto", { file });
-      
-      await base44.auth.updateMe({ profile_photo: data.file_url });
-      
-      // Reload page to update profile photo in header
-      window.location.reload();
+      const result = await base44.functions.invoke("uploadProfilePhoto", { file });
+      if (result.data.url) {
+        await base44.auth.updateMe({ profile_photo: result.data.url });
+        queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+        toast.success("Profile photo updated");
+      }
     } catch (error) {
-      console.error("Error uploading photo:", error);
-      alert("Failed to upload photo");
+      toast.error("Failed to upload photo");
     } finally {
-      setUploading(false);
+      setUploadingPhoto(false);
     }
   };
 
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      await base44.auth.updateMe(formData);
-      setUser({ ...user, ...formData });
-      alert("Profile updated successfully!");
-    } catch (error) {
-      console.error("Error saving profile:", error);
-      alert("Failed to save profile");
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
-        <Loader2 className="animate-spin text-[#D8B46B]" size={32} />
+        <p className="text-[#2B2725]/70">Loading...</p>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
-      <div className="max-w-3xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-3">
-              <User size={32} className="text-[#1E3A32]" />
-              <h1 className="font-serif text-4xl text-[#1E3A32]">Profile Settings</h1>
-            </div>
-            <p className="text-[#2B2725]/70">Manage your profile information and preferences</p>
-          </div>
+      <div className="max-w-4xl mx-auto">
+        <h1 className="font-serif text-4xl text-[#1E3A32] mb-8">Profile & Settings</h1>
 
-          {/* Profile Photo */}
-          <div className="bg-white p-8 mb-6">
-            <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Profile Photo</h2>
-            <div className="flex items-center gap-6">
-              <div className="w-24 h-24 rounded-full bg-[#D8B46B]/20 flex items-center justify-center overflow-hidden">
-                {user?.profile_photo ? (
-                  <img
-                    src={user.profile_photo}
-                    alt={user.full_name}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <User size={40} className="text-[#D8B46B]" />
-                )}
-              </div>
-              <div>
-                <Label htmlFor="photo-upload" className="cursor-pointer">
-                  <div className="px-4 py-2 bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] rounded inline-flex items-center gap-2 transition-colors">
-                    {uploading ? (
-                      <>
-                        <Loader2 size={16} className="animate-spin" />
-                        Uploading...
-                      </>
+        <Tabs defaultValue="profile" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-3">
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
+            <TabsTrigger value="preferences">Preferences</TabsTrigger>
+          </TabsList>
+
+          {/* Profile Tab */}
+          <TabsContent value="profile">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <User size={20} />
+                  Personal Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Profile Photo */}
+                <div className="flex items-center gap-6">
+                  <div className="w-24 h-24 rounded-full bg-[#D8B46B]/20 flex items-center justify-center overflow-hidden">
+                    {user?.profile_photo ? (
+                      <img
+                        src={user.profile_photo}
+                        alt={user.full_name}
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
-                      <>
-                        <Upload size={16} />
-                        Upload Photo
-                      </>
+                      <User size={32} className="text-[#D8B46B]" />
                     )}
                   </div>
-                </Label>
-                <input
-                  id="photo-upload"
-                  type="file"
-                  accept="image/*"
-                  onChange={handlePhotoUpload}
-                  className="hidden"
-                  disabled={uploading}
-                />
-                <p className="text-xs text-[#2B2725]/60 mt-2">
-                  Recommended: Square image, at least 200x200px
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Basic Information */}
-          <div className="bg-white p-8 mb-6">
-            <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Basic Information</h2>
-            <div className="space-y-6">
-              <div>
-                <Label htmlFor="full_name">Full Name</Label>
-                <Input
-                  id="full_name"
-                  value={formData.full_name}
-                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
-                  className="mt-2"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" value={user?.email} disabled className="mt-2" />
-                <p className="text-xs text-[#2B2725]/60 mt-1">Email cannot be changed</p>
-              </div>
-
-              <div>
-                <Label htmlFor="phone">Phone Number (Optional)</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+1 (555) 123-4567"
-                  className="mt-2"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="bio">Bio</Label>
-                <Textarea
-                  id="bio"
-                  value={formData.bio}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  placeholder="Tell us a bit about yourself..."
-                  rows={4}
-                  className="mt-2"
-                />
-                <p className="text-xs text-[#2B2725]/60 mt-1">
-                  This will be visible on your profile
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Preferences */}
-          <div className="bg-white p-8 mb-6">
-            <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Preferences</h2>
-            <div className="space-y-6">
-              <div>
-                <Label htmlFor="timezone">Timezone</Label>
-                <select
-                  id="timezone"
-                  value={formData.timezone}
-                  onChange={(e) => setFormData({ ...formData, timezone: e.target.value })}
-                  className="mt-2 w-full px-3 py-2 border border-[#E4D9C4] rounded-md bg-white text-[#2B2725]"
-                >
-                  <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                  <option value="America/Denver">Mountain Time (MT)</option>
-                  <option value="America/Chicago">Central Time (CT)</option>
-                  <option value="America/New_York">Eastern Time (ET)</option>
-                  <option value="Europe/London">London (GMT)</option>
-                  <option value="Europe/Paris">Paris (CET)</option>
-                  <option value="Asia/Tokyo">Tokyo (JST)</option>
-                  <option value="Australia/Sydney">Sydney (AEDT)</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Subscription Management */}
-          {user?.pocket_visualization_active && (
-            <div className="bg-white p-8 mb-6">
-              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Subscription Management</h2>
-              
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div>
-                  <p className="text-[#2B2725]/70 mb-2">
-                    Manage your Pocket Visualization™ subscription
-                  </p>
-                  <p className="text-sm text-[#2B2725]/60">
-                    Update payment method, view invoices, or cancel subscription
-                  </p>
+                  <div>
+                    <Label htmlFor="photo-upload" className="cursor-pointer">
+                      <div className="flex items-center gap-2 px-4 py-2 border border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-white transition-colors rounded">
+                        <Upload size={16} />
+                        {uploadingPhoto ? "Uploading..." : "Upload Photo"}
+                      </div>
+                    </Label>
+                    <input
+                      id="photo-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                      disabled={uploadingPhoto}
+                    />
+                    <p className="text-xs text-[#2B2725]/60 mt-2">JPG, PNG or GIF. Max 2MB.</p>
+                  </div>
                 </div>
-                <Button
-                  onClick={async () => {
-                    try {
-                      const response = await base44.functions.invoke('createCustomerPortalSession', {});
-                      if (response.data?.url) {
-                        window.location.href = response.data.url;
-                      }
-                    } catch (error) {
-                      alert(error.message || 'Failed to open billing portal');
-                    }
-                  }}
-                  variant="outline"
-                  className="border-[#1E3A32] hover:bg-[#1E3A32] hover:text-white"
-                >
-                  <ExternalLink size={16} className="mr-2" />
-                  Manage Subscription
-                </Button>
-              </div>
-            </div>
-          )}
 
-          {/* Save Button */}
-          <div className="flex justify-end">
-            <Button
-              onClick={handleSave}
-              disabled={saving}
-              className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
-            >
-              {saving ? (
-                <>
-                  <Loader2 size={18} className="mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save size={18} className="mr-2" />
-                  Save Changes
-                </>
-              )}
-            </Button>
-          </div>
-        </motion.div>
+                {/* Profile Form */}
+                <form onSubmit={handleProfileSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="full_name">Full Name</Label>
+                    <Input
+                      id="full_name"
+                      value={profileData.full_name}
+                      onChange={(e) =>
+                        setProfileData({ ...profileData, full_name: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={profileData.email}
+                      disabled
+                      className="bg-gray-100"
+                    />
+                    <p className="text-xs text-[#2B2725]/60 mt-1">
+                      Email cannot be changed. Contact support if needed.
+                    </p>
+                  </div>
+
+                  <div className="pt-4">
+                    <Button type="submit" disabled={updateProfileMutation.isPending}>
+                      {updateProfileMutation.isPending ? "Saving..." : "Save Changes"}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Notifications Tab */}
+          <TabsContent value="notifications">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Bell size={20} />
+                  Notification Preferences
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-[#1E3A32]">Email Notifications</p>
+                      <p className="text-sm text-[#2B2725]/60">
+                        Receive email updates about your account
+                      </p>
+                    </div>
+                    <Switch
+                      checked={notificationPrefs.email_notifications}
+                      onCheckedChange={(v) => handleNotificationUpdate("email_notifications", v)}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-[#1E3A32]">Booking Reminders</p>
+                      <p className="text-sm text-[#2B2725]/60">
+                        Get reminders before your scheduled sessions
+                      </p>
+                    </div>
+                    <Switch
+                      checked={notificationPrefs.booking_reminders}
+                      onCheckedChange={(v) => handleNotificationUpdate("booking_reminders", v)}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-[#1E3A32]">Marketing Emails</p>
+                      <p className="text-sm text-[#2B2725]/60">
+                        Receive updates about new programs and features
+                      </p>
+                    </div>
+                    <Switch
+                      checked={notificationPrefs.marketing_emails}
+                      onCheckedChange={(v) => handleNotificationUpdate("marketing_emails", v)}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-[#1E3A32]">Weekly Digest</p>
+                      <p className="text-sm text-[#2B2725]/60">
+                        Get a weekly summary of your progress
+                      </p>
+                    </div>
+                    <Switch
+                      checked={notificationPrefs.weekly_digest}
+                      onCheckedChange={(v) => handleNotificationUpdate("weekly_digest", v)}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Preferences Tab */}
+          <TabsContent value="preferences">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings size={20} />
+                  Dashboard Preferences
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-[#2B2725]/70">
+                  {user?.role === "admin" || user?.role === "manager"
+                    ? "Additional dashboard preferences for managers coming soon."
+                    : "Customize your dashboard experience (coming soon)."}
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

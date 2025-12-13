@@ -102,6 +102,8 @@ import ManagerReports from './pages/ManagerReports';
 import ManagerCourseAnalytics from './pages/ManagerCourseAnalytics';
 import ManagerPurchaseFunnel from './pages/ManagerPurchaseFunnel';
 import ManagerSubscriptionAnalytics from './pages/ManagerSubscriptionAnalytics';
+import ApplicationForm from './pages/ApplicationForm';
+import ManagerApplications from './pages/ManagerApplications';
 import __Layout from './Layout.jsx';
 
 
@@ -210,6 +212,8 @@ export const PAGES = {
     "ManagerCourseAnalytics": ManagerCourseAnalytics,
     "ManagerPurchaseFunnel": ManagerPurchaseFunnel,
     "ManagerSubscriptionAnalytics": ManagerSubscriptionAnalytics,
+    "ApplicationForm": ApplicationForm,
+    "ManagerApplications": ManagerApplications,
 }
 
 export const pagesConfig = {
