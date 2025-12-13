@@ -269,12 +269,12 @@ export default function Bookings() {
                 </div>
               </motion.div>
             ) : (
-              // Reorder to show private_sessions first, then consultation
-              const orderedTypes = ['private_sessions', 'consultation', 'certification'];
-              orderedTypes.filter(type => groupedServices[type]).map((type) => {
-              const services = groupedServices[type];
-              const category = serviceCategories[type];
-              if (!category) return null;
+              ['private_sessions', 'consultation', 'certification']
+                .filter(type => groupedServices[type])
+                .map((type) => {
+                const services = groupedServices[type];
+                const category = serviceCategories[type];
+                if (!category) return null;
 
               return (
                 <div key={type} className="mb-16">
