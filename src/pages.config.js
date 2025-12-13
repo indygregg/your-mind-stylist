@@ -88,6 +88,7 @@ import ManagerTransformationAnalytics from './pages/ManagerTransformationAnalyti
 import TransformationDemo from './pages/TransformationDemo';
 import DemoSetup from './pages/DemoSetup';
 import DepthDashboard from './pages/DepthDashboard';
+import ManagerCRM from './pages/ManagerCRM';
 import __Layout from './Layout.jsx';
 
 
@@ -182,6 +183,7 @@ export const PAGES = {
     "TransformationDemo": TransformationDemo,
     "DemoSetup": DemoSetup,
     "DepthDashboard": DepthDashboard,
+    "ManagerCRM": ManagerCRM,
 }
 
 export const pagesConfig = {
