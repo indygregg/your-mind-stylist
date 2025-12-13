@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Target, Image, Download, Sparkles, FileText, Mail, Headphones, FileVideo } from "lucide-react";
+import { Target, Image, Download, Sparkles, FileText, Mail, Headphones, FileVideo, Search, Shuffle, Video, Presentation } from "lucide-react";
 import SocialMediaTransformer from "@/components/alchemy/SocialMediaTransformer";
 import VisualIntelligence from "@/components/alchemy/VisualIntelligence";
 import LeadMagnetGenerator from "@/components/alchemy/LeadMagnetGenerator";
@@ -10,6 +10,10 @@ import ScriptWriter from "@/components/alchemy/ScriptWriter";
 import EmailSequenceGenerator from "@/components/alchemy/EmailSequenceGenerator";
 import PocketScriptGenerator from "@/components/alchemy/PocketScriptGenerator";
 import CourseOutlineGenerator from "@/components/alchemy/CourseOutlineGenerator";
+import SEOOptimizer from "@/components/alchemy/SEOOptimizer";
+import ContentRepurposer from "@/components/alchemy/ContentRepurposer";
+import VideoScriptGenerator from "@/components/alchemy/VideoScriptGenerator";
+import WebinarOutlineCreator from "@/components/alchemy/WebinarOutlineCreator";
 
 export default function ContentStudio() {
   // Set auth layout
@@ -21,9 +25,13 @@ export default function ContentStudio() {
 
   const tools = [
     { id: "social", icon: Target, label: "Social Media", component: SocialMediaTransformer },
+    { id: "repurpose", icon: Shuffle, label: "Content Repurposer", component: ContentRepurposer },
+    { id: "seo", icon: Search, label: "SEO Optimizer", component: SEOOptimizer },
     { id: "visual", icon: Image, label: "Visual Intelligence", component: VisualIntelligence },
     { id: "lead", icon: Download, label: "Lead Magnets", component: LeadMagnetGenerator },
     { id: "quotes", icon: Sparkles, label: "Quote Graphics", component: QuoteGraphicsGenerator },
+    { id: "video", icon: Video, label: "Video Scripts", component: VideoScriptGenerator },
+    { id: "webinar", icon: Presentation, label: "Webinar Outlines", component: WebinarOutlineCreator },
     { id: "scripts", icon: FileText, label: "Script Writer", component: ScriptWriter },
     { id: "email", icon: Mail, label: "Email Sequences", component: EmailSequenceGenerator },
     { id: "pocket", icon: Headphones, label: "Pocket Scripts", component: PocketScriptGenerator },
@@ -55,7 +63,7 @@ export default function ContentStudio() {
           transition={{ delay: 0.1 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-4 lg:grid-cols-8 gap-2 h-auto bg-white p-2 mb-6">
+            <TabsList className="grid grid-cols-4 lg:grid-cols-6 gap-2 h-auto bg-white p-2 mb-6 overflow-x-auto">
               {tools.map((tool) => (
                 <TabsTrigger
                   key={tool.id}
