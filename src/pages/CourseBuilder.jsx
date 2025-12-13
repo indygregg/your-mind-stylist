@@ -106,6 +106,7 @@ export default function CourseBuilder() {
             duration: lesson.duration,
             key_takeaways: lesson.key_takeaways,
             resources: lesson.resources,
+            attached_resource_ids: lesson.attached_resource_ids || [],
             order: lesson.order,
           };
 

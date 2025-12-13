@@ -5,12 +5,19 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { X, Plus, Upload, FileText } from "lucide-react";
+import { X, Plus, Upload, FileText, Link as LinkIcon } from "lucide-react";
 import ReactQuill from "react-quill";
 import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload, allLessons = [], modules = [] }) {
   const [uploadingTranscription, setUploadingTranscription] = useState(false);
+  
+  // Fetch available resources
+  const { data: availableResources = [] } = useQuery({
+    queryKey: ["resources", "published"],
+    queryFn: () => base44.entities.Resource.filter({ status: "published" }),
+  });
   
   const addKeyTakeaway = () => {
     const takeaways = lesson.key_takeaways || [];
@@ -65,6 +72,15 @@ export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload,
       onUpdate({ ...lesson, prerequisites: prerequisites.filter(id => id !== prereqId) });
     } else {
       onUpdate({ ...lesson, prerequisites: [...prerequisites, prereqId] });
+    }
+  };
+
+  const toggleAttachedResource = (resourceId) => {
+    const attachedIds = lesson.attached_resource_ids || [];
+    if (attachedIds.includes(resourceId)) {
+      onUpdate({ ...lesson, attached_resource_ids: attachedIds.filter(id => id !== resourceId) });
+    } else {
+      onUpdate({ ...lesson, attached_resource_ids: [...attachedIds, resourceId] });
     }
   };
 
@@ -292,9 +308,47 @@ export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload,
               </div>
             </div>
 
-            {/* Resources */}
+            {/* Attached Resources from Library */}
             <div>
-              <Label>Resources</Label>
+              <Label>Attach Resources from Library</Label>
+              <p className="text-xs text-[#2B2725]/60 mb-3">
+                Select published resources to make available with this lesson
+              </p>
+              {availableResources.length === 0 ? (
+                <div className="p-4 bg-[#F9F5EF] rounded text-sm text-[#2B2725]/60">
+                  No published resources available. Create resources in the Resource Manager first.
+                </div>
+              ) : (
+                <div className="max-h-48 overflow-y-auto space-y-2 border border-[#E4D9C4] rounded-lg p-3">
+                  {availableResources.map((resource) => (
+                    <div key={resource.id} className="flex items-center gap-2">
+                      <Checkbox
+                        id={`resource-${resource.id}`}
+                        checked={(lesson.attached_resource_ids || []).includes(resource.id)}
+                        onCheckedChange={() => toggleAttachedResource(resource.id)}
+                      />
+                      <Label 
+                        htmlFor={`resource-${resource.id}`} 
+                        className="text-sm font-normal cursor-pointer flex-1"
+                      >
+                        <div className="flex items-center gap-2">
+                          <FileText size={14} className="text-[#D8B46B]" />
+                          <span>{resource.title}</span>
+                          <span className="text-xs text-[#2B2725]/40">({resource.category})</span>
+                        </div>
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Manual Inline Resources (Legacy) */}
+            <div>
+              <Label>Manual Resources (Legacy)</Label>
+              <p className="text-xs text-[#2B2725]/60 mb-2">
+                Add quick links/resources. Consider using the Resource Library above instead.
+              </p>
               <div className="space-y-3">
                 {(lesson.resources || []).map((resource, index) => (
                   <div key={index} className="p-3 bg-[#F9F5EF] rounded-lg space-y-2">
