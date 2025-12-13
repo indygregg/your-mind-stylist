@@ -19,6 +19,7 @@ export default function ManagerProducts() {
 
   const [formData, setFormData] = useState({
     key: "",
+    slug: "",
     name: "",
     tagline: "",
     short_description: "",
@@ -34,6 +35,7 @@ export default function ManagerProducts() {
     status: "draft",
     ui_group: "standard",
     display_order: 0,
+    template_choice: "detailed",
     related_course_id: "",
     access_grants: [],
   });
@@ -165,6 +167,7 @@ export default function ManagerProducts() {
   const resetForm = () => {
     setFormData({
       key: "",
+      slug: "",
       name: "",
       tagline: "",
       short_description: "",
@@ -180,6 +183,7 @@ export default function ManagerProducts() {
       status: "draft",
       ui_group: "standard",
       display_order: 0,
+      template_choice: "detailed",
       related_course_id: "",
       access_grants: [],
     });
@@ -190,8 +194,10 @@ export default function ManagerProducts() {
     setEditingProduct(product);
     setFormData({
       ...product,
+      slug: product.slug || "",
       price: product.price ? (product.price / 100).toString() : "",
       features: product.features || [""],
+      template_choice: product.template_choice || "detailed",
       related_course_id: product.related_course_id || "",
       access_grants: product.access_grants || [],
     });
@@ -397,10 +403,31 @@ export default function ManagerProducts() {
                 <Label>Product Key *</Label>
                 <Input
                   value={formData.key}
-                  onChange={(e) => setFormData({ ...formData, key: e.target.value })}
+                  onChange={(e) => {
+                    const key = e.target.value;
+                    setFormData({ 
+                      ...formData, 
+                      key,
+                      slug: formData.slug || key.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+                    });
+                  }}
                   placeholder="certification"
                 />
               </div>
+              <div>
+                <Label>URL Slug *</Label>
+                <Input
+                  value={formData.slug}
+                  onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') })}
+                  placeholder="certification-program"
+                />
+                <p className="text-xs text-[#2B2725]/60 mt-1">
+                  yourmindstylist.com/product/{formData.slug || 'slug'}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
               <div>
                 <Label>Category *</Label>
                 <Select
@@ -415,6 +442,22 @@ export default function ManagerProducts() {
                     <SelectItem value="mid_level">Tier 2: Mid-Level</SelectItem>
                     <SelectItem value="high_touch">Tier 3: High-Touch</SelectItem>
                     <SelectItem value="advanced">Advanced</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Page Template</Label>
+                <Select
+                  value={formData.template_choice}
+                  onValueChange={(value) => setFormData({ ...formData, template_choice: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="minimal">Minimal (Clean & Simple)</SelectItem>
+                    <SelectItem value="detailed">Detailed (Full Features)</SelectItem>
+                    <SelectItem value="immersive">Immersive (Visual Story)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

@@ -93,6 +93,7 @@ import ManagerAppointmentTypes from './pages/ManagerAppointmentTypes';
 import ManagerCalendarSync from './pages/ManagerCalendarSync';
 import PurchaseSuccess from './pages/PurchaseSuccess';
 import ManagerProducts from './pages/ManagerProducts';
+import ProductPage from './pages/ProductPage';
 import __Layout from './Layout.jsx';
 
 
@@ -192,6 +193,7 @@ export const PAGES = {
     "ManagerCalendarSync": ManagerCalendarSync,
     "PurchaseSuccess": PurchaseSuccess,
     "ManagerProducts": ManagerProducts,
+    "ProductPage": ProductPage,
 }
 
 export const pagesConfig = {
