@@ -13,13 +13,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    let demo_email = 'demo@yourmindstylist.com';
-    try {
-      const body = await req.json();
-      demo_email = body.demo_email || demo_email;
-    } catch (e) {
-      // No body provided, use default
-    }
+    const body = await req.json().catch(() => ({}));
+    const demo_email = body.demo_email || 'demo@yourmindstylist.com';
 
     // Create demo user if doesn't exist
     const demoUser = { email: demo_email };
