@@ -338,7 +338,7 @@ export default function Programs() {
               </div>
               <p className="text-[#2B2725]/70 mb-8">Build mastery and expand your transformational reach</p>
 
-              <div className="grid md:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-2 gap-6">
                 {/* Hypnosis Training — Certification */}
                 <div className="bg-white p-8 border border-[#E4D9C4]">
                   <h4 className="font-serif text-xl text-[#1E3A32] mb-3">
