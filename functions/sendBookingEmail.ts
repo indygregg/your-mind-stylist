@@ -1,4 +1,30 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+
+// Also trigger MailerLite automation
+async function addToMailerLite(email, name, bookingData) {
+  try {
+    const apiKey = Deno.env.get('MAILERLITE_API_KEY');
+    if (!apiKey) return;
+
+    await fetch('https://connect.mailerlite.com/api/subscribers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        email,
+        fields: {
+          name: name || '',
+          last_booking_date: new Date().toISOString(),
+          last_booking_type: bookingData.service_type
+        }
+      })
+    });
+  } catch (error) {
+    console.log('MailerLite sync failed (non-critical):', error.message);
+  }
+}
 import { renderToStaticMarkup } from 'npm:react-dom@18.2.0/server';
 import React from 'npm:react@18.2.0';
 
