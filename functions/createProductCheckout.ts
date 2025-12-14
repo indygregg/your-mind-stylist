@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { product_id, selected_price_id } = await req.json();
+        const { product_id, selected_price_id, affiliate_code } = await req.json();
 
         if (!product_id) {
             return Response.json({ error: 'product_id is required' }, { status: 400 });
@@ -93,12 +93,15 @@ Deno.serve(async (req) => {
             ],
             success_url: `${req.headers.get('origin')}/app/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${req.headers.get('origin')}/app/purchase-center`,
+            client_reference_id: affiliate_code || null,
             metadata: {
                 user_id: user.id,
                 product_id: product.id,
                 product_key: product.key,
+                product_name: product.name,
                 selected_price_id: stripePriceId,
                 is_payment_plan: selected_price_id ? 'true' : 'false',
+                affiliate_code: affiliate_code || null,
             },
         };
         

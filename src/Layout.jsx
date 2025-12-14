@@ -12,6 +12,7 @@ import { base44 } from "@/api/base44Client";
 import { EditModeProvider } from "./components/cms/EditModeProvider";
 import ManagerBar from "./components/cms/ManagerBar";
 import haptics from "./components/utils/haptics";
+import AffiliateTracker from "./components/affiliate/AffiliateTracker";
 
 export default function Layout({ children, currentPageName }) {
   const [useAuthLayout, setUseAuthLayout] = useState(false);

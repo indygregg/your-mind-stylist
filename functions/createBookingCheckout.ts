@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { service_type, session_count, amount, notes, scheduled_date, appointment_type_id, staff_id, intake_data } = await req.json();
+        const { service_type, session_count, amount, notes, scheduled_date, appointment_type_id, staff_id, intake_data, affiliate_code } = await req.json();
 
         // Calculate checkout expiry (30 minutes from now)
         const expiresAt = new Date();
@@ -46,10 +46,12 @@ Deno.serve(async (req) => {
             payment_method_types: ['card'],
             mode: 'payment',
             customer_email: user.email,
+            client_reference_id: affiliate_code || null,
             metadata: {
                 booking_id: booking.id,
                 user_id: user.id,
-                service_type
+                service_type,
+                affiliate_code: affiliate_code || null
             },
             line_items: [
                 {
