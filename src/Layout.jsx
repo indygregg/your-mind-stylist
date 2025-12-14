@@ -95,6 +95,7 @@ export default function Layout({ children, currentPageName }) {
         <link rel="icon" type="image/png" href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/7d5c32b99_Mind-stylist-dark-icon2x.png" />
       </Helmet>
       <div className="min-h-screen bg-[#F9F5EF]">
+        <AffiliateTracker />
         <ManagerBar />
         <ScrollToTop />
       <style>{`

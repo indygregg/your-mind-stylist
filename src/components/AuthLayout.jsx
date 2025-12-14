@@ -69,6 +69,7 @@ export default function AuthLayout({ children, currentPageName }) {
         { name: "Courses", page: "CourseManager" },
         { name: "Audio", page: "AudioManager" },
         { name: "Messages", page: "MessagesManager" },
+        { name: "Affiliates", page: "ManagerAffiliates" },
       ];
     }
 
@@ -83,6 +84,7 @@ export default function AuthLayout({ children, currentPageName }) {
       { name: "Buy Programs", page: "BuyPrograms" },
       { name: "Notes", page: "StudioNotes" },
       { name: "Blog", page: "Blog" },
+      { name: "Affiliate", page: "AffiliatePortal" },
     ];
   };
 
