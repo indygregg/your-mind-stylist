@@ -50,6 +50,7 @@ Deno.serve(async (req) => {
           plan_name: plan.name,
           total_months: plan.months.toString(),
           total_amount: (monthlyAmount * plan.months).toString(),
+          product_id: product_id,
         },
       });
 

@@ -55,15 +55,34 @@ Deno.serve(async (req) => {
 
         // Check if selected price is recurring (payment plan)
         let mode = 'payment';
+        let subscriptionData = null;
+        
         if (selected_price_id) {
             const priceDetails = await stripe.prices.retrieve(selected_price_id);
-            mode = priceDetails.recurring ? 'subscription' : 'payment';
+            if (priceDetails.recurring) {
+                mode = 'subscription';
+                
+                // If payment plan, set billing cycle count to auto-cancel after X months
+                if (priceDetails.metadata.payment_plan === 'true' && priceDetails.metadata.total_months) {
+                    const totalMonths = parseInt(priceDetails.metadata.total_months);
+                    subscriptionData = {
+                        metadata: {
+                            payment_plan: 'true',
+                            plan_name: priceDetails.metadata.plan_name,
+                            total_months: totalMonths.toString(),
+                            product_id: product.id,
+                        },
+                        // Auto-cancel after total_months
+                        cancel_at: Math.floor(Date.now() / 1000) + (totalMonths * 30 * 24 * 60 * 60), // Approximate
+                    };
+                }
+            }
         } else if (product.type === 'subscription') {
             mode = 'subscription';
         }
 
         // Create checkout session
-        const session = await stripe.checkout.sessions.create({
+        const sessionConfig = {
             customer: customer.id,
             mode: mode,
             line_items: [
@@ -81,7 +100,14 @@ Deno.serve(async (req) => {
                 selected_price_id: stripePriceId,
                 is_payment_plan: selected_price_id ? 'true' : 'false',
             },
-        });
+        };
+        
+        // Add subscription_data if payment plan
+        if (subscriptionData) {
+            sessionConfig.subscription_data = subscriptionData;
+        }
+        
+        const session = await stripe.checkout.sessions.create(sessionConfig);
 
         return Response.json({
             url: session.url,

@@ -255,6 +255,7 @@ Deno.serve(async (req) => {
 
             case 'customer.subscription.updated': {
                 const subscription = event.data.object;
+                
                 // Update user subscription status
                 const users = await base44.asServiceRole.entities.User.filter({ 
                     stripe_subscription_id: subscription.id 
@@ -264,12 +265,32 @@ Deno.serve(async (req) => {
                     await base44.asServiceRole.entities.User.update(users[0].id, {
                         subscription_status: subscription.status
                     });
+                    
+                    // If payment plan completed, notify user
+                    if (subscription.metadata.payment_plan === 'true' && subscription.cancel_at) {
+                        const monthsRemaining = Math.ceil((subscription.cancel_at * 1000 - Date.now()) / (30 * 24 * 60 * 60 * 1000));
+                        
+                        if (monthsRemaining === 1) {
+                            await base44.asServiceRole.integrations.Core.SendEmail({
+                                to: users[0].email,
+                                subject: 'Final Payment Plan Installment',
+                                body: `
+                                    <h2>Final Payment Coming Up</h2>
+                                    <p>This is your last payment installment for ${subscription.metadata.plan_name}.</p>
+                                    <p>After this payment, your plan will be complete and you'll retain full access to all content.</p>
+                                    <br>
+                                    <p>Roberta Fernandez<br>Your Mind Stylist</p>
+                                `
+                            });
+                        }
+                    }
                 }
                 break;
             }
 
             case 'customer.subscription.deleted': {
                 const subscription = event.data.object;
+                
                 // Mark subscription as cancelled
                 const users = await base44.asServiceRole.entities.User.filter({ 
                     stripe_subscription_id: subscription.id 
@@ -280,17 +301,33 @@ Deno.serve(async (req) => {
                         subscription_status: 'cancelled'
                     });
 
-                    await base44.asServiceRole.integrations.Core.SendEmail({
-                        to: users[0].email,
-                        subject: 'Subscription Cancelled',
-                        body: `
-                            <h2>Your subscription has been cancelled</h2>
-                            <p>We're sorry to see you go. Your access will remain active until the end of your billing period.</p>
-                            <p>You can reactivate anytime from your dashboard.</p>
-                            <br>
-                            <p>Roberta Fernandez<br>Your Mind Stylist</p>
-                        `
-                    });
+                    // Different message for payment plan completion vs cancellation
+                    if (subscription.metadata.payment_plan === 'true') {
+                        await base44.asServiceRole.integrations.Core.SendEmail({
+                            to: users[0].email,
+                            subject: 'Payment Plan Complete!',
+                            body: `
+                                <h2>Congratulations! Your payment plan is complete</h2>
+                                <p>You've successfully completed all ${subscription.metadata.total_months} installments for ${subscription.metadata.plan_name}.</p>
+                                <p>You now have permanent access to all included content and materials.</p>
+                                <p>Thank you for your commitment to your growth.</p>
+                                <br>
+                                <p>Roberta Fernandez<br>Your Mind Stylist</p>
+                            `
+                        });
+                    } else {
+                        await base44.asServiceRole.integrations.Core.SendEmail({
+                            to: users[0].email,
+                            subject: 'Subscription Cancelled',
+                            body: `
+                                <h2>Your subscription has been cancelled</h2>
+                                <p>We're sorry to see you go. Your access will remain active until the end of your billing period.</p>
+                                <p>You can reactivate anytime from your dashboard.</p>
+                                <br>
+                                <p>Roberta Fernandez<br>Your Mind Stylist</p>
+                            `
+                        });
+                    }
                 }
                 break;
             }
