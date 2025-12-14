@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check, Edit3, Scissors, Sparkles } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 
-export default function Evolution() {
+export default function CleaningOutYourCloset() {
   const phases = [
     {
       number: "Part I",
@@ -126,9 +126,9 @@ export default function Evolution() {
   return (
     <div className="bg-[#F9F5EF]">
       <SEO
-        title="Mind Styling Evolution™ | Mindset & Emotional Intelligence Training"
-        description="A three-part inner redesign for people ready for a new mental operating system. Build emotional intelligence, identity-level change, and clearer thinking."
-        canonical="/evolution"
+        title="Cleaning Out Your Closet | One-on-One Hypnosis & Mindset Transformation"
+        description="Work directly with Roberta Fernandez in this three-part hypnosis program to release old patterns, rebuild your mindset, and step into your future self."
+        canonical="/cleaning-out-your-closet"
       />
       {/* Hero Section */}
       <section className="pt-32 pb-20">
@@ -141,8 +141,8 @@ export default function Evolution() {
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
               <CmsText 
-                contentKey="evolution.hero.subtitle" 
-                page="Evolution"
+                contentKey="closet.hero.subtitle" 
+                page="CleaningOutYourCloset"
                 blockTitle="Hero Subtitle"
                 fallback="Signature Program" 
                 contentType="short_text"
@@ -150,8 +150,8 @@ export default function Evolution() {
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
               <CmsText 
-                contentKey="evolution.hero.title" 
-                page="Evolution"
+                contentKey="closet.hero.title" 
+                page="CleaningOutYourCloset"
                 blockTitle="Hero Title"
                 fallback="Cleaning Out Your Closet" 
                 contentType="short_text"
@@ -159,8 +159,8 @@ export default function Evolution() {
             </h1>
             <p className="text-[#1E3A32] font-serif text-2xl md:text-3xl italic mb-8">
               <CmsText 
-                contentKey="evolution.hero.tagline" 
-                page="Evolution"
+                contentKey="closet.hero.tagline" 
+                page="CleaningOutYourCloset"
                 blockTitle="Hero Tagline"
                 fallback="One-on-one hypnosis work to release old patterns and step into your future self." 
                 contentType="short_text"
@@ -169,8 +169,8 @@ export default function Evolution() {
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-3xl mx-auto">
               <CmsText 
-                contentKey="evolution.hero.description" 
-                page="Evolution"
+                contentKey="closet.hero.description" 
+                page="CleaningOutYourCloset"
                 blockTitle="Hero Description"
                 fallback="When your mindset shifts, everything else in your life begins to realign. This program is designed to help you understand how your mind actually works, release the patterns that no longer fit, and become the person you've been trying to step into." 
                 contentType="rich_text"
@@ -209,8 +209,8 @@ export default function Evolution() {
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
               <CmsText 
-                contentKey="evolution.for.title" 
-                page="Evolution"
+                contentKey="closet.for.title" 
+                page="CleaningOutYourCloset"
                 blockTitle="Who This Is For Title"
                 fallback="Who This Program Is Designed For" 
                 contentType="short_text"
@@ -219,8 +219,8 @@ export default function Evolution() {
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
               <CmsText 
-                contentKey="evolution.for.intro" 
-                page="Evolution"
+                contentKey="closet.for.intro" 
+                page="CleaningOutYourCloset"
                 blockTitle="Who This Is For Intro"
                 fallback="This program is for individuals who are ready for more than surface-level mindset work. It's for people who are done repeating the same stories, outgrowing old patterns, and feeling stuck between who they are and who they want to be." 
                 contentType="rich_text"
@@ -230,8 +230,8 @@ export default function Evolution() {
             <div className="bg-[#F9F5EF] p-8 mb-8">
               <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-6">Perfect for:</p>
               <CmsText 
-                contentKey="evolution.for.list"
-                page="Evolution"
+                contentKey="closet.for.list"
+                page="CleaningOutYourCloset"
                 blockTitle="Perfect For List"
                 fallback={`<div class='space-y-3'>${perfectFor.map(item => `<div class='flex items-center gap-3'><svg class='lucide lucide-check' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg><span class='text-[#2B2725]/80 text-lg'>${item}</span></div>`).join('')}</div>`}
                 contentType="rich_text"
@@ -240,8 +240,8 @@ export default function Evolution() {
 
             <p className="font-serif text-xl text-[#1E3A32] italic">
               <CmsText 
-                contentKey="evolution.for.closing" 
-                page="Evolution"
+                contentKey="closet.for.closing" 
+                page="CleaningOutYourCloset"
                 blockTitle="Who This Is For Closing"
                 fallback="If you're ready to think from where you want to be — not where you've been — this is your path." 
                 contentType="rich_text"
@@ -262,8 +262,8 @@ export default function Evolution() {
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
               <CmsText 
-                contentKey="evolution.overview.title" 
-                page="Evolution"
+                contentKey="closet.overview.title" 
+                page="CleaningOutYourCloset"
                 blockTitle="Overview Title"
                 fallback="How Mind Styling Evolution Works" 
                 contentType="short_text"
@@ -271,8 +271,8 @@ export default function Evolution() {
             </h2>
             <p className="text-[#2B2725]/70 text-lg">
               <CmsText 
-                contentKey="evolution.overview.subtitle" 
-                page="Evolution"
+                contentKey="closet.overview.subtitle" 
+                page="CleaningOutYourCloset"
                 blockTitle="Overview Subtitle"
                 fallback="A three-part, editorial-style process based on the Mind Stylist method" 
                 contentType="short_text"
@@ -311,8 +311,8 @@ export default function Evolution() {
                       style={{ color: phase.color }}
                     >
                       <CmsText 
-                        contentKey={`evolution.phase${index + 1}.number`}
-                        page="Evolution"
+                        contentKey={`closet.phase${index + 1}.number`}
+                        page="CleaningOutYourCloset"
                         blockTitle={`Phase ${index + 1} Number`}
                         fallback={phase.number}
                         contentType="short_text"
@@ -321,8 +321,8 @@ export default function Evolution() {
                     </span>
                     <h3 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-3">
                       <CmsText 
-                        contentKey={`evolution.phase${index + 1}.name`}
-                        page="Evolution"
+                        contentKey={`closet.phase${index + 1}.name`}
+                        page="CleaningOutYourCloset"
                         blockTitle={`Phase ${index + 1} Name`}
                         fallback={phase.name}
                         contentType="short_text"
@@ -331,8 +331,8 @@ export default function Evolution() {
                     </h3>
                     <p className="font-serif text-xl md:text-2xl text-[#2B2725]/70 italic">
                       <CmsText 
-                        contentKey={`evolution.phase${index + 1}.tagline`}
-                        page="Evolution"
+                        contentKey={`closet.phase${index + 1}.tagline`}
+                        page="CleaningOutYourCloset"
                         blockTitle={`Phase ${index + 1} Tagline`}
                         fallback={phase.tagline}
                         contentType="short_text"
@@ -347,8 +347,8 @@ export default function Evolution() {
                     <div>
                       <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
                         <CmsText 
-                          contentKey={`evolution.phase${index + 1}.description`}
-                          page="Evolution"
+                          contentKey={`closet.phase${index + 1}.description`}
+                          page="CleaningOutYourCloset"
                           blockTitle={`Phase ${index + 1} Description`}
                           fallback={phase.description}
                           contentType="rich_text"
@@ -360,8 +360,8 @@ export default function Evolution() {
                           You'll Learn To:
                         </p>
                         <CmsText 
-                          contentKey={`evolution.phase${index + 1}.learnings`}
-                          page="Evolution"
+                          contentKey={`closet.phase${index + 1}.learnings`}
+                          page="CleaningOutYourCloset"
                           blockTitle={`Phase ${index + 1} Learnings`}
                           fallback={`<ul class='space-y-2'>${phase.learnings.map(learning => `<li class='text-[#2B2725]/80 flex items-start gap-2'><span class='text-[#D8B46B] mt-1'>•</span>${learning}</li>`).join('')}</ul>`}
                           contentType="rich_text"
@@ -377,8 +377,8 @@ export default function Evolution() {
                         </p>
                         <p className="text-[#2B2725]/80 text-lg leading-relaxed italic">
                           <CmsText 
-                            contentKey={`evolution.phase${index + 1}.outcome`}
-                            page="Evolution"
+                            contentKey={`closet.phase${index + 1}.outcome`}
+                            page="CleaningOutYourCloset"
                             blockTitle={`Phase ${index + 1} Outcome`}
                             fallback={phase.outcome}
                             contentType="rich_text"
@@ -417,8 +417,8 @@ export default function Evolution() {
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] mb-10">
               <CmsText 
-                contentKey="evolution.outcomes.title" 
-                page="Evolution"
+                contentKey="closet.outcomes.title" 
+                page="CleaningOutYourCloset"
                 blockTitle="Outcomes Title"
                 fallback="The Transformation You Can Expect" 
                 contentType="short_text"
@@ -427,8 +427,8 @@ export default function Evolution() {
 
             <p className="text-[#F9F5EF]/80 text-lg mb-10">
               <CmsText 
-                contentKey="evolution.outcomes.intro" 
-                page="Evolution"
+                contentKey="closet.outcomes.intro" 
+                page="CleaningOutYourCloset"
                 blockTitle="Outcomes Intro"
                 fallback="By the end of this program, you will:" 
                 contentType="short_text"
@@ -441,8 +441,8 @@ export default function Evolution() {
                   <Check size={20} className="text-[#D8B46B] mt-1 flex-shrink-0" />
                   <span className="text-[#F9F5EF]/90 text-lg">
                     <CmsText 
-                      contentKey={`evolution.outcome${idx + 1}`}
-                      page="Evolution"
+                      contentKey={`closet.outcome${idx + 1}`}
+                      page="CleaningOutYourCloset"
                       blockTitle={`Outcome ${idx + 1}`}
                       fallback={outcome}
                       contentType="short_text"
@@ -455,8 +455,8 @@ export default function Evolution() {
 
             <p className="font-serif text-2xl text-[#D8B46B] italic text-center">
               <CmsText 
-                contentKey="evolution.outcomes.closing" 
-                page="Evolution"
+                contentKey="closet.outcomes.closing" 
+                page="CleaningOutYourCloset"
                 blockTitle="Outcomes Closing"
                 fallback="This is a complete internal redesign." 
                 contentType="short_text"
@@ -476,8 +476,8 @@ export default function Evolution() {
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-12 text-center">
               <CmsText 
-                contentKey="evolution.faq.title" 
-                page="Evolution"
+                contentKey="closet.faq.title" 
+                page="CleaningOutYourCloset"
                 blockTitle="FAQ Title"
                 fallback="Frequently Asked Questions" 
                 contentType="short_text"
@@ -496,8 +496,8 @@ export default function Evolution() {
                 >
                   <h3 className="font-serif text-xl md:text-2xl text-[#1E3A32] mb-4">
                     <CmsText 
-                      contentKey={`evolution.faq${idx + 1}.question`}
-                      page="Evolution"
+                      contentKey={`closet.faq${idx + 1}.question`}
+                      page="CleaningOutYourCloset"
                       blockTitle={`FAQ ${idx + 1} Question`}
                       fallback={faq.question}
                       contentType="short_text"
@@ -505,8 +505,8 @@ export default function Evolution() {
                   </h3>
                   <p className="text-[#2B2725]/80 text-lg leading-relaxed">
                     <CmsText 
-                      contentKey={`evolution.faq${idx + 1}.answer`}
-                      page="Evolution"
+                      contentKey={`closet.faq${idx + 1}.answer`}
+                      page="CleaningOutYourCloset"
                       blockTitle={`FAQ ${idx + 1} Answer`}
                       fallback={faq.answer}
                       contentType="rich_text"
@@ -529,8 +529,8 @@ export default function Evolution() {
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
               <CmsText 
-                contentKey="evolution.cta.title" 
-                page="Evolution"
+                contentKey="closet.cta.title" 
+                page="CleaningOutYourCloset"
                 blockTitle="CTA Title"
                 fallback="Begin Your Mind Styling Evolution" 
                 contentType="short_text"
@@ -539,8 +539,8 @@ export default function Evolution() {
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
               <CmsText 
-                contentKey="evolution.cta.description" 
-                page="Evolution"
+                contentKey="closet.cta.description" 
+                page="CleaningOutYourCloset"
                 blockTitle="CTA Description"
                 fallback="When you change your thinking, you change everything — your confidence, relationships, leadership, and sense of possibility." 
                 contentType="rich_text"
