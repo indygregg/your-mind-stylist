@@ -125,7 +125,12 @@ export default function AuthLayout({ children, currentPageName }) {
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#1E3A32] shadow-md">
         {/* Main Nav */}
         <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link to={createPageUrl(navLinks[0]?.page || "Dashboard")} className="group">
+          <Link to={createPageUrl(navLinks[0]?.page || "Dashboard")} className="group flex items-center gap-3">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/60b825e58_Mind-stylist-light-icon2x.png" 
+              alt="Your Mind Stylist Logo" 
+              className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 object-contain"
+            />
             <div className="flex flex-col">
               <span className="text-[8px] md:text-[10px] text-[#F9F5EF]/60 tracking-[0.2em] uppercase">
                 Roberta Fernandez
