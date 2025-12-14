@@ -141,8 +141,8 @@ export default function Layout({ children, currentPageName }) {
           const textColorClass = hasDarkHero ? 'text-white' : 'text-[#2B2725]';
           const textColorOpacity = hasDarkHero ? 'text-white/80' : 'text-[#2B2725]/60';
           const logoSrc = hasDarkHero 
-            ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/7d481edb8_light-mind-stylist-icon2x.png'
-            : 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9ea03b99b_mind-stylist-icon2x.png';
+            ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/60b825e58_Mind-stylist-light-icon2x.png'
+            : 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/7d5c32b99_Mind-stylist-dark-icon2x.png';
           
           return (
             <>
@@ -367,11 +367,11 @@ export default function Layout({ children, currentPageName }) {
             {/* Brand */}
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/7d481edb8_light-mind-stylist-icon2x.png" 
-                  alt="Your Mind Stylist Logo" 
-                  className="w-12 h-12 flex-shrink-0 object-contain"
-                />
+                  <img 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/60b825e58_Mind-stylist-light-icon2x.png" 
+                    alt="Your Mind Stylist Logo" 
+                    className="w-12 h-12 flex-shrink-0 object-contain"
+                  />
                 <div>
                   <p className="text-[#F9F5EF]/60 text-xs tracking-[0.2em] uppercase mb-1">
                     Roberta Fernandez
