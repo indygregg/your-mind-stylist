@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Check, Edit3, Scissors, Sparkles } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 
-export default function CleaningOutYourCloset() {
+export default function Evolution() {
   const phases = [
     {
       number: "Part I",
@@ -72,6 +72,18 @@ export default function CleaningOutYourCloset() {
     "Anyone ready for clarity, confidence, and emotional intelligence",
   ];
 
+  const included = [
+    "Three structured phases (Edit → Tailor → Design)",
+    "Video lessons + guided practice",
+    "Inner pattern assessments",
+    "Emotional intelligence tools",
+    "Identity-realignment exercises",
+    "Future-self rehearsal methods",
+    "Workbooks & prompts",
+    "Access to optional support from Roberta (group or 1:1 add-ons)",
+    "Certificate upon completion",
+  ];
+
   const outcomes = [
     "Understand your internal patterns",
     "Think with clarity instead of confusion",
@@ -86,37 +98,37 @@ export default function CleaningOutYourCloset() {
 
   const faqs = [
     {
-      question: "How long does Cleaning Out Your Closet take?",
-      answer: "It's customized to your needs. Most clients complete the three-part process in 6–12 weeks, working directly with Roberta.",
+      question: "How long does the Mind Styling Evolution take?",
+      answer: "It's self-paced. Most people complete it in 6–12 weeks, depending on their schedule.",
     },
     {
       question: "Is this therapy?",
       answer:
-        "No. This is hypnosis-based transformation work that helps you release old patterns and redesign your mindset at the identity level.",
+        "No. This is a psychology-informed, future-focused, skill-building program designed to support self-awareness, emotional intelligence, and mental clarity.",
     },
     {
       question: "Can I do this alongside other personal development work?",
       answer:
-        "Yes — it enhances everything else you're doing by giving you the internal tools to support lasting change.",
+        "Yes — it enhances everything else you're doing by giving you the internal tools to support change.",
     },
     {
       question: "What if I've done programs like this before?",
       answer:
-        "Most clients say this is unlike anything they've experienced. Cleaning Out Your Closet focuses on identity-level transformation through hypnosis and inner pattern work.",
+        "Most clients say this is unlike anything they've experienced. Mind Styling focuses on identity-level transformation rather than surface habits.",
     },
     {
-      question: "Will I work directly with Roberta?",
+      question: "Will I get access to Roberta directly?",
       answer:
-        "Yes. This is one-on-one work. You'll have Roberta's full attention as you move through the three-part process.",
+        "The core program is self-paced. Optional private sessions or group upgrades are available.",
     },
   ];
 
   return (
     <div className="bg-[#F9F5EF]">
       <SEO
-        title="Cleaning Out Your Closet | One-on-One Hypnosis & Mindset Transformation"
-        description="Work directly with Roberta Fernandez in this three-part hypnosis program to release old patterns, rebuild your mindset, and step into your future self."
-        canonical="/cleaning-out-your-closet"
+        title="Mind Styling Evolution™ | Mindset & Emotional Intelligence Training"
+        description="A three-part inner redesign for people ready for a new mental operating system. Build emotional intelligence, identity-level change, and clearer thinking."
+        canonical="/evolution"
       />
       {/* Hero Section */}
       <section className="pt-32 pb-20">
@@ -129,8 +141,8 @@ export default function CleaningOutYourCloset() {
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
               <CmsText 
-                contentKey="closet.hero.subtitle" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.hero.subtitle" 
+                page="Evolution"
                 blockTitle="Hero Subtitle"
                 fallback="Signature Program" 
                 contentType="short_text"
@@ -138,8 +150,8 @@ export default function CleaningOutYourCloset() {
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
               <CmsText 
-                contentKey="closet.hero.title" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.hero.title" 
+                page="Evolution"
                 blockTitle="Hero Title"
                 fallback="Cleaning Out Your Closet" 
                 contentType="short_text"
@@ -147,8 +159,8 @@ export default function CleaningOutYourCloset() {
             </h1>
             <p className="text-[#1E3A32] font-serif text-2xl md:text-3xl italic mb-8">
               <CmsText 
-                contentKey="closet.hero.tagline" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.hero.tagline" 
+                page="Evolution"
                 blockTitle="Hero Tagline"
                 fallback="One-on-one hypnosis work to release old patterns and step into your future self." 
                 contentType="short_text"
@@ -157,10 +169,10 @@ export default function CleaningOutYourCloset() {
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-3xl mx-auto">
               <CmsText 
-                contentKey="closet.hero.description" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.hero.description" 
+                page="Evolution"
                 blockTitle="Hero Description"
-                fallback="This is where deep transformation happens. Working privately with Roberta, you'll identify the patterns that no longer serve you, release outdated beliefs, and redesign your mindset from the inside out." 
+                fallback="When your mindset shifts, everything else in your life begins to realign. This program is designed to help you understand how your mind actually works, release the patterns that no longer fit, and become the person you've been trying to step into." 
                 contentType="rich_text"
               />
             </p>
@@ -197,8 +209,8 @@ export default function CleaningOutYourCloset() {
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
               <CmsText 
-                contentKey="closet.for.title" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.for.title" 
+                page="Evolution"
                 blockTitle="Who This Is For Title"
                 fallback="Who This Program Is Designed For" 
                 contentType="short_text"
@@ -207,8 +219,8 @@ export default function CleaningOutYourCloset() {
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
               <CmsText 
-                contentKey="closet.for.intro" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.for.intro" 
+                page="Evolution"
                 blockTitle="Who This Is For Intro"
                 fallback="This program is for individuals who are ready for more than surface-level mindset work. It's for people who are done repeating the same stories, outgrowing old patterns, and feeling stuck between who they are and who they want to be." 
                 contentType="rich_text"
@@ -218,8 +230,8 @@ export default function CleaningOutYourCloset() {
             <div className="bg-[#F9F5EF] p-8 mb-8">
               <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-6">Perfect for:</p>
               <CmsText 
-                contentKey="closet.for.list"
-                page="CleaningOutYourCloset"
+                contentKey="evolution.for.list"
+                page="Evolution"
                 blockTitle="Perfect For List"
                 fallback={`<div class='space-y-3'>${perfectFor.map(item => `<div class='flex items-center gap-3'><svg class='lucide lucide-check' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 6 9 17l-5-5'/></svg><span class='text-[#2B2725]/80 text-lg'>${item}</span></div>`).join('')}</div>`}
                 contentType="rich_text"
@@ -228,8 +240,8 @@ export default function CleaningOutYourCloset() {
 
             <p className="font-serif text-xl text-[#1E3A32] italic">
               <CmsText 
-                contentKey="closet.for.closing" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.for.closing" 
+                page="Evolution"
                 blockTitle="Who This Is For Closing"
                 fallback="If you're ready to think from where you want to be — not where you've been — this is your path." 
                 contentType="rich_text"
@@ -250,17 +262,17 @@ export default function CleaningOutYourCloset() {
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
               <CmsText 
-                contentKey="closet.overview.title" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.overview.title" 
+                page="Evolution"
                 blockTitle="Overview Title"
-                fallback="How Cleaning Out Your Closet Works" 
+                fallback="How Mind Styling Evolution Works" 
                 contentType="short_text"
               />
             </h2>
             <p className="text-[#2B2725]/70 text-lg">
               <CmsText 
-                contentKey="closet.overview.subtitle" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.overview.subtitle" 
+                page="Evolution"
                 blockTitle="Overview Subtitle"
                 fallback="A three-part, editorial-style process based on the Mind Stylist method" 
                 contentType="short_text"
@@ -299,8 +311,8 @@ export default function CleaningOutYourCloset() {
                       style={{ color: phase.color }}
                     >
                       <CmsText 
-                        contentKey={`closet.phase${index + 1}.number`}
-                        page="CleaningOutYourCloset"
+                        contentKey={`evolution.phase${index + 1}.number`}
+                        page="Evolution"
                         blockTitle={`Phase ${index + 1} Number`}
                         fallback={phase.number}
                         contentType="short_text"
@@ -309,8 +321,8 @@ export default function CleaningOutYourCloset() {
                     </span>
                     <h3 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-3">
                       <CmsText 
-                        contentKey={`closet.phase${index + 1}.name`}
-                        page="CleaningOutYourCloset"
+                        contentKey={`evolution.phase${index + 1}.name`}
+                        page="Evolution"
                         blockTitle={`Phase ${index + 1} Name`}
                         fallback={phase.name}
                         contentType="short_text"
@@ -319,8 +331,8 @@ export default function CleaningOutYourCloset() {
                     </h3>
                     <p className="font-serif text-xl md:text-2xl text-[#2B2725]/70 italic">
                       <CmsText 
-                        contentKey={`closet.phase${index + 1}.tagline`}
-                        page="CleaningOutYourCloset"
+                        contentKey={`evolution.phase${index + 1}.tagline`}
+                        page="Evolution"
                         blockTitle={`Phase ${index + 1} Tagline`}
                         fallback={phase.tagline}
                         contentType="short_text"
@@ -335,28 +347,26 @@ export default function CleaningOutYourCloset() {
                     <div>
                       <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
                         <CmsText 
-                          contentKey={`closet.phase${index + 1}.description`}
-                          page="CleaningOutYourCloset"
+                          contentKey={`evolution.phase${index + 1}.description`}
+                          page="Evolution"
                           blockTitle={`Phase ${index + 1} Description`}
                           fallback={phase.description}
                           contentType="rich_text"
                         />
                       </p>
 
-                      {index === 0 ? null : (
-                        <div className="border-l-2 border-[#D8B46B] pl-6 mb-8">
-                          <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-4">
-                            You'll Learn:
-                          </p>
-                          <CmsText 
-                            contentKey={`closet.phase${index + 1}.learnings`}
-                            page="CleaningOutYourCloset"
-                            blockTitle={`Phase ${index + 1} Learnings`}
-                            fallback={`<ul class='space-y-2'>${phase.learnings.map(learning => `<li class='text-[#2B2725]/80 flex items-start gap-2'><span class='text-[#D8B46B] mt-1'>•</span>${learning}</li>`).join('')}</ul>`}
-                            contentType="rich_text"
-                          />
-                        </div>
-                      )}
+                      <div className="border-l-2 border-[#D8B46B] pl-6 mb-8">
+                        <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-2">
+                          You'll Learn To:
+                        </p>
+                        <CmsText 
+                          contentKey={`evolution.phase${index + 1}.learnings`}
+                          page="Evolution"
+                          blockTitle={`Phase ${index + 1} Learnings`}
+                          fallback={`<ul class='space-y-2'>${phase.learnings.map(learning => `<li class='text-[#2B2725]/80 flex items-start gap-2'><span class='text-[#D8B46B] mt-1'>•</span>${learning}</li>`).join('')}</ul>`}
+                          contentType="rich_text"
+                        />
+                      </div>
                     </div>
 
                     {/* Right - Outcome & CTA */}
@@ -367,8 +377,8 @@ export default function CleaningOutYourCloset() {
                         </p>
                         <p className="text-[#2B2725]/80 text-lg leading-relaxed italic">
                           <CmsText 
-                            contentKey={`closet.phase${index + 1}.outcome`}
-                            page="CleaningOutYourCloset"
+                            contentKey={`evolution.phase${index + 1}.outcome`}
+                            page="Evolution"
                             blockTitle={`Phase ${index + 1} Outcome`}
                             fallback={phase.outcome}
                             contentType="rich_text"
@@ -395,6 +405,8 @@ export default function CleaningOutYourCloset() {
         </div>
       </section>
 
+
+
       {/* Benefits & Outcomes */}
       <section className="py-24 bg-[#1E3A32]">
         <div className="max-w-4xl mx-auto px-6">
@@ -405,8 +417,8 @@ export default function CleaningOutYourCloset() {
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] mb-10">
               <CmsText 
-                contentKey="closet.outcomes.title" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.outcomes.title" 
+                page="Evolution"
                 blockTitle="Outcomes Title"
                 fallback="The Transformation You Can Expect" 
                 contentType="short_text"
@@ -415,8 +427,8 @@ export default function CleaningOutYourCloset() {
 
             <p className="text-[#F9F5EF]/80 text-lg mb-10">
               <CmsText 
-                contentKey="closet.outcomes.intro" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.outcomes.intro" 
+                page="Evolution"
                 blockTitle="Outcomes Intro"
                 fallback="By the end of this program, you will:" 
                 contentType="short_text"
@@ -429,8 +441,8 @@ export default function CleaningOutYourCloset() {
                   <Check size={20} className="text-[#D8B46B] mt-1 flex-shrink-0" />
                   <span className="text-[#F9F5EF]/90 text-lg">
                     <CmsText 
-                      contentKey={`closet.outcome${idx + 1}`}
-                      page="CleaningOutYourCloset"
+                      contentKey={`evolution.outcome${idx + 1}`}
+                      page="Evolution"
                       blockTitle={`Outcome ${idx + 1}`}
                       fallback={outcome}
                       contentType="short_text"
@@ -443,8 +455,8 @@ export default function CleaningOutYourCloset() {
 
             <p className="font-serif text-2xl text-[#D8B46B] italic text-center">
               <CmsText 
-                contentKey="closet.outcomes.closing" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.outcomes.closing" 
+                page="Evolution"
                 blockTitle="Outcomes Closing"
                 fallback="This is a complete internal redesign." 
                 contentType="short_text"
@@ -464,8 +476,8 @@ export default function CleaningOutYourCloset() {
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-12 text-center">
               <CmsText 
-                contentKey="closet.faq.title" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.faq.title" 
+                page="Evolution"
                 blockTitle="FAQ Title"
                 fallback="Frequently Asked Questions" 
                 contentType="short_text"
@@ -484,8 +496,8 @@ export default function CleaningOutYourCloset() {
                 >
                   <h3 className="font-serif text-xl md:text-2xl text-[#1E3A32] mb-4">
                     <CmsText 
-                      contentKey={`closet.faq${idx + 1}.question`}
-                      page="CleaningOutYourCloset"
+                      contentKey={`evolution.faq${idx + 1}.question`}
+                      page="Evolution"
                       blockTitle={`FAQ ${idx + 1} Question`}
                       fallback={faq.question}
                       contentType="short_text"
@@ -493,8 +505,8 @@ export default function CleaningOutYourCloset() {
                   </h3>
                   <p className="text-[#2B2725]/80 text-lg leading-relaxed">
                     <CmsText 
-                      contentKey={`closet.faq${idx + 1}.answer`}
-                      page="CleaningOutYourCloset"
+                      contentKey={`evolution.faq${idx + 1}.answer`}
+                      page="Evolution"
                       blockTitle={`FAQ ${idx + 1} Answer`}
                       fallback={faq.answer}
                       contentType="rich_text"
@@ -517,18 +529,18 @@ export default function CleaningOutYourCloset() {
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
               <CmsText 
-                contentKey="closet.cta.title" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.cta.title" 
+                page="Evolution"
                 blockTitle="CTA Title"
-                fallback="Ready to Clean Out Your Closet?" 
+                fallback="Begin Your Mind Styling Evolution" 
                 contentType="short_text"
               />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
               <CmsText 
-                contentKey="closet.cta.description" 
-                page="CleaningOutYourCloset"
+                contentKey="evolution.cta.description" 
+                page="Evolution"
                 blockTitle="CTA Description"
                 fallback="When you change your thinking, you change everything — your confidence, relationships, leadership, and sense of possibility." 
                 contentType="rich_text"
