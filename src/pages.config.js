@@ -109,6 +109,7 @@ import RobotsText from './pages/RobotsText';
 import ManageSubscription from './pages/ManageSubscription';
 import ManagerPaymentPlans from './pages/ManagerPaymentPlans';
 import CalendarSettings from './pages/CalendarSettings';
+import ManagerMailerLite from './pages/ManagerMailerLite';
 import __Layout from './Layout.jsx';
 
 
@@ -224,6 +225,7 @@ export const PAGES = {
     "ManageSubscription": ManageSubscription,
     "ManagerPaymentPlans": ManagerPaymentPlans,
     "CalendarSettings": CalendarSettings,
+    "ManagerMailerLite": ManagerMailerLite,
 }
 
 export const pagesConfig = {

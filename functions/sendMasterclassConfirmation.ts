@@ -95,6 +95,29 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Add to MailerLite masterclass automation
+    try {
+      const apiKey = Deno.env.get('MAILERLITE_API_KEY');
+      if (apiKey) {
+        await fetch('https://connect.mailerlite.com/api/subscribers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            email,
+            fields: {
+              name: full_name || '',
+              masterclass_signup_date: new Date().toISOString()
+            }
+          })
+        });
+      }
+    } catch (mlError) {
+      console.log('MailerLite sync failed (non-critical):', mlError.message);
+    }
+
     return Response.json({ success: true });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
