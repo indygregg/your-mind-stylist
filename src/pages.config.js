@@ -112,6 +112,7 @@ import CalendarSettings from './pages/CalendarSettings';
 import ManagerMailerLite from './pages/ManagerMailerLite';
 import ManagerQuizAnalytics from './pages/ManagerQuizAnalytics';
 import AffiliatePortal from './pages/AffiliatePortal';
+import ManagerAffiliates from './pages/ManagerAffiliates';
 import __Layout from './Layout.jsx';
 
 
@@ -230,6 +231,7 @@ export const PAGES = {
     "ManagerMailerLite": ManagerMailerLite,
     "ManagerQuizAnalytics": ManagerQuizAnalytics,
     "AffiliatePortal": AffiliatePortal,
+    "ManagerAffiliates": ManagerAffiliates,
 }
 
 export const pagesConfig = {
