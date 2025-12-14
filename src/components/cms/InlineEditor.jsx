@@ -158,7 +158,7 @@ export default function InlineEditor({
               <Input
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="text-lg"
+                className="text-lg text-[#1E3A32]"
                 placeholder="Type your text here..."
               />
               {maxLength && (
@@ -169,6 +169,15 @@ export default function InlineEditor({
             </div>
           ) : (
             <div>
+              <style>{`
+                .ql-editor {
+                  color: #1E3A32 !important;
+                  min-height: 200px;
+                }
+                .ql-editor p, .ql-editor span, .ql-editor div {
+                  color: #1E3A32 !important;
+                }
+              `}</style>
               <ReactQuill
                 value={content}
                 onChange={setContent}

@@ -82,15 +82,15 @@ export default function FreeMasterclass() {
               />
             </h2>
 
-            <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-8">
+            <div className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-8">
               <CmsText
                 contentKey="home.masterclass.description"
                 page="Home"
                 blockTitle="Masterclass Description"
-                fallback="An on-demand masterclass for anyone who feels like they're 'faking it.' Learn what imposter syndrome really is, why it follows high performers, and how to break the loop for good."
+                fallback="An on-demand webinar for anyone who feels like they're 'faking it.' Learn what imposter syndrome really is through Roberta's personal story and discover the myths you need to ditch about yourself."
                 contentType="rich_text"
               />
-            </p>
+            </div>
 
             <Link
               to={createPageUrl("FreeMasterclass")}
