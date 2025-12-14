@@ -17,6 +17,27 @@ Deno.serve(async (req) => {
         // Initialize base44 AFTER getting the body
         const base44 = createClientFromRequest(req);
 
+        // Helper to track affiliate referral
+        const trackAffiliate = async (session) => {
+            const affiliateCode = session.metadata?.affiliate_code || session.client_reference_id;
+            if (affiliateCode) {
+                try {
+                    await base44.asServiceRole.functions.invoke('trackAffiliateReferral', {
+                        affiliate_code: affiliateCode,
+                        referred_user_email: session.customer_email,
+                        referred_user_id: session.metadata?.user_id,
+                        conversion_type: session.metadata?.type || 'product',
+                        product_id: session.metadata?.product_id,
+                        product_name: session.metadata?.product_name,
+                        purchase_amount: session.amount_total,
+                        stripe_payment_intent_id: session.payment_intent
+                    });
+                } catch (affError) {
+                    console.error('Affiliate tracking failed:', affError);
+                }
+            }
+        };
+
         // Verify webhook signature
         let event;
         try {
@@ -34,6 +55,9 @@ Deno.serve(async (req) => {
         switch (event.type) {
             case 'checkout.session.completed': {
                 const session = event.data.object;
+                
+                // Track affiliate referral for all conversions
+                await trackAffiliate(session);
                 
                 // Handle Booking (Private Sessions)
                 if (session.metadata.booking_id) {
