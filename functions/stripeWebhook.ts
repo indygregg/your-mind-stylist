@@ -43,6 +43,18 @@ Deno.serve(async (req) => {
                         stripe_payment_intent_id: session.payment_intent
                     });
 
+                    // Auto-tag user for booking completion
+                    if (session.metadata.user_id) {
+                        try {
+                            await base44.asServiceRole.functions.invoke('autoTagUser', {
+                                user_id: session.metadata.user_id,
+                                event_type: 'booking_completed'
+                            });
+                        } catch (tagError) {
+                            console.error('Auto-tagging failed:', tagError);
+                        }
+                    }
+
                     // Auto-create Zoom meeting
                     try {
                         await base44.asServiceRole.functions.invoke('createZoomMeeting', {
@@ -147,6 +159,17 @@ Deno.serve(async (req) => {
                             }
                         }
 
+                        // Auto-tag user based on purchase
+                        try {
+                            await base44.asServiceRole.functions.invoke('autoTagUser', {
+                                user_id: session.metadata.user_id,
+                                product_key: product.key
+                            });
+                        } catch (tagError) {
+                            console.error('Auto-tagging failed:', tagError);
+                            // Continue even if tagging fails
+                        }
+
                         await base44.asServiceRole.integrations.Core.SendEmail({
                             to: session.customer_email,
                             subject: `Welcome to ${product.name}`,
@@ -173,6 +196,16 @@ Deno.serve(async (req) => {
                             subscription_status: 'active'
                         });
 
+                        // Auto-tag for subscription (e.g., Pocket Visualization)
+                        try {
+                            await base44.asServiceRole.functions.invoke('autoTagUser', {
+                                user_id: userId,
+                                product_key: 'pocket-visualization' // Default to PV
+                            });
+                        } catch (tagError) {
+                            console.error('Auto-tagging failed:', tagError);
+                        }
+
                         await base44.asServiceRole.integrations.Core.SendEmail({
                             to: session.customer_email,
                             subject: 'Subscription Activated',
@@ -194,6 +227,16 @@ Deno.serve(async (req) => {
                         needs_masterclass_onboarding: true,
                         masterclass_signup_date: new Date().toISOString()
                     });
+
+                    // Auto-tag masterclass lead and trigger email sequence
+                    try {
+                        await base44.asServiceRole.functions.invoke('autoTagUser', {
+                            user_id: session.metadata.user_id,
+                            event_type: 'masterclass_signup'
+                        });
+                    } catch (tagError) {
+                        console.error('Auto-tagging failed:', tagError);
+                    }
 
                     // Send welcome email with masterclass access
                     await base44.asServiceRole.integrations.Core.SendEmail({
