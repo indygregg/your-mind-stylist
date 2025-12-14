@@ -127,7 +127,7 @@ export default function AuthLayout({ children, currentPageName }) {
         <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <Link to={createPageUrl(navLinks[0]?.page || "Dashboard")} className="group flex items-center gap-3">
             <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/60b825e58_Mind-stylist-light-icon2x.png" 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/fad26f1a8_mind-stylist-whie-gold-logo2x.png" 
               alt="Your Mind Stylist Logo" 
               className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 object-contain"
             />
