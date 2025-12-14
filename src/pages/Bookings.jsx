@@ -200,13 +200,31 @@ export default function Bookings() {
               transition={{ duration: 0.6 }}
             >
               <span className="text-[#D8B46B] text-sm tracking-[0.3em] uppercase mb-4 block">
-                Book Your Session
+                <CmsText 
+                  contentKey="bookings.hero.subtitle" 
+                  page="Bookings"
+                  blockTitle="Hero Subtitle"
+                  fallback="Book Your Session" 
+                  contentType="short_text"
+                />
               </span>
               <h1 className="font-serif text-4xl md:text-5xl mb-6">
-                Begin Your Transformation
+                <CmsText 
+                  contentKey="bookings.hero.title" 
+                  page="Bookings"
+                  blockTitle="Hero Title"
+                  fallback="Begin Your Transformation" 
+                  contentType="short_text"
+                />
               </h1>
               <p className="text-lg text-white/90 max-w-3xl mx-auto leading-relaxed">
-                An initial consultation is the first step for everyone. I want to find out how I can best serve you. We can meet by phone, Zoom, or, if you are in the Las Vegas area, in person. Once we've determined how we will work together, I'll guide you on setting up future appointments.
+                <CmsText 
+                  contentKey="bookings.hero.description" 
+                  page="Bookings"
+                  blockTitle="Hero Description"
+                  fallback="An initial consultation is the first step for everyone. I want to find out how I can best serve you. We can meet by phone, Zoom, or, if you are in the Las Vegas area, in person. Once we've determined how we will work together, I'll guide you on setting up future appointments." 
+                  contentType="rich_text"
+                />
               </p>
             </motion.div>
           </div>
@@ -577,7 +595,13 @@ export default function Bookings() {
           <section className="py-16 px-6 bg-[#1E3A32] text-white">
           <div className="max-w-4xl mx-auto text-center">
             <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
-              Contact Roberta today to start clearing the clutter from your emotional wardrobe so you can finally step into a life that fits.
+              <CmsText 
+                contentKey="bookings.cta.text" 
+                page="Bookings"
+                blockTitle="Bottom CTA Text"
+                fallback="Contact Roberta today to start clearing the clutter from your emotional wardrobe so you can finally step into a life that fits." 
+                contentType="rich_text"
+              />
             </p>
           </div>
         </section>
