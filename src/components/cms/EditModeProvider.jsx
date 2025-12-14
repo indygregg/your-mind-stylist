@@ -11,6 +11,11 @@ export function EditModeProvider({ children }) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (!isAuth) {
+          setIsManager(false);
+          return;
+        }
         const currentUser = await base44.auth.me();
         setUser(currentUser);
         const userRole = currentUser?.custom_role || currentUser?.role;
