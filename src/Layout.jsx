@@ -21,6 +21,9 @@ export default function Layout({ children, currentPageName }) {
 
   useEffect(() => {
     const checkAuthPages = async () => {
+      // Skip layout rendering for login/auth pages
+      if (!currentPageName) return;
+      
       // Pattern-based detection for authenticated pages
       const isAuthPage = 
         currentPageName.startsWith('Admin') ||
@@ -86,11 +89,16 @@ export default function Layout({ children, currentPageName }) {
     }
   ];
 
+  // Don't render layout for pages without a name (like login)
+  if (!currentPageName) {
+    return <>{children}</>;
+  }
+
   return (
     <EditModeProvider>
       <Helmet>
         <title>Your Mind Stylist</title>
-        <link rel="icon" type="image/png" href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9ea03b99b_mind-stylist-icon2x.png" />
+        <link rel="icon" type="image/png" href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/7d5c32b99_Mind-stylist-dark-icon2x.png" />
       </Helmet>
       <div className="min-h-screen bg-[#F9F5EF]">
         <ManagerBar />
