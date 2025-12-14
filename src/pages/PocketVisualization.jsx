@@ -185,7 +185,7 @@ export default function PocketVisualization() {
                 to={createPageUrl("PocketVisualizationPurchase")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                Access Pocket Visualization
+                Access Pocket Mindset
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
