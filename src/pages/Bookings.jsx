@@ -110,14 +110,14 @@ export default function Bookings() {
   };
 
   const serviceCategories = {
-    private_sessions: {
-      title: "Private Coaching",
-      description: "One-on-one intensive sessions tailored to your specific needs",
+    consultation: {
+      title: "Complimentary Initial Consultations",
+      description: "",
       color: "#1E3A32"
     },
-    consultation: {
-      title: "Consultations",
-      description: "Discovery calls and strategic planning sessions",
+    private_sessions: {
+      title: "After You Know How You'll Work with Roberta",
+      description: "",
       color: "#6E4F7D"
     },
     certification: {
@@ -134,6 +134,9 @@ export default function Bookings() {
     acc[service.service_type].push(service);
     return acc;
   }, {});
+
+  // Custom order: consultation first, then private_sessions
+  const categoryOrder = ['consultation', 'private_sessions', 'certification'];
 
   // Manager view banner
   const isManager = user?.role === 'admin' || user?.role === 'manager';
@@ -199,11 +202,11 @@ export default function Bookings() {
               <span className="text-[#D8B46B] text-sm tracking-[0.3em] uppercase mb-4 block">
                 Book Your Session
               </span>
-              <h1 className="font-serif text-4xl md:text-5xl mb-4">
+              <h1 className="font-serif text-4xl md:text-5xl mb-6">
                 Begin Your Transformation
               </h1>
-              <p className="text-lg text-white/80 max-w-3xl mx-auto">
-                Choose the session type that fits your needs. Every journey starts with a single step.
+              <p className="text-lg text-white/90 max-w-3xl mx-auto leading-relaxed">
+                An initial consultation is the first step for everyone. I want to find out how I can best serve you. We can meet by phone, Zoom, or, if you are in the Las Vegas area, in person. Once we've determined how we will work together, I'll guide you on setting up future appointments.
               </p>
             </motion.div>
           </div>
@@ -279,7 +282,7 @@ export default function Bookings() {
                 </div>
               </motion.div>
             ) : (
-              ['private_sessions', 'consultation', 'certification']
+              categoryOrder
                 .filter(type => groupedServices[type])
                 .map((type) => {
                 const services = groupedServices[type];
@@ -573,19 +576,9 @@ export default function Bookings() {
         {step === 1 && (
           <section className="py-16 px-6 bg-[#1E3A32] text-white">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="font-serif text-3xl md:text-4xl mb-4">
-              Not Sure Where to Start?
-            </h2>
-            <p className="text-lg text-white/80 mb-6 max-w-2xl mx-auto">
-              Book a complimentary consultation to discuss your goals and find the right path forward.
+            <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+              Contact Roberta today to start clearing the clutter from your emotional wardrobe so you can finally step into a life that fits.
             </p>
-            <Button 
-              size="lg"
-              className="bg-[#D8B46B] hover:bg-[#C9A55B] text-[#1E3A32] font-medium px-8 py-4"
-              onClick={() => window.location.href = createPageUrl('Contact')}
-            >
-              Schedule a Free Consultation
-            </Button>
           </div>
         </section>
         )}

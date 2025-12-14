@@ -103,7 +103,7 @@ export default function HeroSection() {
                   blockTitle="Homepage Hero Secondary CTA"
                   contentType="short_text"
                   maxLength={60}
-                  fallback="Explore Pocket Visualization"
+                  fallback="Listen to a Free Pocket Mindset Recording"
                   as="span"
                 />
               </Link>

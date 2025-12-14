@@ -343,18 +343,20 @@ export default function CleaningOutYourCloset() {
                         />
                       </p>
 
-                      <div className="border-l-2 border-[#D8B46B] pl-6 mb-8">
-                        <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-2">
-                          You'll Learn To:
-                        </p>
-                        <CmsText 
-                          contentKey={`closet.phase${index + 1}.learnings`}
-                          page="CleaningOutYourCloset"
-                          blockTitle={`Phase ${index + 1} Learnings`}
-                          fallback={`<ul class='space-y-2'>${phase.learnings.map(learning => `<li class='text-[#2B2725]/80 flex items-start gap-2'><span class='text-[#D8B46B] mt-1'>•</span>${learning}</li>`).join('')}</ul>`}
-                          contentType="rich_text"
-                        />
-                      </div>
+                      {index === 0 ? null : (
+                        <div className="border-l-2 border-[#D8B46B] pl-6 mb-8">
+                          <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-4">
+                            You'll Learn:
+                          </p>
+                          <CmsText 
+                            contentKey={`closet.phase${index + 1}.learnings`}
+                            page="CleaningOutYourCloset"
+                            blockTitle={`Phase ${index + 1} Learnings`}
+                            fallback={`<ul class='space-y-2'>${phase.learnings.map(learning => `<li class='text-[#2B2725]/80 flex items-start gap-2'><span class='text-[#D8B46B] mt-1'>•</span>${learning}</li>`).join('')}</ul>`}
+                            contentType="rich_text"
+                          />
+                        </div>
+                      )}
                     </div>
 
                     {/* Right - Outcome & CTA */}

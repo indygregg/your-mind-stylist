@@ -17,7 +17,7 @@ export default function WhatIDo() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-[#C27BA0] text-sm font-bold tracking-[0.2em] uppercase mb-4 block">
+            <span className="text-[#8B4F70] text-base md:text-lg font-bold tracking-[0.2em] uppercase mb-4 block">
               The Approach
             </span>
             <CmsText
@@ -88,7 +88,7 @@ export default function WhatIDo() {
                     { number: "30+", label: "Years of Experience" },
                     { number: "NLP", label: "Master Practitioner" },
                     { number: "EI", label: "Emotional Intelligence Specialist" },
-                    { number: "", label: "Board Certified Hypnotherapist" },
+                    { number: "", label: "Board Certified Hypnotist" },
                   ].map((item, index) => (
                     <motion.div
                       key={item.label}

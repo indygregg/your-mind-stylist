@@ -35,9 +35,17 @@ export default function MindStylingSuite() {
     {
       icon: User,
       title: "Expanding Your Mind Style",
-      tagline: "Different Thinkers. Innovative Problem Solvers. Better Human Beings.",
+      tagline: "Transform how you think, communicate, and lead.",
       description:
-        "Transform how you think, communicate, and lead. This is for individuals ready to expand their emotional intelligence, strengthen their identity, and step into their next level of personal and professional growth.",
+        "This is for individuals ready to expand their emotional intelligence, strengthen their identity, and step into their next level of personal and professional growth.",
+      rightBox: {
+        title: "",
+        bullets: [
+          "Different Thinkers.",
+          "Innovative Problem Solvers.",
+          "Better Human Beings."
+        ]
+      },
       cta: "Explore Expanding Your Mind Style",
       link: "PrivateSessions",
       accent: "#6E4F7D",
@@ -55,7 +63,7 @@ export default function MindStylingSuite() {
         "Build confidence",
         "Enhance clarity & decision-making",
         "Prepare for performance",
-        "Cultivate balanced well-being",
+        "Balanced well-being",
         "Deep rest & inner regulation",
       ],
       bottomNote:
@@ -96,7 +104,7 @@ export default function MindStylingSuite() {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block font-bold">
+          <span className="text-[#D8B46B] text-sm md:text-base tracking-[0.3em] uppercase mb-4 block font-bold">
             <CmsText
               contentKey="home.mind_styling_suite.label"
               page="Home"
@@ -156,7 +164,7 @@ export default function MindStylingSuite() {
                       />
                     </h3>
                     <p
-                      className="font-serif italic text-lg mb-6"
+                      className="font-serif italic text-lg md:text-xl mb-6"
                       style={{ color: service.accent }}
                     >
                       <CmsText
@@ -209,6 +217,19 @@ export default function MindStylingSuite() {
                       </div>
                     )}
 
+                    {/* Right Box for Expanding Your Mind Style */}
+                    {service.rightBox && (
+                      <div className="bg-white p-8 border-2 border-[#D8B46B] mb-8">
+                        <div className="space-y-3">
+                          {service.rightBox.bullets.map((bullet, idx) => (
+                            <p key={idx} className="text-[#1E3A32] font-medium text-lg">
+                              {bullet}
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {/* Bullets */}
                     {service.bullets && (
                       <div className="mb-6">
@@ -234,7 +255,7 @@ export default function MindStylingSuite() {
                         blockTitle={`${service.title} - Bottom Note`}
                         fallback={service.bottomNote}
                         contentType="short_text"
-                        className="text-[#2B2725]/60 text-sm italic mb-8"
+                        className="text-[#2B2725]/80 text-sm italic mb-8"
                         as="p"
                       />
                     )}
