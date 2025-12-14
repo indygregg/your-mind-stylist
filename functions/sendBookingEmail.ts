@@ -126,6 +126,11 @@ Deno.serve(async (req) => {
             body: emailHtml
         });
 
+        // Add to MailerLite for automation sequences (client only)
+        if (recipient_type === 'client') {
+            await addToMailerLite(bookingData.user_email, bookingData.user_name, bookingData);
+        }
+
         return Response.json({ success: true, sent_to: recipient });
 
     } catch (error) {
