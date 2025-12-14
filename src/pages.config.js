@@ -110,6 +110,7 @@ import ManageSubscription from './pages/ManageSubscription';
 import ManagerPaymentPlans from './pages/ManagerPaymentPlans';
 import CalendarSettings from './pages/CalendarSettings';
 import ManagerMailerLite from './pages/ManagerMailerLite';
+import ManagerQuizAnalytics from './pages/ManagerQuizAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -226,6 +227,7 @@ export const PAGES = {
     "ManagerPaymentPlans": ManagerPaymentPlans,
     "CalendarSettings": CalendarSettings,
     "ManagerMailerLite": ManagerMailerLite,
+    "ManagerQuizAnalytics": ManagerQuizAnalytics,
 }
 
 export const pagesConfig = {

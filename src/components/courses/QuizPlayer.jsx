@@ -46,11 +46,36 @@ export default function QuizPlayer({ quizId, onComplete }) {
         const loadedQuiz = quizData[0];
         setQuiz(loadedQuiz);
         
-        let questionData = await base44.entities.QuizQuestion.filter({ quiz_id: quizId });
-        questionData = questionData.sort((a, b) => a.order - b.order);
+        let questionData = [];
         
-        if (loadedQuiz.randomize_questions) {
-          questionData = questionData.sort(() => Math.random() - 0.5);
+        // Check if using question pools
+        if (loadedQuiz.use_question_pools) {
+          const pools = await base44.entities.QuizQuestionPool.filter({ 
+            quiz_id: quizId, 
+            active: true 
+          });
+          
+          for (const pool of pools) {
+            // Shuffle and select pool_size questions from each pool
+            const shuffled = [...pool.question_ids].sort(() => Math.random() - 0.5);
+            const selectedIds = shuffled.slice(0, pool.pool_size);
+            
+            // Fetch selected questions
+            for (const qId of selectedIds) {
+              const q = await base44.entities.QuizQuestion.filter({ id: qId });
+              if (q && q.length > 0) {
+                questionData.push(q[0]);
+              }
+            }
+          }
+        } else {
+          // Regular question loading
+          questionData = await base44.entities.QuizQuestion.filter({ quiz_id: quizId });
+          questionData = questionData.sort((a, b) => a.order - b.order);
+          
+          if (loadedQuiz.randomize_questions) {
+            questionData = questionData.sort(() => Math.random() - 0.5);
+          }
         }
         
         setQuestions(questionData);
