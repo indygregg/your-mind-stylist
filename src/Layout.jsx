@@ -68,20 +68,20 @@ export default function Layout({ children, currentPageName }) {
       items: [
         { name: "All Programs & Pricing", page: "Programs", description: "Explore all offerings" },
         { name: "Cleaning Out Your Closet", page: "CleaningOutYourCloset", description: "One-on-one hypnosis work" },
-        { name: "Pocket Visualization™", page: "PocketVisualization", description: "Daily guided experiences" },
+        { name: "Pocket Mindset™", page: "PocketVisualization", description: "Daily guided experiences" },
       ]
     },
     {
       category: "Professional Development",
       items: [
         { name: "Hypnosis Training", page: "LearnHypnosis", description: "Become a certified hypnotist" },
-        { name: "Speaking & Training", page: "SpeakingTraining", description: "Organizational Mind Styling" },
+        { name: "Speaking & Training", page: "SpeakingTraining", description: "Mind Styling for Organizations" },
       ]
     },
     {
       category: "Private Work",
       items: [
-        { name: "1:1 Coaching", page: "PrivateSessions", description: "Intensive personal coaching" },
+        { name: "Private Sessions", page: "PrivateSessions", description: "Intensive personal coaching" },
       ]
     }
   ];
@@ -150,7 +150,7 @@ export default function Layout({ children, currentPageName }) {
         <div className={`hidden lg:block border-b ${hasDarkHero ? 'border-white/20' : 'border-[#D8B46B]/20'}`}>
           <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
             <p className={`text-xs tracking-[0.2em] ${textColorOpacity} uppercase font-light`}>
-              Las Vegas • Emotional Intelligence • Mind Styling • Leadership & Personal Transformation
+              Las Vegas • Emotional Intelligence • Mind Styling • Hypnosis • Professional Development
             </p>
             <Link
               to={createPageUrl("Bookings")}
@@ -381,12 +381,15 @@ export default function Layout({ children, currentPageName }) {
                   </h3>
                 </div>
               </div>
-              <p className="text-[#F9F5EF]/70 text-sm leading-relaxed">
-                Emotional Intelligence • Mind Styling
-                <br />
-                Leadership & Personal Transformation
+              <p className="text-[#F9F5EF]/70 text-sm leading-relaxed mb-4">
+                Emotional Intelligence • Mind Styling • Hypnosis • Professional Development
               </p>
-              <p className="text-[#F9F5EF]/50 text-sm mt-4">Las Vegas, NV</p>
+              <div className="text-[#F9F5EF]/70 text-sm space-y-1">
+                <p>8724 Spanish Ridge Ave #B</p>
+                <p>Las Vegas, NV 89148</p>
+                <p className="mt-2">612-839-2295</p>
+                <p>roberta@yourmindstylist.com</p>
+              </div>
             </div>
 
             {/* Quick Links */}

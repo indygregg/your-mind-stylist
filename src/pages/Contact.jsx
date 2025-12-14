@@ -18,11 +18,7 @@ export default function Contact() {
     name: "",
     email: "",
     phone: "",
-    reachingOutAs: "",
-    interests: [],
-    message: "",
-    preferredContact: "email",
-    availability: "",
+    message: ""
   });
 
   const [submitted, setSubmitted] = useState(false);
@@ -68,11 +64,7 @@ export default function Contact() {
         name: "",
         email: "",
         phone: "",
-        reachingOutAs: "",
-        interests: [],
-        message: "",
-        preferredContact: "email",
-        availability: "",
+        message: ""
       });
       setSubmitted(false);
     }, 5000);
@@ -221,49 +213,7 @@ export default function Contact() {
                   />
                 </div>
 
-                {/* Reaching Out As */}
-                <div>
-                  <Label className="text-[#2B2725] mb-2 block">I'm reaching out as a…</Label>
-                  <Select
-                    value={formData.reachingOutAs}
-                    onValueChange={(value) => setFormData({ ...formData, reachingOutAs: value })}
-                  >
-                    <SelectTrigger className="border-[#E4D9C4] focus:border-[#D8B46B] focus:ring-[#D8B46B]">
-                      <SelectValue placeholder="Select one" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="individual">Individual</SelectItem>
-                      <SelectItem value="leader">Leader / Executive</SelectItem>
-                      <SelectItem value="hr">HR / People & Culture</SelectItem>
-                      <SelectItem value="business-owner">Business Owner</SelectItem>
-                      <SelectItem value="event-organizer">Event / Conference Organizer</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
 
-                {/* Interests */}
-                <div>
-                  <Label className="text-[#2B2725] mb-4 block">I'm interested in…</Label>
-                  <div className="space-y-3">
-                    {interestOptions.map((interest) => (
-                      <div key={interest} className="flex items-start gap-3">
-                        <Checkbox
-                          id={interest}
-                          checked={formData.interests.includes(interest)}
-                          onCheckedChange={() => handleInterestToggle(interest)}
-                          className="mt-1"
-                        />
-                        <label
-                          htmlFor={interest}
-                          className="text-[#2B2725]/80 leading-relaxed cursor-pointer"
-                        >
-                          {interest}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
 
                 {/* Message */}
                 <div>
@@ -280,47 +230,7 @@ export default function Contact() {
                   />
                 </div>
 
-                {/* Preferred Contact Method */}
-                <div>
-                  <Label className="text-[#2B2725] mb-3 block">Preferred contact method</Label>
-                  <RadioGroup
-                    value={formData.preferredContact}
-                    onValueChange={(value) => setFormData({ ...formData, preferredContact: value })}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="email" id="contact-email" />
-                      <Label htmlFor="contact-email" className="cursor-pointer font-normal">
-                        Email
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="phone" id="contact-phone" />
-                      <Label htmlFor="contact-phone" className="cursor-pointer font-normal">
-                        Phone
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="either" id="contact-either" />
-                      <Label htmlFor="contact-either" className="cursor-pointer font-normal">
-                        Either is fine
-                      </Label>
-                    </div>
-                  </RadioGroup>
-                </div>
 
-                {/* Availability */}
-                <div>
-                  <Label htmlFor="availability" className="text-[#2B2725] mb-2 block">
-                    Preferred availability (optional)
-                  </Label>
-                  <Input
-                    id="availability"
-                    value={formData.availability}
-                    onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
-                    className="border-[#E4D9C4] focus:border-[#D8B46B] focus:ring-[#D8B46B]"
-                    placeholder="If you'd like a call, share a few days / times that work best for you."
-                  />
-                </div>
 
                 {/* Submit Button */}
                 <Button
@@ -405,79 +315,15 @@ export default function Contact() {
               />
             </h2>
 
-            <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">
+            <p className="text-[#2B2725]/80 text-lg leading-relaxed max-w-3xl mx-auto">
               <CmsText 
                 contentKey="contact.nextsteps.intro" 
                 page="Contact"
                 blockTitle="Next Steps Intro"
-                fallback="If you're unsure which path is right for you, that's completely okay. You can use this page simply to say:" 
+                fallback="If you're unsure which path is right for you, that's completely okay. You can use this page simply to say: &quot;Here's what I'm struggling with right now&quot; or &quot;Here's what I'd like to feel or experience instead.&quot;" 
                 contentType="rich_text"
               />
             </p>
-
-            <div className="bg-[#F9F5EF] p-8 mb-8">
-              <div className="space-y-3">
-                <p className="text-[#2B2725]/80 flex items-start gap-3">
-                  <span className="text-[#D8B46B]">•</span>
-                  "Here's what I'm struggling with right now."
-                </p>
-                <p className="text-[#2B2725]/80 flex items-start gap-3">
-                  <span className="text-[#D8B46B]">•</span>
-                  "Here's what I'd like to feel or experience instead."
-                </p>
-              </div>
-            </div>
-
-            <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">
-              From there, I can suggest:
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-4 mb-10">
-              <Link
-                to={createPageUrl("Evolution")}
-                className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors flex items-center gap-2"
-              >
-                <span className="text-[#D8B46B]">✦</span>
-                The Mind Styling Certification™
-              </Link>
-              <Link
-                to={createPageUrl("PrivateSessions")}
-                className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors flex items-center gap-2"
-              >
-                <span className="text-[#D8B46B]">✦</span>
-                Private Mind Styling
-              </Link>
-              <Link
-                to={createPageUrl("InnerRehearsal")}
-                className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors flex items-center gap-2"
-              >
-                <span className="text-[#D8B46B]">✦</span>
-                The Inner Rehearsal Sessions™
-              </Link>
-              <Link
-                to={createPageUrl("SpeakingTraining")}
-                className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors flex items-center gap-2"
-              >
-                <span className="text-[#D8B46B]">✦</span>
-                Organizational Mind Styling
-              </Link>
-              <Link
-                to={createPageUrl("FreeMasterclass")}
-                className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors flex items-center gap-2"
-              >
-                <span className="text-[#D8B46B]">✦</span>
-                Or a gentle first step like the Free Masterclass
-              </Link>
-            </div>
-
-            <div className="text-center">
-              <Link
-                to={createPageUrl("Contact")}
-                className="group inline-flex items-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
-              >
-                Explore Ways to Work With Me
-              </Link>
-            </div>
           </motion.div>
         </div>
       </section>

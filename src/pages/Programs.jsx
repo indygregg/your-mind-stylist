@@ -355,21 +355,7 @@ export default function Programs() {
                   </Link>
                 </div>
 
-                {/* Hypnosis Training — Audit */}
-                <div className="bg-white p-8 border border-[#E4D9C4]">
-                  <h4 className="font-serif text-xl text-[#1E3A32] mb-3">
-                    Hypnosis Training — Audit Track
-                  </h4>
-                  <p className="text-[#2B2725]/70 text-sm mb-4">
-                    Self-paced learning without certification
-                  </p>
-                  <p className="text-xl font-medium text-[#2B2725]/60 mb-6">TBD</p>
-                  <Link to={createPageUrl("LearnHypnosis")}>
-                    <Button variant="outline" className="w-full border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-white">
-                      Join Waitlist
-                    </Button>
-                  </Link>
-                </div>
+
 
                 {/* Annual Retreat */}
                 <div className="bg-white p-8 border border-[#E4D9C4]">
@@ -424,7 +410,7 @@ export default function Programs() {
             <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#D8B46B]">
                 <p className="text-[#2B2725]/80 mb-2">New to this world?</p>
-                <p className="font-serif text-xl text-[#1E3A32]">Pocket Visualization™ is the perfect gentle entry.</p>
+                <p className="font-serif text-xl text-[#1E3A32]">Pocket Mindset™ is the perfect gentle entry.</p>
               </div>
 
               <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#6E4F7D]">
@@ -439,7 +425,7 @@ export default function Programs() {
 
               <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#1E3A32]">
                 <p className="text-[#2B2725]/80 mb-2">You want the deepest transformation?</p>
-                <p className="font-serif text-xl text-[#1E3A32]">Couture Coaching is for you.</p>
+                <p className="font-serif text-xl text-[#1E3A32]">Private coaching is for you.</p>
               </div>
             </div>
           </motion.div>
@@ -536,7 +522,7 @@ export default function Programs() {
             <div className="grid md:grid-cols-3 gap-4">
               <Link to={createPageUrl("PocketVisualization")}>
                 <Button className="w-full h-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">Pocket Visualization™</span>
+                  <span className="text-sm font-normal">Pocket Mindset™</span>
                   <span className="text-lg font-bold">Start for $7/mo</span>
                 </Button>
               </Link>

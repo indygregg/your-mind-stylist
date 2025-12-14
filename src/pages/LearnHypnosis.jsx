@@ -83,7 +83,7 @@ export default function LearnHypnosis() {
               />
             </p>
             <Link
-              to="/app/login"
+              to={createPageUrl("Contact")}
               className="inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
             >
               Begin Your Training
@@ -367,7 +367,7 @@ export default function LearnHypnosis() {
               </h2>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="max-w-2xl mx-auto">
               {/* Certification Track */}
               <div className="bg-[#1E3A32] p-8 text-[#F9F5EF] relative">
                 <div className="absolute top-6 right-6 bg-[#D8B46B] text-[#1E3A32] px-3 py-1 text-xs uppercase tracking-wide">
@@ -404,50 +404,10 @@ export default function LearnHypnosis() {
                 </div>
 
                 <Link
-                  to="/app/login"
+                  to={createPageUrl("Contact")}
                   className="block w-full text-center px-6 py-3 bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] transition-colors"
                 >
                   Begin Certification →
-                </Link>
-              </div>
-
-              {/* Audit Track */}
-              <div className="bg-[#F9F5EF] p-8 border border-[#E4D9C4]">
-                <h3 className="font-serif text-2xl text-[#1E3A32] mb-4">
-                  <CmsText 
-                    contentKey="hypnosis.tracks.audit.title"
-                    page="LearnHypnosis"
-                    blockTitle="Audit Track Title"
-                    fallback="Audit Track"
-                    contentType="short_text"
-                  />
-                </h3>
-                <p className="text-[#2B2725]/80 mb-6">
-                  <CmsText 
-                    contentKey="hypnosis.tracks.audit.description"
-                    page="LearnHypnosis"
-                    blockTitle="Audit Track Description"
-                    fallback="For personal use or skill development without certification."
-                    contentType="rich_text"
-                  />
-                </p>
-
-                <div className="space-y-3 mb-8">
-                  <p className="text-sm font-medium text-[#1E3A32] mb-3">Includes:</p>
-                  <CmsText 
-                    contentKey="hypnosis.tracks.audit.features"
-                    page="LearnHypnosis"
-                    blockTitle="Audit Features"
-                    fallback={`${["Full content access", "No exam", "No practitioner listing"].map(feature => `<div class='flex items-start gap-3'><svg class='lucide lucide-check-circle' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#A6B7A3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='flex-shrink: 0; margin-top: 4px;'><path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/><polyline points='22 4 12 14.01 9 11.01'/></svg><p class='text-[#2B2725]/80'>${feature}</p></div>`).join('')}`}
-                    contentType="rich_text"
-                  />
-                </div>
-
-                <Link
-                  to="/app/login"
-                  className="block w-full text-center px-6 py-3 border border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-[#F9F5EF] transition-colors"
-                >
-                  Start Learning →
                 </Link>
               </div>
             </div>
@@ -679,7 +639,7 @@ export default function LearnHypnosis() {
               />
             </p>
             <Link
-              to="/app/login"
+              to={createPageUrl("Contact")}
               className="inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
             >
               Start Your Training
