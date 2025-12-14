@@ -370,7 +370,7 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <div className="flex items-center gap-3 mb-4">
                   <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/60b825e58_Mind-stylist-light-icon2x.png" 
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/fad26f1a8_mind-stylist-whie-gold-logo2x.png" 
                     alt="Your Mind Stylist Logo" 
                     className="w-12 h-12 flex-shrink-0 object-contain"
                   />
