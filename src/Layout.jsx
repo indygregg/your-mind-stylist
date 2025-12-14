@@ -80,12 +80,6 @@ export default function Layout({ children, currentPageName }) {
         { name: "Hypnosis Training", page: "LearnHypnosis", description: "Become a certified hypnotist" },
         { name: "Speaking & Training", page: "SpeakingTraining", description: "Mind Styling for Organizations" },
       ]
-    },
-    {
-      category: "Private Work",
-      items: [
-        { name: "Private Sessions", page: "PrivateSessions", description: "Intensive personal coaching" },
-      ]
     }
   ];
 
