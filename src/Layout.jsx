@@ -91,7 +91,7 @@ export default function Layout({ children, currentPageName }) {
 
   // Don't render layout for pages without a name (like login)
   if (!currentPageName) {
-    return <>{children}</>;
+    return children;
   }
 
   return (
