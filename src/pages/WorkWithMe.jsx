@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Layers, User, Sparkles, Users, CheckCircle } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function WorkWithMe() {
   const offerings = [
@@ -81,14 +82,31 @@ export default function WorkWithMe() {
             transition={{ duration: 0.6 }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              The Mind Styling Suite
+              <CmsText 
+                contentKey="workwithme.hero.subtitle" 
+                page="WorkWithMe"
+                blockTitle="Hero Subtitle"
+                fallback="The Mind Styling Suite" 
+                contentType="short_text"
+              />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
-              Work With Me
+              <CmsText 
+                contentKey="workwithme.hero.title" 
+                page="WorkWithMe"
+                blockTitle="Hero Title"
+                fallback="Work With Me" 
+                contentType="short_text"
+              />
             </h1>
             <p className="text-[#2B2725]/80 text-xl leading-relaxed mb-10 max-w-3xl mx-auto">
-              Whether you want deep personal transformation, a guided shift in your thinking, or
-              organizational support for your team, there is a Mind Styling path designed for you.
+              <CmsText 
+                contentKey="workwithme.hero.description" 
+                page="WorkWithMe"
+                blockTitle="Hero Description"
+                fallback="Whether you want deep personal transformation, a guided shift in your thinking, or organizational support for your team, there is a Mind Styling path designed for you." 
+                contentType="rich_text"
+              />
             </p>
             <Link
               to={createPageUrl("Bookings")}
@@ -113,12 +131,22 @@ export default function WorkWithMe() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
-              Choose Your Path
+              <CmsText 
+                contentKey="workwithme.overview.title" 
+                page="WorkWithMe"
+                blockTitle="Overview Title"
+                fallback="Choose Your Path" 
+                contentType="short_text"
+              />
             </h2>
             <p className="text-[#2B2725]/80 text-lg leading-relaxed">
-              Transformation can be gentle, structured, collaborative, or deeply internal. Each
-              offering is designed to meet you exactly where you are—personally, professionally, or
-              within your organization.
+              <CmsText 
+                contentKey="workwithme.overview.description" 
+                page="WorkWithMe"
+                blockTitle="Overview Description"
+                fallback="Transformation can be gentle, structured, collaborative, or deeply internal. Each offering is designed to meet you exactly where you are—personally, professionally, or within your organization." 
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -213,12 +241,23 @@ export default function WorkWithMe() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
-              Ready to Begin?
+              <CmsText 
+                contentKey="workwithme.cta.title" 
+                page="WorkWithMe"
+                blockTitle="CTA Title"
+                fallback="Ready to Begin?" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
-              Whether you're seeking personal change or support for your team, the first step is a
-              conversation.
+              <CmsText 
+                contentKey="workwithme.cta.description" 
+                page="WorkWithMe"
+                blockTitle="CTA Description"
+                fallback="Whether you're seeking personal change or support for your team, the first step is a conversation." 
+                contentType="rich_text"
+              />
             </p>
 
             <Link

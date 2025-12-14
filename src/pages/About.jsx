@@ -273,15 +273,22 @@ export default function About() {
             </div>
 
             <div className="bg-white p-8 md:p-10 mb-10">
-              <p className="text-[#2B2725]/70 mb-6">Your Mind Stylist approach blends:</p>
-              <div className="grid md:grid-cols-2 gap-3">
-                {approaches.map((approach) => (
-                  <div key={approach} className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#D8B46B]" />
-                    <span className="text-[#2B2725]/80">{approach}</span>
-                  </div>
-                ))}
-              </div>
+              <p className="text-[#2B2725]/70 mb-6">
+                <CmsText 
+                  contentKey="about.philosophy.blend_intro" 
+                  page="About"
+                  blockTitle="Philosophy Blend Intro"
+                  fallback="Your Mind Stylist approach blends:" 
+                  contentType="short_text"
+                />
+              </p>
+              <CmsText 
+                contentKey="about.philosophy.approaches" 
+                page="About"
+                blockTitle="Philosophy Approaches List"
+                fallback={`<div class='grid md:grid-cols-2 gap-3'>${approaches.map(approach => `<div class='flex items-center gap-3'><div class='w-1.5 h-1.5 rounded-full bg-[#D8B46B]'></div><span class='text-[#2B2725]/80'>${approach}</span></div>`).join('')}</div>`}
+                contentType="rich_text"
+              />
             </div>
 
             <div className="space-y-4 text-[#2B2725]/80 text-lg leading-relaxed">
@@ -394,14 +401,13 @@ export default function About() {
             </p>
 
             <div className="bg-white p-8 md:p-10 mb-10">
-              <div className="space-y-4">
-                {credentials.map((credential) => (
-                  <div key={credential} className="flex items-start gap-4">
-                    <Check size={20} className="text-[#D8B46B] mt-1 flex-shrink-0" />
-                    <span className="text-[#2B2725]/80 text-lg">{credential}</span>
-                  </div>
-                ))}
-              </div>
+              <CmsText 
+                contentKey="about.credentials.list" 
+                page="About"
+                blockTitle="Credentials List"
+                fallback={`<div class='space-y-4'>${credentials.map(credential => `<div class='flex items-start gap-4'><svg class='lucide lucide-check' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='margin-top: 4px; flex-shrink: 0;'><path d='M20 6 9 17l-5-5'/></svg><span class='text-[#2B2725]/80 text-lg'>${credential}</span></div>`).join('')}</div>`}
+                contentType="rich_text"
+              />
             </div>
 
             <p className="font-serif text-xl text-[#1E3A32] italic">
@@ -495,29 +501,13 @@ export default function About() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {offerings.map((offering, index) => (
-              <motion.div
-                key={offering.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Link
-                  to={createPageUrl(offering.link)}
-                  className="block bg-white p-8 h-full group hover:shadow-lg transition-all duration-300"
-                >
-                  <offering.icon size={32} className="text-[#D8B46B] mb-4" />
-                  <h3 className="font-serif text-2xl text-[#1E3A32] mb-3">{offering.title}</h3>
-                  <p className="text-[#2B2725]/70 mb-6">{offering.description}</p>
-                  <span className="text-[#1E3A32] font-medium group-hover:text-[#D8B46B] transition-colors inline-flex items-center gap-2">
-                    Learn More <ArrowRight size={16} />
-                  </span>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+          <CmsText 
+            contentKey="about.work.offerings" 
+            page="About"
+            blockTitle="Work With Me Offerings"
+            fallback={`<div class='grid md:grid-cols-2 gap-6'>${offerings.map((offering, index) => `<div class='block bg-white p-8 h-full group hover:shadow-lg transition-all duration-300'><div class='mb-4' style='color: #D8B46B;'>${offering.icon === Layers ? '📋' : offering.icon === Users ? '👥' : offering.icon === Sparkles ? '✨' : '🏆'}</div><h3 class='font-serif text-2xl text-[#1E3A32] mb-3'>${offering.title}</h3><p class='text-[#2B2725]/70 mb-6'>${offering.description}</p><a href='${createPageUrl(offering.link)}' class='text-[#1E3A32] font-medium group-hover:text-[#D8B46B] transition-colors inline-flex items-center gap-2'>Learn More →</a></div>`).join('')}</div>`}
+            contentType="rich_text"
+          />
         </div>
       </section>
 
