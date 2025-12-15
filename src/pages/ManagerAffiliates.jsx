@@ -3,12 +3,13 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Users, DollarSign, TrendingUp, CheckCircle, XCircle, Search, Clock } from "lucide-react";
+import { Users, DollarSign, TrendingUp, CheckCircle, XCircle, Search, Clock, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 
@@ -17,6 +18,9 @@ export default function ManagerAffiliates() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedAffiliate, setSelectedAffiliate] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [payoutDialogOpen, setPayoutDialogOpen] = useState(false);
+  const [selectedPayoutAffiliate, setSelectedPayoutAffiliate] = useState(null);
+  const [minimumThreshold, setMinimumThreshold] = useState(5000);
 
   // Fetch all affiliates
   const { data: affiliates = [], isLoading } = useQuery({
@@ -28,6 +32,12 @@ export default function ManagerAffiliates() {
   const { data: allReferrals = [] } = useQuery({
     queryKey: ["allReferrals"],
     queryFn: () => base44.entities.AffiliateReferral.list("-created_date", 100),
+  });
+
+  // Fetch payouts
+  const { data: payouts = [] } = useQuery({
+    queryKey: ["payouts"],
+    queryFn: () => base44.entities.AffiliatePayout.list("-created_date", 100),
   });
 
   // Approve affiliate
@@ -71,10 +81,41 @@ export default function ManagerAffiliates() {
     },
   });
 
+  // Process payout
+  const processPayoutMutation = useMutation({
+    mutationFn: ({ affiliate_id, payout_method }) => 
+      base44.functions.invoke('processAffiliatePayout', { affiliate_id, payout_method }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["affiliates"] });
+      queryClient.invalidateQueries({ queryKey: ["allReferrals"] });
+      queryClient.invalidateQueries({ queryKey: ["payouts"] });
+      toast.success('Payout processed successfully');
+      setPayoutDialogOpen(false);
+      setSelectedPayoutAffiliate(null);
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.error || 'Payout failed');
+    },
+  });
+
+  // Scheduled batch payout
+  const scheduledPayoutMutation = useMutation({
+    mutationFn: ({ minimum_threshold }) => 
+      base44.functions.invoke('processScheduledPayouts', { minimum_threshold }),
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: ["affiliates"] });
+      queryClient.invalidateQueries({ queryKey: ["payouts"] });
+      const summary = result.data.summary;
+      toast.success(`Batch payout complete: ${summary.processed} processed, ${summary.skipped} skipped, ${summary.failed} failed`);
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.error || 'Batch payout failed');
+    },
+  });
+
   // Filter affiliates
   const filteredAffiliates = affiliates.filter((aff) => {
     const query = searchQuery.toLowerCase();
-    const user = aff.user_id; // Would need to fetch user details
     return (
       aff.affiliate_code?.toLowerCase().includes(query) ||
       aff.payment_email?.toLowerCase().includes(query)
@@ -156,6 +197,7 @@ export default function ManagerAffiliates() {
             <TabsTrigger value="affiliates">Affiliates</TabsTrigger>
             <TabsTrigger value="referrals">Referrals</TabsTrigger>
             <TabsTrigger value="payouts">Payouts</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
           {/* Affiliates Tab */}
@@ -220,7 +262,7 @@ export default function ManagerAffiliates() {
                               {affiliate.successful_conversions} / {affiliate.total_referrals} conversions
                             </p>
                             <p className="text-lg font-bold text-[#1E3A32]">
-                              ${(affiliate.commission_pending / 100).toFixed(2)} pending
+                              ${((affiliate.commission_pending || 0) / 100).toFixed(2)} pending
                             </p>
                           </div>
                         </div>
@@ -326,6 +368,18 @@ export default function ManagerAffiliates() {
                               </div>
                             </DialogContent>
                           </Dialog>
+                          {affiliate.commission_pending > 0 && (
+                            <Button
+                              size="sm"
+                              onClick={() => {
+                                setSelectedPayoutAffiliate(affiliate);
+                                setPayoutDialogOpen(true);
+                              }}
+                              disabled={processPayoutMutation.isPending}
+                            >
+                              Process Payout
+                            </Button>
+                          )}
                         </div>
                       </motion.div>
                     ))}
@@ -402,16 +456,163 @@ export default function ManagerAffiliates() {
           <TabsContent value="payouts">
             <Card>
               <CardHeader>
-                <CardTitle>Payouts (Coming Soon)</CardTitle>
+                <CardTitle className="flex justify-between items-center">
+                  <span>Payout History</span>
+                  <Button
+                    onClick={() => scheduledPayoutMutation.mutate({ minimum_threshold: minimumThreshold })}
+                    disabled={scheduledPayoutMutation.isPending}
+                  >
+                    {scheduledPayoutMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      'Run Batch Payout'
+                    )}
+                  </Button>
+                </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-center py-8 text-[#2B2725]/60">
-                  Payout processing integration coming soon. Currently managing manually.
-                </p>
+                {payouts.length === 0 ? (
+                  <p className="text-center py-8 text-[#2B2725]/60">No payouts processed yet</p>
+                ) : (
+                  <div className="space-y-3">
+                    {payouts.map((payout) => {
+                      const affiliate = affiliates.find(a => a.id === payout.affiliate_id);
+                      return (
+                        <div key={payout.id} className="p-4 border border-[#E4D9C4] rounded-lg">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <p className="font-medium text-[#1E3A32]">
+                                {affiliate?.affiliate_code || 'Unknown'}
+                              </p>
+                              <p className="text-sm text-[#2B2725]/60">
+                                {new Date(payout.created_date).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-lg font-bold text-[#1E3A32]">
+                                ${(payout.payout_amount / 100).toFixed(2)}
+                              </p>
+                              <Badge
+                                variant={
+                                  payout.status === 'completed' ? 'default' :
+                                  payout.status === 'processing' ? 'secondary' : 'destructive'
+                                }
+                              >
+                                {payout.status}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="text-sm text-[#2B2725]/70 space-y-1">
+                            <p><strong>Method:</strong> {payout.payout_method}</p>
+                            <p><strong>Ref:</strong> {payout.payment_reference}</p>
+                            {payout.notes && <p className="italic">{payout.notes}</p>}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings">
+            <Card>
+              <CardHeader>
+                <CardTitle>Payout Settings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <Label>Minimum Payout Threshold</Label>
+                  <p className="text-sm text-[#2B2725]/60 mb-2">
+                    Affiliates must earn at least this amount before payout
+                  </p>
+                  <div className="flex gap-2 items-center">
+                    <span>$</span>
+                    <Input
+                      type="number"
+                      value={minimumThreshold / 100}
+                      onChange={(e) => setMinimumThreshold(parseFloat(e.target.value) * 100)}
+                      className="w-32"
+                    />
+                  </div>
+                </div>
+
+                <div className="border-t pt-6">
+                  <h4 className="font-medium mb-2">Payment Methods</h4>
+                  <ul className="text-sm text-[#2B2725]/70 space-y-2">
+                    <li>✓ Stripe Connect (automated)</li>
+                    <li>✓ PayPal (manual)</li>
+                    <li>✓ Bank Transfer (manual)</li>
+                  </ul>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Payout Dialog */}
+        <Dialog open={payoutDialogOpen} onOpenChange={setPayoutDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Process Payout</DialogTitle>
+            </DialogHeader>
+            {selectedPayoutAffiliate && (
+              <div className="space-y-4">
+                <div className="bg-[#F9F5EF] p-4 rounded-lg space-y-2">
+                  <div>
+                    <p className="text-sm text-[#2B2725]/60">Affiliate</p>
+                    <p className="font-medium">{selectedPayoutAffiliate.affiliate_code}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-[#2B2725]/60">Amount</p>
+                    <p className="text-2xl font-bold text-[#1E3A32]">
+                      ${((selectedPayoutAffiliate.commission_pending || 0) / 100).toFixed(2)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-[#2B2725]/60">Method</p>
+                    <p className="capitalize">{selectedPayoutAffiliate.payment_method || 'Not set'}</p>
+                  </div>
+                </div>
+
+                <p className="text-sm text-[#2B2725]/70">
+                  {selectedPayoutAffiliate.payment_method === 'stripe'
+                    ? 'Funds will be transferred via Stripe Connect.'
+                    : 'This creates a payout record for manual processing.'}
+                </p>
+
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setPayoutDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      processPayoutMutation.mutate({
+                        affiliate_id: selectedPayoutAffiliate.id,
+                        payout_method: selectedPayoutAffiliate.payment_method
+                      });
+                    }}
+                    disabled={processPayoutMutation.isPending}
+                  >
+                    {processPayoutMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      'Confirm'
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
