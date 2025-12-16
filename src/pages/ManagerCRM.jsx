@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Users, TrendingUp, Target, DollarSign, Search, Filter, Mail, Phone, Calendar, MessageSquare, CheckCircle2, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import SendSMSDialog from "../components/crm/SendSMSDialog";
 
 export default function ManagerCRM() {
   const queryClient = useQueryClient();
@@ -24,6 +25,7 @@ export default function ManagerCRM() {
   const [stageUpdateDialogOpen, setStageUpdateDialogOpen] = useState(false);
   const [newStage, setNewStage] = useState("");
   const [stageNotes, setStageNotes] = useState("");
+  const [smsDialogOpen, setSmsDialogOpen] = useState(false);
 
   // Fetch leads
   const { data: leads = [], isLoading } = useQuery({
@@ -283,6 +285,22 @@ export default function ManagerCRM() {
                               <Clock size={10} />
                               <span>Follow up: {new Date(lead.next_follow_up_date).toLocaleDateString()}</span>
                             </div>
+                          )}
+
+                          {lead.phone && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="w-full mt-2"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedLead(lead);
+                                setSmsDialogOpen(true);
+                              }}
+                            >
+                              <MessageSquare size={12} className="mr-1" />
+                              SMS
+                            </Button>
                           )}
                         </motion.div>
                       ))}
@@ -642,6 +660,17 @@ export default function ManagerCRM() {
             )}
           </DialogContent>
         </Dialog>
+
+        {/* SMS Dialog */}
+        <SendSMSDialog
+          open={smsDialogOpen}
+          onOpenChange={setSmsDialogOpen}
+          lead={selectedLead}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ["leadActivities"] });
+            queryClient.invalidateQueries({ queryKey: ["leads"] });
+          }}
+        />
       </div>
     </div>
   );
