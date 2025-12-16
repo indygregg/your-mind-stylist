@@ -14,8 +14,11 @@ export default function QuizPlayer({ quizId, onComplete }) {
   const [submitted, setSubmitted] = useState(false);
   const [results, setResults] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState(null);
+  const [questionTimeRemaining, setQuestionTimeRemaining] = useState(null);
+  const [questionStartTime, setQuestionStartTime] = useState(null);
   const [startTime, setStartTime] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [instantFeedback, setInstantFeedback] = useState(null);
 
   useEffect(() => {
     loadQuiz();
@@ -37,6 +40,30 @@ export default function QuizPlayer({ quizId, onComplete }) {
       return () => clearInterval(timer);
     }
   }, [quiz, submitted, startTime]);
+
+  // Per-question timer
+  useEffect(() => {
+    const currentQ = questions[currentQuestionIndex];
+    if (currentQ?.time_limit_seconds && !submitted && questionStartTime) {
+      const timer = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - questionStartTime) / 1000);
+        const remaining = currentQ.time_limit_seconds - elapsed;
+        
+        if (remaining <= 0) {
+          // Auto-advance to next question
+          if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+          } else {
+            handleSubmit();
+          }
+        } else {
+          setQuestionTimeRemaining(remaining);
+        }
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [currentQuestionIndex, questions, submitted, questionStartTime]);
 
   const loadQuiz = async () => {
     setLoading(true);
@@ -80,9 +107,15 @@ export default function QuizPlayer({ quizId, onComplete }) {
         
         setQuestions(questionData);
         setStartTime(Date.now());
+        setQuestionStartTime(Date.now());
         
         if (loadedQuiz.time_limit) {
           setTimeRemaining(loadedQuiz.time_limit * 60);
+        }
+
+        // Set per-question timer if available
+        if (questionData[0]?.time_limit_seconds) {
+          setQuestionTimeRemaining(questionData[0].time_limit_seconds);
         }
       }
     } catch (error) {
@@ -92,21 +125,58 @@ export default function QuizPlayer({ quizId, onComplete }) {
     }
   };
 
-  const handleAnswer = (questionId, optionIndex, isMultiple = false) => {
-    if (submitted) return;
+  const handleAnswer = async (questionId, optionIndex, isMultiple = false) => {
+    if (submitted || (instantFeedback && instantFeedback.questionId === questionId)) return;
 
-    setAnswers(prev => {
-      if (isMultiple) {
-        const current = prev[questionId] || [];
-        if (current.includes(optionIndex)) {
-          return { ...prev, [questionId]: current.filter(i => i !== optionIndex) };
-        } else {
-          return { ...prev, [questionId]: [...current, optionIndex] };
-        }
+    const newAnswers = { ...answers };
+    if (isMultiple) {
+      const current = newAnswers[questionId] || [];
+      if (current.includes(optionIndex)) {
+        newAnswers[questionId] = current.filter(i => i !== optionIndex);
       } else {
-        return { ...prev, [questionId]: [optionIndex] };
+        newAnswers[questionId] = [...current, optionIndex];
       }
-    });
+    } else {
+      newAnswers[questionId] = [optionIndex];
+    }
+    setAnswers(newAnswers);
+
+    // Instant feedback mode
+    if (quiz.instant_feedback && !isMultiple) {
+      const question = questions.find(q => q.id === questionId);
+      const correctIndices = question.options
+        .map((opt, idx) => opt.is_correct ? idx : -1)
+        .filter(idx => idx !== -1);
+      
+      const isCorrect = newAnswers[questionId].every(idx => correctIndices.includes(idx)) &&
+                        newAnswers[questionId].length === correctIndices.length;
+
+      setInstantFeedback({
+        questionId,
+        isCorrect,
+        explanation: question.explanation
+      });
+
+      // Update question analytics
+      try {
+        await base44.entities.QuizQuestion.update(questionId, {
+          times_answered: (question.times_answered || 0) + 1,
+          times_correct: (question.times_correct || 0) + (isCorrect ? 1 : 0)
+        });
+      } catch (error) {
+        console.error('Failed to update question stats:', error);
+      }
+
+      // Auto-advance after 2 seconds
+      if (!isMultiple) {
+        setTimeout(() => {
+          setInstantFeedback(null);
+          if (currentQuestionIndex < questions.length - 1) {
+            setCurrentQuestionIndex(currentQuestionIndex + 1);
+          }
+        }, 2000);
+      }
+    }
   };
 
   const handleSubmit = async () => {
@@ -179,7 +249,21 @@ export default function QuizPlayer({ quizId, onComplete }) {
     setSubmitted(false);
     setResults(null);
     setCurrentQuestionIndex(0);
+    setInstantFeedback(null);
     loadQuiz();
+  };
+
+  const handleQuestionChange = (newIndex) => {
+    setCurrentQuestionIndex(newIndex);
+    setQuestionStartTime(Date.now());
+    setInstantFeedback(null);
+    
+    const nextQuestion = questions[newIndex];
+    if (nextQuestion?.time_limit_seconds) {
+      setQuestionTimeRemaining(nextQuestion.time_limit_seconds);
+    } else {
+      setQuestionTimeRemaining(null);
+    }
   };
 
   const formatTime = (seconds) => {
@@ -281,14 +365,24 @@ export default function QuizPlayer({ quizId, onComplete }) {
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-2xl font-serif text-[#1E3A32]">{quiz.title}</h2>
-          {timeRemaining !== null && (
-            <div className="flex items-center gap-2 text-[#2B2725]/70">
-              <Clock size={20} />
-              <span className={timeRemaining < 60 ? 'text-red-600 font-bold' : ''}>
-                {formatTime(timeRemaining)}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-4">
+            {questionTimeRemaining !== null && (
+              <div className="flex items-center gap-2 text-[#2B2725]/70">
+                <Clock size={16} />
+                <span className={questionTimeRemaining < 10 ? 'text-red-600 font-bold' : 'text-[#D8B46B]'}>
+                  {questionTimeRemaining}s
+                </span>
+              </div>
+            )}
+            {timeRemaining !== null && (
+              <div className="flex items-center gap-2 text-[#2B2725]/70">
+                <Clock size={20} />
+                <span className={timeRemaining < 60 ? 'text-red-600 font-bold' : ''}>
+                  {formatTime(timeRemaining)}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
         {quiz.description && (
           <p className="text-[#2B2725]/70">{quiz.description}</p>
@@ -348,6 +442,39 @@ export default function QuizPlayer({ quizId, onComplete }) {
                   Select all that apply
                 </p>
               )}
+
+              {/* Instant Feedback */}
+              {instantFeedback && instantFeedback.questionId === currentQuestion.id && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`mt-4 p-4 rounded-lg ${
+                    instantFeedback.isCorrect 
+                      ? 'bg-green-50 border-2 border-green-200' 
+                      : 'bg-red-50 border-2 border-red-200'
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    {instantFeedback.isCorrect ? (
+                      <CheckCircle size={24} className="text-green-600 flex-shrink-0" />
+                    ) : (
+                      <XCircle size={24} className="text-red-600 flex-shrink-0" />
+                    )}
+                    <div>
+                      <p className={`font-medium ${
+                        instantFeedback.isCorrect ? 'text-green-800' : 'text-red-800'
+                      }`}>
+                        {instantFeedback.isCorrect ? 'Correct!' : 'Incorrect'}
+                      </p>
+                      {instantFeedback.explanation && (
+                        <p className="text-sm text-[#2B2725]/80 mt-1">
+                          {instantFeedback.explanation}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </CardContent>
           </Card>
 
@@ -355,8 +482,8 @@ export default function QuizPlayer({ quizId, onComplete }) {
           <div className="flex justify-between items-center mt-6">
             <Button
               variant="outline"
-              onClick={() => setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))}
-              disabled={currentQuestionIndex === 0}
+              onClick={() => handleQuestionChange(Math.max(0, currentQuestionIndex - 1))}
+              disabled={currentQuestionIndex === 0 || (instantFeedback && quiz.instant_feedback)}
             >
               Previous
             </Button>
@@ -371,8 +498,9 @@ export default function QuizPlayer({ quizId, onComplete }) {
               </Button>
             ) : (
               <Button
-                onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
+                onClick={() => handleQuestionChange(currentQuestionIndex + 1)}
                 className="bg-[#1E3A32] hover:bg-[#2B2725]"
+                disabled={instantFeedback && quiz.instant_feedback}
               >
                 Next
               </Button>
