@@ -3,146 +3,151 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, Mail, Tag, Users, Plus, X } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { motion, AnimatePresence } from "framer-motion";
-
-const AVAILABLE_TAGS = [
-  // Lead Tags
-  { value: "lead_masterclass", label: "Masterclass Lead", category: "Lead Status" },
-  { value: "lead_consultation", label: "Consultation Lead", category: "Lead Status" },
-  { value: "lead_webinar", label: "Webinar Lead", category: "Lead Status" },
-  
-  // Purchase Tags
-  { value: "purchased_pv", label: "Purchased PV", category: "Purchase" },
-  { value: "purchased_webinar", label: "Purchased Webinar", category: "Purchase" },
-  { value: "purchased_private", label: "Purchased Private Session", category: "Purchase" },
-  { value: "purchased_cert", label: "Purchased Certification", category: "Purchase" },
-  { value: "purchased_toolkit", label: "Purchased Toolkit Module", category: "Purchase" },
-  
-  // Engagement Tags
-  { value: "active_student", label: "Active Student", category: "Engagement" },
-  { value: "inactive_30d", label: "Inactive 30 Days", category: "Engagement" },
-  { value: "high_engagement", label: "High Engagement", category: "Engagement" },
-  
-  // Sequence Tags
-  { value: "seq_welcome", label: "Welcome Sequence", category: "Email Sequence" },
-  { value: "seq_masterclass", label: "Masterclass Sequence", category: "Email Sequence" },
-  { value: "seq_pv_onboarding", label: "PV Onboarding", category: "Email Sequence" },
-  { value: "seq_rejoin", label: "Re-engagement", category: "Email Sequence" },
-];
-
-const EMAIL_SEQUENCES = [
-  { id: "welcome", name: "Welcome Sequence", emails: 3 },
-  { id: "masterclass", name: "Masterclass Follow-up", emails: 3 },
-  { id: "pv_onboarding", name: "PV Onboarding", emails: 5 },
-  { id: "rejoin", name: "Re-engagement", emails: 4 },
-];
+import { Users, TrendingUp, Target, DollarSign, Search, Filter, Mail, Phone, Calendar, MessageSquare, CheckCircle2, Clock } from "lucide-react";
+import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 export default function ManagerCRM() {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [tagDialogOpen, setTagDialogOpen] = useState(false);
-  const [sequenceDialogOpen, setSequenceDialogOpen] = useState(false);
+  const [stageFilter, setStageFilter] = useState("all");
+  const [sourceFilter, setSourceFilter] = useState("all");
+  const [selectedLead, setSelectedLead] = useState(null);
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [stageUpdateDialogOpen, setStageUpdateDialogOpen] = useState(false);
+  const [newStage, setNewStage] = useState("");
+  const [stageNotes, setStageNotes] = useState("");
 
-  // Fetch all users
-  const { data: users = [], isLoading } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => base44.entities.User.list("-created_date"),
+  // Fetch leads
+  const { data: leads = [], isLoading } = useQuery({
+    queryKey: ["leads"],
+    queryFn: () => base44.entities.Lead.list("-created_date", 500),
   });
 
-  // Filter users based on search
-  const filteredUsers = users.filter((user) => {
+  // Fetch activities
+  const { data: activities = [] } = useQuery({
+    queryKey: ["leadActivities"],
+    queryFn: () => base44.entities.LeadActivity.list("-created_date", 200),
+  });
+
+  // Update stage mutation
+  const updateStageMutation = useMutation({
+    mutationFn: ({ lead_id, stage, notes }) =>
+      base44.functions.invoke("updateLeadStage", { lead_id, stage, notes }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+      queryClient.invalidateQueries({ queryKey: ["leadActivities"] });
+      setStageUpdateDialogOpen(false);
+      setStageNotes("");
+      toast.success("Lead stage updated!");
+    },
+  });
+
+  // Update lead mutation
+  const updateLeadMutation = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Lead.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+      toast.success("Lead updated!");
+    },
+  });
+
+  // Filter leads
+  const filteredLeads = leads.filter((lead) => {
     const query = searchQuery.toLowerCase();
-    return (
-      user.full_name?.toLowerCase().includes(query) ||
-      user.email?.toLowerCase().includes(query) ||
-      user.tags?.some((tag) => tag.toLowerCase().includes(query))
-    );
+    const matchesSearch =
+      lead.email?.toLowerCase().includes(query) ||
+      lead.full_name?.toLowerCase().includes(query) ||
+      lead.phone?.includes(query);
+
+    const matchesStage = stageFilter === "all" || lead.stage === stageFilter;
+    const matchesSource = sourceFilter === "all" || lead.source === sourceFilter;
+
+    return matchesSearch && matchesStage && matchesSource;
   });
 
-  const addTagMutation = useMutation({
-    mutationFn: async ({ userId, tag }) => {
-      const user = users.find((u) => u.id === userId);
-      const currentTags = user.tags || [];
-      if (!currentTags.includes(tag)) {
-        return base44.asServiceRole.entities.User.update(userId, {
-          tags: [...currentTags, tag],
-        });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-  });
+  // Group by stage for pipeline view
+  const stages = ["new", "contacted", "qualified", "proposal", "negotiation", "won", "lost"];
+  const pipelineData = stages.map((stage) => ({
+    stage,
+    leads: filteredLeads.filter((l) => l.stage === stage),
+  }));
 
-  const removeTagMutation = useMutation({
-    mutationFn: async ({ userId, tag }) => {
-      const user = users.find((u) => u.id === userId);
-      const currentTags = user.tags || [];
-      return base44.asServiceRole.entities.User.update(userId, {
-        tags: currentTags.filter((t) => t !== tag),
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-  });
+  // Calculate stats
+  const totalLeads = leads.length;
+  const hotLeads = leads.filter((l) => l.interest_level === "hot").length;
+  const convertedLeads = leads.filter((l) => l.converted_to_client).length;
+  const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;
+  const totalValue = leads.reduce((sum, l) => sum + (l.total_value || 0), 0);
+  const avgLeadScore = totalLeads > 0 ? (leads.reduce((sum, l) => sum + (l.lead_score || 0), 0) / totalLeads).toFixed(0) : 0;
 
-  const handleAddTag = (userId, tag) => {
-    addTagMutation.mutate({ userId, tag });
-    setTagDialogOpen(false);
+  // Get activities for selected lead
+  const getLeadActivities = (leadId) => {
+    return activities
+      .filter((a) => a.lead_id === leadId)
+      .sort((a, b) => new Date(b.created_date) - new Date(a.created_date))
+      .slice(0, 10);
   };
 
-  const handleRemoveTag = (userId, tag) => {
-    if (window.confirm(`Remove tag "${tag}"?`)) {
-      removeTagMutation.mutate({ userId, tag });
-    }
+  // Stage colors
+  const stageColors = {
+    new: "bg-blue-100 text-blue-800",
+    contacted: "bg-purple-100 text-purple-800",
+    qualified: "bg-green-100 text-green-800",
+    proposal: "bg-yellow-100 text-yellow-800",
+    negotiation: "bg-orange-100 text-orange-800",
+    won: "bg-emerald-100 text-emerald-800",
+    lost: "bg-gray-100 text-gray-600",
   };
 
-  const handleSendSequence = (userId, sequenceId) => {
-    // Placeholder - would trigger email sequence
-    console.log(`Sending ${sequenceId} sequence to user ${userId}`);
-    setSequenceDialogOpen(false);
+  const stageLabels = {
+    new: "New",
+    contacted: "Contacted",
+    qualified: "Qualified",
+    proposal: "Proposal",
+    negotiation: "Negotiation",
+    won: "Won",
+    lost: "Lost",
   };
 
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1600px] mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">CRM & Tag Management</h1>
-          <p className="text-[#2B2725]/70">Manage user tags and email sequences</p>
+          <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">CRM & Lead Management</h1>
+          <p className="text-[#2B2725]/70">Track leads, manage pipeline, and convert prospects</p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid md:grid-cols-4 gap-4 mb-8">
+        {/* Stats */}
+        <div className="grid md:grid-cols-5 gap-6 mb-8">
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#2B2725]/60">Total Users</p>
-                  <p className="text-2xl font-bold text-[#1E3A32]">{users.length}</p>
+                  <p className="text-sm text-[#2B2725]/60">Total Leads</p>
+                  <p className="text-2xl font-bold text-[#1E3A32]">{totalLeads}</p>
                 </div>
                 <Users size={32} className="text-[#D8B46B]" />
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#2B2725]/60">Tagged Users</p>
-                  <p className="text-2xl font-bold text-[#1E3A32]">
-                    {users.filter((u) => u.tags?.length > 0).length}
-                  </p>
+                  <p className="text-sm text-[#2B2725]/60">Hot Leads</p>
+                  <p className="text-2xl font-bold text-[#1E3A32]">{hotLeads}</p>
                 </div>
-                <Tag size={32} className="text-[#A6B7A3]" />
+                <Target size={32} className="text-red-500" />
               </div>
             </CardContent>
           </Card>
@@ -151,12 +156,10 @@ export default function ManagerCRM() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#2B2725]/60">Active Students</p>
-                  <p className="text-2xl font-bold text-[#1E3A32]">
-                    {users.filter((u) => u.tags?.includes("active_student")).length}
-                  </p>
+                  <p className="text-sm text-[#2B2725]/60">Converted</p>
+                  <p className="text-2xl font-bold text-[#1E3A32]">{convertedLeads}</p>
                 </div>
-                <Mail size={32} className="text-[#6E4F7D]" />
+                <CheckCircle2 size={32} className="text-green-600" />
               </div>
             </CardContent>
           </Card>
@@ -165,168 +168,480 @@ export default function ManagerCRM() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-[#2B2725]/60">Leads</p>
-                  <p className="text-2xl font-bold text-[#1E3A32]">
-                    {users.filter((u) => u.tags?.some((t) => t.startsWith("lead_"))).length}
-                  </p>
+                  <p className="text-sm text-[#2B2725]/60">Conv. Rate</p>
+                  <p className="text-2xl font-bold text-[#1E3A32]">{conversionRate}%</p>
                 </div>
-                <Search size={32} className="text-[#D8B46B]" />
+                <TrendingUp size={32} className="text-[#6E4F7D]" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-[#2B2725]/60">Avg Score</p>
+                  <p className="text-2xl font-bold text-[#1E3A32]">{avgLeadScore}</p>
+                </div>
+                <Target size={32} className="text-[#A6B7A3]" />
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Search */}
-        <div className="mb-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" size={20} />
-            <Input
-              placeholder="Search by name, email, or tag..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </div>
+        <Tabs defaultValue="pipeline" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
+            <TabsTrigger value="list">List View</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          </TabsList>
 
-        {/* Users List */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Users ({filteredUsers.length})</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <p className="text-center py-8 text-[#2B2725]/60">Loading users...</p>
-            ) : filteredUsers.length === 0 ? (
-              <p className="text-center py-8 text-[#2B2725]/60">No users found</p>
-            ) : (
-              <div className="space-y-3">
-                <AnimatePresence>
-                  {filteredUsers.map((user) => (
-                    <motion.div
-                      key={user.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      className="border border-[#E4D9C4] rounded-lg p-4 hover:border-[#D8B46B] transition-colors"
-                    >
-                      <div className="flex justify-between items-start mb-3">
+          {/* Pipeline View */}
+          <TabsContent value="pipeline">
+            {/* Filters */}
+            <Card className="mb-6">
+              <CardContent className="pt-6">
+                <div className="flex gap-4 items-center">
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" size={16} />
+                    <Input
+                      placeholder="Search leads..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-9"
+                    />
+                  </div>
+                  <Select value={sourceFilter} onValueChange={setSourceFilter}>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="All Sources" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Sources</SelectItem>
+                      <SelectItem value="website">Website</SelectItem>
+                      <SelectItem value="masterclass">Masterclass</SelectItem>
+                      <SelectItem value="referral">Referral</SelectItem>
+                      <SelectItem value="social_media">Social Media</SelectItem>
+                      <SelectItem value="paid_ad">Paid Ad</SelectItem>
+                      <SelectItem value="organic_search">Organic Search</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Pipeline Board */}
+            <div className="grid grid-cols-7 gap-4">
+              {pipelineData.map((column) => (
+                <div key={column.stage}>
+                  <div className="bg-white rounded-lg border border-[#E4D9C4] p-4 min-h-[600px]">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-medium text-[#1E3A32]">{stageLabels[column.stage]}</h3>
+                      <Badge variant="outline">{column.leads.length}</Badge>
+                    </div>
+
+                    <div className="space-y-3">
+                      {column.leads.map((lead) => (
+                        <motion.div
+                          key={lead.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          className="bg-[#F9F5EF] p-3 rounded-lg cursor-pointer hover:shadow-md transition-shadow"
+                          onClick={() => {
+                            setSelectedLead(lead);
+                            setDetailsDialogOpen(true);
+                          }}
+                        >
+                          <div className="flex items-start justify-between mb-2">
+                            <p className="font-medium text-sm text-[#1E3A32] truncate">
+                              {lead.full_name || lead.email}
+                            </p>
+                            <Badge
+                              className={
+                                lead.interest_level === "hot"
+                                  ? "bg-red-100 text-red-800"
+                                  : lead.interest_level === "warm"
+                                  ? "bg-yellow-100 text-yellow-800"
+                                  : "bg-blue-100 text-blue-800"
+                              }
+                            >
+                              {lead.interest_level}
+                            </Badge>
+                          </div>
+
+                          <p className="text-xs text-[#2B2725]/60 mb-2">{lead.email}</p>
+
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-[#2B2725]/50">{lead.source}</span>
+                            <div className="flex items-center gap-1">
+                              <Target size={10} className="text-[#D8B46B]" />
+                              <span className="text-xs font-medium">{lead.lead_score}</span>
+                            </div>
+                          </div>
+
+                          {lead.next_follow_up_date && (
+                            <div className="flex items-center gap-1 mt-2 text-xs text-[#2B2725]/60">
+                              <Clock size={10} />
+                              <span>Follow up: {new Date(lead.next_follow_up_date).toLocaleDateString()}</span>
+                            </div>
+                          )}
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* List View */}
+          <TabsContent value="list">
+            <Card>
+              <CardHeader>
+                <div className="flex gap-4 items-center">
+                  <div className="flex-1 relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" size={16} />
+                    <Input
+                      placeholder="Search leads..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-9"
+                    />
+                  </div>
+                  <Select value={stageFilter} onValueChange={setStageFilter}>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="All Stages" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Stages</SelectItem>
+                      {stages.map((stage) => (
+                        <SelectItem key={stage} value={stage}>
+                          {stageLabels[stage]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select value={sourceFilter} onValueChange={setSourceFilter}>
+                    <SelectTrigger className="w-48">
+                      <SelectValue placeholder="All Sources" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Sources</SelectItem>
+                      <SelectItem value="website">Website</SelectItem>
+                      <SelectItem value="masterclass">Masterclass</SelectItem>
+                      <SelectItem value="referral">Referral</SelectItem>
+                      <SelectItem value="social_media">Social Media</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <p className="text-center py-8 text-[#2B2725]/60">Loading...</p>
+                ) : filteredLeads.length === 0 ? (
+                  <p className="text-center py-8 text-[#2B2725]/60">No leads found</p>
+                ) : (
+                  <div className="space-y-3">
+                    {filteredLeads.map((lead) => (
+                      <motion.div
+                        key={lead.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="border border-[#E4D9C4] rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                        onClick={() => {
+                          setSelectedLead(lead);
+                          setDetailsDialogOpen(true);
+                        }}
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h3 className="font-medium text-[#1E3A32]">
+                                {lead.full_name || lead.email}
+                              </h3>
+                              <Badge className={stageColors[lead.stage]}>
+                                {stageLabels[lead.stage]}
+                              </Badge>
+                              <Badge
+                                variant="outline"
+                                className={
+                                  lead.interest_level === "hot"
+                                    ? "border-red-500 text-red-600"
+                                    : lead.interest_level === "warm"
+                                    ? "border-yellow-500 text-yellow-600"
+                                    : "border-blue-500 text-blue-600"
+                                }
+                              >
+                                {lead.interest_level}
+                              </Badge>
+                            </div>
+
+                            <div className="flex gap-6 text-sm text-[#2B2725]/70">
+                              <span className="flex items-center gap-1">
+                                <Mail size={14} />
+                                {lead.email}
+                              </span>
+                              {lead.phone && (
+                                <span className="flex items-center gap-1">
+                                  <Phone size={14} />
+                                  {lead.phone}
+                                </span>
+                              )}
+                              <span>Source: {lead.source}</span>
+                              <span className="flex items-center gap-1">
+                                <Target size={14} className="text-[#D8B46B]" />
+                                Score: {lead.lead_score}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="text-right">
+                            <p className="text-xs text-[#2B2725]/60 mb-1">
+                              Created: {new Date(lead.created_date).toLocaleDateString()}
+                            </p>
+                            {lead.next_follow_up_date && (
+                              <p className="text-xs text-[#D8B46B] font-medium">
+                                Follow up: {new Date(lead.next_follow_up_date).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Analytics */}
+          <TabsContent value="analytics">
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Lead Sources</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {["website", "masterclass", "referral", "social_media", "paid_ad"].map((source) => {
+                    const count = leads.filter((l) => l.source === source).length;
+                    const percentage = totalLeads > 0 ? ((count / totalLeads) * 100).toFixed(1) : 0;
+                    return (
+                      <div key={source} className="mb-4">
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm capitalize">{source.replace("_", " ")}</span>
+                          <span className="text-sm font-medium">
+                            {count} ({percentage}%)
+                          </span>
+                        </div>
+                        <div className="h-2 bg-[#E4D9C4] rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-[#D8B46B]"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Pipeline Distribution</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {stages.slice(0, -1).map((stage) => {
+                    const count = leads.filter((l) => l.stage === stage).length;
+                    const percentage = totalLeads > 0 ? ((count / totalLeads) * 100).toFixed(1) : 0;
+                    return (
+                      <div key={stage} className="mb-4">
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm">{stageLabels[stage]}</span>
+                          <span className="text-sm font-medium">
+                            {count} ({percentage}%)
+                          </span>
+                        </div>
+                        <div className="h-2 bg-[#E4D9C4] rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-[#1E3A32]"
+                            style={{ width: `${percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        {/* Lead Details Dialog */}
+        <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Lead Details</DialogTitle>
+            </DialogHeader>
+            {selectedLead && (
+              <div className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-medium mb-4">Contact Information</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <Label>Name</Label>
+                        <Input value={selectedLead.full_name || ""} readOnly />
+                      </div>
+                      <div>
+                        <Label>Email</Label>
+                        <Input value={selectedLead.email} readOnly />
+                      </div>
+                      {selectedLead.phone && (
                         <div>
-                          <h3 className="font-medium text-[#1E3A32]">{user.full_name}</h3>
-                          <p className="text-sm text-[#2B2725]/60">{user.email}</p>
+                          <Label>Phone</Label>
+                          <Input value={selectedLead.phone} readOnly />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-medium mb-4">Lead Info</h3>
+                    <div className="space-y-3">
+                      <div>
+                        <Label>Stage</Label>
+                        <div className="flex gap-2">
+                          <Input value={stageLabels[selectedLead.stage]} readOnly />
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              setNewStage(selectedLead.stage);
+                              setStageUpdateDialogOpen(true);
+                            }}
+                          >
+                            Change
+                          </Button>
+                        </div>
+                      </div>
+                      <div>
+                        <Label>Interest Level</Label>
+                        <Select
+                          value={selectedLead.interest_level}
+                          onValueChange={(value) =>
+                            updateLeadMutation.mutate({
+                              id: selectedLead.id,
+                              data: { interest_level: value },
+                            })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="cold">Cold</SelectItem>
+                            <SelectItem value="warm">Warm</SelectItem>
+                            <SelectItem value="hot">Hot</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label>Lead Score</Label>
+                        <Input value={selectedLead.lead_score} readOnly />
+                      </div>
+                      <div>
+                        <Label>Source</Label>
+                        <Input value={selectedLead.source} readOnly />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {selectedLead.notes && (
+                  <div>
+                    <Label>Notes</Label>
+                    <Textarea value={selectedLead.notes} readOnly className="min-h-[100px]" />
+                  </div>
+                )}
+
+                <div>
+                  <h3 className="font-medium mb-4">Recent Activity</h3>
+                  <div className="space-y-2">
+                    {getLeadActivities(selectedLead.id).map((activity) => (
+                      <div
+                        key={activity.id}
+                        className="flex items-start gap-3 p-3 bg-[#F9F5EF] rounded-lg"
+                      >
+                        <MessageSquare size={16} className="text-[#D8B46B] mt-1" />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-[#1E3A32]">
+                            {activity.activity_type.replace("_", " ")}
+                          </p>
+                          <p className="text-xs text-[#2B2725]/60">{activity.description}</p>
                           <p className="text-xs text-[#2B2725]/40 mt-1">
-                            Joined {new Date(user.created_date).toLocaleDateString()}
+                            {new Date(activity.created_date).toLocaleString()}
                           </p>
                         </div>
-                        <div className="flex gap-2">
-                          <Dialog open={tagDialogOpen && selectedUser?.id === user.id} onOpenChange={(open) => {
-                            setTagDialogOpen(open);
-                            if (open) setSelectedUser(user);
-                          }}>
-                            <DialogTrigger asChild>
-                              <Button variant="outline" size="sm">
-                                <Plus size={14} className="mr-1" />
-                                Add Tag
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                              <DialogHeader>
-                                <DialogTitle>Add Tag to {user.full_name}</DialogTitle>
-                              </DialogHeader>
-                              <div className="space-y-4">
-                                {Object.entries(
-                                  AVAILABLE_TAGS.reduce((acc, tag) => {
-                                    if (!acc[tag.category]) acc[tag.category] = [];
-                                    acc[tag.category].push(tag);
-                                    return acc;
-                                  }, {})
-                                ).map(([category, tags]) => (
-                                  <div key={category}>
-                                    <p className="text-sm font-medium text-[#2B2725]/60 mb-2">
-                                      {category}
-                                    </p>
-                                    <div className="flex flex-wrap gap-2">
-                                      {tags.map((tag) => (
-                                        <Button
-                                          key={tag.value}
-                                          variant="outline"
-                                          size="sm"
-                                          onClick={() => handleAddTag(user.id, tag.value)}
-                                          disabled={user.tags?.includes(tag.value)}
-                                        >
-                                          {tag.label}
-                                        </Button>
-                                      ))}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-
-                          <Dialog open={sequenceDialogOpen && selectedUser?.id === user.id} onOpenChange={(open) => {
-                            setSequenceDialogOpen(open);
-                            if (open) setSelectedUser(user);
-                          }}>
-                            <DialogTrigger asChild>
-                              <Button variant="outline" size="sm">
-                                <Mail size={14} className="mr-1" />
-                                Send Sequence
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                              <DialogHeader>
-                                <DialogTitle>Send Email Sequence to {user.full_name}</DialogTitle>
-                              </DialogHeader>
-                              <div className="space-y-3">
-                                {EMAIL_SEQUENCES.map((seq) => (
-                                  <Button
-                                    key={seq.id}
-                                    variant="outline"
-                                    className="w-full justify-between"
-                                    onClick={() => handleSendSequence(user.id, seq.id)}
-                                  >
-                                    <span>{seq.name}</span>
-                                    <span className="text-xs text-[#2B2725]/60">
-                                      {seq.emails} emails
-                                    </span>
-                                  </Button>
-                                ))}
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                        </div>
                       </div>
-
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-2">
-                        {user.tags?.length > 0 ? (
-                          user.tags.map((tag) => (
-                            <Badge
-                              key={tag}
-                              variant="secondary"
-                              className="bg-[#D8B46B]/20 text-[#1E3A32] hover:bg-[#D8B46B]/30"
-                            >
-                              {AVAILABLE_TAGS.find((t) => t.value === tag)?.label || tag}
-                              <button
-                                onClick={() => handleRemoveTag(user.id, tag)}
-                                className="ml-2 hover:text-red-600"
-                              >
-                                <X size={12} />
-                              </button>
-                            </Badge>
-                          ))
-                        ) : (
-                          <span className="text-sm text-[#2B2725]/40">No tags</span>
-                        )}
-                      </div>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </DialogContent>
+        </Dialog>
+
+        {/* Stage Update Dialog */}
+        <Dialog open={stageUpdateDialogOpen} onOpenChange={setStageUpdateDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Update Lead Stage</DialogTitle>
+            </DialogHeader>
+            {selectedLead && (
+              <div className="space-y-4">
+                <div>
+                  <Label>New Stage</Label>
+                  <Select value={newStage} onValueChange={setNewStage}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {stages.map((stage) => (
+                        <SelectItem key={stage} value={stage}>
+                          {stageLabels[stage]}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Notes (optional)</Label>
+                  <Textarea
+                    value={stageNotes}
+                    onChange={(e) => setStageNotes(e.target.value)}
+                    placeholder="Add any notes about this stage change..."
+                    className="min-h-[100px]"
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setStageUpdateDialogOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      updateStageMutation.mutate({
+                        lead_id: selectedLead.id,
+                        stage: newStage,
+                        notes: stageNotes,
+                      })
+                    }
+                    disabled={updateStageMutation.isPending}
+                  >
+                    Update Stage
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
