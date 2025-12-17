@@ -168,13 +168,26 @@ export default function CalendarSettings() {
               </p>
 
               <div className="bg-[#F9F5EF] p-4 rounded-lg">
-                <h4 className="font-medium text-[#1E3A32] mb-2">Setup:</h4>
+                <h4 className="font-medium text-[#1E3A32] mb-2">Setup Instructions:</h4>
                 <ol className="list-decimal list-inside space-y-2 text-sm text-[#2B2725]/80">
-                  <li>Connect your Google Calendar below</li>
-                  <li>Make sure your Apple Calendar syncs to Google Calendar</li>
-                  <li>Click "Sync Now" to import blocked times from your calendar</li>
-                  <li>Run sync periodically (or set up automatic daily sync)</li>
+                  <li><strong>Connect Google Calendar:</strong> Click "Sync Now" and authorize access with your Google account</li>
+                  <li><strong>Sync Apple Calendar to Google:</strong> If you use Apple Calendar:
+                    <ul className="ml-6 mt-1 list-disc space-y-1">
+                      <li>On iPhone/iPad: Settings → Calendar → Accounts → Add Account → Google</li>
+                      <li>On Mac: System Settings → Internet Accounts → Google → Enable Calendar</li>
+                      <li>Your Apple Calendar events will now appear in Google Calendar</li>
+                    </ul>
+                  </li>
+                  <li><strong>Click "Sync Now":</strong> Import all your calendar events to block booking times</li>
+                  <li><strong>Run Sync Regularly:</strong> Click "Sync Now" whenever you add appointments with other companies</li>
                 </ol>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                <p className="text-sm text-blue-900">
+                  <strong>💡 Pro Tip:</strong> Add all your appointments (other companies, personal events, etc.) to your main calendar, 
+                  then sync once. Your booking system will automatically block those times to prevent double-booking.
+                </p>
               </div>
 
               <div className="flex gap-3 items-center">
