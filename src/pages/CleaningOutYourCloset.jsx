@@ -116,11 +116,6 @@ export default function CleaningOutYourCloset() {
       answer:
         "Most clients say this is unlike anything they've experienced. Mind Styling focuses on identity-level transformation rather than surface habits.",
     },
-    {
-      question: "Will I get access to Roberta directly?",
-      answer:
-        "The core program is self-paced. Optional private sessions or group upgrades are available.",
-    },
   ];
 
   return (
@@ -228,7 +223,7 @@ export default function CleaningOutYourCloset() {
             </p>
 
             <div className="bg-[#F9F5EF] p-8 mb-8">
-              <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-6">Perfect for:</p>
+              <p className="text-[#2B2725]/60 text-sm uppercase tracking-wide mb-4">Perfect for:</p>
               <CmsText 
                 contentKey="closet.for.list"
                 page="CleaningOutYourCloset"

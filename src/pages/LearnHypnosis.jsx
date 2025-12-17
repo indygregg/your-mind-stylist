@@ -407,7 +407,7 @@ export default function LearnHypnosis() {
                   to={createPageUrl("Contact")}
                   className="block w-full text-center px-6 py-3 bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] transition-colors"
                 >
-                  Begin Certification →
+                  Begin Your Training →
                 </Link>
               </div>
             </div>
@@ -539,7 +539,7 @@ export default function LearnHypnosis() {
               to={createPageUrl("Contact")}
               className="inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
             >
-              Join the Waitlist
+              Begin Your Training
               <ArrowRight size={18} />
             </Link>
           </motion.div>
@@ -642,7 +642,7 @@ export default function LearnHypnosis() {
               to={createPageUrl("Contact")}
               className="inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
             >
-              Start Your Training
+              Begin Your Training
               <ArrowRight size={18} />
             </Link>
           </motion.div>

@@ -202,7 +202,7 @@ export default function Contact() {
                 {/* Phone */}
                 <div>
                   <Label htmlFor="phone" className="text-[#2B2725] mb-2 block">
-                    Phone (optional)
+                    Phone *
                   </Label>
                   <Input
                     id="phone"
@@ -210,6 +210,7 @@ export default function Contact() {
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="border-[#E4D9C4] focus:border-[#D8B46B] focus:ring-[#D8B46B]"
+                    required
                   />
                 </div>
 
@@ -278,7 +279,7 @@ export default function Contact() {
                 <Mail size={20} className="text-[#D8B46B] mt-1" />
                 <div>
                   <p className="font-medium text-[#1E3A32]">General inquiries:</p>
-                  <p className="text-[#2B2725]/70">info@themindstylist.com</p>
+                  <p className="text-[#2B2725]/70">roberta@yourmindstylist.com</p>
                 </div>
               </div>
 
@@ -286,10 +287,7 @@ export default function Contact() {
                 <Mail size={20} className="text-[#D8B46B] mt-1" />
                 <div>
                   <p className="font-medium text-[#1E3A32]">Speaking & training:</p>
-                  <p className="text-[#2B2725]/70">
-                    Use the form above and select "Organizational Mind Styling (Speaking / Training)" as
-                    your interest.
-                  </p>
+                  <p className="text-[#2B2725]/70">612-839-2295</p>
                 </div>
               </div>
             </div>
@@ -356,17 +354,13 @@ export default function Contact() {
               />
             </p>
 
-            <a
-              href="#"
-              onClick={(e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
+            <Link
+              to={createPageUrl("Bookings")}
               className="group inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
             >
-              Send a Message
-              <Send size={16} />
-            </a>
+              Schedule Your Free Consultation
+              <ArrowRight size={16} />
+            </Link>
           </motion.div>
         </div>
       </section>
