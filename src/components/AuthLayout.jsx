@@ -38,8 +38,16 @@ export default function AuthLayout({ children, currentPageName }) {
     fetchUser();
   }, []);
 
-  const handleLogout = () => {
-    base44.auth.logout();
+  const handleLogout = async () => {
+    try {
+      await base44.auth.logout();
+      // Force redirect to home page after logout
+      window.location.href = '/';
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force redirect anyway
+      window.location.href = '/';
+    }
   };
 
   // Role-based navigation
