@@ -48,7 +48,7 @@ export default function ContentHub() {
               contentKey="home.content_hub.label"
               page="Home"
               blockTitle="Content Hub Label"
-              defaultContent="Resources"
+              defaultContent="Blogs, Podcasts & More"
               contentType="short_text"
             />
           </span>

@@ -17,7 +17,7 @@ export default function WhatIDo() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-[#8B4F70] text-base md:text-lg font-bold tracking-[0.2em] uppercase mb-4 block">
+            <span className="text-[#6E4F7D] text-base md:text-lg font-bold tracking-[0.2em] uppercase mb-4 block">
               The Approach
             </span>
             <CmsText
@@ -55,10 +55,10 @@ export default function WhatIDo() {
                 />
               </Link>
               <Link
-                to={createPageUrl("CleaningOutYourCloset")}
+                to={createPageUrl("FreeMasterclass")}
                 className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:text-[#D8B46B] transition-colors"
               >
-                Cleaning Out Your Closet
+                Watch the Free Webinar
                 <ArrowUpRight
                   size={18}
                   className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
@@ -88,7 +88,7 @@ export default function WhatIDo() {
                     { number: "30+", label: "Years of Experience" },
                     { number: "NLP", label: "Master Practitioner" },
                     { number: "EI", label: "Emotional Intelligence Specialist" },
-                    { number: "", label: "Board Certified Hypnotist" },
+                    { number: "BCH", label: "Board Certified Hypnotist" },
                   ].map((item, index) => (
                     <motion.div
                       key={item.label}

@@ -46,7 +46,7 @@ export default function Testimonials() {
               contentKey="home.testimonials.label"
               page="Home"
               blockTitle="Testimonials Label"
-              defaultContent="Testimonials"
+              defaultContent="Past Clients, Companies I've Worked With"
               contentType="short_text"
             />
           </span>

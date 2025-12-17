@@ -47,14 +47,14 @@ export default function MindStylingSuite() {
         ]
       },
       cta: "Explore Expanding Your Mind Style",
-      link: "PrivateSessions",
+      link: "WorkWithMe",
       accent: "#6E4F7D",
       bg: "bg-[#F9F5EF]",
     },
     {
       icon: Sparkles,
       title: "Pocket Mindset™ Sessions",
-      tagline: "Reset your mind. Rehearse your future self. Shift your emotional state in minutes.",
+      tagline: "Reset your mind. Rehearse your future self in minutes.",
       description:
         "Short, powerful guided experiences that help you regulate your nervous system, dissolve stress, and embody the identity you're growing into.",
       bullets: [
@@ -109,7 +109,7 @@ export default function MindStylingSuite() {
               contentKey="home.mind_styling_suite.label"
               page="Home"
               blockTitle="Mind Styling Suite Label"
-              defaultContent="Signature Services"
+              defaultContent="How We Work Together"
               contentType="short_text"
             />
           </span>
