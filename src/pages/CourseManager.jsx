@@ -143,7 +143,7 @@ export default function CourseManager() {
             <p className="text-[#2B2725]/70">Create and manage your courses</p>
           </div>
           <Button
-            onClick={() => navigate(createPageUrl("CourseBuilder"))}
+            onClick={() => window.location.href = createPageUrl("CourseBuilder")}
             className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
           >
             <Plus size={16} className="mr-2" />
@@ -236,7 +236,7 @@ export default function CourseManager() {
           <div className="bg-white p-12 rounded-lg border border-[#E4D9C4] text-center">
             <p className="text-[#2B2725]/70 mb-4">No courses found</p>
             <Button
-              onClick={() => navigate(createPageUrl("CourseBuilder"))}
+              onClick={() => window.location.href = createPageUrl("CourseBuilder")}
               variant="outline"
             >
               <Plus size={16} className="mr-2" />
