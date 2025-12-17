@@ -25,6 +25,11 @@ export default function AuthLayout({ children, currentPageName }) {
     const fetchUser = async () => {
       try {
         const currentUser = await base44.auth.me();
+        console.log('🔍 AuthLayout User Data:', {
+          email: currentUser.email,
+          role: currentUser.role,
+          custom_role: currentUser.custom_role
+        });
         setUser(currentUser);
       } catch (error) {
         console.error("Error fetching user:", error);
