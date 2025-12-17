@@ -112,12 +112,12 @@ export default function Bookings() {
   const serviceCategories = {
     consultation: {
       title: "Complimentary Initial Consultations",
-      description: "",
+      description: "Choose how you'd like to meet:",
       color: "#1E3A32"
     },
     private_sessions: {
       title: "After You Know How You'll Work with Roberta",
-      description: "",
+      description: "Private sessions are available in the following formats:",
       color: "#6E4F7D"
     },
     certification: {
@@ -360,16 +360,18 @@ export default function Bookings() {
                             </div>
 
                             <div className="pt-6 border-t border-[#E4D9C4]">
-                              <div className="flex items-baseline justify-between mb-4">
-                                <span className="font-serif text-4xl text-[#1E3A32]">
-                                  {formatPrice(service.price)}
-                                </span>
-                                {service.session_count > 1 && (
-                                  <span className="text-sm text-[#2B2725]/60">
-                                    {formatPrice(service.price / service.session_count)}/session
+                              {service.price > 0 && (
+                                <div className="flex items-baseline justify-between mb-4">
+                                  <span className="font-serif text-4xl text-[#1E3A32]">
+                                    {formatPrice(service.price)}
                                   </span>
-                                )}
-                              </div>
+                                  {service.session_count > 1 && (
+                                    <span className="text-sm text-[#2B2725]/60">
+                                      {formatPrice(service.price / service.session_count)}/session
+                                    </span>
+                                  )}
+                                </div>
+                              )}
                               <Button 
                                 className="w-full bg-[#1E3A32] hover:bg-[#2B4A40] text-white"
                                 onClick={() => handleSelectAppointment(service)}
@@ -594,15 +596,22 @@ export default function Bookings() {
         {step === 1 && (
           <section className="py-16 px-6 bg-[#1E3A32] text-white">
           <div className="max-w-4xl mx-auto text-center">
-            <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
               <CmsText 
                 contentKey="bookings.cta.text" 
                 page="Bookings"
                 blockTitle="Bottom CTA Text"
-                fallback="Contact Roberta today to start clearing the clutter from your emotional wardrobe so you can finally step into a life that fits." 
+                fallback="Ready to begin? Schedule your complimentary consultation to explore how we'll work together." 
                 contentType="rich_text"
               />
             </p>
+            <Link
+              to={createPageUrl("Contact")}
+              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
+            >
+              Contact Roberta
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </section>
         )}
