@@ -7,10 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import AILessonOutlineGenerator from "./AILessonOutlineGenerator";
 
-export default function CurriculumBuilder({ modules, onUpdate }) {
+export default function CurriculumBuilder({ modules, onUpdate, onEditLesson }) {
   const [expandedModules, setExpandedModules] = useState({});
   const [editingModule, setEditingModule] = useState(null);
-  const [editingLesson, setEditingLesson] = useState(null);
   const [showAIGenerator, setShowAIGenerator] = useState(false);
 
   const addModule = () => {
@@ -40,7 +39,10 @@ export default function CurriculumBuilder({ modules, onUpdate }) {
       return mod;
     });
     onUpdate(updatedModules);
-    setEditingLesson({ moduleId, lessonId: `temp-${Date.now()}` });
+    const newLessonId = `temp-${Date.now()}`;
+    if (onEditLesson) {
+      onEditLesson({ moduleId, lessonId: newLessonId });
+    }
   };
 
   const updateModule = (moduleId, field, value) => {
@@ -266,7 +268,7 @@ export default function CurriculumBuilder({ modules, onUpdate }) {
                             type="button"
                             variant="ghost"
                             size="sm"
-                            onClick={() => setEditingLesson({ moduleId: module.id, lessonId: lesson.id })}
+                            onClick={() => onEditLesson && onEditLesson({ moduleId: module.id, lessonId: lesson.id })}
                           >
                             <Edit size={14} />
                           </Button>

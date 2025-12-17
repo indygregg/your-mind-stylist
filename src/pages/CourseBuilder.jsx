@@ -310,7 +310,11 @@ export default function CourseBuilder() {
                 />
               )}
               {step === 3 && (
-                <CurriculumBuilder modules={modules} onUpdate={setModules} />
+                <CurriculumBuilder 
+                  modules={modules} 
+                  onUpdate={setModules}
+                  onEditLesson={setEditingLesson}
+                />
               )}
               {step === 4 && (
                 <CourseSettings formData={formData} onChange={setFormData} />
