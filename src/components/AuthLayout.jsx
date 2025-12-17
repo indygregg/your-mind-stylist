@@ -143,7 +143,7 @@ export default function AuthLayout({ children, currentPageName }) {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#1E3A32] shadow-md">
         {/* Main Nav */}
-        <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <nav className="w-full px-6 py-4 flex justify-between items-center">
           <Link to={createPageUrl(navLinks[0]?.page || "Dashboard")} className="group flex items-center gap-3">
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/fad26f1a8_mind-stylist-whie-gold-logo2x.png" 
