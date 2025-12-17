@@ -19,11 +19,23 @@ export default function Layout({ children, currentPageName }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const checkAuthPages = async () => {
       // Skip layout rendering for login/auth pages
       if (!currentPageName) return;
+      
+      // Check if user is authenticated and get their info
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (isAuth) {
+          const currentUser = await base44.auth.me();
+          setUser(currentUser);
+        }
+      } catch (error) {
+        // User not authenticated
+      }
       
       // Pattern-based detection for authenticated pages
       const isAuthPage = 
@@ -83,6 +95,9 @@ export default function Layout({ children, currentPageName }) {
       ]
     }
   ];
+
+  // Check if user is a manager
+  const isManager = user?.role === 'admin' || user?.role === 'manager' || user?.custom_role === 'manager';
 
   // Don't render layout for pages without a name (like login)
   if (!currentPageName) {
@@ -166,8 +181,17 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         {/* Main Nav */}
-        <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link to={createPageUrl("Home")} className="group flex items-center gap-3">
+        <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
+          {/* Manager Dashboard Button - Only show on public pages for managers */}
+          {isManager && !useAuthLayout && (
+            <Link
+              to={createPageUrl('ManagerDashboard')}
+              className={`absolute left-6 top-1/2 -translate-y-1/2 px-3 py-2 ${hasDarkHero ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-[#D8B46B]/20 text-[#1E3A32] hover:bg-[#D8B46B]/30'} text-xs font-medium transition-all duration-300 rounded backdrop-blur-sm z-10`}
+            >
+              Dashboard
+            </Link>
+          )}
+          <Link to={createPageUrl("Home")} className={`group flex items-center gap-3 ${isManager && !useAuthLayout ? 'ml-28' : ''}`}>
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/5fbe0fe56_mind-stylist-purple-m2x.png" 
               alt="Your Mind Stylist Logo" 
