@@ -91,22 +91,26 @@ export default function ManagerAppointments() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Sync with Stripe
     setSyncing(true);
     try {
-      const response = await base44.functions.invoke('syncAppointmentTypeStripe', {
-        appointment_type_id: editingItem?.id,
-        name: formData.name,
-        description: formData.description,
-        price: formData.price,
-        currency: formData.currency,
-      });
+      let updatedData = { ...formData };
 
-      const updatedData = {
-        ...formData,
-        stripe_product_id: response.data.product_id,
-        stripe_price_id: response.data.price_id,
-      };
+      // Only sync with Stripe if price > 0
+      if (formData.price > 0) {
+        const response = await base44.functions.invoke('syncAppointmentTypeStripe', {
+          appointment_type_id: editingItem?.id,
+          name: formData.name,
+          description: formData.description,
+          price: formData.price,
+          currency: formData.currency,
+        });
+
+        updatedData = {
+          ...formData,
+          stripe_product_id: response.data.product_id,
+          stripe_price_id: response.data.price_id,
+        };
+      }
 
       if (editingItem) {
         updateMutation.mutate({ id: editingItem.id, data: updatedData });
@@ -114,8 +118,8 @@ export default function ManagerAppointments() {
         createMutation.mutate(updatedData);
       }
     } catch (error) {
-      console.error('Failed to sync with Stripe:', error);
-      alert('Failed to sync with Stripe. Please try again.');
+      console.error('Failed to save appointment type:', error);
+      alert('Failed to save appointment type. Please try again.');
     } finally {
       setSyncing(false);
     }
@@ -257,10 +261,9 @@ export default function ManagerAppointments() {
                         value={formData.price / 100}
                         onChange={(e) => setFormData({ ...formData, price: Math.round(parseFloat(e.target.value) * 100) })}
                         placeholder="0.00"
-                        required
                       />
                       <p className="text-xs text-[#2B2725]/60 mt-1">
-                        Amount in dollars (e.g., 150.00)
+                        Amount in dollars (e.g., 150.00). Use 0 for free consultations.
                       </p>
                     </div>
                     <div>
@@ -364,7 +367,7 @@ export default function ManagerAppointments() {
                 </div>
 
                 <Button type="submit" disabled={syncing} className="w-full">
-                  {syncing ? "Syncing with Stripe..." : editingItem ? "Update Appointment Type" : "Create Appointment Type"}
+                  {syncing ? "Saving..." : editingItem ? "Update Appointment Type" : "Create Appointment Type"}
                 </Button>
               </form>
             </DialogContent>

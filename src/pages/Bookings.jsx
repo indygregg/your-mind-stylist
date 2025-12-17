@@ -360,27 +360,15 @@ export default function Bookings() {
                             </div>
 
                             <div className="pt-6 border-t border-[#E4D9C4]">
-                              {service.price > 0 && (
-                                <div className="flex items-baseline justify-between mb-4">
-                                  <span className="font-serif text-4xl text-[#1E3A32]">
-                                    {formatPrice(service.price)}
-                                  </span>
-                                  {service.session_count > 1 && (
-                                    <span className="text-sm text-[#2B2725]/60">
-                                      {formatPrice(service.price / service.session_count)}/session
-                                    </span>
-                                  )}
-                                </div>
-                              )}
                               <Button 
                                 className="w-full bg-[#1E3A32] hover:bg-[#2B4A40] text-white"
                                 onClick={() => handleSelectAppointment(service)}
                               >
-                                {getCtaLabel(service)}
+                                {service.price === 0 ? 'Schedule This Session' : 'Continue to Details'}
                                 <ArrowRight size={18} className="ml-2" />
                               </Button>
                               <p className="text-xs text-center text-[#2B2725]/60 mt-2">
-                                You'll choose a date and time next.
+                                {service.price === 0 ? "Complimentary consultation" : "You'll choose a date and time next."}
                               </p>
                             </div>
                           </div>
@@ -444,6 +432,11 @@ export default function Bookings() {
                   <div className="text-sm text-[#2B2725]/70 mt-1">
                     {format(new Date(selectedSlot.start), "EEEE, MMMM d, yyyy 'at' h:mm a")}
                   </div>
+                  {selectedAppointment.price === 0 && (
+                    <div className="text-sm text-green-700 mt-2 font-medium">
+                      Complimentary consultation
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-6 mb-6">

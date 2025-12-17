@@ -27,9 +27,8 @@ export default function CalendarSettings() {
     fetchUser();
   }, []);
 
-  const handleConnect = () => {
-    // Redirect to Google OAuth flow
-    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${import.meta.env.VITE_GOOGLE_CLIENT_ID}&redirect_uri=${window.location.origin}/calendar-callback&response_type=code&scope=https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/calendar.events&access_type=offline`;
+  const handleConnect = async () => {
+    toast.error("Google Calendar integration requires OAuth setup. Please contact support to enable this feature.");
   };
 
   const handleDisconnect = async () => {
