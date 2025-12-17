@@ -38,6 +38,24 @@ export default function Layout({ children, currentPageName }) {
         const isAuth = await base44.auth.isAuthenticated();
         setUseAuthLayout(isAuth);
       }
+
+      // Redirect managers to ManagerDashboard if they land on Home
+      if (currentPageName === 'Home') {
+        try {
+          const isAuth = await base44.auth.isAuthenticated();
+          if (isAuth) {
+            const user = await base44.auth.me();
+            const isManager = user.role === 'manager' || user.custom_role === 'manager';
+            const isAdmin = user.role === 'admin';
+            
+            if (isManager || isAdmin) {
+              window.location.href = createPageUrl('ManagerDashboard');
+            }
+          }
+        } catch (error) {
+          // User not authenticated, stay on Home
+        }
+      }
     };
     checkAuthPages();
   }, [currentPageName]);
