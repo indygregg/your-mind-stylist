@@ -13,14 +13,14 @@ export default function ManagerBar() {
   // Show minimal button when in View Mode
   if (!isEditMode) {
     return (
-      <div className="fixed top-4 left-4 z-[100]">
+      <div className="fixed top-24 right-6 z-[100]">
         <Button
           size="sm"
           onClick={() => setIsEditMode(true)}
-          className="bg-[#1E3A32] text-white hover:bg-[#2B2725] shadow-lg"
+          className="bg-[#D8B46B] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-white shadow-lg"
         >
-          <Eye size={16} className="mr-2" />
-          View Mode
+          <Edit3 size={16} className="mr-2" />
+          Edit Page
         </Button>
       </div>
     );
