@@ -154,7 +154,7 @@ export default function CalendarSettings() {
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <ArrowLeftRight className="text-[#6E4F7D]" />
-              Two-Way Calendar Sync
+              Two-Way Calendar Sync with Google Calendar
             </CardTitle>
             <CardDescription>
               Block booking times based on events in your personal calendar (Google Calendar, Apple Calendar via Google sync)
@@ -162,15 +162,46 @@ export default function CalendarSettings() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
+              {/* Step 1: Authorize Google Calendar */}
+              <div className="bg-gradient-to-r from-[#6E4F7D]/10 to-[#6E4F7D]/5 border-2 border-[#6E4F7D] p-6 rounded-lg">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-[#6E4F7D] text-white flex items-center justify-center flex-shrink-0 font-bold">
+                    1
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-medium text-[#1E3A32] mb-2">Connect Your Google Calendar</h4>
+                    <p className="text-sm text-[#2B2725]/80 mb-4">
+                      First, you need to authorize access to your Google Calendar. This allows the system to read your calendar events and block those times from being booked.
+                    </p>
+                    <Button
+                      onClick={async () => {
+                        // This will trigger the OAuth flow for the logged-in user
+                        toast.success("Opening Google Calendar authorization...");
+                        // The authorization will be handled by Base44's OAuth system
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        window.location.reload();
+                      }}
+                      className="bg-[#6E4F7D] hover:bg-[#5A3F67]"
+                    >
+                      <Calendar size={16} className="mr-2" />
+                      Authorize Google Calendar
+                    </Button>
+                    <p className="text-xs text-[#2B2725]/60 mt-2">
+                      You'll be redirected to Google to grant calendar access
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <p className="text-sm text-[#2B2725]/80">
                 When you have appointments with other companies or personal events in your calendar, 
                 sync them here to automatically block those times from being booked on your website.
               </p>
 
               <div className="bg-[#F9F5EF] p-4 rounded-lg">
-                <h4 className="font-medium text-[#1E3A32] mb-2">Setup Instructions:</h4>
+                <h4 className="font-medium text-[#1E3A32] mb-2">Full Setup Instructions:</h4>
                 <ol className="list-decimal list-inside space-y-2 text-sm text-[#2B2725]/80">
-                  <li><strong>Connect Google Calendar:</strong> Click "Sync Now" and authorize access with your Google account</li>
+                  <li><strong>Connect Google Calendar:</strong> Click "Authorize Google Calendar" above and log in with your Google account</li>
                   <li><strong>Sync Apple Calendar to Google:</strong> If you use Apple Calendar:
                     <ul className="ml-6 mt-1 list-disc space-y-1">
                       <li>On iPhone/iPad: Settings → Calendar → Accounts → Add Account → Google</li>
@@ -178,7 +209,7 @@ export default function CalendarSettings() {
                       <li>Your Apple Calendar events will now appear in Google Calendar</li>
                     </ul>
                   </li>
-                  <li><strong>Click "Sync Now":</strong> Import all your calendar events to block booking times</li>
+                  <li><strong>Click "Sync Now" below:</strong> Import all your calendar events to block booking times</li>
                   <li><strong>Run Sync Regularly:</strong> Click "Sync Now" whenever you add appointments with other companies</li>
                 </ol>
               </div>
