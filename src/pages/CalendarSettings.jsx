@@ -3,13 +3,14 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Calendar, CheckCircle, AlertCircle, RefreshCw, Copy, Check } from "lucide-react";
+import { Calendar, CheckCircle, AlertCircle, RefreshCw, Copy, Check, ArrowLeftRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 export default function CalendarSettings() {
   const [user, setUser] = useState(null);
   const [iCalUrl, setICalUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,6 +33,18 @@ export default function CalendarSettings() {
     setCopied(true);
     toast.success("Calendar feed URL copied!");
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSyncFromCalendar = async () => {
+    setSyncing(true);
+    try {
+      const response = await base44.functions.invoke('syncCalendarToAvailability');
+      toast.success(response.data.message || 'Calendar synced successfully!');
+    } catch (error) {
+      toast.error(error.message || 'Failed to sync calendar');
+    } finally {
+      setSyncing(false);
+    }
   };
 
   if (!user) {
@@ -136,6 +149,60 @@ export default function CalendarSettings() {
           </CardContent>
         </Card>
 
+        {/* Two-Way Sync - NEW */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3">
+              <ArrowLeftRight className="text-[#6E4F7D]" />
+              Two-Way Calendar Sync
+            </CardTitle>
+            <CardDescription>
+              Block booking times based on events in your personal calendar (Google Calendar, Apple Calendar via Google sync)
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <p className="text-sm text-[#2B2725]/80">
+                When you have appointments with other companies or personal events in your calendar, 
+                sync them here to automatically block those times from being booked on your website.
+              </p>
+
+              <div className="bg-[#F9F5EF] p-4 rounded-lg">
+                <h4 className="font-medium text-[#1E3A32] mb-2">Setup:</h4>
+                <ol className="list-decimal list-inside space-y-2 text-sm text-[#2B2725]/80">
+                  <li>Connect your Google Calendar below</li>
+                  <li>Make sure your Apple Calendar syncs to Google Calendar</li>
+                  <li>Click "Sync Now" to import blocked times from your calendar</li>
+                  <li>Run sync periodically (or set up automatic daily sync)</li>
+                </ol>
+              </div>
+
+              <div className="flex gap-3 items-center">
+                <Button
+                  onClick={handleSyncFromCalendar}
+                  disabled={syncing}
+                  className="bg-[#6E4F7D] hover:bg-[#5A3F67]"
+                >
+                  {syncing ? (
+                    <>
+                      <RefreshCw size={16} className="mr-2 animate-spin" />
+                      Syncing...
+                    </>
+                  ) : (
+                    <>
+                      <ArrowLeftRight size={16} className="mr-2" />
+                      Sync Now
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-[#2B2725]/60">
+                  Last synced: Never (requires Google Calendar connection)
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* How It Works */}
         <Card>
           <CardHeader>
@@ -146,25 +213,25 @@ export default function CalendarSettings() {
               <div className="w-6 h-6 rounded-full bg-[#D8B46B]/20 flex items-center justify-center flex-shrink-0 text-[#D8B46B] font-medium">
                 1
               </div>
-              <p>Your calendar app automatically checks your feed for updates every few hours</p>
+              <p><strong>Website → Your Calendar:</strong> Your calendar app checks the feed for updates every few hours</p>
             </div>
             <div className="flex gap-3">
               <div className="w-6 h-6 rounded-full bg-[#D8B46B]/20 flex items-center justify-center flex-shrink-0 text-[#D8B46B] font-medium">
                 2
               </div>
-              <p>New bookings, reschedules, and cancellations sync automatically</p>
+              <p><strong>Your Calendar → Website:</strong> Click "Sync Now" to import events and block booking times</p>
             </div>
             <div className="flex gap-3">
               <div className="w-6 h-6 rounded-full bg-[#D8B46B]/20 flex items-center justify-center flex-shrink-0 text-[#D8B46B] font-medium">
                 3
               </div>
-              <p>Client details and Zoom links are included in each event</p>
+              <p>Client details and Zoom links are included in each calendar event</p>
             </div>
             <div className="flex gap-3">
               <div className="w-6 h-6 rounded-full bg-[#D8B46B]/20 flex items-center justify-center flex-shrink-0 text-[#D8B46B] font-medium">
                 4
               </div>
-              <p>Your feed URL stays the same, so you only need to subscribe once</p>
+              <p>Blocked times from your personal calendar prevent double-booking</p>
             </div>
           </CardContent>
         </Card>
