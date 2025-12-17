@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
@@ -14,6 +14,28 @@ export default function ManagerDashboard() {
   if (typeof window !== 'undefined') {
     window.__USE_AUTH_LAYOUT = true;
   }
+
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+        
+        // Redirect non-managers
+        const isManager = currentUser.role === 'manager' || currentUser.custom_role === 'manager';
+        const isAdmin = currentUser.role === 'admin';
+        
+        if (!isManager && !isAdmin) {
+          window.location.href = createPageUrl('Dashboard');
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const [setupDismissed, setSetupDismissed] = useState(() => {
     return localStorage.getItem('booking_setup_dismissed') === 'true';
@@ -49,10 +71,7 @@ export default function ManagerDashboard() {
     queryFn: () => base44.entities.AvailabilityRule.list(),
   });
 
-  const { data: user } = useQuery({
-    queryKey: ["currentUser"],
-    queryFn: () => base44.auth.me(),
-  });
+
 
   // Check setup completion
   const hasAvailability = availabilityRules.length > 0;

@@ -41,11 +41,15 @@ export default function AuthLayout({ children, currentPageName }) {
   const getNavLinks = () => {
     if (!user) return [];
 
+    // Check both role and custom_role fields for manager
+    const isManager = user.role === "manager" || user.custom_role === "manager";
+    const isAdmin = user.role === "admin";
+
     const commonLinks = [
-      { name: "Dashboard", page: user.role === "admin" ? "AdminDashboard" : user.role === "manager" ? "ManagerDashboard" : "Dashboard" },
+      { name: "Dashboard", page: isAdmin ? "AdminDashboard" : isManager ? "ManagerDashboard" : "Dashboard" },
     ];
 
-    if (user.role === "admin") {
+    if (isAdmin) {
       return [
         ...commonLinks,
         { name: "Calendar", page: "ManagerCalendar" },
@@ -58,7 +62,7 @@ export default function AuthLayout({ children, currentPageName }) {
       ];
     }
 
-    if (user.role === "manager") {
+    if (isManager) {
       return [
         ...commonLinks,
         { name: "Calendar", page: "ManagerCalendar" },
@@ -214,7 +218,7 @@ export default function AuthLayout({ children, currentPageName }) {
                       Profile Settings
                     </Link>
                   </DropdownMenuItem>
-                  {(user?.role === "admin" || user?.role === "manager") && (
+                  {(user?.role === "admin" || user?.role === "manager" || user?.custom_role === "manager") && (
                     <>
                       <DropdownMenuItem asChild>
                         <Link
