@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import MobileBottomNav from "./MobileBottomNav";
 import GlobalSearch from "./GlobalSearch";
 import haptics from "./utils/haptics";
+import BugReportButton from "./bug-tracker/BugReportButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -339,6 +340,9 @@ export default function AuthLayout({ children, currentPageName }) {
 
       {/* Main Content */}
       <main className="pt-20 pb-20 lg:pb-0">{children}</main>
+
+      {/* Bug Report Button */}
+      <BugReportButton />
 
       {/* Mobile Bottom Navigation */}
       <MobileBottomNav 
