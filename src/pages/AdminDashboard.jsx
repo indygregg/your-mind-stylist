@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { 
   PenSquare, FileVideo, Headphones, Mail, Users, FileText, 
-  ShoppingCart, ListTodo, Settings, BarChart3, Shield, Sparkles, Target, Image, Download, Calendar 
+  ShoppingCart, ListTodo, Settings, BarChart3, Shield, Sparkles, Target, Image, Download, Calendar, Bug 
 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -47,6 +47,7 @@ export default function AdminDashboard() {
   });
 
   const quickActions = [
+    { icon: Bug, label: "Bug Tracker", link: "AdminBugTracker", color: "#D8B46B" },
     { icon: Calendar, label: "Manage Bookings", link: "ManagerBookings", color: "#D8B46B" },
     { icon: ListTodo, label: "Manage Roadmap", link: "AdminRoadmap", color: "#6E4F7D" },
     { icon: FileText, label: "Dev Docs", link: "StudioDevDocs", color: "#6E4F7D" },
