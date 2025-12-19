@@ -6,7 +6,7 @@ export default function Sitemap() {
 
   useEffect(() => {
     const generateSitemap = async () => {
-      const siteUrl = window.location.origin;
+      const siteUrl = "https://yourmindstylist.com";
       
       // Static pages
       const staticPages = [

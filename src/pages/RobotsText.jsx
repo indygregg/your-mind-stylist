@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function RobotsText() {
-  const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const siteUrl = "https://yourmindstylist.com";
   
   const robotsTxt = `User-agent: *
 Allow: /

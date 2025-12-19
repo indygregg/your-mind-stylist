@@ -25,6 +25,13 @@ export default function AuthLayout({ children, currentPageName }) {
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (!isAuth) {
+          // Redirect to login if not authenticated
+          base44.auth.redirectToLogin(window.location.pathname);
+          return;
+        }
+        
         const currentUser = await base44.auth.me();
         console.log('🔍 AuthLayout User Data:', {
           email: currentUser.email,
@@ -34,6 +41,8 @@ export default function AuthLayout({ children, currentPageName }) {
         setUser(currentUser);
       } catch (error) {
         console.error("Error fetching user:", error);
+        // Redirect to login on error
+        base44.auth.redirectToLogin(window.location.pathname);
       }
     };
     fetchUser();
