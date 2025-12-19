@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
-import { Menu, X, LogOut, User, Settings, ChevronDown, Search } from "lucide-react";
+import { Menu, X, LogOut, User, Settings, ChevronDown, Search, Bell } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MobileBottomNav from "./MobileBottomNav";
 import GlobalSearch from "./GlobalSearch";
 import haptics from "./utils/haptics";
 import BugReportButton from "./bug-tracker/BugReportButton";
+import { useQuery } from "@tanstack/react-query";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -117,6 +118,18 @@ export default function AuthLayout({ children, currentPageName }) {
 
   const navLinks = getNavLinks();
 
+  // Fetch new bug reports count for admin
+  const { data: newBugsCount = 0 } = useQuery({
+    queryKey: ["newBugsCount"],
+    queryFn: async () => {
+      if (user?.role !== "admin") return 0;
+      const bugs = await base44.entities.BugReport.filter({ status: "New" });
+      return bugs.length;
+    },
+    enabled: !!user && user.role === "admin",
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
+
   return (
     <div className="min-h-screen bg-[#F9F5EF]">
       <style>{`
@@ -202,6 +215,22 @@ export default function AuthLayout({ children, currentPageName }) {
             >
               <Search size={20} className="text-[#F9F5EF]/70" />
             </button>
+
+            {/* Bug Report Notifications (Admin Only) */}
+            {user?.role === "admin" && (
+              <Link
+                to={createPageUrl("AdminBugTracker")}
+                className="relative p-3 hover:bg-[#F9F5EF]/10 rounded-full transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                aria-label="Bug Reports"
+              >
+                <Bell size={20} className="text-[#F9F5EF]/70" />
+                {newBugsCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                    {newBugsCount > 9 ? "9+" : newBugsCount}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {/* User Menu */}
             <div className="flex items-center gap-4 border-l border-[#F9F5EF]/20 pl-6">
