@@ -66,8 +66,8 @@ export default function PublicPagesList() {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-3">
-            Public Pages Directory
+          <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-3">
+            Site Pages Reference
           </h1>
           <p className="text-[#2B2725]/70 text-lg mb-6">
             Complete list of all public-facing pages on Your Mind Stylist website
