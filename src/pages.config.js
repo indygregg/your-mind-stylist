@@ -45,6 +45,7 @@ import GuestAuthorInvite from './pages/GuestAuthorInvite';
 import Home from './pages/Home';
 import InnerRehearsal from './pages/InnerRehearsal';
 import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
+import LENS from './pages/LENS';
 import LearnHypnosis from './pages/LearnHypnosis';
 import LegalPage from './pages/LegalPage';
 import Library from './pages/Library';
@@ -89,6 +90,7 @@ import PrivateSessionsPurchase from './pages/PrivateSessionsPurchase';
 import ProductPage from './pages/ProductPage';
 import ProfileSettings from './pages/ProfileSettings';
 import Programs from './pages/Programs';
+import PublicPagesList from './pages/PublicPagesList';
 import PurchaseCenter from './pages/PurchaseCenter';
 import PurchaseComplete from './pages/PurchaseComplete';
 import PurchaseSuccess from './pages/PurchaseSuccess';
@@ -116,8 +118,6 @@ import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
-import PublicPagesList from './pages/PublicPagesList';
-import LENS from './pages/LENS';
 import __Layout from './Layout.jsx';
 
 
@@ -169,6 +169,7 @@ export const PAGES = {
     "Home": Home,
     "InnerRehearsal": InnerRehearsal,
     "InnerRehearsalPurchase": InnerRehearsalPurchase,
+    "LENS": LENS,
     "LearnHypnosis": LearnHypnosis,
     "LegalPage": LegalPage,
     "Library": Library,
@@ -213,6 +214,7 @@ export const PAGES = {
     "ProductPage": ProductPage,
     "ProfileSettings": ProfileSettings,
     "Programs": Programs,
+    "PublicPagesList": PublicPagesList,
     "PurchaseCenter": PurchaseCenter,
     "PurchaseComplete": PurchaseComplete,
     "PurchaseSuccess": PurchaseSuccess,
@@ -240,8 +242,6 @@ export const PAGES = {
     "WorkWithMe": WorkWithMe,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
-    "PublicPagesList": PublicPagesList,
-    "LENS": LENS,
 }
 
 export const pagesConfig = {
