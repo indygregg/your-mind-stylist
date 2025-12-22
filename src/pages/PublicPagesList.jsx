@@ -133,7 +133,7 @@ export default function PublicPagesList() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => window.open(`/${page.slug}`, '_blank')}
+                      onClick={() => window.open(`${baseUrl}/${page.slug}`, '_blank')}
                       className="text-[#D8B46B] hover:text-[#D8B46B] hover:bg-[#D8B46B]/10"
                     >
                       <ExternalLink size={16} />
