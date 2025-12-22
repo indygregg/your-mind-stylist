@@ -1,5 +1,6 @@
 import About from './pages/About';
 import Accessibility from './pages/Accessibility';
+import AdminBugTracker from './pages/AdminBugTracker';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProducts from './pages/AdminProducts';
 import AdminRoadmap from './pages/AdminRoadmap';
@@ -115,13 +116,13 @@ import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
-import AdminBugTracker from './pages/AdminBugTracker';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "About": About,
     "Accessibility": Accessibility,
+    "AdminBugTracker": AdminBugTracker,
     "AdminDashboard": AdminDashboard,
     "AdminProducts": AdminProducts,
     "AdminRoadmap": AdminRoadmap,
@@ -237,7 +238,6 @@ export const PAGES = {
     "WorkWithMe": WorkWithMe,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
-    "AdminBugTracker": AdminBugTracker,
 }
 
 export const pagesConfig = {

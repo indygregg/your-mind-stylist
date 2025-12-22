@@ -174,6 +174,9 @@ export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload,
                         <span>Upload {lesson.type === "audio" ? "Audio" : "Video"}</span>
                       </Button>
                     </label>
+                    <p className="text-xs text-[#2B2725]/60 mt-3">
+                      Max size: {lesson.type === "audio" ? "100MB" : "500MB"}. Files will be compressed automatically.
+                    </p>
                   </div>
                 )}
               </div>

@@ -14,6 +14,7 @@ import CourseTemplates from "../components/courses/builder/CourseTemplates";
 import { createPageUrl } from "../utils";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { compressMedia, formatFileSize, validateFileSize } from "../components/utils/mediaCompression";
 
 export default function CourseBuilder() {
   const navigate = useNavigate();
@@ -28,6 +29,8 @@ export default function CourseBuilder() {
   const [editingLesson, setEditingLesson] = useState(null);
   const [showAIGenerator, setShowAIGenerator] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
+  const [uploadingMedia, setUploadingMedia] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   // Get course ID from URL if editing
   const urlParams = new URLSearchParams(window.location.search);
@@ -158,16 +161,80 @@ export default function CourseBuilder() {
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    if (!file) return;
+
+    try {
+      // Validate file size
+      const validation = validateFileSize(file, 'image');
+      if (!validation.valid) {
+        toast.error(validation.message);
+        return;
+      }
+
+      toast.loading(`Compressing image... (${formatFileSize(file.size)})`);
+      
+      // Compress image
+      const compressedFile = await compressMedia(file, 'image');
+      
+      toast.dismiss();
+      toast.loading(`Uploading... (${formatFileSize(compressedFile.size)})`);
+      
+      const { file_url } = await base44.integrations.Core.UploadFile({ file: compressedFile });
       setFormData({ ...formData, thumbnail: file_url });
+      
+      toast.dismiss();
+      toast.success('Image uploaded successfully!');
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error.message || 'Failed to upload image');
+      console.error('Image upload error:', error);
     }
   };
 
   const handleMediaUpload = async (e, lessonId, moduleId) => {
     const file = e.target.files[0];
-    if (file) {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    if (!file) return;
+
+    const isVideo = file.type.startsWith('video/');
+    const isAudio = file.type.startsWith('audio/');
+    const mediaType = isVideo ? 'video' : isAudio ? 'audio' : 'unknown';
+
+    try {
+      setUploadingMedia(true);
+      setUploadProgress(0);
+
+      // Validate file size
+      const validation = validateFileSize(file, mediaType);
+      if (!validation.valid) {
+        toast.error(validation.message);
+        setUploadingMedia(false);
+        return;
+      }
+
+      // Show initial file size
+      const initialSize = formatFileSize(file.size);
+      toast.loading(`Preparing ${mediaType}... (${initialSize})`);
+
+      // Compress media
+      const compressedFile = await compressMedia(file, mediaType, (progress) => {
+        setUploadProgress(progress);
+      });
+
+      const finalSize = formatFileSize(compressedFile.size);
+      const savedSize = file.size - compressedFile.size;
+      
+      toast.dismiss();
+      
+      if (savedSize > 0) {
+        toast.success(`Compressed: ${initialSize} → ${finalSize} (saved ${formatFileSize(savedSize)})`);
+      }
+      
+      toast.loading(`Uploading ${mediaType}... (${finalSize})`);
+
+      // Upload the compressed file
+      const { file_url } = await base44.integrations.Core.UploadFile({ file: compressedFile });
+      
+      // Update the lesson with the media URL
       const updatedModules = modules.map((mod) => {
         if (mod.id === moduleId) {
           return {
@@ -180,6 +247,16 @@ export default function CourseBuilder() {
         return mod;
       });
       setModules(updatedModules);
+
+      toast.dismiss();
+      toast.success(`${mediaType.charAt(0).toUpperCase() + mediaType.slice(1)} uploaded successfully!`);
+    } catch (error) {
+      toast.dismiss();
+      toast.error(error.message || `Failed to upload ${mediaType}`);
+      console.error('Media upload error:', error);
+    } finally {
+      setUploadingMedia(false);
+      setUploadProgress(0);
     }
   };
 
