@@ -46,8 +46,8 @@ export default function MindStylingSuite() {
           "Better Human Beings."
         ]
       },
-      cta: "Explore Expanding Your Mind Style",
-      link: "WorkWithMe",
+      cta: "Learn About LENS™",
+      link: "LENS",
       accent: "#6E4F7D",
       bg: "bg-[#F9F5EF]",
     },

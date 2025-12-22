@@ -117,6 +117,7 @@ import WorkWithMe from './pages/WorkWithMe';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import PublicPagesList from './pages/PublicPagesList';
+import LENS from './pages/LENS';
 import __Layout from './Layout.jsx';
 
 
@@ -240,6 +241,7 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "PublicPagesList": PublicPagesList,
+    "LENS": LENS,
 }
 
 export const pagesConfig = {
