@@ -62,7 +62,7 @@ export default function PublicPagesList() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
+    <div className="min-h-screen bg-[#F9F5EF] pt-32 pb-12 px-6">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-8">
