@@ -29,6 +29,20 @@ export default function MasterclassEmailCapture({ onClose, onSuccess }) {
         signup_date: new Date().toISOString(),
       });
 
+      // Also create a lead in the CRM
+      try {
+        await base44.entities.Lead.create({
+          email: email.trim(),
+          full_name: fullName.trim(),
+          source: "masterclass",
+          stage: "new",
+          interest_level: "warm",
+        });
+      } catch (leadErr) {
+        // Lead might already exist, that's okay
+        console.log("Lead creation skipped (may already exist)");
+      }
+
       onSuccess();
     } catch (err) {
       console.error("Error submitting email:", err);
