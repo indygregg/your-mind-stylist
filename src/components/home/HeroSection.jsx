@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
 import CmsText from "../cms/CmsText";
+import VideoModal from "./VideoModal";
 
 export default function HeroSection() {
+  const [showVideoModal, setShowVideoModal] = useState(false);
+
   return (
     <section className="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden">
       {/* Subtle Background Pattern */}
@@ -124,7 +127,7 @@ export default function HeroSection() {
               <div className="absolute -bottom-4 -right-4 w-20 h-20 border-r-2 border-b-2 border-[#D8B46B]" />
 
               {/* Image Container */}
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#E4D9C4]">
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#E4D9C4] group">
                 <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9bff2cefb_Roberta-Fernandez-The-Mind-Stylist.jpg"
                   alt="Roberta Fernandez - Your Mind Stylist"
@@ -132,6 +135,15 @@ export default function HeroSection() {
                 />
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A32]/20 to-transparent" />
+
+                {/* Play Button */}
+                <button
+                  onClick={() => setShowVideoModal(true)}
+                  className="absolute bottom-8 left-8 w-16 h-16 rounded-full bg-[#D8B46B] flex items-center justify-center hover:scale-110 hover:bg-[#F9F5EF] transition-all duration-300 shadow-xl group-hover:shadow-2xl"
+                  aria-label="Play welcome video"
+                >
+                  <Play size={24} className="text-[#1E3A32] ml-1" fill="currentColor" />
+                </button>
               </div>
             </div>
 
@@ -149,6 +161,8 @@ export default function HeroSection() {
           </motion.div>
         </div>
       </div>
+
+      <VideoModal isOpen={showVideoModal} onClose={() => setShowVideoModal(false)} />
     </section>
   );
 }
