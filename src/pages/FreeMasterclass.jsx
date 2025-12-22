@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, CheckCircle, Lightbulb, Shield, Brain, Users, Star } from "lucide-react";
+import CmsText from "../components/cms/CmsText";
 
 export default function FreeMasterclass() {
   const learnings = [
@@ -131,15 +132,16 @@ export default function FreeMasterclass() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="aspect-video bg-[#2B2725] mb-10 flex items-center justify-center cursor-pointer group relative overflow-hidden"
+              className="aspect-video bg-[#2B2725] mb-10 relative overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A32]/50 to-[#6E4F7D]/30" />
-              <div className="relative z-10 w-24 h-24 rounded-full bg-[#D8B46B] flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Play size={40} className="text-[#1E3A32] ml-1" fill="currentColor" />
-              </div>
-              <div className="absolute top-6 left-6 bg-[#D8B46B] px-4 py-2 text-[#1E3A32] text-xs tracking-wide uppercase font-medium">
-                On-Demand • Free
-              </div>
+              <CmsText
+                contentKey="freemasterclass.hero.video_embed"
+                page="FreeMasterclass"
+                blockTitle="Masterclass Video Embed (Paste Vimeo/YouTube iframe code)"
+                fallback={`<div class='absolute inset-0 bg-gradient-to-br from-[#1E3A32]/50 to-[#6E4F7D]/30'></div><div class='relative z-10 w-24 h-24 rounded-full bg-[#D8B46B] flex items-center justify-center mx-auto mt-[calc(50%-48px)]'><svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='currentColor' class='text-[#1E3A32] ml-1'><path d='M8 5v14l11-7z'/></svg></div><div class='absolute top-6 left-6 bg-[#D8B46B] px-4 py-2 text-[#1E3A32] text-xs tracking-wide uppercase font-medium'>On-Demand • Free</div>`}
+                contentType="rich_text"
+                className="w-full h-full [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:absolute [&_iframe]:inset-0"
+              />
             </motion.div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

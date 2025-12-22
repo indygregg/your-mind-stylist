@@ -1,11 +1,24 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../../utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Play, Sparkles } from "lucide-react";
 import CmsText from "../cms/CmsText";
+import MasterclassEmailCapture from "./MasterclassEmailCapture";
 
 export default function FreeMasterclass() {
+  const [showEmailCapture, setShowEmailCapture] = useState(false);
+  const navigate = useNavigate();
+
+  const handleVideoClick = () => {
+    setShowEmailCapture(true);
+  };
+
+  const handleEmailSuccess = () => {
+    setShowEmailCapture(false);
+    navigate(createPageUrl("FreeMasterclass"));
+  };
+
   return (
     <section className="py-24 md:py-32 bg-[#1E3A32] relative overflow-hidden">
       {/* Decorative Elements */}
@@ -22,7 +35,10 @@ export default function FreeMasterclass() {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            <div className="relative aspect-video bg-[#2B2725] overflow-hidden group cursor-pointer">
+            <div 
+              onClick={handleVideoClick}
+              className="relative aspect-video bg-[#2B2725] overflow-hidden group cursor-pointer"
+            >
               <img
                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80"
                 alt="Free Masterclass"
@@ -92,16 +108,25 @@ export default function FreeMasterclass() {
               />
             </div>
 
-            <Link
-              to={createPageUrl("FreeMasterclass")}
+            <button
+              onClick={handleVideoClick}
               className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide font-medium hover:bg-[#F9F5EF] transition-all duration-300"
             >
               <Play size={16} />
               Watch the Free Webinar
-            </Link>
+            </button>
           </motion.div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {showEmailCapture && (
+          <MasterclassEmailCapture
+            onClose={() => setShowEmailCapture(false)}
+            onSuccess={handleEmailSuccess}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
