@@ -93,13 +93,14 @@ export default function LENS() {
                 <div className="absolute -bottom-4 -right-4 w-20 h-20 border-r-2 border-b-2 border-[#D8B46B]" />
 
                 {/* Video Container */}
-                <div className="relative aspect-video bg-[#E4D9C4] flex items-center justify-center">
+                <div className="relative aspect-video bg-[#E4D9C4] overflow-hidden">
                   <CmsText 
                     contentKey="lens.hero.video_embed" 
                     page="LENS"
-                    blockTitle="Hero Video Embed"
-                    fallback="<div class='text-[#2B2725]/40 text-center p-8'><p class='font-serif text-xl mb-2'>Video Coming Soon</p><p class='text-sm'>Video embed will be placed here</p></div>" 
+                    blockTitle="Hero Video Embed (Paste Vimeo/YouTube iframe code)"
+                    fallback="<div class='w-full h-full flex items-center justify-center text-[#2B2725]/40 text-center p-8'><div><p class='font-serif text-xl mb-2'>Video Coming Soon</p><p class='text-sm'>Paste your Vimeo or YouTube embed code in Edit Mode</p></div></div>" 
                     contentType="rich_text"
+                    className="w-full h-full [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:absolute [&_iframe]:inset-0"
                   />
                 </div>
               </div>
