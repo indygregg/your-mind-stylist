@@ -67,7 +67,7 @@ export default function LENS() {
                   contentKey="lens.hero.description" 
                   page="LENS"
                   blockTitle="Hero Description"
-                  fallback="<p><strong>LENS doesn't give you answers - it gives you a new lens to see things differently and expand into new solutions.</strong></p><p>As Albert Einstein observed: <em>\"The problems we have cannot be solved by the same level of thinking that created them.\"</em> LENS is built on this principle. Results are determined by where you place your focus.</p>" 
+                  fallback="<p><strong>LENS doesn't give you answers - it gives you a new lens to see things differently and expand into new solutions.</strong></p><p>As Albert Einstein observed: <em>'The problems we have cannot be solved by the same level of thinking that created them.'</em> LENS is built on this principle. Results are determined by where you place your focus.</p>" 
                   contentType="rich_text"
                 />
               </div>
