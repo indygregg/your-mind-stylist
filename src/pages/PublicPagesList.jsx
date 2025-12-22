@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
 
 export default function PublicPagesList() {
-  const baseUrl = window.location.origin;
+  const baseUrl = "https://yourmindstylist.com";
 
   const publicPages = [
     // Main Navigation
