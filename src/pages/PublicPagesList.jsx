@@ -24,6 +24,9 @@ export default function PublicPagesList() {
     // Services - Professional Development
     { name: "Hypnosis Training", slug: "LearnHypnosis", category: "Professional Development" },
     { name: "Speaking & Training", slug: "SpeakingTraining", category: "Professional Development" },
+    { name: "Private Sessions", slug: "PrivateSessions", category: "Professional Development" },
+    { name: "Inner Rehearsal™", slug: "InnerRehearsal", category: "Professional Development" },
+    { name: "Certification", slug: "Certification", category: "Professional Development" },
     
     // Legal Pages
     { name: "Privacy Policy", slug: "LegalPage?slug=privacy-policy", category: "Legal" },
@@ -33,8 +36,13 @@ export default function PublicPagesList() {
     
     // Additional Public Pages
     { name: "Free Masterclass", slug: "FreeMasterclass", category: "Lead Magnets" },
+    { name: "Masterclass", slug: "Masterclass", category: "Lead Magnets" },
     { name: "Pricing", slug: "Pricing", category: "Sales" },
     { name: "Work With Me", slug: "WorkWithMe", category: "Sales" },
+    { name: "Product Page", slug: "ProductPage", category: "Sales" },
+    { name: "Course Page", slug: "CoursePage", category: "Sales" },
+    { name: "Blog Post", slug: "BlogPost", category: "Content" },
+    { name: "Resources", slug: "Resources", category: "Content" },
     
     // Technical Pages
     { name: "Sitemap", slug: "Sitemap", category: "Technical" },
