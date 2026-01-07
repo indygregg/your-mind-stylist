@@ -104,27 +104,51 @@ export default function FreeMasterclass() {
             transition={{ duration: 0.6 }}
           >
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block text-center">
-              Free On-Demand Masterclass
+              <CmsText 
+                contentKey="freemasterclass.hero.label" 
+                page="FreeMasterclass"
+                blockTitle="Hero Label"
+                fallback="Free On-Demand Masterclass" 
+                contentType="short_text"
+              />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6 text-center">
-              Imposter Syndrome
-              <br />
-              <span className="italic text-[#D8B46B]">& Other Myths to Ditch</span>
+              <CmsText 
+                contentKey="freemasterclass.hero.title" 
+                page="FreeMasterclass"
+                blockTitle="Hero Title"
+                fallback="Imposter Syndrome<br /><span class='italic text-[#D8B46B]'>& Other Myths to Ditch</span>" 
+                contentType="rich_text"
+              />
             </h1>
             <p className="text-[#2B2725] font-serif text-2xl md:text-3xl italic mb-8 text-center">
-              A practical, psychologically grounded class to help you stop feeling like you're faking
-              it — and start trusting your abilities.
+              <CmsText 
+                contentKey="freemasterclass.hero.tagline" 
+                page="FreeMasterclass"
+                blockTitle="Hero Tagline"
+                fallback="A practical, psychologically grounded class to help you stop feeling like you're faking it — and start trusting your abilities." 
+                contentType="short_text"
+              />
             </p>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-3xl mx-auto text-center">
-              If you've ever felt like you don't belong in the room, that you're not "qualified
-              enough," or that people will eventually find out you're not as capable as they think —
-              this class is for you.
+              <CmsText 
+                contentKey="freemasterclass.hero.paragraph1" 
+                page="FreeMasterclass"
+                blockTitle="Hero Paragraph 1"
+                fallback="If you've ever felt like you don't belong in the room, that you're not &quot;qualified enough,&quot; or that people will eventually find out you're not as capable as they think — this class is for you." 
+                contentType="rich_text"
+              />
             </p>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-3xl mx-auto text-center">
-              In this on-demand masterclass, you'll learn what's really happening beneath imposter
-              syndrome and how to shift the way you see yourself, your work, and your abilities.
+              <CmsText 
+                contentKey="freemasterclass.hero.paragraph2" 
+                page="FreeMasterclass"
+                blockTitle="Hero Paragraph 2"
+                fallback="In this on-demand masterclass, you'll learn what's really happening beneath imposter syndrome and how to shift the way you see yourself, your work, and your abilities." 
+                contentType="rich_text"
+              />
             </p>
 
             {/* Video Preview */}
