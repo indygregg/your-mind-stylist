@@ -255,13 +255,13 @@ export default function Programs() {
               </div>
             )}
 
-            {/* Tier 3 — High-Touch Coaching & Community */}
+            {/* Tier 3 — Individual/one-on-one */}
             {productsByCategory.high_touch.length > 0 && (
               <div className="mb-20">
                 <div className="flex items-center gap-3 mb-8">
                   <Users size={28} className="text-[#A6B7A3]" />
                   <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
-                    Tier 3 — High-Touch Coaching & Community
+                    Tier 3 — Individual/one-on-one
                   </h3>
                 </div>
                 <p className="text-[#2B2725]/70 mb-8">Work with Roberta more directly — small group or 1:1 support</p>
@@ -543,7 +543,7 @@ export default function Programs() {
 
               <Link to={createPageUrl("CleaningOutYourCloset")}>
                 <Button className="w-full h-full bg-white text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">Couture (Private 1:1)</span>
+                  <span className="text-sm font-normal">Couture (Individual/one-on-one)</span>
                   <span className="text-lg font-bold">$7,995</span>
                 </Button>
               </Link>
