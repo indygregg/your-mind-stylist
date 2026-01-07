@@ -96,7 +96,7 @@ export default function HeroSection() {
                 />
               </Link>
               <Link
-                to={createPageUrl("PocketVisualization")}
+                to={createPageUrl("FreeMasterclass")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
               >
                 <Play size={16} className="text-[#D8B46B]" />
@@ -106,7 +106,7 @@ export default function HeroSection() {
                   blockTitle="Homepage Hero Secondary CTA"
                   contentType="short_text"
                   maxLength={60}
-                  fallback="Listen to a Free Pocket Mindset Recording"
+                  fallback="Watch the Free Webinar"
                   as="span"
                 />
               </Link>
