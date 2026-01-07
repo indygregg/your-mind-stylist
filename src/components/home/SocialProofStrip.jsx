@@ -27,7 +27,7 @@ export default function SocialProofStrip() {
             contentKey="home.social_proof.title"
             page="Home"
             blockTitle="Social Proof Title"
-            defaultContent="Trusted by leaders and teams at"
+            fallback="Companies I've Worked With"
             contentType="short_text"
           />
         </motion.p>

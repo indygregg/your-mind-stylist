@@ -109,7 +109,7 @@ export default function MindStylingSuite() {
               contentKey="home.mind_styling_suite.label"
               page="Home"
               blockTitle="Mind Styling Suite Label"
-              defaultContent="How We Work Together"
+              fallback="How We Work Together"
               contentType="short_text"
             />
           </span>
@@ -118,7 +118,7 @@ export default function MindStylingSuite() {
               contentKey="home.mind_styling_suite.title"
               page="Home"
               blockTitle="Mind Styling Suite Title"
-              defaultContent="The Mind Styling Suite"
+              fallback="Signature Services"
               contentType="short_text"
             />
           </h2>
