@@ -550,7 +550,7 @@ export default function PocketVisualization() {
                   contentKey="pocket.how.note"
                   page="PocketVisualization"
                   blockTitle="How Section Note"
-                  fallback="Pocket Visualization™ lives inside your private Your Mind Stylist Portal."
+                  fallback="Access Pocket Mindset™ through your private portal after purchase."
                   contentType="rich_text"
                 />
               </p>

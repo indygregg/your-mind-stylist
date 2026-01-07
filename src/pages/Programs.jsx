@@ -415,17 +415,17 @@ export default function Programs() {
 
               <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#6E4F7D]">
                 <p className="text-[#2B2725]/80 mb-2">Want structured learning with tangible skills?</p>
-                <p className="font-serif text-xl text-[#1E3A32]">Toolkit Series is your foundation.</p>
+                <p className="font-serif text-xl text-[#1E3A32]">LENS™ is your foundation.</p>
               </div>
 
               <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#A6B7A3]">
                 <p className="text-[#2B2725]/80 mb-2">You want community + live support?</p>
-                <p className="font-serif text-xl text-[#1E3A32]">Salon Group Coaching delivers that.</p>
+                <p className="font-serif text-xl text-[#1E3A32]">Salon Group delivers that.</p>
               </div>
 
               <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#1E3A32]">
                 <p className="text-[#2B2725]/80 mb-2">You want the deepest transformation?</p>
-                <p className="font-serif text-xl text-[#1E3A32]">Private coaching is for you.</p>
+                <p className="font-serif text-xl text-[#1E3A32]">Private one-to-one work is for you.</p>
               </div>
             </div>
           </motion.div>
@@ -523,34 +523,27 @@ export default function Programs() {
               <Link to={createPageUrl("PocketVisualization")}>
                 <Button className="w-full h-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
                   <span className="text-sm font-normal">Pocket Mindset™</span>
-                  <span className="text-lg font-bold">Start for $7/mo</span>
+                  <span className="text-lg font-bold">$7/mo</span>
                 </Button>
               </Link>
 
               <Link to={createPageUrl("PurchaseCenter")}>
                 <Button className="w-full h-full bg-white text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">Mini Webinars</span>
-                  <span className="text-lg font-bold">Explore Now</span>
-                </Button>
-              </Link>
-
-              <Link to={createPageUrl("PurchaseCenter")}>
-                <Button className="w-full h-full bg-[#6E4F7D] text-white hover:bg-[#5A3F67] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">Toolkit Full Bundle</span>
+                  <span className="text-sm font-normal">LENS™ (Full Bundle)</span>
                   <span className="text-lg font-bold">$719</span>
                 </Button>
               </Link>
 
               <Link to={createPageUrl("PurchaseCenter")}>
-                <Button className="w-full h-full bg-white text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">Salon Coaching</span>
+                <Button className="w-full h-full bg-[#6E4F7D] text-white hover:bg-[#5A3F67] py-6 flex flex-col items-center justify-center gap-2">
+                  <span className="text-sm font-normal">Salon Group</span>
                   <span className="text-lg font-bold">$1,995</span>
                 </Button>
               </Link>
 
-              <Link to={createPageUrl("PrivateSessions")}>
-                <Button className="w-full h-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">Couture Coaching</span>
+              <Link to={createPageUrl("CleaningOutYourCloset")}>
+                <Button className="w-full h-full bg-white text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
+                  <span className="text-sm font-normal">Couture (Private 1:1)</span>
                   <span className="text-lg font-bold">$7,995</span>
                 </Button>
               </Link>
