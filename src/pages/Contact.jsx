@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Send, Mail, CheckCircle } from "lucide-react";
+import { Send, Mail, CheckCircle, ArrowRight } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 
 export default function Contact() {
