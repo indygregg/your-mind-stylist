@@ -52,41 +52,22 @@ export default function Contact() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    // Form submission logic would go here
+    console.log("Form submitted:", formData);
+    setSubmitted(true);
     
-    try {
-      // Send email notification to Roberta
-      await base44.integrations.Core.SendEmail({
-        from_name: "Your Mind Stylist Contact Form",
-        to: "roberta@yourmindstylist.com",
-        subject: `New Contact Form Submission from ${formData.name}`,
-        body: `
-          <h2>New Contact Form Submission</h2>
-          <p><strong>Name:</strong> ${formData.name}</p>
-          <p><strong>Email:</strong> ${formData.email}</p>
-          <p><strong>Phone:</strong> ${formData.phone}</p>
-          <p><strong>Message:</strong></p>
-          <p>${formData.message}</p>
-        `
+    // Reset form after a delay
+    setTimeout(() => {
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: ""
       });
-
-      setSubmitted(true);
-      
-      // Reset form after a delay
-      setTimeout(() => {
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          message: ""
-        });
-        setSubmitted(false);
-      }, 5000);
-    } catch (error) {
-      console.error("Error sending contact form:", error);
-      alert("There was an error sending your message. Please try again or email directly.");
-    }
+      setSubmitted(false);
+    }, 5000);
   };
 
   return (
