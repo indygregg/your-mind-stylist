@@ -360,16 +360,17 @@ export default function Consultations() {
                       contentType="rich_text"
                     />
                   </div>
-                  <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10">
-                    <Download size={16} className="mr-2" />
-                    <CmsText 
-                      contentKey="consultations.step2.button" 
-                      page="Consultations"
-                      blockTitle="Step 2 Button"
-                      fallback="Download Questionnaire" 
-                      contentType="short_text"
-                    />
-                  </Button>
+                  <Link to={createPageUrl("ConsultationQuestionnaire")}>
+                    <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10">
+                      <CmsText 
+                        contentKey="consultations.step2.button" 
+                        page="Consultations"
+                        blockTitle="Step 2 Button"
+                        fallback="Please complete form" 
+                        contentType="short_text"
+                      />
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </CardContent>

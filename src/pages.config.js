@@ -119,6 +119,9 @@ import WorkWithMe from './pages/WorkWithMe';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import Consultations from './pages/Consultations';
+import ConsultationQuestionnaire from './pages/ConsultationQuestionnaire';
+import ConsultationSubmitted from './pages/ConsultationSubmitted';
+import ManagerIntakeReview from './pages/ManagerIntakeReview';
 import __Layout from './Layout.jsx';
 
 
@@ -244,6 +247,9 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "Consultations": Consultations,
+    "ConsultationQuestionnaire": ConsultationQuestionnaire,
+    "ConsultationSubmitted": ConsultationSubmitted,
+    "ManagerIntakeReview": ManagerIntakeReview,
 }
 
 export const pagesConfig = {
