@@ -274,7 +274,7 @@ export default function Contact() {
               />
             </p>
 
-            <div className="space-y-4">
+            <div className="space-y-4 mb-8">
               <div className="flex items-start gap-4">
                 <Mail size={20} className="text-[#D8B46B] mt-1" />
                 <div>
@@ -290,6 +290,19 @@ export default function Contact() {
                   <p className="text-[#2B2725]/70">612-839-2295</p>
                 </div>
               </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg border border-[#E4D9C4]">
+              <p className="text-[#2B2725]/80 mb-4">
+                Ready to learn more about working together?
+              </p>
+              <Link
+                to={createPageUrl("Consultations")}
+                className="inline-flex items-center gap-2 text-[#D8B46B] hover:text-[#1E3A32] transition-colors font-medium"
+              >
+                <ArrowRight size={16} />
+                Learn About Initial Consultations
+              </Link>
             </div>
           </motion.div>
         </div>

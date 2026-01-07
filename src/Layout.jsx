@@ -83,6 +83,7 @@ export default function Layout({ children, currentPageName }) {
       category: "Transformational Programs",
       items: [
         { name: "All Programs & Pricing", page: "Programs", description: "Explore all offerings" },
+        { name: "Initial Consultation", page: "Consultations", description: "Start your journey" },
         { name: "LENS™", page: "LENS", description: "Flagship Mind Styling framework" },
         { name: "Cleaning Out Your Closet", page: "CleaningOutYourCloset", description: "One-on-one hypnosis work" },
         { name: "Pocket Mindset™", page: "PocketVisualization", description: "Daily guided experiences" },
