@@ -24,9 +24,7 @@ export default function PublicPagesList() {
     // Services - Professional Development
     { name: "Hypnosis Training", slug: "LearnHypnosis", category: "Professional Development" },
     { name: "Speaking & Training", slug: "SpeakingTraining", category: "Professional Development" },
-    { name: "Private Sessions", slug: "PrivateSessions", category: "Professional Development" },
-    { name: "Inner Rehearsal™", slug: "InnerRehearsal", category: "Professional Development" },
-    { name: "Certification", slug: "Certification", category: "Professional Development" },
+    { name: "LENS™", slug: "LENS", category: "Professional Development" },
     
     // Legal Pages
     { name: "Privacy Policy", slug: "LegalPage?slug=privacy-policy", category: "Legal" },
