@@ -358,8 +358,8 @@ export default function Contact() {
               to={createPageUrl("Bookings")}
               className="group inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
             >
-              Schedule Your Free Consultation
-              <ArrowRight size={16} />
+              Schedule Your Complimentary Consultation
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
         </div>

@@ -588,25 +588,34 @@ export default function Bookings() {
         {/* CTA Section - Only show on step 1 */}
         {step === 1 && (
           <section className="py-16 px-6 bg-[#1E3A32] text-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
-              <CmsText 
-                contentKey="bookings.cta.text" 
-                page="Bookings"
-                blockTitle="Bottom CTA Text"
-                fallback="Ready to begin? Schedule your complimentary consultation to explore how we'll work together." 
-                contentType="rich_text"
-              />
-            </p>
-            <Link
-              to={createPageUrl("Contact")}
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
-            >
-              Contact Roberta
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </section>
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-6">
+                <CmsText 
+                  contentKey="bookings.cta.title" 
+                  page="Bookings"
+                  blockTitle="Bottom CTA Title"
+                  fallback="Questions About Booking?" 
+                  contentType="short_text"
+                />
+              </h2>
+              <p className="text-lg text-white/90 max-w-2xl mx-auto leading-relaxed mb-8">
+                <CmsText 
+                  contentKey="bookings.cta.text" 
+                  page="Bookings"
+                  blockTitle="Bottom CTA Text"
+                  fallback="If you'd like to discuss which session is right for you before booking, feel free to reach out." 
+                  contentType="rich_text"
+                />
+              </p>
+              <Link
+                to={createPageUrl("Contact")}
+                className="group inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
+              >
+                Contact Roberta
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </section>
         )}
       </div>
     </>
