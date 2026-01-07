@@ -85,7 +85,6 @@ import PocketVisualization from './pages/PocketVisualization';
 import PocketVisualizationPurchase from './pages/PocketVisualizationPurchase';
 import Podcast from './pages/Podcast';
 import Pricing from './pages/Pricing';
-import PrivateSessions from './pages/PrivateSessions';
 import PrivateSessionsPurchase from './pages/PrivateSessionsPurchase';
 import ProductPage from './pages/ProductPage';
 import ProfileSettings from './pages/ProfileSettings';
@@ -209,7 +208,6 @@ export const PAGES = {
     "PocketVisualizationPurchase": PocketVisualizationPurchase,
     "Podcast": Podcast,
     "Pricing": Pricing,
-    "PrivateSessions": PrivateSessions,
     "PrivateSessionsPurchase": PrivateSessionsPurchase,
     "ProductPage": ProductPage,
     "ProfileSettings": ProfileSettings,

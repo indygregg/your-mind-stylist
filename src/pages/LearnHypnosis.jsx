@@ -416,7 +416,7 @@ export default function LearnHypnosis() {
       </section>
 
       {/* Section 6 — The Mind Stylist Hypnosis Method™ */}
-      <section className="py-24 bg-gradient-to-br from-[#6E4F7D] to-[#1E3A32]">
+      <section className="py-24 bg-gradient-to-br from-[#6E4F7D] to-[#1E3A32] text-white">
         <div className="max-w-5xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -425,7 +425,7 @@ export default function LearnHypnosis() {
             className="text-center"
           >
             <Sparkles size={40} className="text-[#D8B46B] mx-auto mb-6" />
-            <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-8">
+            <h2 className="font-serif text-3xl md:text-4xl text-white mb-8">
               <CmsText 
                 contentKey="hypnosis.method.title"
                 page="LearnHypnosis"
