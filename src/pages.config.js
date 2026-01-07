@@ -66,6 +66,7 @@ import ManagerCourseAnalytics from './pages/ManagerCourseAnalytics';
 import ManagerDashboard from './pages/ManagerDashboard';
 import ManagerEmailSequences from './pages/ManagerEmailSequences';
 import ManagerEmailTemplates from './pages/ManagerEmailTemplates';
+import ManagerLeadImport from './pages/ManagerLeadImport';
 import ManagerMailerLite from './pages/ManagerMailerLite';
 import ManagerMasterclass from './pages/ManagerMasterclass';
 import ManagerPaymentPlans from './pages/ManagerPaymentPlans';
@@ -117,7 +118,7 @@ import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
-import ManagerLeadImport from './pages/ManagerLeadImport';
+import Consultations from './pages/Consultations';
 import __Layout from './Layout.jsx';
 
 
@@ -190,6 +191,7 @@ export const PAGES = {
     "ManagerDashboard": ManagerDashboard,
     "ManagerEmailSequences": ManagerEmailSequences,
     "ManagerEmailTemplates": ManagerEmailTemplates,
+    "ManagerLeadImport": ManagerLeadImport,
     "ManagerMailerLite": ManagerMailerLite,
     "ManagerMasterclass": ManagerMasterclass,
     "ManagerPaymentPlans": ManagerPaymentPlans,
@@ -241,7 +243,7 @@ export const PAGES = {
     "WorkWithMe": WorkWithMe,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
-    "ManagerLeadImport": ManagerLeadImport,
+    "Consultations": Consultations,
 }
 
 export const pagesConfig = {
