@@ -10,10 +10,11 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Users, TrendingUp, Target, DollarSign, Search, Filter, Mail, Phone, Calendar, MessageSquare, CheckCircle2, Clock } from "lucide-react";
+import { Users, TrendingUp, Target, DollarSign, Search, Filter, Mail, Phone, Calendar, MessageSquare, CheckCircle2, Clock, Upload } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import SendSMSDialog from "../components/crm/SendSMSDialog";
+import LeadImport from "../components/manager/LeadImport";
 
 export default function ManagerCRM() {
   const queryClient = useQueryClient();
@@ -26,6 +27,7 @@ export default function ManagerCRM() {
   const [newStage, setNewStage] = useState("");
   const [stageNotes, setStageNotes] = useState("");
   const [smsDialogOpen, setSmsDialogOpen] = useState(false);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
 
   // Fetch leads
   const { data: leads = [], isLoading } = useQuery({
@@ -123,9 +125,18 @@ export default function ManagerCRM() {
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">CRM & Lead Management</h1>
-          <p className="text-[#2B2725]/70">Track leads, manage pipeline, and convert prospects</p>
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">CRM & Lead Management</h1>
+            <p className="text-[#2B2725]/70">Track leads, manage pipeline, and convert prospects</p>
+          </div>
+          <Button
+            onClick={() => setImportDialogOpen(true)}
+            className="bg-[#D8B46B] hover:bg-[#D8B46B]/90 text-[#1E3A32]"
+          >
+            <Upload size={16} className="mr-2" />
+            Import Leads
+          </Button>
         </div>
 
         {/* Stats */}
@@ -669,6 +680,16 @@ export default function ManagerCRM() {
           onSuccess={() => {
             queryClient.invalidateQueries({ queryKey: ["leadActivities"] });
             queryClient.invalidateQueries({ queryKey: ["leads"] });
+          }}
+        />
+
+        {/* Import Dialog */}
+        <LeadImport
+          open={importDialogOpen}
+          onOpenChange={setImportDialogOpen}
+          onSuccess={() => {
+            queryClient.invalidateQueries({ queryKey: ["leads"] });
+            setImportDialogOpen(false);
           }}
         />
       </div>
