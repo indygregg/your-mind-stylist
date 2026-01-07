@@ -695,7 +695,7 @@ export default function ManagerProducts() {
               </div>
 
               <div>
-                <Label>Price (USD)</Label>
+                <Label>Default Price (USD)</Label>
                 <Input
                   type="number"
                   value={formData.price}
@@ -703,6 +703,9 @@ export default function ManagerProducts() {
                   placeholder="1995.00"
                   step="0.01"
                 />
+                <p className="text-xs text-[#2B2725]/60 mt-1">
+                  Primary price. Add multiple options below.
+                </p>
               </div>
 
               {formData.type === "subscription" && (
@@ -723,6 +726,26 @@ export default function ManagerProducts() {
                 </div>
               )}
             </div>
+
+            {/* Multiple Payment Options */}
+            {editingProduct && (
+              <div className="border border-[#E4D9C4] rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <Label>Payment Options</Label>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => window.open(createPageUrl(`ManagerPaymentPlans?product_id=${editingProduct.id}`), '_blank')}
+                  >
+                    <Plus size={14} className="mr-1" />
+                    Manage Payment Plans
+                  </Button>
+                </div>
+                <p className="text-xs text-[#2B2725]/60">
+                  Add multiple payment options (e.g., pay-in-full vs 3-month plan). Click "Manage Payment Plans" to set up installment options.
+                </p>
+              </div>
+            )}
 
             {/* Features */}
             <div>

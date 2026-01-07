@@ -117,6 +117,7 @@ import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
+import ManagerLeadImport from './pages/ManagerLeadImport';
 import __Layout from './Layout.jsx';
 
 
@@ -240,6 +241,7 @@ export const PAGES = {
     "WorkWithMe": WorkWithMe,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
+    "ManagerLeadImport": ManagerLeadImport,
 }
 
 export const pagesConfig = {

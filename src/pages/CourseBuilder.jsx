@@ -9,6 +9,7 @@ import CourseBasicsForm from "../components/courses/builder/CourseBasicsForm";
 import CurriculumBuilder from "../components/courses/builder/CurriculumBuilder";
 import LessonEditor from "../components/courses/builder/LessonEditor";
 import CourseSettings from "../components/courses/builder/CourseSettings";
+import CourseSettingsHelp from "../components/courses/builder/CourseSettingsHelp";
 import AICourseGenerator from "../components/courses/builder/AICourseGenerator";
 import CourseTemplates from "../components/courses/builder/CourseTemplates";
 import { createPageUrl } from "../utils";
@@ -454,7 +455,10 @@ export default function CourseBuilder() {
                 />
               )}
               {step === 4 && (
-                <CourseSettings formData={formData} onChange={setFormData} />
+                <div className="space-y-6">
+                  <CourseSettings formData={formData} onChange={setFormData} />
+                  <CourseSettingsHelp />
+                </div>
               )}
             </motion.div>
           </AnimatePresence>
