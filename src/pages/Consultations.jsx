@@ -7,13 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, Phone, Calendar, FileText, Video, Download, AlertCircle } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
+import VideoEmbed from "../components/cms/VideoEmbed";
 
 export default function Consultations() {
-  // Extract video ID from CMS URL or use default
-  const getYouTubeEmbedUrl = (url) => {
-    const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)?.[1];
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
-  };
 
   return (
     <div className="bg-[#F9F5EF]">
@@ -79,27 +75,12 @@ export default function Consultations() {
               className="relative"
             >
               <div className="aspect-video rounded-lg overflow-hidden shadow-2xl">
-                <CmsText 
-                  contentKey="consultations.hero.video_url" 
+                <VideoEmbed
+                  contentKey="consultations.hero.video_url"
                   page="Consultations"
                   blockTitle="Hero Video URL"
-                  fallback="https://www.youtube.com/watch?v=Pue6CXp5FeE" 
-                  contentType="short_text"
-                  as="div"
-                >
-                  {(videoUrl) => (
-                    <iframe
-                      width="100%"
-                      height="100%"
-                      src={getYouTubeEmbedUrl(videoUrl)}
-                      title="Consultation Video"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      className="w-full h-full"
-                    />
-                  )}
-                </CmsText>
+                  fallback="https://www.youtube.com/watch?v=Pue6CXp5FeE"
+                />
               </div>
             </motion.div>
           </div>
