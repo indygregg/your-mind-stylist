@@ -78,46 +78,106 @@ export default function CourseBuilder() {
       let savedCourse;
       if (courseId) {
         savedCourse = await base44.entities.Course.update(courseId, courseData);
-      } else {
-        savedCourse = await base44.entities.Course.create(courseData);
-      }
-
-      // Save modules and lessons
-      for (const module of modules) {
-        const moduleData = {
-          course_id: savedCourse.id,
-          title: module.title,
-          description: module.description,
-          order: module.order,
-        };
-
-        let savedModule;
-        if (module.id.startsWith("temp-")) {
-          savedModule = await base44.entities.Module.create(moduleData);
-        } else {
-          savedModule = await base44.entities.Module.update(module.id, moduleData);
-        }
-
-        // Save lessons
-        for (const lesson of module.lessons || []) {
-          const lessonData = {
-            module_id: savedModule.id,
-            title: lesson.title,
-            type: lesson.type,
-            content: lesson.content,
-            media_url: lesson.media_url,
-            embed_url: lesson.embed_url,
-            duration: lesson.duration,
-            key_takeaways: lesson.key_takeaways,
-            resources: lesson.resources,
-            attached_resource_ids: lesson.attached_resource_ids || [],
-            order: lesson.order,
+        
+        // Get existing modules to track what should be deleted
+        const existingModules = await base44.entities.Module.filter({ course_id: courseId });
+        const moduleIdsToKeep = new Set();
+        
+        // Save modules and lessons
+        for (const module of modules) {
+          const moduleData = {
+            course_id: savedCourse.id,
+            title: module.title,
+            description: module.description,
+            order: module.order,
           };
 
-          if (lesson.id.startsWith("temp-")) {
-            await base44.entities.Lesson.create(lessonData);
+          let savedModule;
+          if (module.id.startsWith("temp-")) {
+            savedModule = await base44.entities.Module.create(moduleData);
           } else {
-            await base44.entities.Lesson.update(lesson.id, lessonData);
+            savedModule = await base44.entities.Module.update(module.id, moduleData);
+            moduleIdsToKeep.add(module.id);
+          }
+
+          // Get existing lessons for this module
+          const existingLessons = await base44.entities.Lesson.filter({ module_id: savedModule.id });
+          const lessonIdsToKeep = new Set();
+
+          // Save lessons
+          for (const lesson of module.lessons || []) {
+            const lessonData = {
+              module_id: savedModule.id,
+              title: lesson.title,
+              type: lesson.type,
+              content: lesson.content,
+              media_url: lesson.media_url,
+              embed_url: lesson.embed_url,
+              duration: lesson.duration,
+              key_takeaways: lesson.key_takeaways,
+              resources: lesson.resources,
+              attached_resource_ids: lesson.attached_resource_ids || [],
+              order: lesson.order,
+            };
+
+            if (lesson.id.startsWith("temp-")) {
+              await base44.entities.Lesson.create(lessonData);
+            } else {
+              await base44.entities.Lesson.update(lesson.id, lessonData);
+              lessonIdsToKeep.add(lesson.id);
+            }
+          }
+
+          // Delete orphaned lessons
+          for (const existingLesson of existingLessons) {
+            if (!lessonIdsToKeep.has(existingLesson.id)) {
+              await base44.entities.Lesson.delete(existingLesson.id);
+            }
+          }
+        }
+
+        // Delete orphaned modules
+        for (const existingModule of existingModules) {
+          if (!moduleIdsToKeep.has(existingModule.id)) {
+            // Delete all lessons in this module first
+            const orphanedLessons = await base44.entities.Lesson.filter({ module_id: existingModule.id });
+            for (const lesson of orphanedLessons) {
+              await base44.entities.Lesson.delete(lesson.id);
+            }
+            await base44.entities.Module.delete(existingModule.id);
+          }
+        }
+      } else {
+        savedCourse = await base44.entities.Course.create(courseData);
+        
+        // Save modules and lessons for new course
+        for (const module of modules) {
+          const moduleData = {
+            course_id: savedCourse.id,
+            title: module.title,
+            description: module.description,
+            order: module.order,
+          };
+
+          const savedModule = await base44.entities.Module.create(moduleData);
+
+          // Save lessons
+          for (const lesson of module.lessons || []) {
+            const lessonData = {
+              module_id: savedModule.id,
+              title: lesson.title,
+              type: lesson.type,
+              content: lesson.content,
+              media_url: lesson.media_url,
+              embed_url: lesson.embed_url,
+              duration: lesson.duration,
+              key_takeaways: lesson.key_takeaways,
+              resources: lesson.resources,
+              attached_resource_ids: lesson.attached_resource_ids || [],
+              order: lesson.order,
+            };
+
+            await base44.entities.Lesson.create(lessonData);
           }
         }
       }
