@@ -173,12 +173,20 @@ export default function Layout({ children, currentPageName }) {
             <p className={`text-xs tracking-[0.2em] ${textColorOpacity} uppercase font-light`}>
               Las Vegas • Emotional Intelligence • Mind Styling • Hypnosis • Professional Development
             </p>
-            <Link
-              to={createPageUrl("Bookings")}
-              className={`text-xs tracking-wide ${hasDarkHero ? 'text-white hover:text-[#D8B46B]' : 'text-[#1E3A32] hover:text-[#D8B46B]'} transition-colors font-medium`}
-            >
-              Schedule Your Complimentary Consultation
-            </Link>
+            <div className="flex flex-col items-end gap-1">
+              <Link
+                to={createPageUrl("Bookings")}
+                className={`text-xs tracking-wide ${hasDarkHero ? 'text-white hover:text-[#D8B46B]' : 'text-[#1E3A32] hover:text-[#D8B46B]'} transition-colors font-medium`}
+              >
+                Schedule Your Complimentary Consultation
+              </Link>
+              <Link
+                to={createPageUrl("Consultations")}
+                className={`text-[9px] ${hasDarkHero ? 'text-white/60 hover:text-white/80' : 'text-[#1E3A32]/60 hover:text-[#1E3A32]/80'} transition-colors`}
+              >
+                (Complete intake form before first session)
+              </Link>
+            </div>
           </div>
         </div>
 

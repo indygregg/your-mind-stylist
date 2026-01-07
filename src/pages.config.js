@@ -25,6 +25,9 @@ import Certification from './pages/Certification';
 import CleaningOutYourCloset from './pages/CleaningOutYourCloset';
 import ClientBookings from './pages/ClientBookings';
 import ClientPortal from './pages/ClientPortal';
+import ConsultationQuestionnaire from './pages/ConsultationQuestionnaire';
+import ConsultationSubmitted from './pages/ConsultationSubmitted';
+import Consultations from './pages/Consultations';
 import Contact from './pages/Contact';
 import ContentStudio from './pages/ContentStudio';
 import CourseBuilder from './pages/CourseBuilder';
@@ -66,6 +69,7 @@ import ManagerCourseAnalytics from './pages/ManagerCourseAnalytics';
 import ManagerDashboard from './pages/ManagerDashboard';
 import ManagerEmailSequences from './pages/ManagerEmailSequences';
 import ManagerEmailTemplates from './pages/ManagerEmailTemplates';
+import ManagerIntakeReview from './pages/ManagerIntakeReview';
 import ManagerLeadImport from './pages/ManagerLeadImport';
 import ManagerMailerLite from './pages/ManagerMailerLite';
 import ManagerMasterclass from './pages/ManagerMasterclass';
@@ -118,10 +122,6 @@ import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
-import Consultations from './pages/Consultations';
-import ConsultationQuestionnaire from './pages/ConsultationQuestionnaire';
-import ConsultationSubmitted from './pages/ConsultationSubmitted';
-import ManagerIntakeReview from './pages/ManagerIntakeReview';
 import __Layout from './Layout.jsx';
 
 
@@ -153,6 +153,9 @@ export const PAGES = {
     "CleaningOutYourCloset": CleaningOutYourCloset,
     "ClientBookings": ClientBookings,
     "ClientPortal": ClientPortal,
+    "ConsultationQuestionnaire": ConsultationQuestionnaire,
+    "ConsultationSubmitted": ConsultationSubmitted,
+    "Consultations": Consultations,
     "Contact": Contact,
     "ContentStudio": ContentStudio,
     "CourseBuilder": CourseBuilder,
@@ -194,6 +197,7 @@ export const PAGES = {
     "ManagerDashboard": ManagerDashboard,
     "ManagerEmailSequences": ManagerEmailSequences,
     "ManagerEmailTemplates": ManagerEmailTemplates,
+    "ManagerIntakeReview": ManagerIntakeReview,
     "ManagerLeadImport": ManagerLeadImport,
     "ManagerMailerLite": ManagerMailerLite,
     "ManagerMasterclass": ManagerMasterclass,
@@ -246,10 +250,6 @@ export const PAGES = {
     "WorkWithMe": WorkWithMe,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
-    "Consultations": Consultations,
-    "ConsultationQuestionnaire": ConsultationQuestionnaire,
-    "ConsultationSubmitted": ConsultationSubmitted,
-    "ManagerIntakeReview": ManagerIntakeReview,
 }
 
 export const pagesConfig = {
