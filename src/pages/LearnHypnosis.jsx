@@ -346,74 +346,7 @@ export default function LearnHypnosis() {
         </div>
       </section>
 
-      {/* Section 5 — Training Tracks */}
-      <section className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <div className="text-center mb-12">
-              <Award size={40} className="text-[#D8B46B] mx-auto mb-4" />
-              <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
-                <CmsText 
-                  contentKey="hypnosis.tracks.title"
-                  page="LearnHypnosis"
-                  blockTitle="Tracks Section Title"
-                  fallback="Training Tracks"
-                  contentType="short_text"
-                />
-              </h2>
-            </div>
 
-            <div className="max-w-2xl mx-auto">
-              {/* Certification Track */}
-              <div className="bg-[#1E3A32] p-8 text-[#F9F5EF] relative">
-                <div className="absolute top-6 right-6 bg-[#D8B46B] text-[#1E3A32] px-3 py-1 text-xs uppercase tracking-wide">
-                  Recommended
-                </div>
-                <h3 className="font-serif text-2xl mb-4">
-                  <CmsText 
-                    contentKey="hypnosis.tracks.cert.title"
-                    page="LearnHypnosis"
-                    blockTitle="Certification Track Title"
-                    fallback="Certification Track"
-                    contentType="short_text"
-                  />
-                </h3>
-                <p className="text-[#F9F5EF]/80 mb-6">
-                  <CmsText 
-                    contentKey="hypnosis.tracks.cert.description"
-                    page="LearnHypnosis"
-                    blockTitle="Certification Track Description"
-                    fallback="For those who want to practice hypnosis professionally."
-                    contentType="rich_text"
-                  />
-                </p>
-
-                <div className="space-y-3 mb-8">
-                  <p className="text-sm font-medium text-[#D8B46B] mb-3">Includes:</p>
-                  <CmsText 
-                    contentKey="hypnosis.tracks.cert.features"
-                    page="LearnHypnosis"
-                    blockTitle="Certification Features"
-                    fallback={`${["Full course access", "Exams & supervised practice", "Practitioner certificate", "Listing in Mind Stylist network (optional)"].map(feature => `<div class='flex items-start gap-3'><svg class='lucide lucide-check-circle' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='flex-shrink: 0; margin-top: 4px;'><path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/><polyline points='22 4 12 14.01 9 11.01'/></svg><p class='text-[#F9F5EF]/90'>${feature}</p></div>`).join('')}`}
-                    contentType="rich_text"
-                  />
-                </div>
-
-                <Link
-                  to={createPageUrl("Contact")}
-                  className="block w-full text-center px-6 py-3 bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] transition-colors"
-                >
-                  Begin Your Training →
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* Section 6 — The Mind Stylist Hypnosis Method™ */}
       <section className="py-24 bg-gradient-to-br from-[#6E4F7D] to-[#1E3A32] text-white">

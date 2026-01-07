@@ -182,17 +182,17 @@ export default function PocketVisualization() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to={createPageUrl("PocketVisualizationPurchase")}
+                to={createPageUrl("PurchaseCenter")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                Buy Pocket Mindset
+                $7/mo or $70/yr
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
                 />
               </Link>
               <Link
-                to={createPageUrl("Contact")}
+                to={createPageUrl("Bookings")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
               >
                 Schedule a Consultation
@@ -558,10 +558,10 @@ export default function PocketVisualization() {
 
             <div className="text-center">
               <Link
-                to={createPageUrl("PocketVisualizationPurchase")}
+                to={createPageUrl("PurchaseCenter")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                Buy Pocket Mindset
+                $7/mo or $70/yr
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
@@ -653,10 +653,10 @@ export default function PocketVisualization() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to={createPageUrl("PocketVisualizationPurchase")}
+                to={createPageUrl("PurchaseCenter")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
               >
-                Buy Pocket Mindset
+                $7/mo or $70/yr
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
