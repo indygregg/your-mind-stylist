@@ -23,6 +23,7 @@ export default function ResourceUploadModal({ onClose }) {
     "Audio Sessions",
     "Videos",
     "Templates",
+    "Graphics",
     "Tools",
     "Other"
   ];

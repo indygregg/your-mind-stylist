@@ -56,6 +56,7 @@ export default function ManagerResources() {
     "Audio Sessions",
     "Videos",
     "Templates",
+    "Graphics",
     "Tools",
     "Other"
   ];

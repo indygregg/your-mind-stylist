@@ -38,6 +38,7 @@ export default function ResourceEditModal({ resource, onClose }) {
     "Audio Sessions",
     "Videos",
     "Templates",
+    "Graphics",
     "Tools",
     "Other"
   ];
