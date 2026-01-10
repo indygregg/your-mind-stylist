@@ -17,8 +17,13 @@ export default function ZoomConnect() {
     }, []);
 
     const loadUser = async () => {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
+        try {
+            const currentUser = await base44.auth.me();
+            setUser(currentUser);
+        } catch (error) {
+            console.error('Auth error:', error);
+            setUser(null);
+        }
     };
 
     const handleConnect = async () => {
@@ -50,8 +55,22 @@ export default function ZoomConnect() {
         }
     };
 
-    if (!user) {
+    if (user === undefined) {
         return <div className="p-6">Loading...</div>;
+    }
+
+    if (user === null) {
+        return (
+            <div className="min-h-screen bg-[#F9F5EF] py-12 px-6 flex items-center justify-center">
+                <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-8">
+                    <div className="flex items-center gap-3 mb-4">
+                        <XCircle size={24} className="text-red-600" />
+                        <h1 className="text-xl font-serif text-[#1E3A32]">Authentication Required</h1>
+                    </div>
+                    <p className="text-[#2B2725]/70">Please log in to connect your Zoom account.</p>
+                </div>
+            </div>
+        );
     }
 
     return (
