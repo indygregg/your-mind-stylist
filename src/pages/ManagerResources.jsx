@@ -225,7 +225,7 @@ export default function ManagerResources() {
         ) : view === "grid" ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filteredResources.map((resource) => {
-              const Icon = getFileIcon(resource.file_type);
+              const Icon = getFileIcon(resource.resource_type);
               return (
                 <motion.div
                   key={resource.id}
@@ -307,7 +307,7 @@ export default function ManagerResources() {
         ) : (
           <div className="space-y-2">
             {filteredResources.map((resource) => {
-              const Icon = getFileIcon(resource.file_type);
+              const Icon = getFileIcon(resource.resource_type);
               return (
                 <Card key={resource.id} className="p-4 hover:shadow-md transition-shadow">
                   <div className="flex items-center gap-4">
