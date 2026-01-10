@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function ResourcePreviewModal({ resource, onClose }) {
   const renderPreview = () => {
-    if (resource.file_type === "image") {
+    if (resource.resource_type === "worksheet" || resource.file_url?.match(/\.(jpg|jpeg|png|gif|svg|webp)$/i)) {
       return (
         <img
           src={resource.file_url}
@@ -15,7 +15,7 @@ export default function ResourcePreviewModal({ resource, onClose }) {
       );
     }
 
-    if (resource.file_type === "pdf") {
+    if (resource.resource_type === "pdf") {
       return (
         <iframe
           src={resource.file_url}
@@ -25,7 +25,7 @@ export default function ResourcePreviewModal({ resource, onClose }) {
       );
     }
 
-    if (resource.file_type === "video") {
+    if (resource.resource_type === "video") {
       return (
         <video
           controls
@@ -37,7 +37,7 @@ export default function ResourcePreviewModal({ resource, onClose }) {
       );
     }
 
-    if (resource.file_type === "audio") {
+    if (resource.resource_type === "audio") {
       return (
         <div className="p-12 text-center">
           <audio controls className="w-full max-w-md mx-auto" src={resource.file_url}>

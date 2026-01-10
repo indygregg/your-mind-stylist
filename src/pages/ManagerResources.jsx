@@ -41,33 +41,32 @@ export default function ManagerResources() {
   const getFileIcon = (type) => {
     const icons = {
       pdf: FileText,
-      image: Image,
       video: Video,
       audio: Music,
-      document: FileText,
-      other: File,
+      text: FileText,
+      link: LinkIcon,
+      worksheet: FileText,
     };
     return icons[type] || File;
   };
 
   const categories = [
-    "Worksheet",
-    "Guide",
-    "Template",
-    "Audio File",
-    "Video Recording",
-    "Presentation",
-    "Reference",
+    "Worksheets",
+    "Guides",
+    "Audio Sessions",
+    "Videos",
+    "Templates",
+    "Tools",
     "Other"
   ];
 
-  const types = ["pdf", "image", "video", "audio", "document", "other"];
+  const types = ["pdf", "video", "audio", "text", "link", "worksheet"];
 
   const filteredResources = resources.filter((resource) => {
     const matchesSearch = resource.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          resource.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = filterCategory === "all" || resource.category === filterCategory;
-    const matchesType = filterType === "all" || resource.file_type === filterType;
+    const matchesType = filterType === "all" || resource.resource_type === filterType;
     return matchesSearch && matchesCategory && matchesType;
   });
 
@@ -189,19 +188,19 @@ export default function ManagerResources() {
           <Card className="p-4">
             <p className="text-sm text-[#2B2725]/60 mb-1">PDFs</p>
             <p className="text-2xl font-bold text-[#1E3A32]">
-              {resources.filter(r => r.file_type === "pdf").length}
+              {resources.filter(r => r.resource_type === "pdf").length}
             </p>
           </Card>
           <Card className="p-4">
-            <p className="text-sm text-[#2B2725]/60 mb-1">Images</p>
+            <p className="text-sm text-[#2B2725]/60 mb-1">Worksheets</p>
             <p className="text-2xl font-bold text-[#1E3A32]">
-              {resources.filter(r => r.file_type === "image").length}
+              {resources.filter(r => r.resource_type === "worksheet").length}
             </p>
           </Card>
           <Card className="p-4">
             <p className="text-sm text-[#2B2725]/60 mb-1">Videos</p>
             <p className="text-2xl font-bold text-[#1E3A32]">
-              {resources.filter(r => r.file_type === "video").length}
+              {resources.filter(r => r.resource_type === "video").length}
             </p>
           </Card>
         </div>
@@ -277,7 +276,7 @@ export default function ManagerResources() {
                         </Badge>
                       )}
                       <Badge className="bg-[#D8B46B]/20 text-[#1E3A32] text-xs">
-                        {resource.file_type}
+                        {resource.resource_type}
                       </Badge>
                     </div>
                     <div className="flex gap-2">
@@ -324,7 +323,7 @@ export default function ManagerResources() {
                         <Badge variant="outline">{resource.category}</Badge>
                       )}
                       <Badge className="bg-[#D8B46B]/20 text-[#1E3A32]">
-                        {resource.file_type}
+                        {resource.resource_type}
                       </Badge>
                     </div>
                     <div className="flex gap-1">

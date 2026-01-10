@@ -18,13 +18,12 @@ export default function ResourceUploadModal({ onClose }) {
   const queryClient = useQueryClient();
 
   const categories = [
-    "Worksheet",
-    "Guide",
-    "Template",
-    "Audio File",
-    "Video Recording",
-    "Presentation",
-    "Reference",
+    "Worksheets",
+    "Guides",
+    "Audio Sessions",
+    "Videos",
+    "Templates",
+    "Tools",
     "Other"
   ];
 
@@ -33,11 +32,10 @@ export default function ResourceUploadModal({ onClose }) {
     const name = file.name.toLowerCase();
     
     if (type.includes("pdf")) return "pdf";
-    if (type.includes("image") || name.endsWith('.svg')) return "image";
     if (type.includes("video")) return "video";
     if (type.includes("audio")) return "audio";
-    if (type.includes("document") || type.includes("word") || type.includes("text")) return "document";
-    return "other";
+    if (type.includes("text") || name.endsWith('.txt')) return "text";
+    return "worksheet"; // Default for images and other files
   };
 
   const handleFileSelect = (e) => {
@@ -47,7 +45,7 @@ export default function ResourceUploadModal({ onClose }) {
       title: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
       description: "",
       category: "Other",
-      file_type: getFileType(file),
+      resource_type: getFileType(file),
       status: "pending"
     }));
     setFiles(fileObjects);
@@ -69,13 +67,15 @@ export default function ResourceUploadModal({ onClose }) {
         const { file_url } = await base44.integrations.Core.UploadFile({ file: fileData.file });
         
         // Create resource record
+        const fileSizeInMB = (fileData.file.size / 1024 / 1024).toFixed(2);
         await base44.entities.Resource.create({
           title: fileData.title,
           description: fileData.description,
           category: fileData.category,
-          file_type: fileData.file_type,
+          resource_type: fileData.resource_type,
           file_url: file_url,
-          file_size: fileData.file.size,
+          file_size: `${fileSizeInMB} MB`,
+          access_level: "public",
           status: "published"
         });
         
@@ -165,7 +165,7 @@ export default function ResourceUploadModal({ onClose }) {
                           {fileData.file.name}
                         </p>
                         <p className="text-xs text-[#2B2725]/60">
-                          {(fileData.file.size / 1024 / 1024).toFixed(2)} MB • {fileData.file_type}
+                          {(fileData.file.size / 1024 / 1024).toFixed(2)} MB • {fileData.resource_type}
                         </p>
                       </div>
                       {!uploading && (

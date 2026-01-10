@@ -33,13 +33,12 @@ export default function ResourceEditModal({ resource, onClose }) {
   };
 
   const categories = [
-    "Worksheet",
-    "Guide",
-    "Template",
-    "Audio File",
-    "Video Recording",
-    "Presentation",
-    "Reference",
+    "Worksheets",
+    "Guides",
+    "Audio Sessions",
+    "Videos",
+    "Templates",
+    "Tools",
     "Other"
   ];
 
