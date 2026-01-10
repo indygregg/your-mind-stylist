@@ -26,11 +26,43 @@ export default function VideoPlayer({ src, embedUrl, onProgressUpdate, lastPosit
     return () => clearInterval(interval);
   }, [lastPosition, onProgressUpdate]);
 
+  // Convert various video URLs to embed format
+  const getEmbedUrl = (url) => {
+    if (!url) return null;
+
+    // Already an embed URL
+    if (url.includes('/embed/') || url.includes('player.vimeo.com') || url.includes('youtube.com/embed')) {
+      return url;
+    }
+
+    // Vimeo: https://vimeo.com/123456789 -> https://player.vimeo.com/video/123456789
+    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+    if (vimeoMatch) {
+      return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+    }
+
+    // YouTube: https://www.youtube.com/watch?v=ABC123 -> https://www.youtube.com/embed/ABC123
+    const youtubeMatch = url.match(/youtube\.com\/watch\?v=([^&]+)/);
+    if (youtubeMatch) {
+      return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+    }
+
+    // YouTube short: https://youtu.be/ABC123 -> https://www.youtube.com/embed/ABC123
+    const youtubeShortMatch = url.match(/youtu\.be\/([^?]+)/);
+    if (youtubeShortMatch) {
+      return `https://www.youtube.com/embed/${youtubeShortMatch[1]}`;
+    }
+
+    // If no match, return original URL
+    return url;
+  };
+
   if (embedUrl) {
+    const finalEmbedUrl = getEmbedUrl(embedUrl);
     return (
       <div className="aspect-video">
         <iframe
-          src={embedUrl}
+          src={finalEmbedUrl}
           className="w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
