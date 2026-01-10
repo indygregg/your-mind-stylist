@@ -35,8 +35,9 @@ export default function ResourceUploadModal({ onClose }) {
     if (type.includes("pdf")) return "pdf";
     if (type.includes("video")) return "video";
     if (type.includes("audio")) return "audio";
+    if (type.includes("image") || name.endsWith('.svg')) return "image";
     if (type.includes("text") || name.endsWith('.txt')) return "text";
-    return "worksheet"; // Default for images and other files
+    return "worksheet"; // Default for documents and other files
   };
 
   const handleFileSelect = (e) => {

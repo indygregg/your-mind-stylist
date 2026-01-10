@@ -43,6 +43,7 @@ export default function ManagerResources() {
       pdf: FileText,
       video: Video,
       audio: Music,
+      image: Image,
       text: FileText,
       link: LinkIcon,
       worksheet: FileText,
@@ -61,7 +62,7 @@ export default function ManagerResources() {
     "Other"
   ];
 
-  const types = ["pdf", "video", "audio", "text", "link", "worksheet"];
+  const types = ["pdf", "video", "audio", "image", "text", "link", "worksheet"];
 
   const filteredResources = resources.filter((resource) => {
     const matchesSearch = resource.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
