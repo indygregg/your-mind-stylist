@@ -10,8 +10,7 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const url = new URLSearchParams(req.url.split('?')[1]);
-        const code = url.get('code');
+        const { code } = await req.json();
         
         if (!code) {
             return Response.json({ error: 'No authorization code provided' }, { status: 400 });
@@ -19,7 +18,7 @@ Deno.serve(async (req) => {
 
         const ZOOM_CLIENT_ID = Deno.env.get('ZOOM_CLIENT_ID');
         const ZOOM_CLIENT_SECRET = Deno.env.get('ZOOM_CLIENT_SECRET');
-        const redirectUri = `${req.headers.get('origin')}/api/zoom/callback`;
+        const redirectUri = `${req.headers.get('origin')}/#/ZoomCallback`;
 
         // Exchange code for tokens
         const tokenResponse = await fetch('https://zoom.us/oauth/token', {

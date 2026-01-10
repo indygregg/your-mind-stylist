@@ -21,12 +21,19 @@ export default function ZoomConnect() {
         setUser(currentUser);
     };
 
-    const handleConnect = () => {
+    const handleConnect = async () => {
         setConnecting(true);
-        const ZOOM_CLIENT_ID = 'YOUR_CLIENT_ID'; // You'll need to expose this from env
-        const redirectUri = `${window.location.origin}/zoom-callback`;
-        const authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=${ZOOM_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}`;
-        window.location.href = authUrl;
+        try {
+            // Get Zoom client ID from backend
+            const response = await base44.functions.invoke('getZoomClientId');
+            const ZOOM_CLIENT_ID = response.data.client_id;
+            const redirectUri = `${window.location.origin}/#/ZoomCallback`;
+            const authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=${ZOOM_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+            window.location.href = authUrl;
+        } catch (error) {
+            console.error('Error connecting Zoom:', error);
+            setConnecting(false);
+        }
     };
 
     const handleDisconnect = async () => {
