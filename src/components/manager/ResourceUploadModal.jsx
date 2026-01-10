@@ -30,8 +30,10 @@ export default function ResourceUploadModal({ onClose }) {
 
   const getFileType = (file) => {
     const type = file.type;
+    const name = file.name.toLowerCase();
+    
     if (type.includes("pdf")) return "pdf";
-    if (type.includes("image")) return "image";
+    if (type.includes("image") || name.endsWith('.svg')) return "image";
     if (type.includes("video")) return "video";
     if (type.includes("audio")) return "audio";
     if (type.includes("document") || type.includes("word") || type.includes("text")) return "document";
