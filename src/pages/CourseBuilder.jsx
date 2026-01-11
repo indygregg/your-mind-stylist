@@ -32,6 +32,8 @@ export default function CourseBuilder() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [uploadingMedia, setUploadingMedia] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [autoSaving, setAutoSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState(null);
 
   // Get course ID from URL if editing
   const urlParams = new URLSearchParams(window.location.search);
@@ -208,10 +210,30 @@ export default function CourseBuilder() {
     },
   });
 
-  const handleSave = async () => {
+  const handleSave = async (isAutoSave = false) => {
+    if (isAutoSave) {
+      setAutoSaving(true);
+    }
     await saveMutation.mutateAsync();
-    toast.success("Course saved and synced with Stripe!");
+    setLastSaved(new Date());
+    if (isAutoSave) {
+      setAutoSaving(false);
+    } else {
+      toast.success("Course saved and synced with Stripe!");
+    }
   };
+
+  // Auto-save functionality
+  useEffect(() => {
+    if (!courseId) return; // Only auto-save when editing existing course
+    if (!formData.title) return; // Don't auto-save if no title yet
+
+    const autoSaveTimer = setTimeout(() => {
+      handleSave(true);
+    }, 3000); // Auto-save 3 seconds after last change
+
+    return () => clearTimeout(autoSaveTimer);
+  }, [formData, modules, courseId]);
 
   const handlePublish = async () => {
     setFormData({ ...formData, status: "published" });
@@ -367,9 +389,20 @@ export default function CourseBuilder() {
             Back to Courses
           </Button>
           <div className="flex justify-between items-center">
-            <h1 className="font-serif text-4xl text-[#1E3A32]">
-              {courseId ? "Edit Course" : "Create New Course"}
-            </h1>
+            <div>
+              <h1 className="font-serif text-4xl text-[#1E3A32]">
+                {courseId ? "Edit Course" : "Create New Course"}
+              </h1>
+              {courseId && (
+                <p className="text-sm text-[#2B2725]/60 mt-1">
+                  {autoSaving ? (
+                    <span className="text-[#D8B46B]">Auto-saving...</span>
+                  ) : lastSaved ? (
+                    <span>Last saved {new Date(lastSaved).toLocaleTimeString()}</span>
+                  ) : null}
+                </p>
+              )}
+            </div>
             {!courseId && step === 1 && (
               <div className="flex gap-3">
                 <Button

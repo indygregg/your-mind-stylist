@@ -80,6 +80,7 @@ import ManagerPurchaseFunnel from './pages/ManagerPurchaseFunnel';
 import ManagerQuizAnalytics from './pages/ManagerQuizAnalytics';
 import ManagerReports from './pages/ManagerReports';
 import ManagerResourceEditor from './pages/ManagerResourceEditor';
+import ManagerResources from './pages/ManagerResources';
 import ManagerSubscriptionAnalytics from './pages/ManagerSubscriptionAnalytics';
 import ManagerTransformationAnalytics from './pages/ManagerTransformationAnalytics';
 import ManagerWaitingList from './pages/ManagerWaitingList';
@@ -122,7 +123,6 @@ import Welcome from './pages/Welcome';
 import WorkWithMe from './pages/WorkWithMe';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
-import ManagerResources from './pages/ManagerResources';
 import __Layout from './Layout.jsx';
 
 
@@ -209,6 +209,7 @@ export const PAGES = {
     "ManagerQuizAnalytics": ManagerQuizAnalytics,
     "ManagerReports": ManagerReports,
     "ManagerResourceEditor": ManagerResourceEditor,
+    "ManagerResources": ManagerResources,
     "ManagerSubscriptionAnalytics": ManagerSubscriptionAnalytics,
     "ManagerTransformationAnalytics": ManagerTransformationAnalytics,
     "ManagerWaitingList": ManagerWaitingList,
@@ -251,7 +252,6 @@ export const PAGES = {
     "WorkWithMe": WorkWithMe,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
-    "ManagerResources": ManagerResources,
 }
 
 export const pagesConfig = {
