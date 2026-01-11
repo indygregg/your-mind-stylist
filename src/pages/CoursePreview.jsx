@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, AlertCircle } from "lucide-react";
+import { ArrowLeft, AlertCircle, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import CourseHeader from "../components/courses/CourseHeader";
@@ -84,7 +84,8 @@ export default function CoursePreview() {
               onClick={() => navigate(createPageUrl("CourseManager"))}
               className="bg-white text-[#6E4F7D] hover:bg-white/90"
             >
-              Exit Preview
+              <X size={16} className="mr-2" />
+              Close Preview
             </Button>
           </div>
         </div>
