@@ -8,9 +8,27 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import AILessonOutlineGenerator from "./AILessonOutlineGenerator";
 
 export default function CurriculumBuilder({ modules, onUpdate, onEditLesson }) {
-  const [expandedModules, setExpandedModules] = useState({});
+  // Initialize with all modules expanded
+  const [expandedModules, setExpandedModules] = useState(() => {
+    const expanded = {};
+    modules.forEach(mod => {
+      expanded[mod.id] = true;
+    });
+    return expanded;
+  });
   const [editingModule, setEditingModule] = useState(null);
   const [showAIGenerator, setShowAIGenerator] = useState(false);
+
+  // Update expandedModules when modules change (new modules added)
+  React.useEffect(() => {
+    const expanded = { ...expandedModules };
+    modules.forEach(mod => {
+      if (!(mod.id in expanded)) {
+        expanded[mod.id] = true;
+      }
+    });
+    setExpandedModules(expanded);
+  }, [modules.length]);
 
   const addModule = () => {
     const newModule = {
