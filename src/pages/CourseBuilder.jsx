@@ -61,6 +61,13 @@ export default function CourseBuilder() {
             })
           );
           setModules(modulesWithLessons);
+          
+          // Set appropriate starting step based on course data
+          if (modulesWithLessons.length > 0) {
+            setStep(3); // Go to curriculum if modules exist
+          } else if (courses[0].title) {
+            setStep(2); // Go to basics if title exists
+          }
         }
       };
       loadCourse();
