@@ -34,6 +34,7 @@ export default function CourseBuilder() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [autoSaving, setAutoSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   // Get course ID from URL if editing
   const urlParams = new URLSearchParams(window.location.search);
@@ -41,8 +42,8 @@ export default function CourseBuilder() {
 
   // Load existing course if editing
   useEffect(() => {
-    if (courseId) {
-      const loadCourse = async () => {
+    const loadCourse = async () => {
+      if (courseId) {
         const courses = await base44.entities.Course.filter({ id: courseId });
         if (courses[0]) {
           setFormData(courses[0]);
@@ -69,9 +70,10 @@ export default function CourseBuilder() {
             setStep(2); // Go to basics if title exists
           }
         }
-      };
-      loadCourse();
-    }
+      }
+      setLoading(false);
+    };
+    loadCourse();
   }, [courseId]);
 
   // Save course
@@ -381,6 +383,14 @@ export default function CourseBuilder() {
         .find((m) => m.id === editingLesson.moduleId)
         ?.lessons.find((l) => l.id === editingLesson.lessonId)
     : null;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] py-8 flex items-center justify-center">
+        <p className="text-[#2B2725]/70">Loading course...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-8">
