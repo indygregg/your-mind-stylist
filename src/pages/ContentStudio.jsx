@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Target, Image, Download, Sparkles, FileText, Mail, Headphones, FileVideo, Search, Shuffle, Video, Presentation, Mic } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Target, Image, Download, Sparkles, FileText, Mail, Headphones, FileVideo, Search, Shuffle, Video, Presentation, Mic, ArrowLeft } from "lucide-react";
 import SocialMediaTransformer from "@/components/alchemy/SocialMediaTransformer";
 import VisualIntelligence from "@/components/alchemy/VisualIntelligence";
 import LeadMagnetGenerator from "@/components/alchemy/LeadMagnetGenerator";
@@ -49,6 +52,12 @@ export default function ContentStudio() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
+          <Link to={createPageUrl("ManagerDashboard")}>
+            <Button variant="ghost" className="mb-4 -ml-2">
+              <ArrowLeft size={16} className="mr-2" />
+              Back to Manager
+            </Button>
+          </Link>
           <div className="flex items-center gap-3 mb-3">
             <Sparkles className="w-8 h-8 text-[#D8B46B]" />
             <h1 className="font-serif text-4xl text-[#1E3A32]">Content Alchemy Suite</h1>
