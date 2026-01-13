@@ -7,11 +7,15 @@ Deno.serve(async (req) => {
         const state = url.searchParams.get('state'); // user ID
         const error = url.searchParams.get('error');
 
+        console.log('Callback received:', { code: !!code, state, error });
+
         if (error) {
+            console.error('OAuth error from Google:', error);
             return Response.redirect(`https://yourmindstylist.com/CalendarSettings?error=${error}`);
         }
 
         if (!code || !state) {
+            console.error('Missing params:', { code: !!code, state });
             return Response.redirect(`https://yourmindstylist.com/CalendarSettings?error=missing_params`);
         }
 
@@ -33,13 +37,16 @@ Deno.serve(async (req) => {
         });
 
         const tokens = await tokenResponse.json();
+        console.log('Token exchange response:', { success: !!tokens.access_token, error: tokens.error });
 
         if (!tokens.access_token) {
-            return Response.redirect(`https://yourmindstylist.com/CalendarSettings?error=token_exchange_failed`);
+            console.error('Token exchange failed:', tokens);
+            return Response.redirect(`https://yourmindstylist.com/CalendarSettings?error=token_exchange_failed&details=${tokens.error || 'unknown'}`);
         }
 
         // Store tokens in user record
         const base44 = createClientFromRequest(req);
+        console.log('Updating user:', state);
         await base44.asServiceRole.entities.User.update(state, {
             google_calendar_access_token: tokens.access_token,
             google_calendar_refresh_token: tokens.refresh_token,
@@ -47,9 +54,19 @@ Deno.serve(async (req) => {
             hasGoogleCalendar: true
         });
 
-        return Response.redirect(`https://yourmindstylist.com/CalendarSettings?success=true`);
+        console.log('Redirecting to success page');
+        const redirectUrl = 'https://yourmindstylist.com/CalendarSettings?success=true';
+        return new Response(null, {
+            status: 302,
+            headers: { 'Location': redirectUrl }
+        });
     } catch (error) {
         console.error('Google Calendar OAuth error:', error);
-        return Response.redirect(`https://yourmindstylist.com/CalendarSettings?error=server_error`);
+        console.error('Error stack:', error.stack);
+        const redirectUrl = `https://yourmindstylist.com/CalendarSettings?error=server_error&message=${encodeURIComponent(error.message)}`;
+        return new Response(null, {
+            status: 302,
+            headers: { 'Location': redirectUrl }
+        });
     }
 });
