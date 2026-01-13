@@ -34,7 +34,7 @@ export default function VideoModal({ isOpen, onClose }) {
               contentKey="home.hero.welcome_video_embed"
               page="Home"
               blockTitle="Hero Welcome Video Embed (Paste Vimeo/YouTube iframe code)"
-              fallback="<div class='w-full h-full flex items-center justify-center text-white/60 text-center p-8'><div><p class='text-xl mb-2'>Welcome Video Coming Soon</p><p class='text-sm'>Paste your Vimeo or YouTube embed code in Edit Mode</p></div></div>"
+              fallback="<iframe src='https://player.vimeo.com/video/1153707003?fl=ml&fe=ec&badge=0&autopause=0&player_id=0&app_id=58479' allow='autoplay; fullscreen; picture-in-picture; clipboard-write' style='width: 100%; height: 100%; border: 0;' title='Welcome to Your Mind Stylist'></iframe>"
               contentType="rich_text"
               className="w-full h-full [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:border-0"
             />
