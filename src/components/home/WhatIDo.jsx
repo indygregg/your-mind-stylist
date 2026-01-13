@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import CmsText from "../cms/CmsText";
+import MasterclassEmailCapture from "./MasterclassEmailCapture";
 
 export default function WhatIDo() {
+  const [showEmailCapture, setShowEmailCapture] = useState(false);
+
   return (
     <section className="py-24 md:py-32 bg-[#F9F5EF]">
       <div className="max-w-7xl mx-auto px-6">
@@ -54,8 +57,8 @@ export default function WhatIDo() {
                   className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
                 />
               </Link>
-              <Link
-                to={createPageUrl("FreeMasterclass")}
+              <button
+                onClick={() => setShowEmailCapture(true)}
                 className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:text-[#D8B46B] transition-colors"
               >
                 Watch the Free Webinar
@@ -63,7 +66,7 @@ export default function WhatIDo() {
                   size={18}
                   className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
                 />
-              </Link>
+              </button>
             </div>
           </motion.div>
 
@@ -114,6 +117,7 @@ export default function WhatIDo() {
           </motion.div>
         </div>
       </div>
+      <MasterclassEmailCapture isOpen={showEmailCapture} onClose={() => setShowEmailCapture(false)} />
     </section>
   );
 }
