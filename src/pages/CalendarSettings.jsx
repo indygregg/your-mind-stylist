@@ -175,11 +175,15 @@ export default function CalendarSettings() {
                     </p>
                     <Button
                       onClick={async () => {
-                        // This will trigger the OAuth flow for the logged-in user
-                        toast.success("Opening Google Calendar authorization...");
-                        // The authorization will be handled by Base44's OAuth system
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                        window.location.reload();
+                        try {
+                          // Trigger OAuth authorization for Google Calendar
+                          const authUrl = await base44.connectors.getAuthorizationUrl('googlecalendar', {
+                            scopes: ['https://www.googleapis.com/auth/calendar.events', 'https://www.googleapis.com/auth/calendar.readonly']
+                          });
+                          window.location.href = authUrl;
+                        } catch (error) {
+                          toast.error('Failed to start authorization: ' + error.message);
+                        }
                       }}
                       className="bg-[#6E4F7D] hover:bg-[#5A3F67]"
                     >
