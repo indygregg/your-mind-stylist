@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
 import CmsText from "../components/cms/CmsText";
 import LearnSectionGrid from "../components/hypnosis/LearnSectionGrid";
+import IncludedSectionGrid from "../components/hypnosis/IncludedSectionGrid";
 import { 
   Brain, 
   Heart, 
@@ -313,13 +314,7 @@ export default function LearnHypnosis() {
               </h2>
             </div>
 
-            <CmsText 
-              contentKey="hypnosis.included.list"
-              page="LearnHypnosis"
-              blockTitle="Included List"
-              fallback={`<div class='grid md:grid-cols-2 gap-6 max-w-4xl mx-auto'>${["Full video-based course taught by Roberta", "Hypnosis demonstrations", "Practice exercises", "Client mapping templates", "Hypnosis scripts & customizable frameworks", "Office Hours or Q&A opportunities (depending on track)", "Access to The Mind Styling Studio™ for live practice", "Certificate of Completion (Certification Track only)"].map(item => `<div class='flex items-start gap-3 bg-white p-4'><svg class='lucide lucide-sparkles' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#6E4F7D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='flex-shrink: 0; margin-top: 4px;'><path d='m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z'/><path d='M5 3v4'/><path d='M19 17v4'/><path d='M3 5h4'/><path d='M17 19h4'/></svg><p class='text-[#2B2725]/80'>${item}</p></div>`).join('')}</div>`}
-              contentType="rich_text"
-            />
+            <IncludedSectionGrid />
           </motion.div>
         </div>
       </section>
