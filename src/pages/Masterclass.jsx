@@ -239,24 +239,72 @@ export default function Masterclass() {
             <div className="w-12 h-12 rounded-full bg-[#D8B46B]/20 flex items-center justify-center mb-4">
               <Calendar size={24} className="text-[#D8B46B]" />
             </div>
-            <h3 className="font-serif text-lg text-[#1E3A32] mb-2">45 Minutes</h3>
-            <p className="text-[#2B2725]/70 text-sm">Watch at your own pace</p>
+            <h3 className="font-serif text-lg text-[#1E3A32] mb-2">
+              <CmsText
+                contentKey="masterclass.takeaway1.title"
+                page="Masterclass"
+                blockTitle="Takeaway 1 Title"
+                fallback="45 Minutes"
+                contentType="short_text"
+              />
+            </h3>
+            <p className="text-[#2B2725]/70 text-sm">
+              <CmsText
+                contentKey="masterclass.takeaway1.description"
+                page="Masterclass"
+                blockTitle="Takeaway 1 Description"
+                fallback="Watch at your own pace"
+                contentType="short_text"
+              />
+            </p>
           </div>
 
           <div className="bg-white p-6">
             <div className="w-12 h-12 rounded-full bg-[#D8B46B]/20 flex items-center justify-center mb-4">
               <Award size={24} className="text-[#D8B46B]" />
             </div>
-            <h3 className="font-serif text-lg text-[#1E3A32] mb-2">Practical Tools</h3>
-            <p className="text-[#2B2725]/70 text-sm">Not just theory—real strategies</p>
+            <h3 className="font-serif text-lg text-[#1E3A32] mb-2">
+              <CmsText
+                contentKey="masterclass.takeaway2.title"
+                page="Masterclass"
+                blockTitle="Takeaway 2 Title"
+                fallback="Practical Tools"
+                contentType="short_text"
+              />
+            </h3>
+            <p className="text-[#2B2725]/70 text-sm">
+              <CmsText
+                contentKey="masterclass.takeaway2.description"
+                page="Masterclass"
+                blockTitle="Takeaway 2 Description"
+                fallback="Not just theory—real strategies"
+                contentType="short_text"
+              />
+            </p>
           </div>
 
           <div className="bg-white p-6">
             <div className="w-12 h-12 rounded-full bg-[#D8B46B]/20 flex items-center justify-center mb-4">
               <CheckCircle size={24} className="text-[#D8B46B]" />
             </div>
-            <h3 className="font-serif text-lg text-[#1E3A32] mb-2">Lifetime Access</h3>
-            <p className="text-[#2B2725]/70 text-sm">Rewatch any time</p>
+            <h3 className="font-serif text-lg text-[#1E3A32] mb-2">
+              <CmsText
+                contentKey="masterclass.takeaway3.title"
+                page="Masterclass"
+                blockTitle="Takeaway 3 Title"
+                fallback="Lifetime Access"
+                contentType="short_text"
+              />
+            </h3>
+            <p className="text-[#2B2725]/70 text-sm">
+              <CmsText
+                contentKey="masterclass.takeaway3.description"
+                page="Masterclass"
+                blockTitle="Takeaway 3 Description"
+                fallback="Rewatch any time"
+                contentType="short_text"
+              />
+            </p>
           </div>
         </div>
 
@@ -286,9 +334,23 @@ export default function Masterclass() {
               onClick={() => trackCTAClick('certification')}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
-              <h3 className="font-medium text-[#1E3A32] mb-1">The Mind Styling Certification™</h3>
+              <h3 className="font-medium text-[#1E3A32] mb-1">
+                <CmsText
+                  contentKey="masterclass.cta1.title"
+                  page="Masterclass"
+                  blockTitle="CTA 1 Title"
+                  fallback="The Mind Styling Certification™"
+                  contentType="short_text"
+                />
+              </h3>
               <p className="text-[#2B2725]/60 text-sm">
-                For identity-level change and emotional intelligence
+                <CmsText
+                  contentKey="masterclass.cta1.description"
+                  page="Masterclass"
+                  blockTitle="CTA 1 Description"
+                  fallback="For identity-level change and emotional intelligence"
+                  contentType="short_text"
+                />
               </p>
             </Link>
             <Link
@@ -296,9 +358,23 @@ export default function Masterclass() {
               onClick={() => trackCTAClick('private_sessions')}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
-              <h3 className="font-medium text-[#1E3A32] mb-1">Private Mind Styling (1:1)</h3>
+              <h3 className="font-medium text-[#1E3A32] mb-1">
+                <CmsText
+                  contentKey="masterclass.cta2.title"
+                  page="Masterclass"
+                  blockTitle="CTA 2 Title"
+                  fallback="Private Mind Styling (1:1)"
+                  contentType="short_text"
+                />
+              </h3>
               <p className="text-[#2B2725]/60 text-sm">
-                Personalized support in shifting long-held patterns
+                <CmsText
+                  contentKey="masterclass.cta2.description"
+                  page="Masterclass"
+                  blockTitle="CTA 2 Description"
+                  fallback="Personalized support in shifting long-held patterns"
+                  contentType="short_text"
+                />
               </p>
             </Link>
             <Link
@@ -306,9 +382,23 @@ export default function Masterclass() {
               onClick={() => trackCTAClick('inner_rehearsal')}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
-              <h3 className="font-medium text-[#1E3A32] mb-1">The Inner Rehearsal Sessions™</h3>
+              <h3 className="font-medium text-[#1E3A32] mb-1">
+                <CmsText
+                  contentKey="masterclass.cta3.title"
+                  page="Masterclass"
+                  blockTitle="CTA 3 Title"
+                  fallback="The Inner Rehearsal Sessions™"
+                  contentType="short_text"
+                />
+              </h3>
               <p className="text-[#2B2725]/60 text-sm">
-                Ongoing internal resets and future-self rehearsal
+                <CmsText
+                  contentKey="masterclass.cta3.description"
+                  page="Masterclass"
+                  blockTitle="CTA 3 Description"
+                  fallback="Ongoing internal resets and future-self rehearsal"
+                  contentType="short_text"
+                />
               </p>
             </Link>
           </div>
