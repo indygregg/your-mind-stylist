@@ -43,7 +43,8 @@ Deno.serve(async (req) => {
         await base44.asServiceRole.entities.User.update(state, {
             google_calendar_access_token: tokens.access_token,
             google_calendar_refresh_token: tokens.refresh_token,
-            google_calendar_token_expiry: new Date(Date.now() + tokens.expires_in * 1000).toISOString()
+            google_calendar_token_expiry: new Date(Date.now() + tokens.expires_in * 1000).toISOString(),
+            hasGoogleCalendar: true
         });
 
         return Response.redirect(`${url.origin}/CalendarSettings?success=true`);
