@@ -76,6 +76,8 @@ export default function VideoPlayer({ src, embedUrl, onProgressUpdate, lastPosit
       <video
         ref={videoRef}
         controls
+        controlsList="nodownload"
+        onContextMenu={(e) => e.preventDefault()}
         className="w-full"
         src={src}
       >
