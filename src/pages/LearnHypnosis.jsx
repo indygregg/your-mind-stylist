@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
 import CmsText from "../components/cms/CmsText";
+import LearnSectionGrid from "../components/hypnosis/LearnSectionGrid";
 import { 
   Brain, 
   Heart, 
@@ -235,45 +236,7 @@ export default function LearnHypnosis() {
               </h2>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-12">
-              <div>
-                <h3 className="font-serif text-2xl text-[#1E3A32] mb-6">
-                  <CmsText 
-                    contentKey="hypnosis.learn.core.title"
-                    page="LearnHypnosis"
-                    blockTitle="Core Skills Title"
-                    fallback="Core Skills:"
-                    contentType="short_text"
-                  />
-                </h3>
-                <CmsText 
-                  contentKey="hypnosis.learn.core.list"
-                  page="LearnHypnosis"
-                  blockTitle="Core Skills List"
-                  fallback={`<div class='space-y-4'>${["Understanding the subconscious mind", "Safe, ethical trance induction", "How to guide clients into focused inner states", "Emotional state design (Mind Styling™ foundations)", "How to restructure internal narratives", "How to work with anxiety, performance, confidence, and habits", "How to design custom sessions without scripts", "How to incorporate hypnosis into coaching or therapeutic work"].map(skill => `<div class='flex items-start gap-3'><svg class='lucide lucide-check-circle' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#6E4F7D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='flex-shrink: 0; margin-top: 4px;'><path d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/><polyline points='22 4 12 14.01 9 11.01'/></svg><p class='text-[#2B2725]/80'>${skill}</p></div>`).join('')}</div>`}
-                  contentType="rich_text"
-                />
-              </div>
-
-              <div>
-                <h3 className="font-serif text-2xl text-[#1E3A32] mb-6">
-                  <CmsText 
-                    contentKey="hypnosis.learn.practical.title"
-                    page="LearnHypnosis"
-                    blockTitle="Practical Application Title"
-                    fallback="Practical Application:"
-                    contentType="short_text"
-                  />
-                </h3>
-                <CmsText 
-                  contentKey="hypnosis.learn.practical.list"
-                  page="LearnHypnosis"
-                  blockTitle="Practical Application List"
-                  fallback={`<div class='space-y-4'>${["Live demos & practice sessions", "Client session frameworks", "How to create your own recorded hypnosis sessions", "Troubleshooting difficult patterns", "Creating emotional \"wardrobes\" that genuinely fit the client"].map(practice => `<div class='flex items-start gap-3'><svg class='lucide lucide-target' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='flex-shrink: 0; margin-top: 4px;'><circle cx='12' cy='12' r='10'/><circle cx='12' cy='12' r='6'/><circle cx='12' cy='12' r='2'/></svg><p class='text-[#2B2725]/80'>${practice}</p></div>`).join('')}</div>`}
-                  contentType="rich_text"
-                />
-              </div>
-            </div>
+            <LearnSectionGrid />
           </motion.div>
         </div>
       </section>
