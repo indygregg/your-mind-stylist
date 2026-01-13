@@ -119,14 +119,11 @@ export default function FreeMasterclass() {
         </div>
       </div>
 
-      <AnimatePresence>
-        {showEmailCapture && (
-          <MasterclassEmailCapture
-            onClose={() => setShowEmailCapture(false)}
-            onSuccess={handleEmailSuccess}
-          />
-        )}
-      </AnimatePresence>
+      <MasterclassEmailCapture
+        isOpen={showEmailCapture}
+        onClose={() => setShowEmailCapture(false)}
+        onSuccess={handleEmailSuccess}
+      />
     </section>
   );
 }
