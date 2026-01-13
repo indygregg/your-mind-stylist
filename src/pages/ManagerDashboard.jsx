@@ -71,7 +71,7 @@ export default function ManagerDashboard() {
     queryFn: () => base44.entities.AvailabilityRule.list(),
   });
 
-  const { data: intakes = [] } = useQuery({
+  const { data: consultationIntakes = [] } = useQuery({
     queryKey: ["consultationIntakes"],
     queryFn: () => base44.entities.ConsultationIntake.filter({ status: "submitted" }),
   });
@@ -155,7 +155,7 @@ export default function ManagerDashboard() {
     { icon: Calendar, label: "Active Bookings", value: bookings.filter(b => b.booking_status === 'confirmed').length, color: "#D8B46B", link: "ManagerBookings" },
     { icon: FileVideo, label: "Published Courses", value: courses.filter(c => c.status === 'published').length, color: "#6E4F7D", link: "CourseManager" },
     { icon: Mail, label: "Unanswered messages", value: messages.length, color: "#A6B7A3", link: "MessagesManager" },
-    { icon: FileText, label: "Pending Intakes", value: intakes.length, color: "#1E3A32", link: "ManagerIntakeReview" },
+    { icon: FileText, label: "Pending Intake Forms", value: consultationIntakes.length, color: "#1E3A32", link: "ManagerIntakeReview" },
   ];
 
   return (
