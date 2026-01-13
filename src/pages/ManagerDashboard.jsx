@@ -77,6 +77,7 @@ export default function ManagerDashboard() {
   const hasAvailability = availabilityRules.length > 0;
   const hasAppointmentTypes = appointmentTypes.length > 0;
   const hasZoomConnected = user?.zoom_access_token ? true : false;
+  const hasGoogleCalendar = user?.google_calendar_access_token ? true : false;
   const hasTestedBooking = bookings.length > 0;
 
   const setupSteps = [
@@ -99,9 +100,9 @@ export default function ManagerDashboard() {
       link: 'ZoomConnect' 
     },
     { 
-      id: 'ical', 
-      label: 'Sync with Apple Calendar', 
-      completed: false, 
+      id: 'google_calendar', 
+      label: 'Connect Google Calendar', 
+      completed: hasGoogleCalendar, 
       link: 'CalendarSettings'
     },
     { 
