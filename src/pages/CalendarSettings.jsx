@@ -3,8 +3,10 @@ import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Calendar, CheckCircle, AlertCircle, RefreshCw, Copy, Check, ArrowLeftRight } from "lucide-react";
+import { Calendar, CheckCircle, AlertCircle, RefreshCw, Copy, Check, ArrowLeftRight, ArrowLeft } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "../utils";
 
 export default function CalendarSettings() {
   const [user, setUser] = useState(null);
@@ -35,6 +37,7 @@ export default function CalendarSettings() {
         }
       } catch (error) {
         console.error("Error fetching user:", error);
+        toast.error("Failed to load calendar settings");
       }
     };
     fetchUser();
@@ -67,6 +70,13 @@ export default function CalendarSettings() {
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
+          <Link
+            to={createPageUrl("ManagerDashboard")}
+            className="inline-flex items-center gap-2 text-[#1E3A32]/70 hover:text-[#1E3A32] mb-4 transition-colors"
+          >
+            <ArrowLeft size={20} />
+            Back to Manager Dashboard
+          </Link>
           <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Calendar Sync</h1>
           <p className="text-[#2B2725]/70">
             Subscribe to your bookings calendar in Apple Calendar, Outlook, or any calendar app
