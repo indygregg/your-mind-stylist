@@ -5,6 +5,7 @@ import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Award, Users, Sparkles, Layers } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
+import BeliefsSection from "../components/about/BeliefsSection";
 
 export default function About() {
   const beliefs = [
