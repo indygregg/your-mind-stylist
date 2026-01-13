@@ -14,13 +14,16 @@ export default function CalendarSettings() {
   const [copied, setCopied] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [connectingGoogle, setConnectingGoogle] = useState(false);
+  const [isGoogleConnected, setIsGoogleConnected] = useState(false);
+  const [disconnecting, setDisconnecting] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
-        
+        setIsGoogleConnected(!!currentUser.hasGoogleCalendar);
+
         // Generate iCal feed URL
         const feedUrl = `${window.location.origin}/api/ical-feed?user_id=${currentUser.id}`;
         setICalUrl(feedUrl);
@@ -61,10 +64,32 @@ export default function CalendarSettings() {
       toast.error(error.message || 'Failed to sync calendar');
     } finally {
       setSyncing(false);
-    }
-  };
+      }
+      };
 
-  if (!user) {
+      const handleDisconnectGoogle = async () => {
+      if (!confirm('Are you sure you want to disconnect Google Calendar? This will stop automatic syncing.')) {
+      return;
+      }
+
+      setDisconnecting(true);
+      try {
+      await base44.auth.updateMe({
+        google_calendar_access_token: null,
+        google_calendar_refresh_token: null,
+        google_calendar_token_expiry: null,
+        hasGoogleCalendar: false
+      });
+      setIsGoogleConnected(false);
+      toast.success('Google Calendar disconnected successfully');
+      } catch (error) {
+      toast.error('Failed to disconnect: ' + error.message);
+      } finally {
+      setDisconnecting(false);
+      }
+      };
+
+      if (!user) {
     return <div className="p-8">Loading...</div>;
   }
 
@@ -195,42 +220,65 @@ export default function CalendarSettings() {
                   <div className="flex-1">
                     <h4 className="font-medium text-[#1E3A32] mb-2">Connect Your Google Calendar</h4>
                     <p className="text-sm text-[#2B2725]/80 mb-4">
-                      First, you need to authorize access to your Google Calendar. This allows the system to read your calendar events and block those times from being booked.
+                      {isGoogleConnected 
+                        ? 'Your Google Calendar is connected. You can now sync events to block booking times.'
+                        : 'First, you need to authorize access to your Google Calendar. This allows the system to read your calendar events and block those times from being booked.'
+                      }
                     </p>
-                    <Button
-                      onClick={async () => {
-                        setConnectingGoogle(true);
-                        try {
-                          const response = await base44.functions.invoke('googleCalendarAuth');
-                          if (response.data?.authUrl) {
-                            window.location.href = response.data.authUrl;
-                          } else {
-                            toast.error('No authorization URL received');
-                            setConnectingGoogle(false);
-                          }
-                        } catch (error) {
-                          toast.error('Failed to start authorization: ' + error.message);
-                          setConnectingGoogle(false);
-                        }
-                      }}
-                      disabled={connectingGoogle}
-                      className="bg-[#6E4F7D] hover:bg-[#5A3F67]"
-                    >
-                      {connectingGoogle ? (
-                        <>
-                          <RefreshCw size={16} className="mr-2 animate-spin" />
-                          Connecting...
-                        </>
-                      ) : (
-                        <>
-                          <Calendar size={16} className="mr-2" />
-                          Authorize Google Calendar
-                        </>
-                      )}
-                    </Button>
-                    <p className="text-xs text-[#2B2725]/60 mt-2">
-                      You'll be redirected to Google to grant calendar access
-                    </p>
+
+                    {isGoogleConnected ? (
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 text-green-600">
+                          <CheckCircle size={20} />
+                          <span className="font-medium">Connected</span>
+                        </div>
+                        <Button
+                          onClick={handleDisconnectGoogle}
+                          disabled={disconnecting}
+                          variant="outline"
+                          className="border-red-300 text-red-600 hover:bg-red-50"
+                        >
+                          {disconnecting ? 'Disconnecting...' : 'Disconnect'}
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <Button
+                          onClick={async () => {
+                            setConnectingGoogle(true);
+                            try {
+                              const response = await base44.functions.invoke('googleCalendarAuth');
+                              if (response.data?.authUrl) {
+                                window.location.href = response.data.authUrl;
+                              } else {
+                                toast.error('No authorization URL received');
+                                setConnectingGoogle(false);
+                              }
+                            } catch (error) {
+                              toast.error('Failed to start authorization: ' + error.message);
+                              setConnectingGoogle(false);
+                            }
+                          }}
+                          disabled={connectingGoogle}
+                          className="bg-[#6E4F7D] hover:bg-[#5A3F67]"
+                        >
+                          {connectingGoogle ? (
+                            <>
+                              <RefreshCw size={16} className="mr-2 animate-spin" />
+                              Connecting...
+                            </>
+                          ) : (
+                            <>
+                              <Calendar size={16} className="mr-2" />
+                              Authorize Google Calendar
+                            </>
+                          )}
+                        </Button>
+                        <p className="text-xs text-[#2B2725]/60 mt-2">
+                          You'll be redirected to Google to grant calendar access
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
