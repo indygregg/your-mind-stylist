@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Loader2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "../../utils";
 
-export default function MasterclassEmailCapture({ onClose, onSuccess }) {
+export default function MasterclassEmailCapture({ isOpen, onClose, onSuccess }) {
+  if (!isOpen) return null;
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,7 +47,9 @@ export default function MasterclassEmailCapture({ onClose, onSuccess }) {
         console.log("Lead creation skipped (may already exist)");
       }
 
-      onSuccess();
+      // Close the modal and navigate to the masterclass
+      onClose();
+      navigate(createPageUrl("FreeMasterclass"));
     } catch (err) {
       console.error("Error submitting email:", err);
       setError("Something went wrong. Please try again.");
@@ -52,13 +58,15 @@ export default function MasterclassEmailCapture({ onClose, onSuccess }) {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={onClose}
+        >
       <motion.div
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
@@ -139,6 +147,8 @@ export default function MasterclassEmailCapture({ onClose, onSuccess }) {
           We respect your privacy. Unsubscribe at any time.
         </p>
       </motion.div>
-    </motion.div>
-  );
-}
+      </motion.div>
+      )}
+      </AnimatePresence>
+      );
+      }
