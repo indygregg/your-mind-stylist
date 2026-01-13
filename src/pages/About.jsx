@@ -283,13 +283,21 @@ export default function About() {
                 />
               </p>
               <div className="grid md:grid-cols-2 gap-3">
-                <CmsText 
-                  contentKey="about.philosophy.approaches" 
-                  page="About"
-                  blockTitle="Philosophy Approaches List - Use bullet list format"
-                  fallback={approaches.map(approach => `<div class='flex items-center gap-3'><div class='w-1.5 h-1.5 rounded-full bg-[#D8B46B] flex-shrink-0'></div><span class='text-[#2B2725]/80'>${approach}</span></div>`).join('')}
-                  contentType="rich_text"
-                />
+                {approaches.map((approach, index) => (
+                  <div key={index} className="flex items-center gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#D8B46B] flex-shrink-0" />
+                    <span className="text-[#2B2725]/80">
+                      <CmsText 
+                        contentKey={`about.philosophy.approach${index + 1}`}
+                        page="About"
+                        blockTitle={`Approach ${index + 1}`}
+                        fallback={approach}
+                        contentType="short_text"
+                        as="span"
+                      />
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 
