@@ -333,24 +333,13 @@ export default function About() {
             </h2>
           </motion.div>
 
-          <div className="space-y-8">
-            {beliefs.map((belief, index) => (
-              <motion.div
-                key={belief.title}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="border-l-2 border-[#D8B46B] pl-6 md:pl-8"
-              >
-                <h3 className="font-serif text-xl md:text-2xl text-[#F9F5EF] mb-3 flex items-start gap-3">
-                  <span className="text-[#D8B46B]">{belief.icon}</span>
-                  {belief.title}
-                </h3>
-                <p className="text-[#F9F5EF]/70 text-lg leading-relaxed">{belief.description}</p>
-              </motion.div>
-            ))}
-          </div>
+          <CmsText
+            contentKey="about.beliefs.list"
+            page="About"
+            blockTitle="Core Principles List"
+            fallback={`<div class='space-y-8'>${beliefs.map((belief, index) => `<div class='border-l-2 border-[#D8B46B] pl-6 md:pl-8'><h3 class='font-serif text-xl md:text-2xl text-[#F9F5EF] mb-3 flex items-start gap-3'><span class='text-[#D8B46B]'>${belief.icon}</span>${belief.title}</h3><p class='text-[#F9F5EF]/70 text-lg leading-relaxed'>${belief.description}</p></div>`).join('')}</div>`}
+            contentType="rich_text"
+          />
 
           <motion.div
             initial={{ opacity: 0 }}
@@ -358,7 +347,15 @@ export default function About() {
             viewport={{ once: true }}
             className="mt-12 text-center"
           >
-            <p className="font-serif text-2xl text-[#D8B46B] italic">This is Mind Styling.</p>
+            <p className="font-serif text-2xl text-[#D8B46B] italic">
+              <CmsText 
+                contentKey="about.beliefs.closing" 
+                page="About"
+                blockTitle="Beliefs Closing"
+                fallback="This is Mind Styling." 
+                contentType="short_text"
+              />
+            </p>
           </motion.div>
         </div>
       </section>
@@ -501,13 +498,42 @@ export default function About() {
             </p>
           </motion.div>
 
-          <CmsText 
-            contentKey="about.work.offerings" 
-            page="About"
-            blockTitle="Work With Me Offerings"
-            fallback={`<div class='grid md:grid-cols-2 gap-6'>${offerings.map((offering, index) => `<div class='block bg-white p-8 h-full group hover:shadow-lg transition-all duration-300'><div class='mb-4' style='color: #D8B46B;'>${offering.icon === Layers ? '📋' : offering.icon === Users ? '👥' : offering.icon === Sparkles ? '✨' : '🏆'}</div><h3 class='font-serif text-2xl text-[#1E3A32] mb-3'>${offering.title}</h3><p class='text-[#2B2725]/70 mb-6'>${offering.description}</p><a href='${createPageUrl(offering.link)}' class='text-[#1E3A32] font-medium group-hover:text-[#D8B46B] transition-colors inline-flex items-center gap-2'>Learn More →</a></div>`).join('')}</div>`}
-            contentType="rich_text"
-          />
+          <div className="grid md:grid-cols-2 gap-6">
+            {offerings.map((offering, index) => (
+              <Link
+                key={index}
+                to={createPageUrl(offering.link)}
+                className="block bg-white p-8 h-full group hover:shadow-lg transition-all duration-300"
+              >
+                <div className="w-14 h-14 rounded-full bg-[#D8B46B]/20 flex items-center justify-center mb-6">
+                  <offering.icon size={24} className="text-[#D8B46B]" />
+                </div>
+                <h3 className="font-serif text-2xl text-[#1E3A32] mb-3">
+                  <CmsText 
+                    contentKey={`about.work.offering${index + 1}.title`}
+                    page="About"
+                    blockTitle={`Offering ${index + 1} Title`}
+                    fallback={offering.title}
+                    contentType="short_text"
+                    as="span"
+                  />
+                </h3>
+                <p className="text-[#2B2725]/70 mb-6">
+                  <CmsText 
+                    contentKey={`about.work.offering${index + 1}.description`}
+                    page="About"
+                    blockTitle={`Offering ${index + 1} Description`}
+                    fallback={offering.description}
+                    contentType="rich_text"
+                  />
+                </p>
+                <span className="text-[#1E3A32] font-medium group-hover:text-[#D8B46B] transition-colors inline-flex items-center gap-2">
+                  Learn More
+                  <ArrowRight size={16} />
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

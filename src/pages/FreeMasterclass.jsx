@@ -156,13 +156,13 @@ export default function FreeMasterclass() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="aspect-video bg-[#2B2725] mb-10 relative overflow-hidden"
+              className="aspect-video bg-[#2B2725] mb-10 relative overflow-hidden rounded-lg"
             >
               <CmsText
                 contentKey="freemasterclass.hero.video_embed"
                 page="FreeMasterclass"
-                blockTitle="Masterclass Video Embed (Paste Vimeo/YouTube iframe code)"
-                fallback={`<div class='absolute inset-0 bg-gradient-to-br from-[#1E3A32]/50 to-[#6E4F7D]/30'></div><div class='relative z-10 w-24 h-24 rounded-full bg-[#D8B46B] flex items-center justify-center mx-auto mt-[calc(50%-48px)]'><svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='currentColor' class='text-[#1E3A32] ml-1'><path d='M8 5v14l11-7z'/></svg></div><div class='absolute top-6 left-6 bg-[#D8B46B] px-4 py-2 text-[#1E3A32] text-xs tracking-wide uppercase font-medium'>On-Demand • Free</div>`}
+                blockTitle="Masterclass Video Embed - Paste your Vimeo embed code here"
+                fallback={`<iframe src="https://player.vimeo.com/video/1153727233?badge=0&autopause=0&player_id=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" title="Imposter Syndrome Masterclass"></iframe>`}
                 contentType="rich_text"
                 className="w-full h-full [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:absolute [&_iframe]:inset-0"
               />
