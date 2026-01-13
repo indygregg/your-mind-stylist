@@ -11,6 +11,7 @@ export default function CalendarSettings() {
   const [iCalUrl, setICalUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [connectingGoogle, setConnectingGoogle] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -175,17 +176,34 @@ export default function CalendarSettings() {
                     </p>
                     <Button
                       onClick={async () => {
+                        setConnectingGoogle(true);
                         try {
                           const response = await base44.functions.invoke('googleCalendarAuth');
-                          window.location.href = response.data.authUrl;
+                          if (response.data?.authUrl) {
+                            window.location.href = response.data.authUrl;
+                          } else {
+                            toast.error('No authorization URL received');
+                            setConnectingGoogle(false);
+                          }
                         } catch (error) {
                           toast.error('Failed to start authorization: ' + error.message);
+                          setConnectingGoogle(false);
                         }
                       }}
+                      disabled={connectingGoogle}
                       className="bg-[#6E4F7D] hover:bg-[#5A3F67]"
                     >
-                      <Calendar size={16} className="mr-2" />
-                      Authorize Google Calendar
+                      {connectingGoogle ? (
+                        <>
+                          <RefreshCw size={16} className="mr-2 animate-spin" />
+                          Connecting...
+                        </>
+                      ) : (
+                        <>
+                          <Calendar size={16} className="mr-2" />
+                          Authorize Google Calendar
+                        </>
+                      )}
                     </Button>
                     <p className="text-xs text-[#2B2725]/60 mt-2">
                       You'll be redirected to Google to grant calendar access
