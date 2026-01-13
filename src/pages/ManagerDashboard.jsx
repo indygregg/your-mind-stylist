@@ -102,8 +102,7 @@ export default function ManagerDashboard() {
       id: 'ical', 
       label: 'Sync with Apple Calendar', 
       completed: false, 
-      link: 'ManagerCalendarSync',
-      external: true
+      link: 'CalendarSettings'
     },
     { 
       id: 'test', 
