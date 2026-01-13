@@ -149,14 +149,32 @@ export default function Masterclass() {
         {/* Header */}
         <div className="text-center mb-12">
           <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-            Free Masterclass
+            <CmsText
+              contentKey="masterclass.hero.label"
+              page="Masterclass"
+              blockTitle="Hero Label"
+              fallback="Free Masterclass"
+              contentType="short_text"
+              as="span"
+            />
           </span>
           <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-4">
-            Imposter Syndrome & Other Myths to Ditch
+            <CmsText
+              contentKey="masterclass.hero.title"
+              page="Masterclass"
+              blockTitle="Hero Title"
+              fallback="Imposter Syndrome & Other Myths to Ditch"
+              contentType="short_text"
+            />
           </h1>
           <p className="text-[#2B2725]/70 text-lg max-w-2xl mx-auto">
-            A practical, psychologically grounded class to help you stop feeling like you're faking it
-            — and start trusting your abilities.
+            <CmsText
+              contentKey="masterclass.hero.description"
+              page="Masterclass"
+              blockTitle="Hero Description"
+              fallback="A practical, psychologically grounded class to help you stop feeling like you're faking it — and start trusting your abilities."
+              contentType="rich_text"
+            />
           </p>
         </div>
 
@@ -244,10 +262,23 @@ export default function Masterclass() {
 
         {/* What's Next */}
         <div className="bg-white p-8 rounded-lg">
-          <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">What's Next?</h2>
+          <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">
+            <CmsText
+              contentKey="masterclass.next.title"
+              page="Masterclass"
+              blockTitle="What's Next Title"
+              fallback="What's Next?"
+              contentType="short_text"
+            />
+          </h2>
           <p className="text-[#2B2725]/70 mb-6">
-            If this masterclass resonates with you, there are several ways to continue your work with
-            The Mind Stylist:
+            <CmsText
+              contentKey="masterclass.next.description"
+              page="Masterclass"
+              blockTitle="What's Next Description"
+              fallback="If this masterclass resonates with you, there are several ways to continue your work with The Mind Stylist:"
+              contentType="rich_text"
+            />
           </p>
           <div className="space-y-3">
             <Link
