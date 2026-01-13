@@ -30,10 +30,12 @@ export default function CalendarSettings() {
         if (urlParams.get('success') === 'true') {
           toast.success('Google Calendar connected successfully!');
           // Clear the query param
-          window.history.replaceState({}, '', '/CalendarSettings');
+          window.history.replaceState({}, '', window.location.pathname);
         } else if (urlParams.get('error')) {
-          toast.error('Failed to connect Google Calendar: ' + urlParams.get('error'));
-          window.history.replaceState({}, '', '/CalendarSettings');
+          const errorMsg = urlParams.get('error');
+          const details = urlParams.get('details') || urlParams.get('message');
+          toast.error(`Failed to connect: ${errorMsg}${details ? ' - ' + details : ''}`);
+          window.history.replaceState({}, '', window.location.pathname);
         }
       } catch (error) {
         console.error("Error fetching user:", error);
