@@ -400,13 +400,23 @@ export default function About() {
             </p>
 
             <div className="bg-white p-8 md:p-10 mb-10">
-              <CmsText 
-                contentKey="about.credentials.list" 
-                page="About"
-                blockTitle="Credentials List"
-                fallback={`<div class='space-y-4'>${credentials.map(credential => `<div class='flex items-start gap-4'><svg class='lucide lucide-check' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#D8B46B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' style='margin-top: 4px; flex-shrink: 0;'><path d='M20 6 9 17l-5-5'/></svg><span class='text-[#2B2725]/80 text-lg'>${credential}</span></div>`).join('')}</div>`}
-                contentType="rich_text"
-              />
+              <div className="space-y-4">
+                {credentials.map((credential, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <Check size={20} className="text-[#D8B46B] flex-shrink-0 mt-1" />
+                    <span className="text-[#2B2725]/80 text-lg">
+                      <CmsText 
+                        contentKey={`about.credentials.item${index + 1}`}
+                        page="About"
+                        blockTitle={`Credential ${index + 1}`}
+                        fallback={credential}
+                        contentType="short_text"
+                        as="span"
+                      />
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <p className="font-serif text-xl text-[#1E3A32] italic">
