@@ -90,6 +90,21 @@ export default function LearnHypnosis() {
               <ArrowRight size={18} />
             </Link>
           </motion.div>
+
+          {/* Training Video */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="aspect-video bg-[#2B2725] mt-12 relative overflow-hidden rounded-lg"
+          >
+            <iframe
+              src="https://player.vimeo.com/video/1153704942?badge=0&autopause=0&player_id=0&app_id=58479"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+              title="Hypnosis Training Introduction"
+            />
+          </motion.div>
         </div>
       </section>
 

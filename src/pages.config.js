@@ -120,7 +120,6 @@ import TransformationDemo from './pages/TransformationDemo';
 import TransformationStory from './pages/TransformationStory';
 import WebinarPage from './pages/WebinarPage';
 import Welcome from './pages/Welcome';
-import WorkWithMe from './pages/WorkWithMe';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import __Layout from './Layout.jsx';
@@ -249,7 +248,6 @@ export const PAGES = {
     "TransformationStory": TransformationStory,
     "WebinarPage": WebinarPage,
     "Welcome": Welcome,
-    "WorkWithMe": WorkWithMe,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
 }

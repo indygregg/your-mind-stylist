@@ -255,13 +255,13 @@ export default function Programs() {
               </div>
             )}
 
-            {/* Tier 3 — Individual/one-on-one */}
+            {/* Tier 3 — Group/one-on-one */}
             {productsByCategory.high_touch.length > 0 && (
               <div className="mb-20">
                 <div className="flex items-center gap-3 mb-8">
                   <Users size={28} className="text-[#A6B7A3]" />
                   <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
-                    Tier 3 — Individual/one-on-one
+                    Tier 3 — Group/one-on-one
                   </h3>
                 </div>
                 <p className="text-[#2B2725]/70 mb-8">Work with Roberta more directly — small group or 1:1 support</p>
@@ -339,10 +339,10 @@ export default function Programs() {
               <p className="text-[#2B2725]/70 mb-8">Build mastery and expand your transformational reach</p>
 
               <div className="grid md:grid-cols-2 gap-6">
-                {/* Hypnosis Training — Certification */}
+                {/* Hypnosis Training */}
                 <div className="bg-white p-8 border border-[#E4D9C4]">
                   <h4 className="font-serif text-xl text-[#1E3A32] mb-3">
-                    Hypnosis Training — Certification Track
+                    Hypnosis Training
                   </h4>
                   <p className="text-[#2B2725]/70 text-sm mb-4">
                     Full training for professional practice

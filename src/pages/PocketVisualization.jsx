@@ -185,17 +185,11 @@ export default function PocketVisualization() {
                 to={createPageUrl("PurchaseCenter")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                $7/mo or $70/yr
+                Buy Here
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
                 />
-              </Link>
-              <Link
-                to={createPageUrl("Bookings")}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
-              >
-                Schedule a Consultation
               </Link>
             </div>
           </motion.div>
@@ -561,7 +555,7 @@ export default function PocketVisualization() {
                 to={createPageUrl("PurchaseCenter")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                $7/mo or $70/yr
+                Buy Here
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
@@ -656,17 +650,11 @@ export default function PocketVisualization() {
                 to={createPageUrl("PurchaseCenter")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
               >
-                $7/mo or $70/yr
+                Buy Here
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
                 />
-              </Link>
-              <Link
-                to={createPageUrl("Bookings")}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
-              >
-                Schedule a Consultation
               </Link>
             </div>
           </motion.div>
