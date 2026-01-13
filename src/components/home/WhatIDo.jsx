@@ -45,7 +45,7 @@ export default function WhatIDo() {
             {/* Micro Links */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                to={createPageUrl("WorkWithMe")}
+                to={createPageUrl("Bookings")}
                 className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:text-[#D8B46B] transition-colors"
               >
                 Work With Me

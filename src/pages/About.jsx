@@ -347,7 +347,7 @@ export default function About() {
             contentKey="about.beliefs.list"
             page="About"
             blockTitle="Core Principles List"
-            fallback={`<div class='space-y-8'>${beliefs.map((belief, index) => `<div class='border-l-2 border-[#D8B46B] pl-6 md:pl-8'><h3 class='font-serif text-xl md:text-2xl text-[#F9F5EF] mb-3 flex items-start gap-3'><span class='text-[#D8B46B]'>${belief.icon}</span>${belief.title}</h3><p class='text-[#F9F5EF]/70 text-lg leading-relaxed'>${belief.description}</p></div>`).join('')}</div>`}
+            fallback={`<div class='space-y-8'>${beliefs.map((belief, index) => `<div class='border-l-2 border-[#D8B46B] pl-6 md:pl-8'><h3 class='font-serif text-xl md:text-2xl text-[#F9F5EF] mb-3 flex items-start gap-3'><span class='text-[#D8B46B]'>${belief.icon}</span><span style='color: #F9F5EF;'>${belief.title}</span></h3><p class='text-[#F9F5EF]/70 text-lg leading-relaxed'>${belief.description}</p></div>`).join('')}</div>`}
             contentType="rich_text"
           />
 
