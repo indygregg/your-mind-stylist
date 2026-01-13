@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Loader2, Copy, ArrowRight } from "lucide-react";
+import { Sparkles, Loader2, Copy, ArrowRight, Mic } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 export default function AIContentGenerator({ onInsert }) {
@@ -11,6 +12,13 @@ export default function AIContentGenerator({ onInsert }) {
   const [contentType, setContentType] = useState("paragraph");
   const [generating, setGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState("");
+
+  const { data: voiceProfiles = [] } = useQuery({
+    queryKey: ['voiceProfiles'],
+    queryFn: () => base44.entities.VoiceProfile.filter({ active: true })
+  });
+
+  const defaultVoice = voiceProfiles.find(p => p.is_default);
 
   const contentTypes = [
     { value: "full", label: "Full Blog Post", prompt: "Write a complete, engaging blog post about: ", fullPost: true },
@@ -31,9 +39,26 @@ export default function AIContentGenerator({ onInsert }) {
     setGenerating(true);
     try {
       const selectedType = contentTypes.find(t => t.value === contentType);
+      
+      let styleInstructions = "Style: Mind Styling voice - calm, intelligent, introspective, identity-focused. Write for emotional intelligence and personal transformation. Keep it grounded, not fluffy.";
+      
+      // Use custom voice profile if available
+      if (defaultVoice) {
+        styleInstructions = `Style Guidelines:
+${defaultVoice.writing_rules}
+
+Tone: ${defaultVoice.tone_descriptors?.join(", ")}
+Formality: ${defaultVoice.formality_level}
+Perspective: ${defaultVoice.perspective}
+Sentence Structure: ${defaultVoice.sentence_structure}
+${defaultVoice.use_contractions ? "Use contractions (I'm, you're, etc.)" : "Avoid contractions"}
+${defaultVoice.vocabulary_preferences ? `\nVocabulary: ${defaultVoice.vocabulary_preferences}` : ""}
+${defaultVoice.example_text ? `\n\nExample of the desired writing style:\n${defaultVoice.example_text.substring(0, 500)}` : ""}`;
+      }
+      
       let fullPrompt = `${selectedType.prompt}${prompt}
 
-Style: Mind Styling voice - calm, intelligent, introspective, identity-focused. Write for emotional intelligence and personal transformation. Keep it grounded, not fluffy.
+${styleInstructions}
 
 CRITICAL: Output HTML formatted content using these tags:
 - Use <h2> for main headings (NOT h1)
@@ -83,6 +108,14 @@ Include:
 
   return (
     <div className="space-y-4">
+      {defaultVoice && (
+        <div className="bg-[#FFF9F0] border border-[#D8B46B]/30 p-3 rounded flex items-center gap-2">
+          <Mic size={16} className="text-[#D8B46B]" />
+          <span className="text-sm text-[#2B2725]/80">
+            Using voice: <strong>{defaultVoice.profile_name}</strong>
+          </span>
+        </div>
+      )}
       <div>
         <Label className="mb-2 block">What do you want to write about?</Label>
         <Textarea

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Target, Image, Download, Sparkles, FileText, Mail, Headphones, FileVideo, Search, Shuffle, Video, Presentation } from "lucide-react";
+import { Target, Image, Download, Sparkles, FileText, Mail, Headphones, FileVideo, Search, Shuffle, Video, Presentation, Mic } from "lucide-react";
 import SocialMediaTransformer from "@/components/alchemy/SocialMediaTransformer";
 import VisualIntelligence from "@/components/alchemy/VisualIntelligence";
 import LeadMagnetGenerator from "@/components/alchemy/LeadMagnetGenerator";
@@ -14,6 +14,7 @@ import SEOOptimizer from "@/components/alchemy/SEOOptimizer";
 import ContentRepurposer from "@/components/alchemy/ContentRepurposer";
 import VideoScriptGenerator from "@/components/alchemy/VideoScriptGenerator";
 import WebinarOutlineCreator from "@/components/alchemy/WebinarOutlineCreator";
+import VoiceProfileManager from "@/components/alchemy/VoiceProfileManager";
 
 export default function ContentStudio() {
   // Set auth layout
@@ -24,6 +25,7 @@ export default function ContentStudio() {
   const [activeTab, setActiveTab] = useState("social");
 
   const tools = [
+    { id: "voice", icon: Mic, label: "My Voice", component: VoiceProfileManager },
     { id: "social", icon: Target, label: "Social Media", component: SocialMediaTransformer },
     { id: "repurpose", icon: Shuffle, label: "Content Repurposer", component: ContentRepurposer },
     { id: "seo", icon: Search, label: "SEO Optimizer", component: SEOOptimizer },
