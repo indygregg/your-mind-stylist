@@ -5,6 +5,8 @@ import { base44 } from "@/api/base44Client";
 import { Play, CheckCircle, Calendar, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ExitIntentPopup from "@/components/masterclass/ExitIntentPopup";
+import CmsText from "../components/cms/CmsText";
+import VideoEmbed from "../components/cms/VideoEmbed";
 
 export default function Masterclass() {
   const [user, setUser] = useState(null);
@@ -160,21 +162,13 @@ export default function Masterclass() {
 
         {/* Video Player */}
         <div className="mb-12">
-          <div className="aspect-video bg-[#2B2725] relative overflow-hidden rounded-lg shadow-xl" ref={videoRef}>
-            <div className="absolute inset-0 bg-gradient-to-br from-[#1E3A32]/50 to-[#6E4F7D]/30" />
-            <div className="relative z-10 flex items-center justify-center h-full">
-              <div className="text-center">
-                <button
-                  onClick={togglePlay}
-                  className="w-24 h-24 rounded-full bg-[#D8B46B] flex items-center justify-center mx-auto mb-6 cursor-pointer hover:scale-110 transition-transform focus:outline-none focus:ring-4 focus:ring-[#D8B46B]/50"
-                  aria-label={isPlaying ? "Pause video" : "Play video"}
-                >
-                  <Play size={40} className="text-[#1E3A32] ml-1" fill="currentColor" />
-                </button>
-                <p className="text-[#F9F5EF] text-sm">Video player coming soon</p>
-                <p className="text-[#F9F5EF]/60 text-xs mt-2">45 minutes • Press Space to play/pause</p>
-              </div>
-            </div>
+          <div className="aspect-video bg-[#2B2725] relative overflow-hidden rounded-lg shadow-xl">
+            <VideoEmbed
+              contentKey="masterclass.video.embed"
+              page="Masterclass"
+              blockTitle="Masterclass Video - Paste Vimeo embed code here"
+              fallback="https://player.vimeo.com/video/1153727233?badge=0&autopause=0&player_id=0&app_id=58479"
+            />
           </div>
 
           {/* Video Controls Info */}
