@@ -87,7 +87,6 @@ import ManagerWaitingList from './pages/ManagerWaitingList';
 import ManagerWebinarEditor from './pages/ManagerWebinarEditor';
 import Masterclass from './pages/Masterclass';
 import NotFound from './pages/NotFound';
-import PocketVisualization from './pages/PocketVisualization';
 import PocketVisualizationPurchase from './pages/PocketVisualizationPurchase';
 import Podcast from './pages/Podcast';
 import Pricing from './pages/Pricing';
@@ -122,6 +121,7 @@ import WebinarPage from './pages/WebinarPage';
 import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
+import PocketMindset from './pages/PocketMindset';
 import __Layout from './Layout.jsx';
 
 
@@ -215,7 +215,6 @@ export const PAGES = {
     "ManagerWebinarEditor": ManagerWebinarEditor,
     "Masterclass": Masterclass,
     "NotFound": NotFound,
-    "PocketVisualization": PocketVisualization,
     "PocketVisualizationPurchase": PocketVisualizationPurchase,
     "Podcast": Podcast,
     "Pricing": Pricing,
@@ -250,6 +249,7 @@ export const PAGES = {
     "Welcome": Welcome,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
+    "PocketMindset": PocketMindset,
 }
 
 export const pagesConfig = {

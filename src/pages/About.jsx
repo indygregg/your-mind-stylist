@@ -72,9 +72,9 @@ export default function About() {
     },
     {
       icon: Sparkles,
-      title: "The Pocket Visualization™ Sessions",
+      title: "The Pocket Mindset™ Sessions",
       description: "Short, powerful guided experiences to shift your emotional state in minutes.",
-      link: "PocketVisualization",
+      link: "PocketMindset",
     },
     {
       icon: Award,

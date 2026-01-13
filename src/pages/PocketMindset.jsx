@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Brain, Heart, Zap, Shield, Sparkles, Moon, Target, RefreshCw } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 
-export default function PocketVisualization() {
+export default function PocketMindset() {
   const whatItCombines = [
     "Guided visualization",
     "Hypnotic language",
@@ -131,7 +131,7 @@ export default function PocketVisualization() {
       <SEO
         title="Pocket Mindset™ | Calm, Clarity & Identity Shifts"
         description="Short, powerful guided Pocket Mindset™ sessions to reset your mind, regulate your nervous system, and rehearse your future self in minutes."
-        canonical="/pocket-visualization"
+        canonical="/pocket-mindset"
       />
       {/* Hero Section */}
       <section className="pt-32 pb-20">
@@ -144,7 +144,7 @@ export default function PocketVisualization() {
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block text-center">
               <CmsText 
                 contentKey="pocket.hero.subtitle"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="Hero Subtitle"
                 fallback="Guided Experiences"
                 contentType="short_text"
@@ -154,16 +154,16 @@ export default function PocketVisualization() {
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6 text-center">
               <CmsText 
                 contentKey="pocket.hero.title"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="Hero Title"
-                fallback="Pocket Visualization™"
+                fallback="Pocket Mindset™"
                 contentType="short_text"
               />
             </h1>
             <p className="text-[#1E3A32] font-serif text-2xl md:text-3xl font-medium italic mb-8 text-center">
               <CmsText 
                 contentKey="pocket.hero.tagline"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="Hero Tagline"
                 fallback="Reset your mind, regulate your nervous system, and rehearse your future self — in minutes."
                 contentType="rich_text"
@@ -173,7 +173,7 @@ export default function PocketVisualization() {
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-3xl mx-auto text-center">
               <CmsText 
                 contentKey="pocket.hero.description"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="Hero Description"
                 fallback="These short, powerful audio-guided experiences help you shift your emotional state, calm your mind, dissolve overwhelm, and embody new patterns with ease. They're designed for real people with real lives — people who want to feel better, think clearly, and step into a more aligned version of themselves."
                 contentType="rich_text"
@@ -207,9 +207,9 @@ export default function PocketVisualization() {
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
               <CmsText 
                 contentKey="pocket.what.title"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="What Section Title"
-                fallback="What Is Pocket Visualization™?"
+                fallback="What Is Pocket Mindset™?"
                 contentType="short_text"
               />
             </h2>
@@ -217,16 +217,16 @@ export default function PocketVisualization() {
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
               <CmsText 
                 contentKey="pocket.what.intro"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="What Section Intro"
-                fallback="Unlike meditation, motivation, or passive relaxation, Pocket Visualization™ combines:"
+                fallback="Unlike meditation, motivation, or passive relaxation, Pocket Mindset™ combines:"
                 contentType="rich_text"
               />
             </p>
 
             <CmsText 
               contentKey="pocket.what.combines"
-              page="PocketVisualization"
+              page="PocketMindset"
               blockTitle="What It Combines List"
               fallback={`<div class='grid md:grid-cols-2 gap-3 mb-10'>${whatItCombines.map(item => `<div class='flex items-center gap-3 bg-[#F9F5EF] p-4'><div class='w-1.5 h-1.5 rounded-full bg-[#A6B7A3]'></div><span class='text-[#2B2725]/80'>${item}</span></div>`).join('')}</div>`}
               contentType="rich_text"
@@ -236,7 +236,7 @@ export default function PocketVisualization() {
               <p className="font-serif text-xl text-[#1E3A32] italic">
                 <CmsText 
                   contentKey="pocket.what.quote"
-                  page="PocketVisualization"
+                  page="PocketMindset"
                   blockTitle="What Section Quote"
                   fallback="This isn't about escaping life — it's about preparing your mind and body to engage with it more clearly."
                   contentType="rich_text"
@@ -245,7 +245,7 @@ export default function PocketVisualization() {
               <p>
                 <CmsText 
                   contentKey="pocket.what.explanation"
-                  page="PocketVisualization"
+                  page="PocketMindset"
                   blockTitle="What Section Explanation"
                   fallback="Each session guides you into a quiet, receptive mental space where your subconscious becomes open to new ways of thinking, feeling, and responding."
                   contentType="rich_text"
@@ -268,16 +268,16 @@ export default function PocketVisualization() {
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-6">
               <CmsText 
                 contentKey="pocket.why.title"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="Why Section Title"
-                fallback="Why Pocket Visualization™ Works"
+                fallback="Why Pocket Mindset™ Works"
                 contentType="short_text"
               />
             </h2>
             <p className="text-[#2B2725]/80 text-lg leading-relaxed max-w-3xl mx-auto">
               <CmsText 
                 contentKey="pocket.why.description"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="Why Section Description"
                 fallback="Your subconscious mind doesn't distinguish vividly imagined experience from lived experience. This is why elite performers, executives, athletes, and creators use mental rehearsal to achieve peak clarity."
                 contentType="rich_text"
@@ -302,7 +302,7 @@ export default function PocketVisualization() {
                   <span className="text-[#D8B46B] mt-1">✦</span>
                   <CmsText 
                     contentKey={`pocket.benefit${index + 1}.title`}
-                    page="PocketVisualization"
+                    page="PocketMindset"
                     blockTitle={`Benefit ${index + 1} Title`}
                     fallback={benefit.title}
                     contentType="short_text"
@@ -312,7 +312,7 @@ export default function PocketVisualization() {
                 <p className="text-[#2B2725]/70 leading-relaxed">
                   <CmsText 
                     contentKey={`pocket.benefit${index + 1}.description`}
-                    page="PocketVisualization"
+                    page="PocketMindset"
                     blockTitle={`Benefit ${index + 1} Description`}
                     fallback={benefit.description}
                     contentType="rich_text"
@@ -325,7 +325,7 @@ export default function PocketVisualization() {
           <p className="text-center font-serif text-xl text-[#1E3A32] italic">
             <CmsText 
               contentKey="pocket.why.closing"
-              page="PocketVisualization"
+              page="PocketMindset"
               blockTitle="Why Section Closing"
               fallback="This is transformation through repetition, safety, and inner alignment."
               contentType="rich_text"
@@ -345,9 +345,9 @@ export default function PocketVisualization() {
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-10">
               <CmsText 
                 contentKey="pocket.when.title"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="When Section Title"
-                fallback="When to Use Pocket Visualization™"
+                fallback="When to Use Pocket Mindset™"
                 contentType="short_text"
               />
             </h2>
@@ -356,7 +356,7 @@ export default function PocketVisualization() {
               <p className="text-[#2B2725]/80 text-lg mb-6">
                 <CmsText 
                   contentKey="pocket.when.intro"
-                  page="PocketVisualization"
+                  page="PocketMindset"
                   blockTitle="When Section Intro"
                   fallback="You can use these sessions any time you want to feel:"
                   contentType="rich_text"
@@ -364,7 +364,7 @@ export default function PocketVisualization() {
               </p>
               <CmsText 
                 contentKey="pocket.when.feelings"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="When Section Feelings"
                 fallback={`<div class='grid md:grid-cols-2 gap-4'>${useCases.feelings.map(feeling => `<div class='flex items-center gap-3'><div class='w-2 h-2 rounded-full bg-[#A6B7A3]'></div><span class='text-[#2B2725]/80 text-lg'>${feeling}</span></div>`).join('')}</div>`}
                 contentType="rich_text"
@@ -375,7 +375,7 @@ export default function PocketVisualization() {
               <p className="text-[#2B2725]/80 text-lg mb-6 font-medium">
                 <CmsText 
                   contentKey="pocket.when.perfect"
-                  page="PocketVisualization"
+                  page="PocketMindset"
                   blockTitle="When Perfect For Intro"
                   fallback="They're perfect for:"
                   contentType="rich_text"
@@ -383,7 +383,7 @@ export default function PocketVisualization() {
               </p>
               <CmsText 
                 contentKey="pocket.when.moments"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="When Perfect Moments"
                 fallback={`<div class='grid md:grid-cols-2 gap-4'>${useCases.moments.map(moment => `<div class='flex items-start gap-3'><div class='w-1.5 h-1.5 rounded-full bg-[#D8B46B] mt-2.5 flex-shrink-0'></div><span class='text-[#2B2725]/80'>${moment}</span></div>`).join('')}</div>`}
                 contentType="rich_text"
@@ -393,7 +393,7 @@ export default function PocketVisualization() {
             <p className="font-serif text-2xl text-[#1E3A32] italic text-center">
               <CmsText 
                 contentKey="pocket.when.closing"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="When Section Closing"
                 fallback="A few minutes can shift your entire day."
                 contentType="rich_text"
@@ -415,7 +415,7 @@ export default function PocketVisualization() {
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
               <CmsText 
                 contentKey="pocket.library.title"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="Library Section Title"
                 fallback="What You'll Find Inside"
                 contentType="short_text"
@@ -424,9 +424,9 @@ export default function PocketVisualization() {
             <p className="text-[#2B2725]/70 text-lg">
               <CmsText 
                 contentKey="pocket.library.description"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="Library Section Description"
-                fallback="The Pocket Visualization™ library includes categories like:"
+                fallback="The Pocket Mindset™ library includes categories like:"
                 contentType="rich_text"
               />
             </p>
@@ -449,7 +449,7 @@ export default function PocketVisualization() {
                   <span className="text-[#D8B46B] mt-1">✦</span>
                   <CmsText 
                     contentKey={`pocket.category${index + 1}.title`}
-                    page="PocketVisualization"
+                    page="PocketMindset"
                     blockTitle={`Category ${index + 1} Title`}
                     fallback={category.title}
                     contentType="short_text"
@@ -459,7 +459,7 @@ export default function PocketVisualization() {
                 <p className="text-[#2B2725]/70 leading-relaxed">
                   <CmsText 
                     contentKey={`pocket.category${index + 1}.description`}
-                    page="PocketVisualization"
+                    page="PocketMindset"
                     blockTitle={`Category ${index + 1} Description`}
                     fallback={category.description}
                     contentType="rich_text"
@@ -472,7 +472,7 @@ export default function PocketVisualization() {
           <p className="text-center text-[#2B2725]/70 text-lg italic">
             <CmsText 
               contentKey="pocket.library.note"
-              page="PocketVisualization"
+              page="PocketMindset"
               blockTitle="Library Note"
               fallback="New sessions are added regularly."
               contentType="rich_text"
@@ -492,7 +492,7 @@ export default function PocketVisualization() {
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-12">
               <CmsText 
                 contentKey="pocket.how.title"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="How Section Title"
                 fallback="How It Works"
                 contentType="short_text"
@@ -517,7 +517,7 @@ export default function PocketVisualization() {
                       <span className="text-[#D8B46B]">✦</span>
                       <CmsText 
                         contentKey={`pocket.how.step${index + 1}.title`}
-                        page="PocketVisualization"
+                        page="PocketMindset"
                         blockTitle={`Step ${index + 1} Title`}
                         fallback={step.step}
                         contentType="short_text"
@@ -527,7 +527,7 @@ export default function PocketVisualization() {
                     <p className="text-[#2B2725]/80 text-lg">
                       <CmsText 
                         contentKey={`pocket.how.step${index + 1}.description`}
-                        page="PocketVisualization"
+                        page="PocketMindset"
                         blockTitle={`Step ${index + 1} Description`}
                         fallback={step.description}
                         contentType="rich_text"
@@ -542,7 +542,7 @@ export default function PocketVisualization() {
               <p className="text-[#2B2725]/80 text-lg text-center">
                 <CmsText 
                   contentKey="pocket.how.note"
-                  page="PocketVisualization"
+                  page="PocketMindset"
                   blockTitle="How Section Note"
                   fallback="Access Pocket Mindset™ through your private portal after purchase."
                   contentType="rich_text"
@@ -577,7 +577,7 @@ export default function PocketVisualization() {
             <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-8">
               <CmsText 
                 contentKey="pocket.note.title"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="Personal Note Title"
                 fallback="A Personal Note"
                 contentType="short_text"
@@ -588,16 +588,16 @@ export default function PocketVisualization() {
               <p>
                 <CmsText 
                   contentKey="pocket.note.paragraph1"
-                  page="PocketVisualization"
+                  page="PocketMindset"
                   blockTitle="Personal Note Paragraph 1"
-                  fallback="Pocket Visualization™ sessions are the tools I wish more people had access to — simple, calming, and deeply effective. You don't need an hour of meditation or a week-long retreat to shift your internal state. You just need a few quiet minutes and a gentle guide."
+                  fallback="Pocket Mindset™ sessions are the tools I wish more people had access to — simple, calming, and deeply effective. You don't need an hour of meditation or a week-long retreat to shift your internal state. You just need a few quiet minutes and a gentle guide."
                   contentType="rich_text"
                 />
               </p>
               <p>
                 <CmsText 
                   contentKey="pocket.note.paragraph2"
-                  page="PocketVisualization"
+                  page="PocketMindset"
                   blockTitle="Personal Note Paragraph 2"
                   fallback="This work changes people because it helps them change how they feel — and when that changes, everything else follows."
                   contentType="rich_text"
@@ -606,7 +606,7 @@ export default function PocketVisualization() {
               <p className="font-serif text-xl italic pt-4">
                 <CmsText 
                   contentKey="pocket.note.signature"
-                  page="PocketVisualization"
+                  page="PocketMindset"
                   blockTitle="Personal Note Signature"
                   fallback="— Roberta Fernandez, Your Mind Stylist"
                   contentType="rich_text"
@@ -628,7 +628,7 @@ export default function PocketVisualization() {
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
               <CmsText 
                 contentKey="pocket.cta.title"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="CTA Title"
                 fallback="Ready to Reset?"
                 contentType="short_text"
@@ -638,7 +638,7 @@ export default function PocketVisualization() {
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
               <CmsText 
                 contentKey="pocket.cta.description"
-                page="PocketVisualization"
+                page="PocketMindset"
                 blockTitle="CTA Description"
                 fallback="Experience what it feels like to shift your state quickly, calmly, and intentionally."
                 contentType="rich_text"
