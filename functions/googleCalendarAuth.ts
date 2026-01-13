@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
         }
 
         const clientId = Deno.env.get('GOOGLE_CALENDAR_CLIENT_ID');
-        const redirectUri = `${new URL(req.url).origin}/api/functions/googleCalendarCallback`;
+        const redirectUri = 'https://yourmindstylist.com/api/functions/googleCalendarCallback';
 
         const scopes = [
             'https://www.googleapis.com/auth/calendar.events',
