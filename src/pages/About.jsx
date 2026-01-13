@@ -71,16 +71,16 @@ export default function About() {
       link: "PrivateSessions",
     },
     {
-      icon: Sparkles,
-      title: "The Pocket Mindset™ Sessions",
-      description: "Short, powerful guided experiences to shift your emotional state in minutes.",
-      link: "PocketMindset",
-    },
-    {
       icon: Award,
       title: "Organizational Mind Styling",
       description: "Workshops and trainings for communication, leadership, and team performance.",
       link: "SpeakingTraining",
+    },
+    {
+      icon: Sparkles,
+      title: "The Pocket Mindset™ Sessions",
+      description: "Short, powerful guided experiences to shift your emotional state in minutes.",
+      link: "PocketMindset",
     },
   ];
 
