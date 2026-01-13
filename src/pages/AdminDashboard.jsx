@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
@@ -8,8 +8,11 @@ import {
   PenSquare, FileVideo, Headphones, Mail, Users, FileText, 
   ShoppingCart, ListTodo, Settings, BarChart3, Shield, Sparkles, Target, Image, Download, Calendar, Bug 
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "react-hot-toast";
 
 export default function AdminDashboard() {
+  const [connectingCalendar, setConnectingCalendar] = useState(false);
   const { data: blogPosts = [] } = useQuery({
     queryKey: ["admin-blogPosts"],
     queryFn: () => base44.entities.BlogPost.list("-created_date", 5),
@@ -135,6 +138,41 @@ export default function AdminDashboard() {
                 </a>
               </div>
             </div>
+          </div>
+        </motion.div>
+
+        {/* Google Calendar Test */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08 }}
+          className="mb-12"
+        >
+          <div className="bg-white border-2 border-[#6E4F7D] p-6 shadow-lg">
+            <div className="flex items-center gap-3 mb-4">
+              <Calendar size={24} className="text-[#6E4F7D]" />
+              <h2 className="font-serif text-xl text-[#1E3A32]">Test Google Calendar OAuth</h2>
+            </div>
+            <p className="text-[#2B2725]/70 mb-4">
+              Connect your Google Calendar to test the OAuth flow for Roberta's booking system.
+            </p>
+            <Button
+              onClick={async () => {
+                setConnectingCalendar(true);
+                try {
+                  const response = await base44.functions.invoke('googleCalendarAuth');
+                  window.location.href = response.data.authUrl;
+                } catch (error) {
+                  toast.error('Failed to start authorization: ' + error.message);
+                  setConnectingCalendar(false);
+                }
+              }}
+              disabled={connectingCalendar}
+              className="bg-[#6E4F7D] hover:bg-[#5A3F67]"
+            >
+              <Calendar size={16} className="mr-2" />
+              {connectingCalendar ? 'Connecting...' : 'Connect Google Calendar'}
+            </Button>
           </div>
         </motion.div>
 
