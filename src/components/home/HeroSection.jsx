@@ -5,9 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
 import CmsText from "../cms/CmsText";
 import VideoModal from "./VideoModal";
+import MasterclassEmailCapture from "./MasterclassEmailCapture";
 
 export default function HeroSection() {
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [showEmailCapture, setShowEmailCapture] = useState(false);
 
   return (
     <section className="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden">
@@ -95,8 +97,8 @@ export default function HeroSection() {
                   className="group-hover:translate-x-1 transition-transform"
                 />
               </Link>
-              <Link
-                to={createPageUrl("FreeMasterclass")}
+              <button
+                onClick={() => setShowEmailCapture(true)}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
               >
                 <Play size={16} className="text-[#D8B46B]" />
@@ -109,7 +111,7 @@ export default function HeroSection() {
                   fallback="Watch the Free Webinar"
                   as="span"
                 />
-              </Link>
+              </button>
             </div>
           </motion.div>
 
@@ -163,6 +165,7 @@ export default function HeroSection() {
       </div>
 
       <VideoModal isOpen={showVideoModal} onClose={() => setShowVideoModal(false)} />
+      <MasterclassEmailCapture isOpen={showEmailCapture} onClose={() => setShowEmailCapture(false)} />
     </section>
   );
 }
