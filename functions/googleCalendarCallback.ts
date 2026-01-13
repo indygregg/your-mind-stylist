@@ -8,11 +8,11 @@ Deno.serve(async (req) => {
         const error = url.searchParams.get('error');
 
         if (error) {
-            return Response.redirect(`${url.origin}/CalendarSettings?error=${error}`);
+            return Response.redirect(`https://yourmindstylist.com/CalendarSettings?error=${error}`);
         }
 
         if (!code || !state) {
-            return Response.redirect(`${url.origin}/CalendarSettings?error=missing_params`);
+            return Response.redirect(`https://yourmindstylist.com/CalendarSettings?error=missing_params`);
         }
 
         const clientId = Deno.env.get('GOOGLE_CALENDAR_CLIENT_ID');
@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
         const tokens = await tokenResponse.json();
 
         if (!tokens.access_token) {
-            return Response.redirect(`${url.origin}/CalendarSettings?error=token_exchange_failed`);
+            return Response.redirect(`https://yourmindstylist.com/CalendarSettings?error=token_exchange_failed`);
         }
 
         // Store tokens in user record
@@ -47,10 +47,9 @@ Deno.serve(async (req) => {
             hasGoogleCalendar: true
         });
 
-        return Response.redirect(`${url.origin}/CalendarSettings?success=true`);
+        return Response.redirect(`https://yourmindstylist.com/CalendarSettings?success=true`);
     } catch (error) {
         console.error('Google Calendar OAuth error:', error);
-        const url = new URL(req.url);
-        return Response.redirect(`${url.origin}/CalendarSettings?error=server_error`);
+        return Response.redirect(`https://yourmindstylist.com/CalendarSettings?error=server_error`);
     }
 });

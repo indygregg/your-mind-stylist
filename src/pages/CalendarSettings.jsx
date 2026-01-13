@@ -22,6 +22,17 @@ export default function CalendarSettings() {
         // Generate iCal feed URL
         const feedUrl = `${window.location.origin}/api/ical-feed?user_id=${currentUser.id}`;
         setICalUrl(feedUrl);
+
+        // Check for success/error query params
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+          toast.success('Google Calendar connected successfully!');
+          // Clear the query param
+          window.history.replaceState({}, '', '/CalendarSettings');
+        } else if (urlParams.get('error')) {
+          toast.error('Failed to connect Google Calendar: ' + urlParams.get('error'));
+          window.history.replaceState({}, '', '/CalendarSettings');
+        }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
