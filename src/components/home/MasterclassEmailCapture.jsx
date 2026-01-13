@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 
 export default function MasterclassEmailCapture({ isOpen, onClose, onSuccess }) {
-  if (!isOpen) return null;
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
@@ -65,7 +64,11 @@ export default function MasterclassEmailCapture({ isOpen, onClose, onSuccess }) 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-          onClick={onClose}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              onClose();
+            }
+          }}
         >
       <motion.div
         initial={{ scale: 0.9, y: 20 }}
