@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, User, Layers, Users } from "lucide-react";
+import { ArrowRight, Sparkles, User, Layers, Users, Brain } from "lucide-react";
 import CmsText from "../cms/CmsText";
 
 export default function MindStylingSuite() {
@@ -69,9 +69,30 @@ export default function MindStylingSuite() {
       bottomNote:
         "Not meditation. Not napping. This is inner rehearsal—a fast, elegant way to shift your state and reset your mind.",
       cta: "Explore Pocket Mindset",
-      link: "PocketVisualization",
+      link: "PocketMindset",
       accent: "#A6B7A3",
       bg: "bg-[#A6B7A3]/10",
+    },
+    {
+      icon: Brain,
+      title: "Learn Hypnosis",
+      tagline: "Train your mind to guide others into calm, clarity, and transformation.",
+      description:
+        "Become a confident, ethical, emotionally intelligent hypnotist using Roberta's signature Mind Styling™ approach to subconscious change. Perfect for beginners, coaches, therapists, and anyone ready to help others reshape their inner world.",
+      bullets: [
+        "Understanding the subconscious mind",
+        "Safe, ethical trance induction",
+        "Emotional state design",
+        "Custom session frameworks",
+        "Work with anxiety, performance, confidence",
+        "Live demos & practice sessions",
+      ],
+      bottomNote:
+        "No prior experience required. This is hypnosis for people who want to facilitate transformation, not memorize scripts.",
+      cta: "Explore Hypnosis Training",
+      link: "LearnHypnosis",
+      accent: "#6E4F7D",
+      bg: "bg-white",
     },
     {
       icon: Users,
