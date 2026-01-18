@@ -74,6 +74,25 @@ export default function MindStylingSuite() {
       bg: "bg-[#A6B7A3]/10",
     },
     {
+      icon: Users,
+      title: "Organizational Mind Styling",
+      tagline: "Transform how your team communicates, thinks, and leads.",
+      description:
+        "Workshops, trainings, and keynotes for teams and organizations who want to build cultures of emotional intelligence, clarity, and effective communication.",
+      bullets: [
+        "Navigate change",
+        "Resolve conflict",
+        "Improve communication",
+        "Elevate performance",
+        "Reduce burnout",
+        "Strengthen leadership identity",
+      ],
+      cta: "Book Roberta to Speak",
+      link: "SpeakingTraining",
+      accent: "#1E3A32",
+      bg: "bg-white",
+    },
+    {
       icon: Brain,
       title: "Learn Hypnosis",
       tagline: "Train your mind to guide others into calm, clarity, and transformation.",
@@ -92,25 +111,6 @@ export default function MindStylingSuite() {
       cta: "Explore Hypnosis Training",
       link: "LearnHypnosis",
       accent: "#6E4F7D",
-      bg: "bg-white",
-    },
-    {
-      icon: Users,
-      title: "Organizational Mind Styling",
-      tagline: "Transform how your team communicates, thinks, and leads.",
-      description:
-        "Workshops, trainings, and keynotes for teams and organizations who want to build cultures of emotional intelligence, clarity, and effective communication.",
-      bullets: [
-        "Navigate change",
-        "Resolve conflict",
-        "Improve communication",
-        "Elevate performance",
-        "Reduce burnout",
-        "Strengthen leadership identity",
-      ],
-      cta: "Book Roberta to Speak",
-      link: "SpeakingTraining",
-      accent: "#1E3A32",
       bg: "bg-white",
     },
   ];
