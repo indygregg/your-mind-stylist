@@ -520,40 +520,34 @@ export default function Programs() {
             </h2>
 
             <div className="grid md:grid-cols-3 gap-4">
-              <Link to={createPageUrl("PocketVisualization")}>
-                <Button className="w-full h-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">Pocket Mindset™</span>
-                  <span className="text-lg font-bold">$7/mo</span>
-                </Button>
-              </Link>
-
-              <Link to={createPageUrl("PurchaseCenter")}>
-                <Button className="w-full h-full bg-white text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">LENS™ (Full Bundle)</span>
-                  <span className="text-lg font-bold">$719</span>
-                </Button>
-              </Link>
-
-              <Link to={createPageUrl("PurchaseCenter")}>
-                <Button className="w-full h-full bg-[#6E4F7D] text-white hover:bg-[#5A3F67] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">Salon Group</span>
-                  <span className="text-lg font-bold">$1,995</span>
-                </Button>
-              </Link>
-
-              <Link to={createPageUrl("CleaningOutYourCloset")}>
-                <Button className="w-full h-full bg-white text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">Couture (Individual/one-on-one)</span>
-                  <span className="text-lg font-bold">$7,995</span>
-                </Button>
-              </Link>
-
-              <Link to={createPageUrl("LearnHypnosis")}>
-                <Button className="w-full h-full bg-white text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
-                  <span className="text-sm font-normal">Hypnosis Training</span>
-                  <span className="text-lg font-bold">Join Waitlist</span>
-                </Button>
-              </Link>
+              {isLoading ? (
+                <div className="col-span-3 text-center text-[#F9F5EF]/70">Loading products...</div>
+              ) : (
+                <>
+                  {/* Dynamically render published products for the CTA section */}
+                  {products
+                    .filter(p => p.ui_group === "hero" || p.ui_group === "featured")
+                    .slice(0, 5)
+                    .map((product) => (
+                      <Link key={product.id} to={product.slug ? createPageUrl(product.slug) : createPageUrl("PurchaseCenter")}>
+                        <Button className="w-full h-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
+                          <span className="text-sm font-normal">{product.name}</span>
+                          <span className="text-lg font-bold">{formatPrice(product.price, product.billing_interval)}</span>
+                        </Button>
+                      </Link>
+                    ))
+                  }
+                  
+                  {/* Fallback if no featured products - show link to Purchase Center */}
+                  {products.filter(p => p.ui_group === "hero" || p.ui_group === "featured").length === 0 && (
+                    <Link to={createPageUrl("PurchaseCenter")} className="col-span-3">
+                      <Button className="w-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] py-6">
+                        <span className="text-lg font-bold">View All Programs</span>
+                      </Button>
+                    </Link>
+                  )}
+                </>
+              )}
             </div>
 
             <div className="text-center mt-12">
