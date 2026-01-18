@@ -124,6 +124,7 @@ import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ConsultationFormEditor from './pages/ConsultationFormEditor';
 import ZoomSetup from './pages/ZoomSetup';
+import ManagerSettings from './pages/ManagerSettings';
 import __Layout from './Layout.jsx';
 
 
@@ -254,6 +255,7 @@ export const PAGES = {
     "ZoomConnect": ZoomConnect,
     "ConsultationFormEditor": ConsultationFormEditor,
     "ZoomSetup": ZoomSetup,
+    "ManagerSettings": ManagerSettings,
 }
 
 export const pagesConfig = {
