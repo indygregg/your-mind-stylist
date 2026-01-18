@@ -543,7 +543,14 @@ export default function About() {
                   />
                 </p>
                 <span className="text-[#1E3A32] font-medium group-hover:text-[#D8B46B] transition-colors inline-flex items-center gap-2">
-                  Learn More
+                  <CmsText 
+                    contentKey={`about.work.offering${index + 1}.cta`}
+                    page="About"
+                    blockTitle={`Offering ${index + 1} CTA Text`}
+                    fallback="Learn More"
+                    contentType="short_text"
+                    as="span"
+                  />
                   <ArrowRight size={16} />
                 </span>
               </Link>
