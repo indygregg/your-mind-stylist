@@ -173,7 +173,14 @@ export default function FreeMasterclass() {
                 to="/app/signup?intent=masterclass"
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                Watch the Free Webinar
+                <CmsText 
+                  contentKey="freemasterclass.hero.button1" 
+                  page="FreeMasterclass"
+                  blockTitle="Hero Button 1 Text"
+                  fallback="Watch the Free Webinar" 
+                  contentType="short_text"
+                  as="span"
+                />
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
@@ -183,7 +190,14 @@ export default function FreeMasterclass() {
                 to={createPageUrl("Contact")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
               >
-                Contact Roberta
+                <CmsText 
+                  contentKey="freemasterclass.hero.button2" 
+                  page="FreeMasterclass"
+                  blockTitle="Hero Button 2 Text"
+                  fallback="Contact Roberta" 
+                  contentType="short_text"
+                  as="span"
+                />
               </Link>
             </div>
           </motion.div>
@@ -199,11 +213,23 @@ export default function FreeMasterclass() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              What You'll Learn in This Class
+              <CmsText 
+                contentKey="freemasterclass.learn.title" 
+                page="FreeMasterclass"
+                blockTitle="What You'll Learn - Title"
+                fallback="What You'll Learn in This Class" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
-              In this masterclass, you'll explore:
+              <CmsText 
+                contentKey="freemasterclass.learn.intro" 
+                page="FreeMasterclass"
+                blockTitle="What You'll Learn - Intro"
+                fallback="In this masterclass, you'll explore:" 
+                contentType="rich_text"
+              />
             </p>
 
             <div className="space-y-4 mb-10">
@@ -217,17 +243,38 @@ export default function FreeMasterclass() {
                   className="flex items-start gap-4 bg-[#F9F5EF] p-6"
                 >
                   <CheckCircle size={24} className="text-[#D8B46B] flex-shrink-0 mt-0.5" />
-                  <span className="text-[#2B2725]/80 text-lg">{learning}</span>
+                  <span className="text-[#2B2725]/80 text-lg">
+                    <CmsText 
+                      contentKey={`freemasterclass.learn.item${index + 1}`}
+                      page="FreeMasterclass"
+                      blockTitle={`What You'll Learn - Item ${index + 1}`}
+                      fallback={learning}
+                      contentType="short_text"
+                      as="span"
+                    />
+                  </span>
                 </motion.div>
               ))}
             </div>
 
             <div className="border-l-4 border-[#D8B46B] pl-6 mb-8">
               <p className="font-serif text-xl text-[#1E3A32] mb-2">
-                This class isn't about "fake it till you make it."
+                <CmsText 
+                  contentKey="freemasterclass.learn.callout1" 
+                  page="FreeMasterclass"
+                  blockTitle="What You'll Learn - Callout Line 1"
+                  fallback="This class isn't about &quot;fake it till you make it.&quot;" 
+                  contentType="rich_text"
+                />
               </p>
               <p className="text-[#2B2725]/80 text-lg">
-                It's about understanding your mind so you can stop fighting yourself.
+                <CmsText 
+                  contentKey="freemasterclass.learn.callout2" 
+                  page="FreeMasterclass"
+                  blockTitle="What You'll Learn - Callout Line 2"
+                  fallback="It's about understanding your mind so you can stop fighting yourself." 
+                  contentType="rich_text"
+                />
               </p>
             </div>
 
@@ -236,7 +283,14 @@ export default function FreeMasterclass() {
                 to="/app/signup?intent=masterclass"
                 className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
-                Access the Free Masterclass
+                <CmsText 
+                  contentKey="freemasterclass.learn.button" 
+                  page="FreeMasterclass"
+                  blockTitle="What You'll Learn - Button Text"
+                  fallback="Access the Free Masterclass" 
+                  contentType="short_text"
+                  as="span"
+                />
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
@@ -256,7 +310,13 @@ export default function FreeMasterclass() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              This Class Is for You If…
+              <CmsText 
+                contentKey="freemasterclass.foryou.title" 
+                page="FreeMasterclass"
+                blockTitle="For You If - Title"
+                fallback="This Class Is for You If…" 
+                contentType="short_text"
+              />
             </h2>
 
             <div className="space-y-4">
@@ -270,14 +330,28 @@ export default function FreeMasterclass() {
                   className="flex items-start gap-3"
                 >
                   <div className="w-2 h-2 rounded-full bg-[#6E4F7D] mt-2.5 flex-shrink-0" />
-                  <span className="text-[#2B2725]/80 text-lg">{item}</span>
+                  <span className="text-[#2B2725]/80 text-lg">
+                    <CmsText 
+                      contentKey={`freemasterclass.foryou.item${index + 1}`}
+                      page="FreeMasterclass"
+                      blockTitle={`For You If - Item ${index + 1}`}
+                      fallback={item}
+                      contentType="short_text"
+                      as="span"
+                    />
+                  </span>
                 </motion.div>
               ))}
             </div>
 
             <p className="mt-10 font-serif text-xl text-[#1E3A32] italic">
-              If you're tired of the internal battle between what you've achieved and what you believe
-              about yourself, this is your starting point.
+              <CmsText 
+                contentKey="freemasterclass.foryou.closing" 
+                page="FreeMasterclass"
+                blockTitle="For You If - Closing"
+                fallback="If you're tired of the internal battle between what you've achieved and what you believe about yourself, this is your starting point." 
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
         </div>
@@ -292,27 +366,75 @@ export default function FreeMasterclass() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              A Different Way to Look at Imposter Syndrome
+              <CmsText 
+                contentKey="freemasterclass.different.title" 
+                page="FreeMasterclass"
+                blockTitle="Different Approach - Title"
+                fallback="A Different Way to Look at Imposter Syndrome" 
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">
-              Most advice about imposter syndrome focuses on:
+              <CmsText 
+                contentKey="freemasterclass.different.intro" 
+                page="FreeMasterclass"
+                blockTitle="Different Approach - Intro"
+                fallback="Most advice about imposter syndrome focuses on:" 
+                contentType="rich_text"
+              />
             </p>
 
             <div className="bg-[#F9F5EF] p-8 mb-10">
               <div className="space-y-3">
-                <p className="text-[#2B2725]/70">• More affirmations</p>
-                <p className="text-[#2B2725]/70">• More confidence hacks</p>
-                <p className="text-[#2B2725]/70">• More "just believe in yourself"</p>
+                <p className="text-[#2B2725]/70">
+                  <CmsText 
+                    contentKey="freemasterclass.different.typical1" 
+                    page="FreeMasterclass"
+                    blockTitle="Different Approach - Typical Advice 1"
+                    fallback="• More affirmations" 
+                    contentType="short_text"
+                  />
+                </p>
+                <p className="text-[#2B2725]/70">
+                  <CmsText 
+                    contentKey="freemasterclass.different.typical2" 
+                    page="FreeMasterclass"
+                    blockTitle="Different Approach - Typical Advice 2"
+                    fallback="• More confidence hacks" 
+                    contentType="short_text"
+                  />
+                </p>
+                <p className="text-[#2B2725]/70">
+                  <CmsText 
+                    contentKey="freemasterclass.different.typical3" 
+                    page="FreeMasterclass"
+                    blockTitle="Different Approach - Typical Advice 3"
+                    fallback="• More &quot;just believe in yourself&quot;" 
+                    contentType="short_text"
+                  />
+                </p>
               </div>
             </div>
 
             <p className="font-serif text-2xl text-[#1E3A32] mb-8">
-              Your Mind Stylist approach is different.
+              <CmsText 
+                contentKey="freemasterclass.different.subhead" 
+                page="FreeMasterclass"
+                blockTitle="Different Approach - Subheading"
+                fallback="Your Mind Stylist approach is different." 
+                contentType="short_text"
+              />
             </p>
 
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
-              Instead of forcing confidence, we explore:
+              <CmsText 
+                contentKey="freemasterclass.different.intro2" 
+                page="FreeMasterclass"
+                blockTitle="Different Approach - Intro 2"
+                fallback="Instead of forcing confidence, we explore:" 
+                contentType="rich_text"
+              />
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 mb-10">
@@ -325,18 +447,48 @@ export default function FreeMasterclass() {
                   transition={{ delay: index * 0.1 }}
                   className="border-l-2 border-[#D8B46B] pl-6"
                 >
-                  <p className="font-medium text-[#1E3A32] mb-2">{approach.title}</p>
-                  <p className="text-[#2B2725]/70">{approach.description}</p>
+                  <p className="font-medium text-[#1E3A32] mb-2">
+                    <CmsText 
+                      contentKey={`freemasterclass.different.approach${index + 1}.title`}
+                      page="FreeMasterclass"
+                      blockTitle={`Different Approach - Point ${index + 1} Title`}
+                      fallback={approach.title}
+                      contentType="short_text"
+                      as="span"
+                    />
+                  </p>
+                  <p className="text-[#2B2725]/70">
+                    <CmsText 
+                      contentKey={`freemasterclass.different.approach${index + 1}.description`}
+                      page="FreeMasterclass"
+                      blockTitle={`Different Approach - Point ${index + 1} Description`}
+                      fallback={approach.description}
+                      contentType="short_text"
+                      as="span"
+                    />
+                  </p>
                 </motion.div>
               ))}
             </div>
 
             <div className="bg-[#6E4F7D] p-8 text-center">
               <p className="text-[#F9F5EF] text-lg mb-4">
-                From there, we work with awareness, emotional intelligence, and gentle pattern shifts.
+                <CmsText 
+                  contentKey="freemasterclass.different.callout1" 
+                  page="FreeMasterclass"
+                  blockTitle="Different Approach - Callout Line 1"
+                  fallback="From there, we work with awareness, emotional intelligence, and gentle pattern shifts." 
+                  contentType="rich_text"
+                />
               </p>
               <p className="font-serif text-xl text-[#F9F5EF] italic">
-                This isn't about pretending — it's about understanding.
+                <CmsText 
+                  contentKey="freemasterclass.different.callout2" 
+                  page="FreeMasterclass"
+                  blockTitle="Different Approach - Callout Line 2"
+                  fallback="This isn't about pretending — it's about understanding." 
+                  contentType="rich_text"
+                />
               </p>
             </div>
           </motion.div>
@@ -353,7 +505,13 @@ export default function FreeMasterclass() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
-              How to Watch the Masterclass
+              <CmsText 
+                contentKey="freemasterclass.howto.title" 
+                page="FreeMasterclass"
+                blockTitle="How to Watch - Title"
+                fallback="How to Watch the Masterclass" 
+                contentType="short_text"
+              />
             </h2>
           </motion.div>
 
@@ -372,9 +530,24 @@ export default function FreeMasterclass() {
                 </div>
                 <h3 className="font-serif text-lg text-[#1E3A32] mb-3 flex items-start justify-center gap-2">
                   <span className="text-[#D8B46B]">✦</span>
-                  {step.title}
+                  <CmsText 
+                    contentKey={`freemasterclass.howto.step${index + 1}.title`}
+                    page="FreeMasterclass"
+                    blockTitle={`How to Watch - Step ${index + 1} Title`}
+                    fallback={step.title}
+                    contentType="short_text"
+                    as="span"
+                  />
                 </h3>
-                <p className="text-[#2B2725]/70 text-sm leading-relaxed">{step.description}</p>
+                <p className="text-[#2B2725]/70 text-sm leading-relaxed">
+                  <CmsText 
+                    contentKey={`freemasterclass.howto.step${index + 1}.description`}
+                    page="FreeMasterclass"
+                    blockTitle={`How to Watch - Step ${index + 1} Description`}
+                    fallback={step.description}
+                    contentType="rich_text"
+                  />
+                </p>
               </motion.div>
             ))}
           </div>
@@ -384,7 +557,14 @@ export default function FreeMasterclass() {
               to="/app/signup?intent=masterclass"
               className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
             >
-              Watch the Free Masterclass
+              <CmsText 
+                contentKey="freemasterclass.howto.button" 
+                page="FreeMasterclass"
+                blockTitle="How to Watch - Button Text"
+                fallback="Watch the Free Masterclass" 
+                contentType="short_text"
+                as="span"
+              />
               <ArrowRight
                 size={16}
                 className="group-hover:translate-x-1 transition-transform"
@@ -404,10 +584,22 @@ export default function FreeMasterclass() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
-              Want to Go Deeper After the Masterclass?
+              <CmsText 
+                contentKey="freemasterclass.deeper.title" 
+                page="FreeMasterclass"
+                blockTitle="Go Deeper - Title"
+                fallback="Want to Go Deeper After the Masterclass?" 
+                contentType="short_text"
+              />
             </h2>
             <p className="text-[#2B2725]/70 text-lg">
-              If this class resonates, there are several ways to continue your work:
+              <CmsText 
+                contentKey="freemasterclass.deeper.intro" 
+                page="FreeMasterclass"
+                blockTitle="Go Deeper - Intro"
+                fallback="If this class resonates, there are several ways to continue your work:" 
+                contentType="rich_text"
+              />
             </p>
           </motion.div>
 
@@ -426,14 +618,36 @@ export default function FreeMasterclass() {
                 </div>
                 <h3 className="font-serif text-xl text-[#1E3A32] mb-3 flex items-start gap-2">
                   <span className="text-[#D8B46B]">✦</span>
-                  {offering.title}
+                  <CmsText 
+                    contentKey={`freemasterclass.deeper.offering${index + 1}.title`}
+                    page="FreeMasterclass"
+                    blockTitle={`Go Deeper - Offering ${index + 1} Title`}
+                    fallback={offering.title}
+                    contentType="short_text"
+                    as="span"
+                  />
                 </h3>
-                <p className="text-[#2B2725]/70 leading-relaxed mb-6">{offering.description}</p>
+                <p className="text-[#2B2725]/70 leading-relaxed mb-6">
+                  <CmsText 
+                    contentKey={`freemasterclass.deeper.offering${index + 1}.description`}
+                    page="FreeMasterclass"
+                    blockTitle={`Go Deeper - Offering ${index + 1} Description`}
+                    fallback={offering.description}
+                    contentType="rich_text"
+                  />
+                </p>
                 <Link
                   to={createPageUrl(offering.link)}
                   className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all"
                 >
-                  Learn More
+                  <CmsText 
+                    contentKey={`freemasterclass.deeper.offering${index + 1}.cta`}
+                    page="FreeMasterclass"
+                    blockTitle={`Go Deeper - Offering ${index + 1} CTA`}
+                    fallback="Learn More"
+                    contentType="short_text"
+                    as="span"
+                  />
                   <ArrowRight
                     size={16}
                     className="group-hover:translate-x-1 transition-transform"
@@ -454,13 +668,23 @@ export default function FreeMasterclass() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
-              Ready to Stop Feeling
-              <br />
-              <span className="italic text-[#D8B46B]">Like You're Faking It?</span>
+              <CmsText 
+                contentKey="freemasterclass.final.title" 
+                page="FreeMasterclass"
+                blockTitle="Final CTA - Title"
+                fallback="Ready to Stop Feeling<br /><span class='italic text-[#D8B46B]'>Like You're Faking It?</span>" 
+                contentType="rich_text"
+              />
             </h2>
 
             <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
-              You've already done the work. This is about finally allowing yourself to own it.
+              <CmsText 
+                contentKey="freemasterclass.final.description" 
+                page="FreeMasterclass"
+                blockTitle="Final CTA - Description"
+                fallback="You've already done the work. This is about finally allowing yourself to own it." 
+                contentType="rich_text"
+              />
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -468,7 +692,14 @@ export default function FreeMasterclass() {
                 to="/app/signup?intent=masterclass"
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
               >
-                Watch the Free Webinar
+                <CmsText 
+                  contentKey="freemasterclass.final.button1" 
+                  page="FreeMasterclass"
+                  blockTitle="Final CTA - Button 1 Text"
+                  fallback="Watch the Free Webinar" 
+                  contentType="short_text"
+                  as="span"
+                />
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
@@ -478,7 +709,14 @@ export default function FreeMasterclass() {
                 to={createPageUrl("Contact")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
               >
-                Contact Roberta
+                <CmsText 
+                  contentKey="freemasterclass.final.button2" 
+                  page="FreeMasterclass"
+                  blockTitle="Final CTA - Button 2 Text"
+                  fallback="Contact Roberta" 
+                  contentType="short_text"
+                  as="span"
+                />
               </Link>
             </div>
           </motion.div>
