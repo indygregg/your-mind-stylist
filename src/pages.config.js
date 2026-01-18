@@ -123,6 +123,7 @@ import WebinarPage from './pages/WebinarPage';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ConsultationFormEditor from './pages/ConsultationFormEditor';
+import ZoomSetup from './pages/ZoomSetup';
 import __Layout from './Layout.jsx';
 
 
@@ -252,6 +253,7 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ConsultationFormEditor": ConsultationFormEditor,
+    "ZoomSetup": ZoomSetup,
 }
 
 export const pagesConfig = {
