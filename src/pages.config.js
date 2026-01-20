@@ -49,6 +49,7 @@ import GuestAuthorInvite from './pages/GuestAuthorInvite';
 import Home from './pages/Home';
 import InnerRehearsal from './pages/InnerRehearsal';
 import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
+import IntegrationSetup from './pages/IntegrationSetup';
 import LENS from './pages/LENS';
 import LearnHypnosis from './pages/LearnHypnosis';
 import LegalPage from './pages/LegalPage';
@@ -116,17 +117,16 @@ import StudioNotes from './pages/StudioNotes';
 import StudioPricing from './pages/StudioPricing';
 import StudioRevisions from './pages/StudioRevisions';
 import StudioRoles from './pages/StudioRoles';
-import StudioSettings from './pages/StudioSettings';
 import Welcome from './pages/Welcome';
+import StudioSettings from './pages/StudioSettings';
 import StylePauses from './pages/StylePauses';
 import TransformationDemo from './pages/TransformationDemo';
 import TransformationStory from './pages/TransformationStory';
+import TransitionGuide from './pages/TransitionGuide';
 import WebinarPage from './pages/WebinarPage';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import IntegrationSetup from './pages/IntegrationSetup';
-import TransitionGuide from './pages/TransitionGuide';
 import __Layout from './Layout.jsx';
 
 
@@ -182,6 +182,7 @@ export const PAGES = {
     "Home": Home,
     "InnerRehearsal": InnerRehearsal,
     "InnerRehearsalPurchase": InnerRehearsalPurchase,
+    "IntegrationSetup": IntegrationSetup,
     "LENS": LENS,
     "LearnHypnosis": LearnHypnosis,
     "LegalPage": LegalPage,
@@ -249,17 +250,16 @@ export const PAGES = {
     "StudioPricing": StudioPricing,
     "StudioRevisions": StudioRevisions,
     "StudioRoles": StudioRoles,
-    "StudioSettings": StudioSettings,
     "Welcome": Welcome,
+    "StudioSettings": StudioSettings,
     "StylePauses": StylePauses,
     "TransformationDemo": TransformationDemo,
     "TransformationStory": TransformationStory,
+    "TransitionGuide": TransitionGuide,
     "WebinarPage": WebinarPage,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "IntegrationSetup": IntegrationSetup,
-    "TransitionGuide": TransitionGuide,
 }
 
 export const pagesConfig = {
