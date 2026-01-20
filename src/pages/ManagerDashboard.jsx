@@ -106,9 +106,9 @@ export default function ManagerDashboard() {
     },
     { 
       id: 'google_calendar', 
-      label: 'Connect Google Calendar', 
+      label: 'Connect your calendar (Google or Mac)', 
       completed: hasGoogleCalendar, 
-      link: 'CalendarSettings'
+      link: 'IntegrationSetup'
     },
     { 
       id: 'test', 
