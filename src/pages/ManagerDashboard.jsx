@@ -4,8 +4,9 @@ import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings, Clock, CheckCircle, Circle, X, DollarSign, Play, Package } from "lucide-react";
+import { PenSquare, FileVideo, Headphones, Mail, Users, FileText, ShoppingCart, Sparkles, Target, Image, Download, Calendar, BarChart3, TrendingUp, Video, Settings, Clock, CheckCircle, Circle, X, DollarSign, Play, Package, AlertCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import AIManagerAssistant from "../components/ai/AIManagerAssistant";
 import { PersonalizedGreeting } from "@/components/ui/PersonalizedGreeting";
 
@@ -163,6 +164,37 @@ export default function ManagerDashboard() {
       <div className="max-w-7xl mx-auto">
         {/* Personalized Welcome */}
         <PersonalizedGreeting user={user} variant="dashboard" />
+
+        {/* Transition Guide Alert */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-8"
+        >
+          <Alert className="bg-gradient-to-r from-[#D8B46B]/20 to-[#D8B46B]/10 border-2 border-[#D8B46B] shadow-lg">
+            <AlertCircle className="text-[#D8B46B]" size={24} />
+            <AlertDescription>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="font-serif text-xl text-[#1E3A32] mb-2">
+                    Transitioning from Acuity?
+                  </h3>
+                  <p className="text-[#2B2725]/80 mb-3">
+                    Follow our step-by-step guide to smoothly migrate your booking system while keeping your existing clients happy.
+                  </p>
+                  <Link
+                    to={createPageUrl("TransitionGuide")}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors rounded"
+                  >
+                    View Transition Guide
+                    <ArrowRight size={16} />
+                  </Link>
+                </div>
+              </div>
+            </AlertDescription>
+          </Alert>
+        </motion.div>
 
         {/* Booking Setup Checklist */}
         {!setupDismissed && !allComplete && (

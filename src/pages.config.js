@@ -126,6 +126,7 @@ import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
 import IntegrationSetup from './pages/IntegrationSetup';
+import TransitionGuide from './pages/TransitionGuide';
 import __Layout from './Layout.jsx';
 
 
@@ -258,6 +259,7 @@ export const PAGES = {
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
     "IntegrationSetup": IntegrationSetup,
+    "TransitionGuide": TransitionGuide,
 }
 
 export const pagesConfig = {
