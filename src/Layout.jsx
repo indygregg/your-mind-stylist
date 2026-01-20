@@ -25,7 +25,7 @@ export default function Layout({ children, currentPageName }) {
     const checkAuthPages = async () => {
       // Skip layout rendering for login/auth pages
       if (!currentPageName) return;
-      
+
       // Check if user is authenticated and get their info
       try {
         const isAuth = await base44.auth.isAuthenticated();
@@ -36,7 +36,7 @@ export default function Layout({ children, currentPageName }) {
       } catch (error) {
         // User not authenticated
       }
-      
+
       // Pattern-based detection for authenticated pages
       const isAuthPage = 
         currentPageName.startsWith('Admin') ||
@@ -45,8 +45,16 @@ export default function Layout({ children, currentPageName }) {
         ['Dashboard', 'PurchaseCenter', 'Library', 'TransformationStory', 'Resources'].includes(currentPageName) ||
         currentPageName.endsWith('Editor') ||
         currentPageName.endsWith('Manager');
-      
+
+      // Hybrid pages that adapt to user's auth status
+      const hybridPages = ['FreeMasterclass', 'Masterclass'];
+      const isHybridPage = hybridPages.includes(currentPageName);
+
       if (isAuthPage) {
+        const isAuth = await base44.auth.isAuthenticated();
+        setUseAuthLayout(isAuth);
+      } else if (isHybridPage) {
+        // For hybrid pages, use auth layout if user is authenticated
         const isAuth = await base44.auth.isAuthenticated();
         setUseAuthLayout(isAuth);
       }
