@@ -25,6 +25,7 @@ import Certification from './pages/Certification';
 import CleaningOutYourCloset from './pages/CleaningOutYourCloset';
 import ClientBookings from './pages/ClientBookings';
 import ClientPortal from './pages/ClientPortal';
+import ConsultationFormEditor from './pages/ConsultationFormEditor';
 import ConsultationQuestionnaire from './pages/ConsultationQuestionnaire';
 import ConsultationSubmitted from './pages/ConsultationSubmitted';
 import Consultations from './pages/Consultations';
@@ -81,6 +82,7 @@ import ManagerQuizAnalytics from './pages/ManagerQuizAnalytics';
 import ManagerReports from './pages/ManagerReports';
 import ManagerResourceEditor from './pages/ManagerResourceEditor';
 import ManagerResources from './pages/ManagerResources';
+import ManagerSettings from './pages/ManagerSettings';
 import ManagerSubscriptionAnalytics from './pages/ManagerSubscriptionAnalytics';
 import ManagerTransformationAnalytics from './pages/ManagerTransformationAnalytics';
 import ManagerWaitingList from './pages/ManagerWaitingList';
@@ -115,16 +117,15 @@ import StudioPricing from './pages/StudioPricing';
 import StudioRevisions from './pages/StudioRevisions';
 import StudioRoles from './pages/StudioRoles';
 import StudioSettings from './pages/StudioSettings';
+import Welcome from './pages/Welcome';
 import StylePauses from './pages/StylePauses';
 import TransformationDemo from './pages/TransformationDemo';
-import Welcome from './pages/Welcome';
 import TransformationStory from './pages/TransformationStory';
 import WebinarPage from './pages/WebinarPage';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
-import ConsultationFormEditor from './pages/ConsultationFormEditor';
 import ZoomSetup from './pages/ZoomSetup';
-import ManagerSettings from './pages/ManagerSettings';
+import IntegrationSetup from './pages/IntegrationSetup';
 import __Layout from './Layout.jsx';
 
 
@@ -156,6 +157,7 @@ export const PAGES = {
     "CleaningOutYourCloset": CleaningOutYourCloset,
     "ClientBookings": ClientBookings,
     "ClientPortal": ClientPortal,
+    "ConsultationFormEditor": ConsultationFormEditor,
     "ConsultationQuestionnaire": ConsultationQuestionnaire,
     "ConsultationSubmitted": ConsultationSubmitted,
     "Consultations": Consultations,
@@ -212,6 +214,7 @@ export const PAGES = {
     "ManagerReports": ManagerReports,
     "ManagerResourceEditor": ManagerResourceEditor,
     "ManagerResources": ManagerResources,
+    "ManagerSettings": ManagerSettings,
     "ManagerSubscriptionAnalytics": ManagerSubscriptionAnalytics,
     "ManagerTransformationAnalytics": ManagerTransformationAnalytics,
     "ManagerWaitingList": ManagerWaitingList,
@@ -246,16 +249,15 @@ export const PAGES = {
     "StudioRevisions": StudioRevisions,
     "StudioRoles": StudioRoles,
     "StudioSettings": StudioSettings,
+    "Welcome": Welcome,
     "StylePauses": StylePauses,
     "TransformationDemo": TransformationDemo,
-    "Welcome": Welcome,
     "TransformationStory": TransformationStory,
     "WebinarPage": WebinarPage,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
-    "ConsultationFormEditor": ConsultationFormEditor,
     "ZoomSetup": ZoomSetup,
-    "ManagerSettings": ManagerSettings,
+    "IntegrationSetup": IntegrationSetup,
 }
 
 export const pagesConfig = {
