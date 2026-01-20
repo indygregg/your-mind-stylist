@@ -16,6 +16,7 @@ import AffiliateTracker from "./components/affiliate/AffiliateTracker";
 
 export default function Layout({ children, currentPageName }) {
   const [useAuthLayout, setUseAuthLayout] = useState(false);
+  const [layoutReady, setLayoutReady] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -58,6 +59,8 @@ export default function Layout({ children, currentPageName }) {
         const isAuth = await base44.auth.isAuthenticated();
         setUseAuthLayout(isAuth);
       }
+      
+      setLayoutReady(true);
     };
     checkAuthPages();
   }, [currentPageName]);
@@ -71,6 +74,22 @@ export default function Layout({ children, currentPageName }) {
       return () => window.removeEventListener("scroll", handleScroll);
     }
   }, [useAuthLayout]);
+
+  // Show loading while checking auth for protected pages
+  const authPagesList = currentPageName?.startsWith('Admin') ||
+    currentPageName?.startsWith('Studio') ||
+    currentPageName?.startsWith('Manager') ||
+    ['Dashboard', 'PurchaseCenter', 'Library', 'TransformationStory', 'Resources'].includes(currentPageName) ||
+    currentPageName?.endsWith('Editor') ||
+    currentPageName?.endsWith('Manager');
+
+  if (authPagesList && !layoutReady) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
+        <div className="animate-pulse text-[#1E3A32]">Loading...</div>
+      </div>
+    );
+  }
 
   // Return AuthLayout if authenticated page
   if (useAuthLayout) {
