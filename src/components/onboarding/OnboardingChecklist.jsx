@@ -140,15 +140,14 @@ export default function OnboardingChecklist({ user }) {
                   </div>
 
                   {!completed && (
-                    <Link to={createPageUrl(step.link)}>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="text-[#1E3A32] hover:text-[#D8B46B]"
-                      >
-                        <ChevronRight size={16} />
-                      </Button>
-                    </Link>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-[#1E3A32] hover:text-[#D8B46B]"
+                      onClick={() => window.location.href = createPageUrl(step.link)}
+                    >
+                      <ChevronRight size={16} />
+                    </Button>
                   )}
                 </div>
               );
