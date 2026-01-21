@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Layers, Sparkles, BookOpen, Calendar, Play, User, Edit3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import CmsText from "../components/cms/CmsText";
 import OnboardingModal from "../components/onboarding/OnboardingModal";
 import OnboardingChecklist from "../components/onboarding/OnboardingChecklist";
 import DashboardTooltips from "../components/onboarding/DashboardTooltips";
@@ -185,8 +186,12 @@ export default function Dashboard() {
             <div className="bg-gradient-to-r from-[#D8B46B] to-[#C9A55A] p-6 rounded-lg text-white">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-serif text-xl mb-2">Daily Style Check™</h3>
-                  <p className="text-white/90 text-sm">Quick check-in • Everything optional</p>
+                  <h3 className="font-serif text-xl mb-2">
+                    <CmsText cmsKey="dashboard.style_check.title" defaultText="Daily Style Check™" />
+                  </h3>
+                  <p className="text-white/90 text-sm">
+                    <CmsText cmsKey="dashboard.style_check.subtitle" defaultText="Quick check-in • Everything optional" />
+                  </p>
                 </div>
                 <Button
                   onClick={() => setShowStyleCheck(true)}
@@ -224,7 +229,9 @@ export default function Dashboard() {
           {/* Upcoming Sessions */}
           {upcomingBookings.length > 0 && (
             <div className="mb-12">
-              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Your Upcoming Sessions</h2>
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">
+                <CmsText cmsKey="dashboard.sessions.title" defaultText="Your Upcoming Sessions" />
+              </h2>
               <UpcomingSessions 
                 bookings={upcomingBookings} 
                 onRefresh={async () => {
@@ -238,7 +245,9 @@ export default function Dashboard() {
           {/* Personalized Recommendations */}
           {recommendations.length > 0 && (
             <div className="mb-12">
-              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Suggested For You</h2>
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">
+                <CmsText cmsKey="dashboard.recommendations.title" defaultText="Suggested For You" />
+              </h2>
               <div className="grid md:grid-cols-2 gap-6">
                 {recommendations.map((rec, index) => (
                   <RecommendationCard 
@@ -257,22 +266,25 @@ export default function Dashboard() {
           {/* Booking History */}
           {pastBookings.length > 0 && (
             <div className="mb-12">
-              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Booking History</h2>
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">
+                <CmsText cmsKey="dashboard.history.title" defaultText="Booking History" />
+              </h2>
               <BookingHistory bookings={pastBookings} />
             </div>
           )}
 
           {/* Programs */}
           <div className="mb-12">
-            <h2 className="font-serif text-xl text-[#1E3A32] mb-6">Your Programs</h2>
+            <h2 className="font-serif text-xl text-[#1E3A32] mb-6">
+              <CmsText cmsKey="dashboard.programs.title" defaultText="Your Programs" />
+            </h2>
             {programs.length === 0 ? (
               <div className="bg-white p-8 text-center">
                 <p className="text-[#2B2725]/70 leading-relaxed">
-                  You haven't added any programs yet. When you're ready, you can begin with{" "}
-                  <Link to={createPageUrl("PocketVisualization")} className="text-[#D8B46B] hover:underline">
-                    Pocket Visualization™
-                  </Link>{" "}
-                  or explore the Mind Style Toolkit.
+                  <CmsText 
+                    cmsKey="dashboard.programs.empty" 
+                    defaultText="You haven't added any programs yet. When you're ready, you can begin with Pocket Visualization™ or explore the Mind Style Toolkit." 
+                  />
                 </p>
               </div>
             ) : (
@@ -301,7 +313,9 @@ export default function Dashboard() {
 
           {/* Quick Links */}
           <div>
-            <h2 className="font-serif text-xl text-[#1E3A32] mb-6">Quick Links</h2>
+            <h2 className="font-serif text-xl text-[#1E3A32] mb-6">
+              <CmsText cmsKey="dashboard.quicklinks.title" defaultText="Quick Links" />
+            </h2>
             <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
               {[
                 { label: "Style Pauses™", page: "StylePauses", icon: Sparkles, description: "1-3 minute resets." },
