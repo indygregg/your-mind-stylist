@@ -77,6 +77,7 @@ export default function AuthLayout({ children, currentPageName }) {
     if (isAdmin) {
       return [
         ...commonLinks,
+        { name: "User Dashboard", page: "Dashboard" },
         { name: "Calendar", page: "ManagerCalendar" },
         { name: "Staff", page: "StaffManagement" },
         { name: "Library", page: "Library" },
@@ -90,6 +91,7 @@ export default function AuthLayout({ children, currentPageName }) {
     if (isManager) {
       return [
         ...commonLinks,
+        { name: "User Dashboard", page: "Dashboard" },
         { name: "Calendar", page: "ManagerCalendar" },
         { name: "Staff", page: "StaffManagement" },
         { name: "Library", page: "Library" },
