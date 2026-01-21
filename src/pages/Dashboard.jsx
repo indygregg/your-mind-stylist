@@ -304,7 +304,8 @@ export default function Dashboard() {
                     </span>
                     <div className="mt-4">
                       <Link 
-                        to={createPageUrl(program.page)} 
+                        to={createPageUrl(program.page)}
+                        onClick={() => window.scrollTo(0, 0)}
                         className="text-[#1E3A32] text-sm font-medium hover:text-[#D8B46B] transition-colors"
                       >
                         Learn More →
@@ -333,6 +334,7 @@ export default function Dashboard() {
                 <Link
                   key={link.label}
                   to={createPageUrl(link.page)}
+                  onClick={() => window.scrollTo(0, 0)}
                   className="bg-white p-4 hover:shadow-md transition-shadow flex flex-col gap-2 min-h-[100px] active:scale-98 touch-manipulation"
                 >
                   <link.icon size={20} className="text-[#D8B46B]" />
