@@ -7,14 +7,17 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye, EyeOff, DollarSign, Sparkles, RefreshCw, ExternalLink, Download, Upload } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, DollarSign, Sparkles, RefreshCw, ExternalLink, Download, Upload, Package } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ReactQuill from "react-quill";
+import BundleCreator from "../components/manager/BundleCreator";
 
 export default function ManagerProducts() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [bundleDialogOpen, setBundleDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [editingBundle, setEditingBundle] = useState(null);
   const [syncing, setSyncing] = useState(false);
   const [importing, setImporting] = useState(false);
   const fileInputRef = React.useRef(null);
@@ -193,6 +196,13 @@ export default function ManagerProducts() {
   };
 
   const handleEdit = (product) => {
+    // If it's a bundle, open the bundle editor
+    if (product.is_bundle || product.type === "bundle") {
+      setEditingBundle(product);
+      setBundleDialogOpen(true);
+      return;
+    }
+    
     setEditingProduct(product);
     setFormData({
       ...product,
@@ -361,6 +371,16 @@ export default function ManagerProducts() {
           </div>
           <div className="flex gap-3">
             <Button
+              onClick={() => {
+                setEditingBundle(null);
+                setBundleDialogOpen(true);
+              }}
+              className="bg-[#6E4F7D] hover:bg-[#8B659B]"
+            >
+              <Package size={16} className="mr-2" />
+              Create Bundle
+            </Button>
+            <Button
               variant="outline"
               onClick={() => {
                 const menu = document.createElement('div');
@@ -473,6 +493,12 @@ export default function ManagerProducts() {
                       <span className="text-xs px-2 py-1 bg-[#F9F5EF] text-[#2B2725]/70 rounded">
                         {product.type}
                       </span>
+                      {(product.is_bundle || product.type === "bundle") && (
+                        <span className="text-xs px-2 py-1 bg-[#6E4F7D]/20 text-[#6E4F7D] rounded flex items-center gap-1">
+                          <Package size={12} />
+                          Bundle ({product.bundled_product_ids?.length || 0})
+                        </span>
+                      )}
                       {product.stripe_product_id && (
                         <span className="text-xs px-2 py-1 bg-[#A6B7A3]/20 text-[#A6B7A3] rounded">
                           Synced
@@ -874,6 +900,16 @@ export default function ManagerProducts() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Bundle Creator Dialog */}
+      <BundleCreator
+        open={bundleDialogOpen}
+        onClose={() => {
+          setBundleDialogOpen(false);
+          setEditingBundle(null);
+        }}
+        existingBundle={editingBundle}
+      />
     </div>
   );
 }
