@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "../utils";
+import { createPageUrl } from "../../utils";
 
 export default function SmartLoginRedirect() {
   const navigate = useNavigate();
