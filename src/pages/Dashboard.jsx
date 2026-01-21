@@ -119,15 +119,17 @@ export default function Dashboard() {
   const programs = useMemo(() => [
     {
       icon: Layers,
-      title: "The Mind Styling Evolution™",
+      title: "Cleaning Out Your Closet",
       status: "Not Enrolled",
       color: "#1E3A32",
+      page: "CleaningOutYourCloset",
     },
     {
       icon: Sparkles,
-      title: "Pocket Visualization™",
+      title: "Pocket Mindset™",
       status: "Not Enrolled",
       color: "#A6B7A3",
+      page: "PocketMindset",
     },
   ], []);
 
@@ -301,9 +303,12 @@ export default function Dashboard() {
                       {program.status}
                     </span>
                     <div className="mt-4">
-                      <button className="text-[#1E3A32] text-sm font-medium hover:text-[#D8B46B] transition-colors">
+                      <Link 
+                        to={createPageUrl(program.page)} 
+                        className="text-[#1E3A32] text-sm font-medium hover:text-[#D8B46B] transition-colors"
+                      >
                         Learn More →
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 ))}
@@ -320,7 +325,7 @@ export default function Dashboard() {
               {[
                 { label: "Style Pauses™", page: "StylePauses", icon: Sparkles, description: "1-3 minute resets." },
                 { label: "Library", page: "Library", icon: Layers, description: "Access your programs." },
-                { label: "Pocket Visualization™", page: "PocketVisualization", icon: Sparkles, description: "Daily emotional reset tools." },
+                { label: "Pocket Mindset™", page: "PocketMindset", icon: Sparkles, description: "Daily emotional reset tools." },
                 { label: "Notes", page: "StudioNotes", icon: Edit3, description: "Capture insights as you learn." },
                 { label: "Free Masterclass", page: "FreeMasterclass", icon: Play, description: "Watch anytime." },
                 { label: "Read Blog", page: "Blog", icon: BookOpen, description: "Articles and insights." },

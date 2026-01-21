@@ -48,7 +48,7 @@ export default function Layout({ children, currentPageName }) {
         currentPageName.endsWith('Manager');
 
       // Hybrid pages that adapt to user's auth status
-      const hybridPages = ['FreeMasterclass', 'Masterclass'];
+      const hybridPages = ['FreeMasterclass', 'Masterclass', 'CleaningOutYourCloset', 'PocketMindset', 'Blog', 'BlogPost'];
       const isHybridPage = hybridPages.includes(currentPageName);
 
       if (isAuthPage) {
