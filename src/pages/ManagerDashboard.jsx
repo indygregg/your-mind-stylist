@@ -11,11 +11,6 @@ import AIManagerAssistant from "../components/ai/AIManagerAssistant";
 import { PersonalizedGreeting } from "@/components/ui/PersonalizedGreeting";
 
 export default function ManagerDashboard() {
-  // Set auth layout
-  if (typeof window !== 'undefined') {
-    window.__USE_AUTH_LAYOUT = true;
-  }
-
   const [user, setUser] = useState(null);
 
   useEffect(() => {
