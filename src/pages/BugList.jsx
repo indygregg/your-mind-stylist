@@ -326,8 +326,9 @@ export default function BugList() {
           id: "misc-5",
           title: "Set up bundling in Stripe",
           description: "Need bundling option so don't have to rebuild training course",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "Bundle system is ready! Go to Manager Dashboard → Product Manager → Click 'Create Bundle'. Follow 4-step wizard: (1) Name your bundle, (2) Select products to include, (3) Set bundle price (system calculates savings), (4) Review & publish. Bundles auto-sync with Stripe."
         },
         {
           id: "misc-6",
