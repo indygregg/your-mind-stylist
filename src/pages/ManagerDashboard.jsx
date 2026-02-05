@@ -128,6 +128,7 @@ export default function ManagerDashboard() {
   };
 
   const quickActions = [
+    { icon: AlertCircle, label: "Bug & Issue Tracker", link: "BugList" },
     { icon: PenSquare, label: "Create New Blog Post", link: "BlogEditor?mode=new" },
     { icon: Package, label: "Product Manager", link: "ManagerProducts" },
     { icon: TrendingUp, label: "Product Analytics", link: "ManagerProductAnalytics" },

@@ -67,6 +67,7 @@ import BookingPaymentCancelled from './pages/BookingPaymentCancelled';
 import BookingPaymentFailed from './pages/BookingPaymentFailed';
 import BookingSuccess from './pages/BookingSuccess';
 import Bookings from './pages/Bookings';
+import BugList from './pages/BugList';
 import BuyPrograms from './pages/BuyPrograms';
 import CalendarSettings from './pages/CalendarSettings';
 import CertPurchase from './pages/CertPurchase';
@@ -166,17 +167,16 @@ import StudioNotes from './pages/StudioNotes';
 import StudioPricing from './pages/StudioPricing';
 import StudioRevisions from './pages/StudioRevisions';
 import StudioRoles from './pages/StudioRoles';
-import Welcome from './pages/Welcome';
 import StudioSettings from './pages/StudioSettings';
 import StylePauses from './pages/StylePauses';
 import TransformationDemo from './pages/TransformationDemo';
 import TransformationStory from './pages/TransformationStory';
 import TransitionGuide from './pages/TransitionGuide';
 import WebinarPage from './pages/WebinarPage';
+import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import BugList from './pages/BugList';
 import __Layout from './Layout.jsx';
 
 
@@ -201,6 +201,7 @@ export const PAGES = {
     "BookingPaymentFailed": BookingPaymentFailed,
     "BookingSuccess": BookingSuccess,
     "Bookings": Bookings,
+    "BugList": BugList,
     "BuyPrograms": BuyPrograms,
     "CalendarSettings": CalendarSettings,
     "CertPurchase": CertPurchase,
@@ -300,17 +301,16 @@ export const PAGES = {
     "StudioPricing": StudioPricing,
     "StudioRevisions": StudioRevisions,
     "StudioRoles": StudioRoles,
-    "Welcome": Welcome,
     "StudioSettings": StudioSettings,
     "StylePauses": StylePauses,
     "TransformationDemo": TransformationDemo,
     "TransformationStory": TransformationStory,
     "TransitionGuide": TransitionGuide,
     "WebinarPage": WebinarPage,
+    "Welcome": Welcome,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "BugList": BugList,
 }
 
 export const pagesConfig = {
