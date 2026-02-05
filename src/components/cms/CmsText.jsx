@@ -33,7 +33,10 @@ export default function CmsText({
     <>
       <div
         className={`relative ${className} cursor-pointer group hover:outline hover:outline-2 hover:outline-[#D8B46B] hover:outline-offset-2 transition-all`}
-        onClick={() => setIsEditing(true)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsEditing(true);
+        }}
       >
         {contentType === "short_text" ? (
           <Component>{content}</Component>
