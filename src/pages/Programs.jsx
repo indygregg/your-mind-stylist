@@ -28,6 +28,19 @@ export default function Programs() {
     },
   });
 
+  // Fetch published webinars
+  const { data: webinars = [] } = useQuery({
+    queryKey: ["published-webinars"],
+    queryFn: async () => {
+      const all = await base44.entities.Webinar.filter({ status: "published" }, "-created_date");
+      return all;
+    },
+  });
+
+  // Filter products by subtype
+  const books = products.filter(p => p.product_subtype === "book");
+  const webinarProducts = products.filter(p => p.product_subtype === "webinar");
+
   // Group products by category
   const productsByCategory = {
     foundation: products.filter(p => p.category === "foundation"),
@@ -320,6 +333,91 @@ export default function Programs() {
                           }`}
                         >
                           Get Started
+                        </Button>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Books & Resources */}
+            {books.length > 0 && (
+              <div className="mb-20">
+                <div className="flex items-center gap-3 mb-8">
+                  <BookOpen size={28} className="text-[#D8B46B]" />
+                  <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
+                    Books & Resources
+                  </h3>
+                </div>
+                <p className="text-[#2B2725]/70 mb-8">Deep dives and practical guides</p>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  {books.map((book) => (
+                    <div key={book.id} className="bg-white p-8 border border-[#E4D9C4] hover:border-[#D8B46B] transition-all">
+                      <h4 className="font-serif text-xl text-[#1E3A32] mb-3">{book.name}</h4>
+                      {book.tagline && (
+                        <p className="text-[#2B2725]/60 text-sm mb-4">{book.tagline}</p>
+                      )}
+                      <p className="text-[#2B2725]/70 text-sm mb-4">{book.short_description}</p>
+                      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
+                        {formatPrice(book.price, book.billing_interval)}
+                      </p>
+                      <Link to={createPageUrl("PurchaseCenter")}>
+                        <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
+                          Get the Book
+                        </Button>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Webinars */}
+            {(webinars.length > 0 || webinarProducts.length > 0) && (
+              <div className="mb-20">
+                <div className="flex items-center gap-3 mb-8">
+                  <Sparkles size={28} className="text-[#6E4F7D]" />
+                  <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
+                    Webinars & Live Events
+                  </h3>
+                </div>
+                <p className="text-[#2B2725]/70 mb-8">Join live sessions and workshops</p>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  {webinars.map((webinar) => (
+                    <div key={webinar.id} className="bg-white p-8 border border-[#E4D9C4] hover:border-[#6E4F7D] transition-all">
+                      <h4 className="font-serif text-xl text-[#1E3A32] mb-3">{webinar.title}</h4>
+                      <p className="text-[#2B2725]/70 text-sm mb-4">{webinar.short_description}</p>
+                      {webinar.event_date && (
+                        <p className="text-sm text-[#D8B46B] mb-4">
+                          {new Date(webinar.event_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        </p>
+                      )}
+                      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
+                        {webinar.price ? `$${(webinar.price / 100).toFixed(2)}` : "Free"}
+                      </p>
+                      <Link to={createPageUrl(`WebinarPage?id=${webinar.id}`)}>
+                        <Button className="w-full bg-[#6E4F7D] hover:bg-[#8B659B] text-white">
+                          Learn More
+                        </Button>
+                      </Link>
+                    </div>
+                  ))}
+                  {webinarProducts.map((product) => (
+                    <div key={product.id} className="bg-white p-8 border border-[#E4D9C4] hover:border-[#6E4F7D] transition-all">
+                      <h4 className="font-serif text-xl text-[#1E3A32] mb-3">{product.name}</h4>
+                      {product.tagline && (
+                        <p className="text-[#2B2725]/60 text-sm mb-4">{product.tagline}</p>
+                      )}
+                      <p className="text-[#2B2725]/70 text-sm mb-4">{product.short_description}</p>
+                      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
+                        {formatPrice(product.price, product.billing_interval)}
+                      </p>
+                      <Link to={createPageUrl("PurchaseCenter")}>
+                        <Button className="w-full bg-[#6E4F7D] hover:bg-[#8B659B] text-white">
+                          Register Now
                         </Button>
                       </Link>
                     </div>
