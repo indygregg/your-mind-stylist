@@ -79,7 +79,7 @@ export default function Consultations() {
                   contentKey="consultations.hero.video_url"
                   page="Consultations"
                   blockTitle="Hero Video URL"
-                  fallback="https://www.youtube.com/watch?v=Pue6CXp5FeE"
+                  fallback="https://vimeo.com/1158905462?fl=ip&fe=ec"
                 />
               </div>
             </motion.div>

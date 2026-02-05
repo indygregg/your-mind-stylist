@@ -129,22 +129,28 @@ export default function HeroSection() {
               <div className="absolute -bottom-4 -right-4 w-20 h-20 border-r-2 border-b-2 border-[#D8B46B]" />
 
               {/* Image Container */}
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#E4D9C4] group">
+              <div className="relative aspect-[4/5] overflow-hidden bg-[#E4D9C4] group cursor-pointer" onClick={() => setShowVideoModal(true)}>
                 <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9bff2cefb_Roberta-Fernandez-The-Mind-Stylist.jpg"
                   alt="Roberta Fernandez - Your Mind Stylist"
                   className="w-full h-full object-cover object-center hover:scale-105 transition-all duration-700"
                 />
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A32]/20 to-transparent" />
+                {/* Video Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A32]/40 via-transparent to-[#1E3A32]/20 group-hover:from-[#1E3A32]/50 transition-all duration-300" />
+                
+                {/* Video Indicator */}
+                <div className="absolute top-4 right-4 px-3 py-1 bg-[#1E3A32]/80 backdrop-blur-sm rounded-full flex items-center gap-2">
+                  <Play size={12} className="text-[#D8B46B]" fill="currentColor" />
+                  <span className="text-[#F9F5EF] text-xs font-medium">Watch Video</span>
+                </div>
 
                 {/* Play Button */}
                 <button
                   onClick={() => setShowVideoModal(true)}
-                  className="absolute bottom-8 left-8 w-16 h-16 rounded-full bg-[#D8B46B] flex items-center justify-center hover:scale-110 hover:bg-[#F9F5EF] transition-all duration-300 shadow-xl group-hover:shadow-2xl"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-[#D8B46B] flex items-center justify-center hover:scale-110 hover:bg-[#F9F5EF] transition-all duration-300 shadow-2xl"
                   aria-label="Play welcome video"
                 >
-                  <Play size={24} className="text-[#1E3A32] ml-1" fill="currentColor" />
+                  <Play size={32} className="text-[#1E3A32] ml-1" fill="currentColor" />
                 </button>
               </div>
             </div>

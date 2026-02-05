@@ -172,6 +172,17 @@ export default function CleaningOutYourCloset() {
               />
             </p>
 
+            <div className="mb-10 max-w-3xl mx-auto">
+              <div className="aspect-video rounded-lg overflow-hidden shadow-2xl">
+                <iframe
+                  src="https://player.vimeo.com/video/1158916467?badge=0&autopause=0&player_id=0&app_id=58479"
+                  className="w-full h-full"
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+                  title="Cleaning Out Your Closet"
+                />
+              </div>
+            </div>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to={createPageUrl("Bookings")}

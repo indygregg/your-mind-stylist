@@ -21,7 +21,7 @@ export default function SocialProofStrip() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-10"
+          className="text-center text-[#D8B46B] text-sm md:text-base tracking-[0.3em] uppercase mb-10 font-medium"
         >
           <CmsText
             contentKey="home.social_proof.title"
