@@ -52,8 +52,8 @@ export default function Layout({ children, currentPageName }) {
       const isHybridPage = hybridPages.includes(currentPageName);
 
       if (isAuthPage) {
-        const isAuth = await base44.auth.isAuthenticated();
-        setUseAuthLayout(isAuth);
+        // Always use AuthLayout for auth pages - AuthLayout handles its own redirect
+        setUseAuthLayout(true);
       } else if (isHybridPage) {
         // For hybrid pages, use auth layout if user is authenticated
         const isAuth = await base44.auth.isAuthenticated();
