@@ -49,7 +49,7 @@ export default function BugList() {
           id: "home-1",
           title: "Increase font size for 'Companies I've Worked with' heading",
           description: "The heading is smaller than the company names below it",
-          status: "open",
+          status: "completed",
           priority: "low"
         }
       ]
@@ -63,7 +63,7 @@ export default function BugList() {
           id: "fmc-1",
           title: "Edit buttons link to other pages instead of allowing editing",
           description: "Edit buttons work like links to other pages instead of opening inline editor",
-          status: "open",
+          status: "completed",
           priority: "high"
         }
       ]
@@ -77,14 +77,14 @@ export default function BugList() {
           id: "about-1",
           title: "Edit buttons under 'Work With Me' redirect to other pages",
           description: "Private Mind Styling and other edit buttons take user to linked pages instead of allowing editing",
-          status: "open",
+          status: "completed",
           priority: "high"
         },
         {
           id: "about-2",
           title: "Back button causes website to quit",
           description: "Using browser back button after clicking edit buttons causes website to crash/quit",
-          status: "open",
+          status: "completed",
           priority: "high"
         }
       ]
@@ -333,28 +333,28 @@ export default function BugList() {
           id: "misc-6",
           title: "Add video to Initial Consultation page",
           description: "Add https://vimeo.com/1158905462?fl=ip&fe=ec",
-          status: "open",
+          status: "completed",
           priority: "medium"
         },
         {
           id: "misc-7",
           title: "Add video to Cleaning Out Your Closet™ page",
           description: "Add https://vimeo.com/1158916467?fl=ml&fe=ec",
-          status: "open",
+          status: "completed",
           priority: "medium"
         },
         {
           id: "misc-8",
           title: "Add video to Pocket Mindset™ page",
           description: "Add https://vimeo.com/1158920818?fl=ml&fe=ec",
-          status: "open",
+          status: "completed",
           priority: "medium"
         },
         {
           id: "misc-9",
           title: "Home page video not recognizable as video",
           description: "Video looks like a picture, not clearly a playable video",
-          status: "open",
+          status: "completed",
           priority: "low"
         },
         {
@@ -493,7 +493,11 @@ export default function BugList() {
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
-                                <Circle size={18} className="text-orange-500 flex-shrink-0" />
+                                {item.status === "completed" ? (
+                                 <CheckCircle2 size={18} className="text-green-600 flex-shrink-0" />
+                                ) : (
+                                 <Circle size={18} className="text-orange-500 flex-shrink-0" />
+                                )}
                                 <h4 className="font-medium text-[#1E3A32]">{item.title}</h4>
                                 <Badge className={getPriorityColor(item.priority)}>
                                   {item.priority}
