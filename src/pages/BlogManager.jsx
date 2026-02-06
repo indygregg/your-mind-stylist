@@ -5,7 +5,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ResponsiveSelect from "@/components/ui/ResponsiveSelect";
 import { PenSquare, Eye, Trash2, Plus, UserPlus, CheckCircle, XCircle, BarChart3 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -106,36 +106,38 @@ export default function BlogManager() {
           <div className="flex flex-wrap gap-4">
             <div className="flex-1 min-w-[200px]">
               <label className="text-sm text-[#2B2725]/70 mb-2 block">Status</label>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="pending_review">Pending Review</SelectItem>
-                  <SelectItem value="scheduled">Scheduled</SelectItem>
-                  <SelectItem value="published">Published</SelectItem>
-                  <SelectItem value="rejected">Rejected</SelectItem>
-                </SelectContent>
-              </Select>
+              <ResponsiveSelect 
+                value={statusFilter} 
+                onValueChange={setStatusFilter}
+                title="Filter by Status"
+                placeholder="All Statuses"
+                options={[
+                  { value: "all", label: "All Statuses" },
+                  { value: "draft", label: "Draft" },
+                  { value: "pending_review", label: "Pending Review" },
+                  { value: "scheduled", label: "Scheduled" },
+                  { value: "published", label: "Published" },
+                  { value: "rejected", label: "Rejected" }
+                ]}
+              />
             </div>
             <div className="flex-1 min-w-[200px]">
               <label className="text-sm text-[#2B2725]/70 mb-2 block">Category</label>
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="Monday Mentions">Monday Mentions</SelectItem>
-                  <SelectItem value="Thursday Thoughts">Thursday Thoughts</SelectItem>
-                  <SelectItem value="Emotional Intelligence">Emotional Intelligence</SelectItem>
-                  <SelectItem value="Communication">Communication</SelectItem>
-                  <SelectItem value="Leadership & Teams">Leadership & Teams</SelectItem>
-                  <SelectItem value="Identity & Confidence">Identity & Confidence</SelectItem>
-                </SelectContent>
-              </Select>
+              <ResponsiveSelect 
+                value={categoryFilter} 
+                onValueChange={setCategoryFilter}
+                title="Filter by Category"
+                placeholder="All Categories"
+                options={[
+                  { value: "all", label: "All Categories" },
+                  { value: "Monday Mentions", label: "Monday Mentions" },
+                  { value: "Thursday Thoughts", label: "Thursday Thoughts" },
+                  { value: "Emotional Intelligence", label: "Emotional Intelligence" },
+                  { value: "Communication", label: "Communication" },
+                  { value: "Leadership & Teams", label: "Leadership & Teams" },
+                  { value: "Identity & Confidence", label: "Identity & Confidence" }
+                ]}
+              />
             </div>
           </div>
         </div>

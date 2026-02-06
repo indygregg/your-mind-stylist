@@ -6,7 +6,7 @@ import { Calendar, DollarSign, Mail, Phone, User, Clock, CheckCircle, XCircle, A
 import RecurringSessionManager from "../components/manager/RecurringSessionManager";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import ResponsiveSelect from "@/components/ui/ResponsiveSelect";
 import {
   Dialog,
   DialogContent,
@@ -167,45 +167,47 @@ export default function ManagerBookings() {
               />
             </div>
 
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="confirmed">Confirmed</SelectItem>
-                <SelectItem value="scheduled">Scheduled</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="cancelled">Cancelled</SelectItem>
-                <SelectItem value="pending_payment">Pending Payment</SelectItem>
-              </SelectContent>
-            </Select>
+            <ResponsiveSelect 
+              value={statusFilter} 
+              onValueChange={setStatusFilter}
+              title="Filter by Status"
+              placeholder="Status"
+              options={[
+                { value: "all", label: "All Statuses" },
+                { value: "confirmed", label: "Confirmed" },
+                { value: "scheduled", label: "Scheduled" },
+                { value: "completed", label: "Completed" },
+                { value: "cancelled", label: "Cancelled" },
+                { value: "pending_payment", label: "Pending Payment" }
+              ]}
+            />
 
-            <Select value={serviceFilter} onValueChange={setServiceFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Service Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Services</SelectItem>
-                {serviceTypes.map(type => (
-                  <SelectItem key={type} value={type}>
-                    {type?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <ResponsiveSelect 
+              value={serviceFilter} 
+              onValueChange={setServiceFilter}
+              title="Filter by Service"
+              placeholder="Service Type"
+              options={[
+                { value: "all", label: "All Services" },
+                ...serviceTypes.map(type => ({
+                  value: type,
+                  label: type?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
+                }))
+              ]}
+            />
 
-            <Select value={dateRangeFilter} onValueChange={setDateRangeFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Date Range" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Time</SelectItem>
-                <SelectItem value="7">Last 7 Days</SelectItem>
-                <SelectItem value="30">Last 30 Days</SelectItem>
-                <SelectItem value="90">Last 90 Days</SelectItem>
-              </SelectContent>
-            </Select>
+            <ResponsiveSelect 
+              value={dateRangeFilter} 
+              onValueChange={setDateRangeFilter}
+              title="Filter by Date"
+              placeholder="Date Range"
+              options={[
+                { value: "all", label: "All Time" },
+                { value: "7", label: "Last 7 Days" },
+                { value: "30", label: "Last 30 Days" },
+                { value: "90", label: "Last 90 Days" }
+              ]}
+            />
 
             <div className="flex items-center text-sm text-[#2B2725]/70">
               Showing {filteredBookings.length} of {bookings.length}
