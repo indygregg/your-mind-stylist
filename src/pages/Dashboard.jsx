@@ -27,6 +27,7 @@ import { PersonalizedGreeting } from "../components/ui/PersonalizedGreeting";
 import { SmartSuggestion } from "../components/ui/SmartSuggestion";
 import { useSmartSuggestions } from "../components/ui/useSmartSuggestions";
 import { useQueryClient } from "@tanstack/react-query";
+import haptics from "@/components/utils/haptics";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -123,12 +124,15 @@ export default function Dashboard() {
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
+    haptics.light(); // Haptic feedback on refresh trigger
     try {
       await fetchBookings(user);
       const stats = await base44.functions.invoke('getStudioStats', {});
       setStudioStats(stats.data);
+      haptics.success(); // Success haptic
     } catch (error) {
       console.error('Refresh error:', error);
+      haptics.error(); // Error haptic
     }
     setTimeout(() => {
       setIsRefreshing(false);

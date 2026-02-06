@@ -13,8 +13,28 @@ import { EditModeProvider } from "./components/cms/EditModeProvider";
 import ManagerBar from "./components/cms/ManagerBar";
 import haptics from "./components/utils/haptics";
 import AffiliateTracker from "./components/affiliate/AffiliateTracker";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+// Helper to detect if running in WebView
+const isWebView = () => {
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  return (ua.indexOf('FBAN') > -1) || (ua.indexOf('FBAV') > -1) || 
+         (ua.indexOf('Instagram') > -1) || (ua.indexOf('wv') > -1);
+};
+
+// Handle external links in WebView
+const handleExternalLink = (e, url) => {
+  if (isWebView()) {
+    e.preventDefault();
+    // For WebView, try to open in external browser
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'openExternal', url }));
+    } else {
+      window.open(url, '_blank');
+    }
+  }
+};
 
 export default function Layout({ children, currentPageName }) {
   const [useAuthLayout, setUseAuthLayout] = useState(false);
@@ -225,8 +245,11 @@ export default function Layout({ children, currentPageName }) {
           {/* Back Button for child routes on mobile */}
           {currentPageName !== 'Home' && (
             <button
-              onClick={() => navigate(-1)}
-              className={`lg:hidden p-2 ${hasDarkHero ? 'text-white hover:bg-white/10' : 'text-[#1E3A32] hover:bg-[#1E3A32]/5'} rounded-lg transition-colors`}
+              onClick={() => {
+                haptics.light();
+                navigate(-1);
+              }}
+              className={`lg:hidden p-2 ${hasDarkHero ? 'text-white hover:bg-white/10' : 'text-[#1E3A32] hover:bg-[#1E3A32]/5'} rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center`}
             >
               <ArrowLeft size={24} />
             </button>
@@ -355,12 +378,14 @@ export default function Layout({ children, currentPageName }) {
                 <div className={`flex items-center gap-3 ml-6 pl-6 border-l ${hasDarkHero ? 'border-white/20' : 'border-[#D8B46B]/20'}`}>
                   <a
                     href="https://yourmindstylist.com/login"
+                    onClick={() => haptics.light()}
                     className={`text-sm tracking-wide ${hasDarkHero ? 'text-white/80 hover:text-white' : 'text-[#2B2725]/70 hover:text-[#1E3A32]'} transition-colors`}
                   >
                     Login
                   </a>
                   <a
                     href="https://yourmindstylist.com/login"
+                    onClick={() => haptics.medium()}
                     className={`px-5 py-2 ${hasDarkHero ? 'bg-white text-[#1E3A32] hover:bg-[#F9F5EF]' : 'bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725]'} text-sm tracking-wide transition-all duration-300`}
                   >
                     Get Started

@@ -7,13 +7,28 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { User, Bell, Lock, Settings, Upload, CheckCircle, CreditCard, ExternalLink } from "lucide-react";
+import { User, Bell, Lock, Settings, Upload, CheckCircle, CreditCard, ExternalLink, AlertTriangle } from "lucide-react";
 import { toast } from "react-hot-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import haptics from "@/components/utils/haptics";
 
 export default function ProfileSettings() {
   const queryClient = useQueryClient();
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [loadingPortal, setLoadingPortal] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showFinalDeleteDialog, setShowFinalDeleteDialog] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const { data: user, isLoading } = useQuery({
     queryKey: ["currentUser"],
@@ -101,6 +116,35 @@ export default function ProfileSettings() {
       toast.error(error.response?.data?.error || "Failed to access billing portal");
     } finally {
       setLoadingPortal(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmText !== "DELETE MY ACCOUNT") {
+      toast.error("Please type the confirmation text exactly as shown");
+      return;
+    }
+
+    setIsDeletingAccount(true);
+    haptics.heavy();
+
+    try {
+      const response = await base44.functions.invoke("deleteUserAccount", {
+        confirmationText: deleteConfirmText
+      });
+
+      if (response.data.success) {
+        toast.success("Account deletion request submitted");
+        haptics.success();
+        setTimeout(() => {
+          base44.auth.logout();
+        }, 2000);
+      }
+    } catch (error) {
+      haptics.error();
+      toast.error(error.response?.data?.error || "Failed to delete account");
+    } finally {
+      setIsDeletingAccount(false);
     }
   };
 
@@ -369,7 +413,7 @@ export default function ProfileSettings() {
             <Card className="mt-6 border-red-200">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-red-600">
-                  <Lock size={20} />
+                  <AlertTriangle size={20} />
                   Danger Zone
                 </CardTitle>
               </CardHeader>
@@ -382,17 +426,8 @@ export default function ProfileSettings() {
                   <Button
                     variant="destructive"
                     onClick={() => {
-                      if (window.confirm('Are you absolutely sure? This action cannot be undone. Type "DELETE" to confirm.')) {
-                        const confirmation = prompt('Type DELETE to confirm account deletion:');
-                        if (confirmation === 'DELETE') {
-                          base44.auth.updateMe({ account_deletion_requested: true, account_deletion_date: new Date().toISOString() })
-                            .then(() => {
-                              toast.success('Account deletion requested. You will receive a confirmation email.');
-                              setTimeout(() => base44.auth.logout(), 2000);
-                            })
-                            .catch(() => toast.error('Failed to process deletion request'));
-                        }
-                      }
+                      haptics.warning();
+                      setShowDeleteDialog(true);
                     }}
                   >
                     Delete My Account
@@ -402,6 +437,74 @@ export default function ProfileSettings() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* First Confirmation Dialog */}
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete your account and remove all your data from our servers, including:
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li>All notes and diary entries</li>
+                  <li>Course progress and certificates</li>
+                  <li>Bookings and session history</li>
+                  <li>Personal information and preferences</li>
+                </ul>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => haptics.light()}>
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => {
+                  haptics.warning();
+                  setShowDeleteDialog(false);
+                  setShowFinalDeleteDialog(true);
+                }}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                Continue to Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Final Confirmation Dialog */}
+        <AlertDialog open={showFinalDeleteDialog} onOpenChange={setShowFinalDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-red-600">Final Confirmation Required</AlertDialogTitle>
+              <AlertDialogDescription>
+                Please type <span className="font-mono font-bold">DELETE MY ACCOUNT</span> to confirm deletion:
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <Input
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              placeholder="DELETE MY ACCOUNT"
+              className="font-mono"
+            />
+            <AlertDialogFooter>
+              <AlertDialogCancel 
+                onClick={() => {
+                  haptics.light();
+                  setDeleteConfirmText("");
+                }}
+              >
+                Cancel
+              </AlertDialogCancel>
+              <Button
+                onClick={handleDeleteAccount}
+                disabled={deleteConfirmText !== "DELETE MY ACCOUNT" || isDeletingAccount}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                {isDeletingAccount ? "Deleting..." : "Delete My Account Permanently"}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
