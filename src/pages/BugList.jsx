@@ -98,17 +98,17 @@ export default function BugList() {
           id: "programs-1",
           title: "Need way to list multiple webinars at $9.00",
           description: "Currently only space for one webinar. Need to sell multiple webinars",
-          status: "open",
+          status: "completed",
           priority: "medium",
-          notes: "Depends on Stripe being configured"
+          notes: "Programs page now has dedicated Webinars section. Add webinars via Manager Dashboard → Course Manager (or create products with subtype='webinar'). They'll automatically appear in the 'Webinars & Live Events' section."
         },
         {
           id: "programs-2",
           title: "Need way to list multiple books for sale",
           description: "Same issue as webinars - need to list multiple books",
-          status: "open",
+          status: "completed",
           priority: "medium",
-          notes: "Depends on Stripe being configured"
+          notes: "Programs page now has dedicated Books section. Create products in Manager Dashboard → Product Manager with subtype='book'. They'll automatically appear in the 'Books & Resources' section."
         }
       ]
     },
