@@ -13,6 +13,8 @@ import { EditModeProvider } from "./components/cms/EditModeProvider";
 import ManagerBar from "./components/cms/ManagerBar";
 import haptics from "./components/utils/haptics";
 import AffiliateTracker from "./components/affiliate/AffiliateTracker";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Layout({ children, currentPageName }) {
   const [useAuthLayout, setUseAuthLayout] = useState(false);
@@ -21,6 +23,7 @@ export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuthPages = async () => {
@@ -219,16 +222,26 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Main Nav */}
         <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
+          {/* Back Button for child routes on mobile */}
+          {currentPageName !== 'Home' && (
+            <button
+              onClick={() => navigate(-1)}
+              className={`lg:hidden p-2 ${hasDarkHero ? 'text-white hover:bg-white/10' : 'text-[#1E3A32] hover:bg-[#1E3A32]/5'} rounded-lg transition-colors`}
+            >
+              <ArrowLeft size={24} />
+            </button>
+          )}
+
           {/* Manager Dashboard Button - Only show on public pages for managers */}
           {isManager && !useAuthLayout && (
             <Link
               to={createPageUrl('ManagerDashboard')}
-              className={`absolute left-6 top-1/2 -translate-y-1/2 px-3 py-2 ${hasDarkHero ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-[#D8B46B]/20 text-[#1E3A32] hover:bg-[#D8B46B]/30'} text-xs font-medium transition-all duration-300 rounded backdrop-blur-sm z-10`}
+              className={`absolute left-6 top-1/2 -translate-y-1/2 px-3 py-2 ${hasDarkHero ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-[#D8B46B]/20 text-[#1E3A32] hover:bg-[#D8B46B]/30'} text-xs font-medium transition-all duration-300 rounded backdrop-blur-sm z-10 hidden lg:block`}
             >
               Dashboard
             </Link>
           )}
-          <Link to={createPageUrl("Home")} className={`group flex items-center gap-3 ${isManager && !useAuthLayout ? 'ml-28' : ''}`}>
+          <Link to={createPageUrl("Home")} className={`group flex items-center gap-3 ${isManager && !useAuthLayout ? 'lg:ml-28' : ''} ${currentPageName !== 'Home' ? 'ml-12 lg:ml-0' : ''}`}>
             <img 
               src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/5fbe0fe56_mind-stylist-purple-m2x.png" 
               alt="Your Mind Stylist Logo" 
