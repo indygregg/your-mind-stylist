@@ -364,6 +364,42 @@ export default function ProfileSettings() {
                 </p>
               </CardContent>
             </Card>
+
+            {/* Danger Zone */}
+            <Card className="mt-6 border-red-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-red-600">
+                  <Lock size={20} />
+                  Danger Zone
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
+                  <h4 className="font-medium text-red-800 mb-2">Delete Account</h4>
+                  <p className="text-sm text-red-700 mb-4">
+                    Once you delete your account, there is no going back. All your data, including notes, diary entries, and progress will be permanently deleted.
+                  </p>
+                  <Button
+                    variant="destructive"
+                    onClick={() => {
+                      if (window.confirm('Are you absolutely sure? This action cannot be undone. Type "DELETE" to confirm.')) {
+                        const confirmation = prompt('Type DELETE to confirm account deletion:');
+                        if (confirmation === 'DELETE') {
+                          base44.auth.updateMe({ account_deletion_requested: true, account_deletion_date: new Date().toISOString() })
+                            .then(() => {
+                              toast.success('Account deletion requested. You will receive a confirmation email.');
+                              setTimeout(() => base44.auth.logout(), 2000);
+                            })
+                            .catch(() => toast.error('Failed to process deletion request'));
+                        }
+                      }
+                    }}
+                  >
+                    Delete My Account
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

@@ -35,6 +35,26 @@ export default function Diary() {
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.DiaryEntry.create(data),
+    onMutate: async (newEntry) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["diaryEntries"] });
+      
+      // Snapshot previous value
+      const previousEntries = queryClient.getQueryData(["diaryEntries", user?.id]);
+      
+      // Optimistically update
+      queryClient.setQueryData(["diaryEntries", user?.id], (old = []) => [{
+        id: 'temp-' + Date.now(),
+        ...newEntry,
+        created_date: new Date().toISOString(),
+      }, ...old]);
+      
+      return { previousEntries };
+    },
+    onError: (err, newEntry, context) => {
+      // Rollback on error
+      queryClient.setQueryData(["diaryEntries", user?.id], context.previousEntries);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["diaryEntries"] });
       setIsEditing(false);

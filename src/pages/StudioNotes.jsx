@@ -17,6 +17,8 @@ import {
 
 export default function StudioNotes() {
   const [notesDrawerOpen, setNotesDrawerOpen] = useState(false);
+  const [pullRefreshY, setPullRefreshY] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: notes = [], isLoading } = useQuery({
@@ -72,6 +74,15 @@ export default function StudioNotes() {
     URL.revokeObjectURL(url);
   };
 
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await queryClient.refetchQueries({ queryKey: ['notes'] });
+    setTimeout(() => {
+      setIsRefreshing(false);
+      setPullRefreshY(0);
+    }, 500);
+  };
+
   // Format trends data for EmotionalTrends component
   const trendsData = notes
     .filter(note => note.sentiment_primary)
@@ -102,10 +113,36 @@ export default function StudioNotes() {
 
       <div className="max-w-5xl mx-auto px-6">
         <motion.div
+          drag="y"
+          dragConstraints={{ top: 0, bottom: 0 }}
+          dragElastic={{ top: 0.3, bottom: 0 }}
+          onDragEnd={(e, info) => {
+            if (info.offset.y > 100 && window.scrollY === 0) {
+              handleRefresh();
+            }
+          }}
+          onDrag={(e, info) => {
+            if (window.scrollY === 0 && info.offset.y > 0) {
+              setPullRefreshY(Math.min(info.offset.y, 100));
+            }
+          }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          className="touch-pan-y"
         >
+          {/* Pull to Refresh Indicator */}
+          {pullRefreshY > 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: pullRefreshY / 100 }}
+              className="flex justify-center py-4"
+            >
+              <div className={`text-[#D8B46B] ${isRefreshing ? 'animate-spin' : ''}`}>
+                {isRefreshing ? '↻' : '↓'} {isRefreshing ? 'Refreshing...' : 'Pull to refresh'}
+              </div>
+            </motion.div>
+          )}
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>

@@ -25,6 +25,26 @@ export default function NotesDrawer({ isOpen, onClose, sourceType, sourceId, sou
 
   const createNoteMutation = useMutation({
     mutationFn: (data) => base44.entities.Note.create(data),
+    onMutate: async (newNote) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["notes"] });
+      
+      // Snapshot previous value
+      const previousNotes = queryClient.getQueryData(["notes"]);
+      
+      // Optimistically update
+      queryClient.setQueryData(["notes"], (old = []) => [{
+        id: 'temp-' + Date.now(),
+        ...newNote,
+        created_date: new Date().toISOString(),
+      }, ...old]);
+      
+      return { previousNotes };
+    },
+    onError: (err, newNote, context) => {
+      // Rollback on error
+      queryClient.setQueryData(["notes"], context.previousNotes);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       setContent("");
