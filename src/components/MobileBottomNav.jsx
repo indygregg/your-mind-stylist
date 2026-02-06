@@ -3,14 +3,13 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Home, BookOpen, ShoppingCart, Menu, X, Settings, Users, FileText, MessageSquare, Headphones, LayoutDashboard, UsersRound } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import haptics from "@/components/utils/haptics";
 
 export default function MobileBottomNav({ user, currentPageName, navLinks, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleNavClick = () => {
-    if (navigator.vibrate) {
-      navigator.vibrate(10);
-    }
+    haptics.light();
     setMenuOpen(false);
   };
 
@@ -72,7 +71,7 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
           {moreLinks.length > 0 && (
             <button
               onClick={() => {
-                if (navigator.vibrate) navigator.vibrate(10);
+                haptics.light();
                 setMenuOpen(!menuOpen);
               }}
               className={`flex flex-col items-center justify-center gap-1 transition-colors ${
@@ -137,10 +136,10 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
                 {/* Logout Button */}
                 <button
                   onClick={() => {
-                    if (navigator.vibrate) navigator.vibrate(10);
+                    haptics.medium();
                     onLogout();
                   }}
-                  className="w-full py-3 px-4 bg-[#F9F5EF]/10 hover:bg-[#F9F5EF]/20 text-[#F9F5EF] rounded-lg transition-colors"
+                  className="w-full py-3 px-4 bg-[#F9F5EF]/10 hover:bg-[#F9F5EF]/20 text-[#F9F5EF] rounded-lg transition-colors min-h-[48px]"
                 >
                   Logout
                 </button>
