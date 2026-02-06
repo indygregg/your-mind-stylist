@@ -26,6 +26,7 @@ import AIClientAssistant from "@/components/ai/AIClientAssistant";
 import { PersonalizedGreeting } from "../components/ui/PersonalizedGreeting";
 import { SmartSuggestion } from "../components/ui/SmartSuggestion";
 import { useSmartSuggestions } from "../components/ui/useSmartSuggestions";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -37,7 +38,10 @@ export default function Dashboard() {
   const [recommendations, setRecommendations] = useState([]);
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const [pastBookings, setPastBookings] = useState([]);
+  const [pullRefreshY, setPullRefreshY] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const suggestions = useSmartSuggestions();
+  const queryClient = useQueryClient();
 
   const fetchBookings = useCallback(async (currentUser) => {
     const allBookings = await base44.entities.Booking.filter({ user_email: currentUser.email });
@@ -116,6 +120,22 @@ export default function Dashboard() {
     // window.location.href = billingPortalUrl;
     console.log("Opening billing portal...");
   };
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await fetchBookings(user);
+      const stats = await base44.functions.invoke('getStudioStats', {});
+      setStudioStats(stats.data);
+    } catch (error) {
+      console.error('Refresh error:', error);
+    }
+    setTimeout(() => {
+      setIsRefreshing(false);
+      setPullRefreshY(0);
+    }, 500);
+  };
+  
   const programs = useMemo(() => [
     {
       icon: Layers,
@@ -169,10 +189,36 @@ export default function Dashboard() {
         {user && <OnboardingChecklist user={user} />}
         
         <motion.div
+          drag="y"
+          dragConstraints={{ top: 0, bottom: 0 }}
+          dragElastic={{ top: 0.3, bottom: 0 }}
+          onDragEnd={(e, info) => {
+            if (info.offset.y > 100 && window.scrollY === 0) {
+              handleRefresh();
+            }
+          }}
+          onDrag={(e, info) => {
+            if (window.scrollY === 0 && info.offset.y > 0) {
+              setPullRefreshY(Math.min(info.offset.y, 100));
+            }
+          }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          className="touch-pan-y"
         >
+          {/* Pull to Refresh Indicator */}
+          {pullRefreshY > 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: pullRefreshY / 100 }}
+              className="flex justify-center py-4"
+            >
+              <div className={`text-[#D8B46B] ${isRefreshing ? 'animate-spin' : ''}`}>
+                {isRefreshing ? '↻' : '↓'} {isRefreshing ? 'Refreshing...' : 'Pull to refresh'}
+              </div>
+            </motion.div>
+          )}
           {/* Personalized Greeting */}
           <PersonalizedGreeting user={user} variant="dashboard" />
 
