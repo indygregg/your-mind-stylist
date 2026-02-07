@@ -246,7 +246,7 @@ export default function Consultations() {
                           />
                         </h4>
                       </div>
-                      <p className="text-sm text-[#2B2725]/70">
+                      <div className="text-sm text-[#2B2725]/70 mb-2">
                         <CmsText 
                           contentKey="consultations.step1.doc1.description" 
                           page="Consultations"
@@ -254,7 +254,14 @@ export default function Consultations() {
                           fallback="Start here to understand how I work and what to expect." 
                           contentType="rich_text"
                         />
-                      </p>
+                      </div>
+                      <CmsText 
+                        contentKey="consultations.step1.doc1.link" 
+                        page="Consultations"
+                        blockTitle="Document 1 Link"
+                        fallback='<a href="#" class="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"><Download size={14} />Download PDF</a>' 
+                        contentType="rich_text"
+                      />
                     </div>
 
                     <div>
@@ -270,7 +277,7 @@ export default function Consultations() {
                           />
                         </h4>
                       </div>
-                      <p className="text-sm text-[#2B2725]/70">
+                      <div className="text-sm text-[#2B2725]/70 mb-2">
                         <CmsText 
                           contentKey="consultations.step1.doc2.description" 
                           page="Consultations"
@@ -278,7 +285,14 @@ export default function Consultations() {
                           fallback="Learn how to make the most of your virtual consultation." 
                           contentType="rich_text"
                         />
-                      </p>
+                      </div>
+                      <CmsText 
+                        contentKey="consultations.step1.doc2.link" 
+                        page="Consultations"
+                        blockTitle="Document 2 Link"
+                        fallback='<a href="#" class="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"><Download size={14} />Download PDF</a>' 
+                        contentType="rich_text"
+                      />
                     </div>
 
                     <div>
@@ -294,15 +308,22 @@ export default function Consultations() {
                           />
                         </h4>
                       </div>
-                      <div className="text-sm text-[#2B2725]/70">
+                      <div className="text-sm text-[#2B2725]/70 mb-2">
                         <CmsText 
                           contentKey="consultations.step1.doc3.description" 
                           page="Consultations"
                           blockTitle="Document 3 Description"
-                          fallback="<p>Please read:</p><ul><li>The <em>Bill of Rights for Adults</em> <strong>or</strong></li><li>The <em>Bill of Rights for Minors</em></li></ul>" 
+                          fallback="<p>Please read:</p><ul class='text-left ml-4 list-disc'><li>The <em>Bill of Rights for Adults</em> <strong>or</strong></li><li>The <em>Bill of Rights for Minors</em></li></ul>" 
                           contentType="rich_text"
                         />
                       </div>
+                      <CmsText 
+                        contentKey="consultations.step1.doc3.link" 
+                        page="Consultations"
+                        blockTitle="Document 3 Link"
+                        fallback='<div class="flex flex-col gap-2"><a href="#" class="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"><Download size={14} />Adult Rights PDF</a><a href="#" class="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"><Download size={14} />Minor Rights PDF</a></div>' 
+                        contentType="rich_text"
+                      />
                     </div>
 
                     <div>
@@ -318,7 +339,7 @@ export default function Consultations() {
                           />
                         </h4>
                       </div>
-                      <p className="text-sm text-[#2B2725]/70">
+                      <div className="text-sm text-[#2B2725]/70 mb-2">
                         <CmsText 
                           contentKey="consultations.step1.doc4.description" 
                           page="Consultations"
@@ -326,7 +347,14 @@ export default function Consultations() {
                           fallback="This short video will help you prepare for your consultation." 
                           contentType="rich_text"
                         />
-                      </p>
+                      </div>
+                      <CmsText 
+                        contentKey="consultations.step1.doc4.link" 
+                        page="Consultations"
+                        blockTitle="Document 4 Link"
+                        fallback='<a href="https://vimeo.com/example" target="_blank" rel="noopener noreferrer" class="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors">Watch Video <ExternalLink size={14} /></a>' 
+                        contentType="rich_text"
+                      />
                     </div>
                   </div>
                 </div>
@@ -360,17 +388,31 @@ export default function Consultations() {
                       contentType="rich_text"
                     />
                   </div>
-                  <Link to={createPageUrl("ConsultationQuestionnaire")}>
-                    <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10">
-                      <CmsText 
-                        contentKey="consultations.step2.button" 
-                        page="Consultations"
-                        blockTitle="Step 2 Button"
-                        fallback="Please complete form" 
-                        contentType="short_text"
-                      />
-                    </Button>
-                  </Link>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Link to={createPageUrl("ConsultationQuestionnaire")}>
+                      <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10">
+                        <FileText size={16} className="mr-2" />
+                        <CmsText 
+                          contentKey="consultations.step2.button" 
+                          page="Consultations"
+                          blockTitle="Step 2 Button"
+                          fallback="Complete Intake Form" 
+                          contentType="short_text"
+                        />
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl("ConsultationFormEditor")}>
+                      <Button variant="ghost" className="text-[#D8B46B] hover:bg-[#D8B46B]/10">
+                        <CmsText 
+                          contentKey="consultations.step2.edit_button" 
+                          page="Consultations"
+                          blockTitle="Step 2 Edit Button"
+                          fallback="Edit Form Questions (Manager)" 
+                          contentType="short_text"
+                        />
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </CardContent>

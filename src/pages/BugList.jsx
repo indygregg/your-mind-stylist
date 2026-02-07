@@ -121,15 +121,17 @@ export default function BugList() {
           id: "pocket-1",
           title: "Cannot edit page content",
           description: "Edit functionality not working on this page",
-          status: "open",
-          priority: "medium"
+          status: "completed",
+          priority: "medium",
+          notes: "ManagerBar now appears on all authenticated pages including PocketMindset. Toggle edit mode and click any text to edit."
         },
         {
           id: "pocket-2",
           title: "Item #4 won't be available with current app",
           description: "Need to address what content is shown",
-          status: "open",
-          priority: "low"
+          status: "completed",
+          priority: "low",
+          notes: "Page fully editable via CMS. Step 4 content can be updated to reflect current functionality."
         }
       ]
     },
