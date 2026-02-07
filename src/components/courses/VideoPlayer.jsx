@@ -59,13 +59,30 @@ export default function VideoPlayer({ src, embedUrl, onProgressUpdate, lastPosit
 
   if (embedUrl) {
     const finalEmbedUrl = getEmbedUrl(embedUrl);
+    // Add download protection parameters to embed URLs
+    let protectedUrl = finalEmbedUrl;
+    
+    // Vimeo: Add parameters to prevent download
+    if (protectedUrl.includes('player.vimeo.com')) {
+      const separator = protectedUrl.includes('?') ? '&' : '?';
+      protectedUrl += `${separator}download=0&byline=0&portrait=0`;
+    }
+    
+    // YouTube: Add parameters to prevent download (rel=0 to reduce related videos)
+    if (protectedUrl.includes('youtube.com/embed')) {
+      const separator = protectedUrl.includes('?') ? '&' : '?';
+      protectedUrl += `${separator}rel=0&modestbranding=1`;
+    }
+    
     return (
       <div className="aspect-video">
         <iframe
-          src={finalEmbedUrl}
+          src={protectedUrl}
           className="w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
+          style={{ pointerEvents: 'auto' }}
+          onContextMenu={(e) => e.preventDefault()}
         />
       </div>
     );

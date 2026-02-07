@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search, MoreVertical, Edit, Copy, Archive, Trash2, Eye, BarChart3, Monitor } from "lucide-react";
+import { Plus, Search, MoreVertical, Edit, Copy, Archive, Trash2, Eye, BarChart3, Monitor, Merge } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import CourseAnalytics from "@/components/courses/CourseAnalytics";
+import CourseMerger from "@/components/courses/CourseMerger";
 import { createPageUrl } from "../utils";
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +19,7 @@ export default function CourseManager() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
+  const [showMerger, setShowMerger] = useState(false);
 
   // Fetch all courses
   const { data: courses = [], isLoading } = useQuery({
@@ -142,13 +144,23 @@ export default function CourseManager() {
             <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Course Manager</h1>
             <p className="text-[#2B2725]/70">Create and manage your courses</p>
           </div>
-          <Button
-            onClick={() => window.location.href = createPageUrl("CourseBuilder")}
-            className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
-          >
-            <Plus size={16} className="mr-2" />
-            Create Course
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              onClick={() => setShowMerger(true)}
+              variant="outline"
+              className="border-[#D8B46B] text-[#1E3A32]"
+            >
+              <Merge size={16} className="mr-2" />
+              Merge Courses
+            </Button>
+            <Button
+              onClick={() => window.location.href = createPageUrl("CourseBuilder")}
+              className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
+            >
+              <Plus size={16} className="mr-2" />
+              Create Course
+            </Button>
+          </div>
         </div>
 
         <Tabs defaultValue="courses" className="w-full">
@@ -375,6 +387,9 @@ export default function CourseManager() {
             <CourseAnalytics courses={courses} />
           </TabsContent>
         </Tabs>
+
+        {/* Course Merger Dialog */}
+        <CourseMerger open={showMerger} onClose={() => setShowMerger(false)} />
       </div>
     </div>
   );

@@ -144,15 +144,17 @@ export default function BugList() {
           id: "consult-1",
           title: "Cannot link to documents",
           description: "Need to link documents and edit intake form",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "Document links are now editable via CMS (consultations.step1.doc1.link, doc2.link, doc3.link, doc4.link). Edit mode enabled. Manager can also click 'Edit Form Questions (Manager)' to edit the questionnaire."
         },
         {
           id: "consult-2",
           title: "Cannot view or edit questionnaire",
           description: "Questionnaire page not accessible for editing",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "Added 'Edit Form Questions (Manager)' button on Consultations page that links to ConsultationFormEditor. Managers can edit all intake form questions there."
         }
       ]
     },
@@ -179,23 +181,25 @@ export default function BugList() {
           id: "course-1",
           title: "Prevent video downloads",
           description: "Don't want students to be able to download videos in any courses",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "Video downloads now blocked via controlsList='nodownload' and right-click disabled. Vimeo embeds include download=0 parameter."
         },
         {
           id: "course-2",
           title: "Stripe pricing for multiple courses",
           description: "Most students take all courses. Need to know if each course charges full price or if should create bundle",
-          status: "open",
+          status: "completed",
           priority: "high",
-          notes: "Students can take individual courses or all 4. Need individual pricing + bundle option"
+          notes: "Bundle system is ready! Go to Manager Dashboard → Product Manager → Click 'Create Bundle'. Courses can be sold individually OR as a discounted bundle. Each course needs a linked Product, then bundle them together with custom pricing. Bundles auto-sync with Stripe."
         },
         {
           id: "course-3",
           title: "Course merging functionality",
           description: "If need to create 1 course, can courses be merged in order or need to rebuild?",
-          status: "open",
-          priority: "medium"
+          status: "completed",
+          priority: "medium",
+          notes: "Course Merger tool added! In Course Manager, click 'Merge Courses' button. Select 2+ courses, they'll be combined into one new course (in selected order) as a draft. Original courses remain unchanged."
         }
       ]
     },
