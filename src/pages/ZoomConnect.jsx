@@ -47,7 +47,8 @@ export default function ZoomConnect() {
                 zoom_access_token: null,
                 zoom_refresh_token: null,
                 zoom_token_expires_at: null,
-                zoom_connected: false
+                zoom_connected: false,
+                hasZoom: false
             });
             await loadUser();
         } catch (error) {
@@ -82,7 +83,7 @@ export default function ZoomConnect() {
                     <h1 className="text-2xl font-serif text-[#1E3A32]">Zoom Integration</h1>
                 </div>
 
-                {user.zoom_connected ? (
+                {(user.zoom_connected || user.hasZoom) ? (
                     <div className="space-y-6">
                         <div className="flex items-center gap-3 p-4 bg-green-50 rounded-lg">
                             <CheckCircle size={24} className="text-green-600" />
