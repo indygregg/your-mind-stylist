@@ -29,26 +29,17 @@ export default function Bookings() {
     whyHelpful: ""
   });
 
-  // Fetch appointment types for the primary booking manager (Roberta)
-  const { data: primaryManager } = useQuery({
-    queryKey: ["primaryManager"],
-    queryFn: async () => {
-      const users = await base44.entities.User.list();
-      // Find Roberta - she's the primary booking manager
-      return users.find(u => u.email === 'roberta@robertafernandez.com');
-    },
-  });
+  // Hardcode Roberta's manager ID for public booking page
+  const primaryManagerId = '693b6b4124b276d4067b6d8e';
 
   const { data: appointmentTypes = [], isLoading } = useQuery({
-    queryKey: ["appointmentTypes", primaryManager?.id],
+    queryKey: ["appointmentTypes", primaryManagerId],
     queryFn: () => {
-      if (!primaryManager?.id) return [];
       return base44.entities.AppointmentType.filter({ 
         active: true,
-        manager_id: primaryManager.id 
+        manager_id: primaryManagerId
       });
     },
-    enabled: !!primaryManager?.id,
   });
 
   useEffect(() => {
