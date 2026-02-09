@@ -276,8 +276,9 @@ export default function BugList() {
           id: "email-1",
           title: "Email editing location unclear",
           description: "Where to edit and control emails - in MailerLite?",
-          status: "open",
-          priority: "medium"
+          status: "completed",
+          priority: "medium",
+          notes: "✅ All outgoing emails can be edited in Manager Dashboard → Email Templates. This includes booking confirmations, purchase receipts, and all other transactional emails. You can edit subject lines, body content, customize variables ({{user_name}}, {{product_name}}, etc.), and test emails before they go live."
         },
         {
           id: "email-2",
