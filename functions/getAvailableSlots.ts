@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
     }
 
     // Get manager's availability rules and settings
-    const managerEmail = 'roberta@yourmindstylist.com'; // Default manager
+    const managerEmail = 'roberta@robertafernandez.com'; // Default manager
     const users = await base44.asServiceRole.entities.User.filter({ email: managerEmail });
     const manager = users[0];
 
