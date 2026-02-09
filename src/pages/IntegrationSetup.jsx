@@ -299,6 +299,20 @@ export default function IntegrationSetup() {
                 </p>
               </div>
 
+              <div>
+                <h4 className="font-medium text-[#1E3A32] mb-2">Step 4: Sync Apple Calendar (Optional)</h4>
+                <p className="text-sm text-[#2B2725]/80 mb-2">
+                  If you use Apple Calendar, you can sync it with your Google Calendar for seamless two-way sync:
+                </p>
+                <ol className="text-sm text-[#2B2725]/80 space-y-2 list-decimal list-inside ml-2">
+                  <li>On your Mac, open <strong>System Settings</strong> → <strong>Internet Accounts</strong></li>
+                  <li>Click the <strong>+</strong> button and select <strong>Google</strong></li>
+                  <li>Sign in with the same Google account you connected above</li>
+                  <li>Make sure <strong>Calendars</strong> is checked</li>
+                  <li>Your Google Calendar will now appear in Apple Calendar, and all bookings will sync automatically</li>
+                </ol>
+              </div>
+
               <Alert className="bg-blue-50 border-blue-200">
                 <AlertCircle className="text-blue-600" />
                 <AlertDescription className="text-sm text-blue-900">
