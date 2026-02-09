@@ -29,9 +29,25 @@ export default function Bookings() {
     whyHelpful: ""
   });
 
+  // Fetch appointment types for the primary booking manager (Roberta)
+  const { data: primaryManager } = useQuery({
+    queryKey: ["primaryManager"],
+    queryFn: async () => {
+      const users = await base44.entities.User.list();
+      return users.find(u => u.email === 'roberta@yourmindstylist.com' || u.role === 'admin');
+    },
+  });
+
   const { data: appointmentTypes = [], isLoading } = useQuery({
-    queryKey: ["appointmentTypes"],
-    queryFn: () => base44.entities.AppointmentType.filter({ active: true }),
+    queryKey: ["appointmentTypes", primaryManager?.id],
+    queryFn: () => {
+      if (!primaryManager?.id) return [];
+      return base44.entities.AppointmentType.filter({ 
+        active: true,
+        manager_id: primaryManager.id 
+      });
+    },
+    enabled: !!primaryManager?.id,
   });
 
   useEffect(() => {
