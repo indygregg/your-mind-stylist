@@ -287,14 +287,16 @@ export default function BugList() {
           title: "Forward RF and FARE emails",
           description: "Forward RF and FARE emails to Your Mind Stylist",
           status: "open",
-          priority: "high"
+          priority: "high",
+          notes: "❌ Cannot complete: This app doesn't have access to the RF and FARE email domains or accounts. Email forwarding requires direct access to those external email systems and domains, which are outside this application. You'll need to set this up manually through your email provider's forwarding settings."
         },
         {
           id: "email-3",
           title: "Forward Roberta Fernandez website emails",
           description: "Forward Roberta Fernandez website emails to yourmindstylist.com",
           status: "open",
-          priority: "high"
+          priority: "high",
+          notes: "❌ Cannot complete: This app doesn't have access to the Roberta Fernandez email domain or account. Email forwarding requires direct access to that external email system, which is outside this application. You'll need to set this up manually through your email provider's forwarding settings after Feb 2 when RF goes offline."
         }
       ]
     },
