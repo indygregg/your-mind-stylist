@@ -761,25 +761,105 @@ export default function ManagerProducts() {
               )}
             </div>
 
-            {/* Multiple Payment Options */}
-            {editingProduct && (
-              <div className="border border-[#E4D9C4] rounded-lg p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <Label>Payment Options</Label>
+            {/* Payment Plans */}
+            <div className="border border-[#E4D9C4] rounded-lg p-4">
+              <div className="mb-4">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={enablePaymentPlans}
+                    onChange={(e) => {
+                      setEnablePaymentPlans(e.target.checked);
+                      if (!e.target.checked) {
+                        setFormData({ ...formData, payment_plan_options: [] });
+                      } else {
+                        setFormData({ ...formData, payment_plan_options: [
+                          { name: "Pay in Full", months: 1, monthly_price: parseInt(formData.price) || 0 },
+                          { name: "3 Monthly Payments", months: 3, monthly_price: Math.round((parseInt(formData.price) || 0) / 3) }
+                        ]});
+                      }
+                    }}
+                    className="w-4 h-4"
+                  />
+                  <span className="font-medium text-[#1E3A32]">Offer Payment Plans</span>
+                </label>
+              </div>
+
+              {enablePaymentPlans && (
+                <div className="space-y-3">
+                  {formData.payment_plan_options.map((plan, idx) => (
+                    <div key={idx} className="bg-[#F9F5EF] p-3 rounded space-y-2">
+                      <div className="grid grid-cols-3 gap-2">
+                        <Input
+                          placeholder="Plan name"
+                          value={plan.name}
+                          onChange={(e) => {
+                            const updated = [...formData.payment_plan_options];
+                            updated[idx].name = e.target.value;
+                            setFormData({ ...formData, payment_plan_options: updated });
+                          }}
+                        />
+                        <Input
+                          type="number"
+                          placeholder="Months"
+                          min="1"
+                          max="12"
+                          value={plan.months}
+                          onChange={(e) => {
+                            const updated = [...formData.payment_plan_options];
+                            updated[idx].months = parseInt(e.target.value) || 1;
+                            setFormData({ ...formData, payment_plan_options: updated });
+                          }}
+                        />
+                        <div className="flex gap-1">
+                          <Input
+                            type="number"
+                            placeholder="Monthly $"
+                            value={plan.monthly_price / 100}
+                            onChange={(e) => {
+                              const updated = [...formData.payment_plan_options];
+                              updated[idx].monthly_price = Math.round((parseFloat(e.target.value) || 0) * 100);
+                              setFormData({ ...formData, payment_plan_options: updated });
+                            }}
+                          />
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              const updated = formData.payment_plan_options.filter((_, i) => i !== idx);
+                              setFormData({ ...formData, payment_plan_options: updated });
+                            }}
+                          >
+                            <Trash2 size={14} />
+                          </Button>
+                        </div>
+                      </div>
+                      <p className="text-xs text-[#2B2725]/60">
+                        Total: ${((plan.monthly_price * plan.months) / 100).toFixed(2)}
+                      </p>
+                    </div>
+                  ))}
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => window.open(createPageUrl(`ManagerPaymentPlans?product_id=${editingProduct.id}`), '_blank')}
+                    onClick={() => {
+                      const newPrice = Math.round((parseInt(formData.price) || 0) / 2);
+                      setFormData({
+                        ...formData,
+                        payment_plan_options: [
+                          ...formData.payment_plan_options,
+                          { name: `Pay in ${formData.payment_plan_options.length + 1}`, months: formData.payment_plan_options.length + 1, monthly_price: newPrice }
+                        ]
+                      });
+                    }}
+                    className="w-full"
                   >
                     <Plus size={14} className="mr-1" />
-                    Manage Payment Plans
+                    Add Plan Option
                   </Button>
                 </div>
-                <p className="text-xs text-[#2B2725]/60">
-                  Add multiple payment options (e.g., pay-in-full vs 3-month plan). Click "Manage Payment Plans" to set up installment options.
-                </p>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Features */}
             <div>
