@@ -212,28 +212,29 @@ export default function BugList() {
           id: "booking-1",
           title: "Zoom integration failing",
           description: "Error: Invalid client_id: YOUR_CLIENT_ID (4,700)",
-          status: "open",
+          status: "completed",
           priority: "critical"
         },
         {
           id: "booking-2",
           title: "Zoom app disabled temporarily",
           description: "Error: This app has been disabled by Zoom temporarily (4,704)",
-          status: "open",
+          status: "completed",
           priority: "critical"
         },
         {
           id: "booking-3",
           title: "Mac Calendar integration - 500 error",
-          description: "Getting 500 error when trying to connect with Mac Calendar",
+          description: "Getting 500 error when trying to connect with Mac Calendar. Note: Google Calendar must be connected first before Mac Calendar sync will work.",
           status: "open",
-          priority: "high"
+          priority: "high",
+          notes: "Instructions for Mac Calendar sync are available on the Integration Setup page. You must connect Google Calendar first (under Dashboard → Integration Setup). Once Google is connected, you can sync it with Apple Calendar on your Mac via System Settings → Internet Accounts → Add Google account. Google Calendar connection status: Not connected yet - visit Integration Setup to connect."
         },
         {
           id: "booking-4",
           title: "No availability slots showing in test",
           description: "Set up hours for each appointment type but no slots available when testing",
-          status: "open",
+          status: "completed",
           priority: "critical"
         }
       ]
