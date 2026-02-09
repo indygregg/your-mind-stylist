@@ -167,8 +167,9 @@ export default function BugList() {
           id: "domain-1",
           title: "Primary domain shows 'themindstylist' instead of 'yourmindstylist.com'",
           description: "Check if this matters for functionality",
-          status: "open",
-          priority: "low"
+          status: "completed",
+          priority: "low",
+          notes: "✅ Fixed: Updated SEO component to use 'Your Mind Stylist' instead of 'The Mind Stylist' in page titles. Google should reflect this change within a few days as it re-crawls the site."
         }
       ]
     },
