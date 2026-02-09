@@ -23,18 +23,16 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Appointment type not found' }, { status: 404 });
     }
 
-    // Get manager's availability rules and settings
-    const managerEmail = 'roberta@robertafernandez.com'; // Default manager
-    const users = await base44.asServiceRole.entities.User.filter({ email: managerEmail });
-    const manager = users[0];
-
-    if (!manager) {
-      return Response.json({ error: 'Manager not found' }, { status: 404 });
+    // Get manager from appointment type
+    const managerId = appointmentType.manager_id;
+    
+    if (!managerId) {
+      return Response.json({ error: 'No manager assigned to this appointment type' }, { status: 400 });
     }
 
     // Get appointment-specific rules first, fallback to default rules
     let availabilityRules = await base44.asServiceRole.entities.AvailabilityRule.filter({ 
-      manager_id: manager.id,
+      manager_id: managerId,
       appointment_type_id: appointment_type_id,
       active: true 
     });
@@ -42,7 +40,7 @@ Deno.serve(async (req) => {
     // If no specific rules, use default rules
     if (availabilityRules.length === 0) {
       availabilityRules = await base44.asServiceRole.entities.AvailabilityRule.filter({ 
-        manager_id: manager.id,
+        manager_id: managerId,
         appointment_type_id: null,
         active: true 
       });
@@ -50,13 +48,13 @@ Deno.serve(async (req) => {
 
     // Get appointment-specific settings first, fallback to default settings
     let availabilitySettings = await base44.asServiceRole.entities.AvailabilitySettings.filter({ 
-      manager_id: manager.id,
+      manager_id: managerId,
       appointment_type_id: appointment_type_id 
     });
 
     if (availabilitySettings.length === 0) {
       availabilitySettings = await base44.asServiceRole.entities.AvailabilitySettings.filter({ 
-        manager_id: manager.id,
+        manager_id: managerId,
         appointment_type_id: null 
       });
     }
