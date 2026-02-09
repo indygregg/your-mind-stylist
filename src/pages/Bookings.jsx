@@ -34,7 +34,7 @@ export default function Bookings() {
     queryKey: ["primaryManager"],
     queryFn: async () => {
       const users = await base44.entities.User.list();
-      return users.find(u => u.email === 'roberta@yourmindstylist.com' || u.role === 'admin');
+      return users.find(u => u.role === 'admin');
     },
   });
 
