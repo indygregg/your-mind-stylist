@@ -263,8 +263,9 @@ export default function BugList() {
           id: "products-1",
           title: "Payment plans not working",
           description: "Payment plan functionality needs to be fixed",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "✅ COMPLETE: Payment plans are now integrated directly into Product Manager! When creating/editing a product, check 'Offer Payment Plans' to enable installment options. Add multiple payment tiers (e.g., Pay in Full, 3 Monthly Payments, 6 Monthly Payments) with custom names, months, and monthly amounts. The system calculates totals automatically. All plans sync with Stripe on save. Visit Manager Dashboard → Product Manager to configure payment options for your high-ticket products."
         }
       ]
     },
