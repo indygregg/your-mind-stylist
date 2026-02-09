@@ -314,7 +314,7 @@ export default function BugList() {
           description: "Verify booking confirmation emails are sent from the correct domain",
           status: "completed",
           priority: "high",
-          notes: "✅ VERIFIED: Booking confirmations send from no-reply@yourmindstylist.com (configured in Base44 Domains section). Both customer and Roberta receive confirmation emails from this branded address. Email domain is active and properly configured."
+          notes: "✅ VERIFIED: All booking confirmations and purchase receipts send from no-reply@yourmindstylist.com. When a client books a meeting with Roberta, both the client AND Roberta receive confirmation emails from this address. When a purchase is made, the confirmation email also comes from this address. Email domain is configured in Base44 Settings > Domains > Email domain section."
         },
         {
           id: "misc-3",
