@@ -17,12 +17,18 @@ export default function ZoomCallback() {
         try {
             // Extract query params from hash URL
             const hash = window.location.hash;
+            console.log('Full hash:', hash);
             const queryString = hash.includes('?') ? hash.split('?')[1] : '';
+            console.log('Query string:', queryString);
             const urlParams = new URLSearchParams(queryString);
             const code = urlParams.get('code');
             const error = urlParams.get('error');
 
+            console.log('OAuth code:', code);
+            console.log('OAuth error:', error);
+
             if (error) {
+                console.error('OAuth error from Zoom:', error);
                 setStatus('error');
                 setMessage('Authorization was denied or cancelled.');
                 setTimeout(() => navigate(createPageUrl('ZoomConnect')), 3000);
@@ -30,29 +36,35 @@ export default function ZoomCallback() {
             }
 
             if (!code) {
+                console.error('No authorization code in URL');
                 setStatus('error');
                 setMessage('No authorization code received.');
                 setTimeout(() => navigate(createPageUrl('ZoomConnect')), 3000);
                 return;
             }
 
+            console.log('Calling backend with code:', code);
+            
             // Call backend to exchange code for tokens
             const response = await base44.functions.invoke('zoomOAuthCallback', { code });
 
-            if (response.data.success) {
+            console.log('Backend response:', response);
+
+            if (response.data && response.data.success) {
                 setStatus('success');
                 setMessage('Zoom account connected successfully!');
                 setTimeout(() => navigate(createPageUrl('ZoomConnect')), 2000);
             } else {
+                console.error('Backend returned failure:', response);
                 setStatus('error');
-                setMessage('Failed to connect Zoom account.');
+                setMessage(response.data?.error || 'Failed to connect Zoom account.');
                 setTimeout(() => navigate(createPageUrl('ZoomConnect')), 3000);
             }
 
         } catch (error) {
-            console.error('Zoom callback error:', error);
+            console.error('Zoom callback error details:', error);
             setStatus('error');
-            setMessage('An error occurred while connecting your Zoom account.');
+            setMessage(`Error: ${error.message || 'An error occurred while connecting your Zoom account.'}`);
             setTimeout(() => navigate(createPageUrl('ZoomConnect')), 3000);
         }
     };
