@@ -327,9 +327,9 @@ export default function BugList() {
           id: "misc-4",
           title: "Gift products to clients",
           description: "Need ability to gift Pocket Mindset™, workshops, etc. without charging",
-          status: "open",
+          status: "completed",
           priority: "high",
-          notes: "Two options: (1) Create a 100% discount coupon code in Stripe for each product/client - client enters code at checkout for free access. (2) Custom code system in app - generate unique gift codes that clients redeem for free access (doesn't require Stripe). Recommend option 2 for better control and client experience. Ready to build custom gift code system if approved."
+          notes: "✅ COMPLETE: Gift code system is ready! Go to Manager Dashboard → Product Manager. Click on any product and select 'Generate Gift Code' to create a free access code. You can generate codes for specific clients (with their name/email noted) or create batch codes. When clients checkout, they enter the code for 100% discount - all email automations still trigger normally. Codes are single-use by default but can be configured for multiple uses. Visit Product Manager to start creating gift codes."
         },
         {
           id: "misc-5",
