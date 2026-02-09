@@ -15,12 +15,8 @@ export default function ZoomCallback() {
 
     const handleCallback = async () => {
         try {
-            // Extract query params from hash URL
-            const hash = window.location.hash;
-            console.log('Full hash:', hash);
-            const queryString = hash.includes('?') ? hash.split('?')[1] : '';
-            console.log('Query string:', queryString);
-            const urlParams = new URLSearchParams(queryString);
+            // Extract query params from URL (not hash since we removed #)
+            const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             const error = urlParams.get('error');
 
