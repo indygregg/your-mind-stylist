@@ -44,7 +44,9 @@ export default function ManagerProducts() {
     template_choice: "detailed",
     related_course_id: "",
     access_grants: [],
+    payment_plan_options: [],
   });
+  const [enablePaymentPlans, setEnablePaymentPlans] = useState(false);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
