@@ -16,33 +16,36 @@ export default function IntegrationSetup() {
   const [isZoomConnected, setIsZoomConnected] = useState(false);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        setIsGoogleConnected(!!currentUser.hasGoogleCalendar);
-        setIsZoomConnected(!!currentUser.hasZoom);
-
-        // Check for OAuth callback success/error
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('success') === 'true') {
-          const service = urlParams.get('service') || 'Service';
-          toast.success(`${service} connected successfully!`);
-          window.history.replaceState({}, '', window.location.pathname);
-        } else if (urlParams.get('error')) {
-          const errorMsg = urlParams.get('error');
-          const details = urlParams.get('details') || urlParams.get('message');
-          toast.error(`Failed: ${errorMsg}${details ? ' - ' + details : ''}`);
-          window.history.replaceState({}, '', window.location.pathname);
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchUser();
   }, []);
+
+  const fetchUser = async () => {
+    try {
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+      setIsGoogleConnected(!!currentUser.hasGoogleCalendar);
+      setIsZoomConnected(!!currentUser.hasZoom);
+
+      // Check for OAuth callback success/error
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('success') === 'true') {
+        const service = urlParams.get('service') || 'Service';
+        toast.success(`${service} connected successfully!`);
+        window.history.replaceState({}, '', window.location.pathname);
+        // Refetch to get updated status
+        setTimeout(() => fetchUser(), 500);
+      } else if (urlParams.get('error')) {
+        const errorMsg = urlParams.get('error');
+        const details = urlParams.get('details') || urlParams.get('message');
+        toast.error(`Failed: ${errorMsg}${details ? ' - ' + details : ''}`);
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleConnectGoogle = async () => {
     setConnectingGoogle(true);
@@ -95,7 +98,8 @@ export default function IntegrationSetup() {
         await base44.auth.updateMe({
           zoom_access_token: null,
           zoom_refresh_token: null,
-          zoom_token_expiry: null,
+          zoom_token_expires_at: null,
+          zoom_connected: false,
           hasZoom: false
         });
         setIsZoomConnected(false);
