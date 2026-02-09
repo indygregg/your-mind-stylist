@@ -44,7 +44,7 @@ export default function ManagerPaymentPlans() {
     { name: "3 Monthly Payments", months: 3, monthly_price: 0 },
   ]);
 
-  const { data: products = [], isLoading } = useQuery({
+  const { data: products = [], isLoading: isProductsLoading } = useQuery({
     queryKey: ["products"],
     queryFn: () => base44.entities.Product.filter({ active: true }),
   });
