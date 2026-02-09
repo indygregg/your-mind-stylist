@@ -13,9 +13,9 @@ export default function SEO({
   tags = [],
   category,
 }) {
-  const fullTitle = title.includes("The Mind Stylist") 
+  const fullTitle = title.includes("Your Mind Stylist") 
     ? title 
-    : `${title} | The Mind Stylist`;
+    : `${title} | Your Mind Stylist`;
   
   const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
   const canonicalUrl = canonical ? `${siteUrl}${canonical}` : (typeof window !== 'undefined' ? window.location.href : '');
