@@ -50,7 +50,8 @@ Deno.serve(async (req) => {
             zoom_access_token: tokens.access_token,
             zoom_refresh_token: tokens.refresh_token,
             zoom_token_expires_at: expiresAt,
-            zoom_connected: true
+            zoom_connected: true,
+            hasZoom: true
         });
 
         return Response.json({
