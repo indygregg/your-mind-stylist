@@ -110,7 +110,7 @@ export default function ManagerPaymentPlans() {
   // Filter products eligible for payment plans (high-ticket items)
   const eligibleProducts = products.filter(p => p.price >= 50000); // $500+
 
-  if (isLoading) {
+  if (isProductsLoading) {
     return <div className="p-8">Loading...</div>;
   }
 
