@@ -24,7 +24,7 @@ export default function IntegrationSetup() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       setIsGoogleConnected(!!currentUser.hasGoogleCalendar);
-      setIsZoomConnected(!!currentUser.hasZoom);
+      setIsZoomConnected(!!(currentUser.hasZoom || currentUser.zoom_connected));
 
       // Check for OAuth callback success/error
       const urlParams = new URLSearchParams(window.location.search);
