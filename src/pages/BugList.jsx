@@ -311,7 +311,8 @@ export default function BugList() {
           description: "Forward Roberta Fernandez site and email to yourmindstylist.com - Roberta Fernandez goes offline Feb 2",
           status: "open",
           priority: "critical",
-          deadline: "Feb 2, 2026"
+          deadline: "Feb 2, 2026",
+          notes: "⚠️ ACTION REQUIRED: Roberta needs to call GoDaddy directly to set up domain forwarding. The account is currently locked due to incorrect auth codes. When Roberta calls GoDaddy with her PIN, they will handle the domain forwarding to yourmindstylist.com. She should reference the RF domain and request the redirect be set up."
         },
         {
           id: "misc-2",
