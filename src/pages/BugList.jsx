@@ -317,17 +317,19 @@ export default function BugList() {
         },
         {
           id: "misc-3",
-          title: "Need to connect to Zoom",
-          description: "Need Zoom connection for scheduler",
-          status: "open",
-          priority: "critical"
+          title: "Connect Zoom for scheduler",
+          description: "Zoom integration has been tested and is working. Connect your Zoom account in Dashboard → Integration Setup to enable automatic Zoom meeting creation for bookings.",
+          status: "completed",
+          priority: "critical",
+          notes: "Zoom is fully functional. Visit Integration Setup to authorize your Zoom account. Once connected, all bookings will automatically generate Zoom meeting links."
         },
         {
           id: "misc-4",
           title: "Gift products to clients",
           description: "Need ability to gift Pocket Mindset™, workshops, etc. without charging",
           status: "open",
-          priority: "high"
+          priority: "high",
+          notes: "Two options: (1) Create a 100% discount coupon code in Stripe for each product/client - client enters code at checkout for free access. (2) Custom code system in app - generate unique gift codes that clients redeem for free access (doesn't require Stripe). Recommend option 2 for better control and client experience. Ready to build custom gift code system if approved."
         },
         {
           id: "misc-5",
