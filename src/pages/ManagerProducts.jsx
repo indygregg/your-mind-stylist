@@ -194,8 +194,10 @@ export default function ManagerProducts() {
       template_choice: "detailed",
       related_course_id: "",
       access_grants: [],
+      payment_plan_options: [],
     });
     setEditingProduct(null);
+    setEnablePaymentPlans(false);
   };
 
   const handleEdit = (product) => {
