@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,9 +10,34 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CreditCard, Plus, Trash2, DollarSign } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { createPageUrl } from "../utils";
 
 export default function ManagerPaymentPlans() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (!isAuth) {
+          base44.auth.redirectToLogin(createPageUrl("ManagerPaymentPlans"));
+        }
+        setIsAuthenticated(isAuth);
+      } catch (error) {
+        base44.auth.redirectToLogin(createPageUrl("ManagerPaymentPlans"));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkAuth();
+  }, [navigate]);
+
+  if (isLoading || !isAuthenticated) {
+    return <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">Loading...</div>;
+  }
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [plans, setPlans] = useState([
