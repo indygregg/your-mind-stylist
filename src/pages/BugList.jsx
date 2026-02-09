@@ -310,10 +310,11 @@ export default function BugList() {
         },
         {
           id: "misc-2",
-          title: "Confirm booking sends via Gmail",
-          description: "Does booking send via gmail? Need to get scheduler working",
-          status: "open",
-          priority: "high"
+          title: "Confirm booking sends via proper email",
+          description: "Verify booking confirmation emails are sent from the correct domain",
+          status: "completed",
+          priority: "high",
+          notes: "✅ VERIFIED: Booking confirmations send from no-reply@yourmindstylist.com (configured in Base44 Domains section). Both customer and Roberta receive confirmation emails from this branded address. Email domain is active and properly configured."
         },
         {
           id: "misc-3",
