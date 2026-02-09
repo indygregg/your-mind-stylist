@@ -209,6 +209,7 @@ export default function ManagerProducts() {
     }
     
     setEditingProduct(product);
+    const hasPlan = product.payment_plan_options && product.payment_plan_options.length > 0;
     setFormData({
       ...product,
       slug: product.slug || "",
@@ -217,7 +218,9 @@ export default function ManagerProducts() {
       template_choice: product.template_choice || "detailed",
       related_course_id: product.related_course_id || "",
       access_grants: product.access_grants || [],
+      payment_plan_options: product.payment_plan_options || [],
     });
+    setEnablePaymentPlans(hasPlan);
     setDialogOpen(true);
   };
 
