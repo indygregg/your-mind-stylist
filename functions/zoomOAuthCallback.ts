@@ -18,7 +18,7 @@ Deno.serve(async (req) => {
 
         const ZOOM_CLIENT_ID = Deno.env.get('ZOOM_CLIENT_ID');
         const ZOOM_CLIENT_SECRET = Deno.env.get('ZOOM_CLIENT_SECRET');
-        const redirectUri = 'https://yourmindstylist.com/#/ZoomCallback';
+        const redirectUri = 'https://yourmindstylist.com/ZoomCallback';
 
         // Exchange code for tokens
         const tokenResponse = await fetch('https://zoom.us/oauth/token', {

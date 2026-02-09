@@ -32,7 +32,7 @@ export default function ZoomConnect() {
             // Get Zoom client ID from backend
             const response = await base44.functions.invoke('getZoomClientId');
             const ZOOM_CLIENT_ID = response.data.client_id;
-            const redirectUri = `${window.location.origin}/#/ZoomCallback`;
+            const redirectUri = `${window.location.origin}/ZoomCallback`;
             const authUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=${ZOOM_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}`;
             window.top.location.href = authUrl;
         } catch (error) {
