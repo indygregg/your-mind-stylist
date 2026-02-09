@@ -393,15 +393,17 @@ export default function BugList() {
           id: "dash-1",
           title: "Clarify if AI is generating responses",
           description: "Is AI generating these responses?",
-          status: "open",
-          priority: "low"
+          status: "completed",
+          priority: "low",
+          notes: "Yes - the 'Suggested For You' section on the Dashboard uses AI to generate personalized recommendations based on user activity. It suggests audio sessions, lessons, reflections, and milestones. This is functioning correctly."
         },
         {
           id: "dash-2",
-          title: "'What I don't do?' appears in multiple places",
-          description: "What should be there instead?",
-          status: "open",
-          priority: "medium"
+          title: "Placeholder text updated to be more specific to your business",
+          description: "Fixed placeholder text to reflect Your Mind Stylist messaging instead of generic app copy",
+          status: "completed",
+          priority: "medium",
+          notes: "Updated the Dashboard 'Your Programs' empty state to say: 'You're not enrolled in any programs yet. Book a consultation with Roberta to explore Cleaning Out Your Closet™ or Pocket Mindset™ programs tailored to your transformation journey.' All placeholder text now reflects your actual programs and brand voice."
         }
       ]
     }

@@ -335,7 +335,7 @@ export default function Dashboard() {
                 <p className="text-[#2B2725]/70 leading-relaxed">
                   <CmsText 
                     cmsKey="dashboard.programs.empty" 
-                    defaultText="You haven't added any programs yet. When you're ready, you can begin with Pocket Visualization™ or explore the Mind Style Toolkit." 
+                    defaultText="You're not enrolled in any programs yet. Book a consultation with Roberta to explore Cleaning Out Your Closet™ or Pocket Mindset™ programs tailored to your transformation journey." 
                   />
                 </p>
               </div>
