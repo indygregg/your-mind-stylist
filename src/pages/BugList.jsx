@@ -328,8 +328,9 @@ export default function BugList() {
           id: "booking-4",
           title: "No availability slots showing in test",
           description: "Set up hours for each appointment type but no slots available when testing",
-          status: "open",
-          priority: "critical"
+          status: "completed",
+          priority: "critical",
+          notes: "Fixed: Non-authenticated users can now view available time slots. Auth requirement removed from getAvailableSlots function. Back button also made more clickable with better touch targets."
         }
       ]
     },
