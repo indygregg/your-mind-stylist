@@ -2,55 +2,43 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
 
 Deno.serve(async (req) => {
     try {
-        const base44 = createClientFromRequest(req);
-        
-        const { user_id } = await req.json();
-        
-        if (!user_id) {
-            return Response.json({ error: 'user_id required' }, { status: 400 });
-        }
+        // Use Server-to-Server OAuth with account-level credentials
+        const ZOOM_ACCOUNT_ID = Deno.env.get('ZOOM_ACCOUNT_ID');
+        const ZOOM_CLIENT_ID = Deno.env.get('ZOOM_CLIENT_ID');
+        const ZOOM_CLIENT_SECRET = Deno.env.get('ZOOM_CLIENT_SECRET');
 
-        // Get user's Zoom tokens
-        const users = await base44.asServiceRole.entities.User.filter({ id: user_id });
-        if (!users || users.length === 0) {
-            return Response.json({ error: 'User not found' }, { status: 404 });
-        }
-
-        const user = users[0];
-
-        if (!user.zoom_connected || !user.zoom_access_token) {
+        if (!ZOOM_ACCOUNT_ID || !ZOOM_CLIENT_ID || !ZOOM_CLIENT_SECRET) {
             return Response.json({ 
-                error: 'Zoom not connected',
-                message: 'User needs to connect their Zoom account'
-            }, { status: 403 });
+                error: 'Zoom credentials not configured',
+                message: 'Please set ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, and ZOOM_CLIENT_SECRET'
+            }, { status: 500 });
         }
 
-        // Check if token is expired or about to expire (within 5 minutes)
-        const tokenExpiresAt = new Date(user.zoom_token_expires_at);
-        const now = new Date();
-        const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60 * 1000);
+        // Get access token using Server-to-Server OAuth
+        const tokenUrl = 'https://zoom.us/oauth/token';
+        const credentials = btoa(`${ZOOM_CLIENT_ID}:${ZOOM_CLIENT_SECRET}`);
 
-        if (tokenExpiresAt <= fiveMinutesFromNow) {
-            // Token expired or expiring soon, refresh it
-            const refreshResponse = await base44.asServiceRole.functions.invoke('refreshZoomToken', {
-                user_id: user_id
-            });
-
-            if (refreshResponse.data.error) {
-                return Response.json({ 
-                    error: 'Token refresh failed',
-                    details: refreshResponse.data
-                }, { status: 500 });
+        const tokenResponse = await fetch(`${tokenUrl}?grant_type=account_credentials&account_id=${ZOOM_ACCOUNT_ID}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${credentials}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
+        });
 
-            return Response.json({
-                access_token: refreshResponse.data.access_token
-            });
+        if (!tokenResponse.ok) {
+            const errorText = await tokenResponse.text();
+            console.error('Zoom token error:', errorText);
+            return Response.json({ 
+                error: 'Failed to get Zoom access token',
+                details: errorText
+            }, { status: tokenResponse.status });
         }
 
-        // Token is still valid
+        const tokenData = await tokenResponse.json();
+
         return Response.json({
-            access_token: user.zoom_access_token
+            access_token: tokenData.access_token
         });
 
     } catch (error) {
