@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Calendar, Mail, Loader2, Video, Download, Bell, Plus, Sparkles } from "lucide-react";
+import { CheckCircle, Calendar, Mail, Loader2, Video, Download, Bell, Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import confetti from "canvas-confetti";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import ReflectionPrompt from "../components/transformation/ReflectionPrompt";
 
 export default function BookingSuccess() {
   const [bookingId, setBookingId] = useState(null);
   const [sessionId, setSessionId] = useState(null);
-  const [showReflection, setShowReflection] = useState(false);
+  const [booking, setBooking] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -28,29 +28,38 @@ export default function BookingSuccess() {
       spread: 70,
       origin: { y: 0.6 }
     });
+
+    // Check auth and load booking
+    const loadBooking = async () => {
+      try {
+        const authStatus = await base44.auth.isAuthenticated();
+        setIsAuthenticated(authStatus);
+
+        if (bid || sid) {
+          if (bid) {
+            // Direct booking ID (free consultation) - use service role
+            const bookings = await base44.asServiceRole.entities.Booking.filter({ id: bid });
+            setBooking(bookings[0] || null);
+          } else if (sid && authStatus) {
+            // Stripe session ID (paid booking) - requires auth
+            const bookings = await base44.entities.Booking.filter({
+              stripe_checkout_session_id: sid,
+            });
+            setBooking(bookings[0] || null);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading booking:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBooking();
   }, []);
 
-  // Fetch booking details
-  const { data: booking, isLoading } = useQuery({
-    queryKey: ["booking-success", sessionId, bookingId],
-    queryFn: async () => {
-      if (bookingId) {
-        // Direct booking ID (free consultation)
-        const bookings = await base44.entities.Booking.filter({ id: bookingId });
-        return bookings[0] || null;
-      } else if (sessionId) {
-        // Stripe session ID (paid booking)
-        const bookings = await base44.entities.Booking.filter({
-          stripe_checkout_session_id: sessionId,
-        });
-        return bookings[0] || null;
-      }
-      return null;
-    },
-    enabled: !!(sessionId || bookingId),
-  });
-
   const formatAmount = (amount) => {
+    if (amount === 0) return "Free";
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
@@ -136,8 +145,10 @@ export default function BookingSuccess() {
           </h1>
 
           <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
-            Thank you for investing in your transformation. Your payment has been received, 
-            and your private Mind Styling sessions are confirmed.
+            {booking?.amount === 0 
+              ? "Thank you for scheduling your complimentary consultation. I'm looking forward to meeting you!"
+              : "Thank you for investing in your transformation. Your payment has been received, and your private Mind Styling sessions are confirmed."
+            }
           </p>
 
           {/* Booking Summary */}
@@ -148,10 +159,10 @@ export default function BookingSuccess() {
                 <div className="flex justify-between">
                   <span className="text-[#2B2725]/70">Service:</span>
                   <span className="text-[#1E3A32] font-medium">
-                    {booking.service_type?.replace("_", " ").toUpperCase()}
+                    {booking.service_type?.replace(/_/g, " ").toUpperCase()}
                   </span>
                 </div>
-                {booking.session_count && (
+                {booking.session_count > 1 && (
                   <div className="flex justify-between">
                     <span className="text-[#2B2725]/70">Sessions:</span>
                     <span className="text-[#1E3A32] font-medium">{booking.session_count}</span>
@@ -176,7 +187,7 @@ export default function BookingSuccess() {
               {/* Calendar Actions */}
               {booking.scheduled_date && (
                 <div className="mt-6 pt-6 border-t border-[#E4D9C4]">
-                  <p className="text-sm text-[#2B2725]/70 mb-3 flex items-center gap-2">
+                  <p className="text-sm text-[#2B2725]/70 mb-3 flex items-center gap-2 justify-center">
                     <Calendar size={16} className="text-[#D8B46B]" />
                     Add to your calendar
                   </p>
@@ -206,7 +217,7 @@ export default function BookingSuccess() {
               {/* Zoom Meeting Link */}
               {booking.zoom_status === 'created' && booking.zoom_join_url && (
                 <div className="mt-6 pt-6 border-t border-[#E4D9C4]">
-                  <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center gap-2 mb-3 justify-center">
                     <Video size={20} className="text-[#2D8CFF]" />
                     <h4 className="font-medium text-[#1E3A32]">Your Zoom Meeting</h4>
                   </div>
@@ -248,10 +259,30 @@ export default function BookingSuccess() {
                     1. Check Your Email
                   </h3>
                   <p className="text-[#2B2725]/70 text-sm">
-                    You'll receive a confirmation email with your booking details, Zoom link, and next steps within minutes.
+                    You'll receive a confirmation email with your booking details{booking?.zoom_join_url ? ', Zoom link,' : ''} and next steps within minutes.
                   </p>
                 </div>
               </div>
+
+              {booking?.amount === 0 && (
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-full bg-[#D8B46B]/20 flex items-center justify-center flex-shrink-0">
+                    <CheckCircle size={24} className="text-[#D8B46B]" />
+                  </div>
+                  <div>
+                    <h3 className="text-[#1E3A32] font-medium mb-2">
+                      2. Complete the Intake Form
+                    </h3>
+                    <p className="text-[#2B2725]/70 text-sm">
+                      Before your session, please complete the{" "}
+                      <Link to={createPageUrl("Consultations")} className="text-[#D8B46B] hover:underline">
+                        consultation intake form
+                      </Link>
+                      {" "}so I can best prepare for our time together.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full bg-[#D8B46B]/20 flex items-center justify-center flex-shrink-0">
@@ -259,7 +290,7 @@ export default function BookingSuccess() {
                 </div>
                 <div>
                   <h3 className="text-[#1E3A32] font-medium mb-2">
-                    2. Receive Reminders
+                    {booking?.amount === 0 ? '3' : '2'}. Receive Reminders
                   </h3>
                   <p className="text-[#2B2725]/70 text-sm">
                     You'll get automated reminders 24 hours and 1 hour before your session to help you prepare.
@@ -273,7 +304,7 @@ export default function BookingSuccess() {
                 </div>
                 <div>
                   <h3 className="text-[#1E3A32] font-medium mb-2">
-                    3. Prepare for Your Session
+                    {booking?.amount === 0 ? '4' : '3'}. Prepare for Your Session
                   </h3>
                   <p className="text-[#2B2725]/70 text-sm">
                     Add the session to your calendar using the buttons above. Find a quiet space where you can focus without distractions.
@@ -287,7 +318,7 @@ export default function BookingSuccess() {
                 </div>
                 <div>
                   <h3 className="text-[#1E3A32] font-medium mb-2">
-                    4. Begin Your Transformation
+                    {booking?.amount === 0 ? '5' : '4'}. Begin Your Transformation
                   </h3>
                   <p className="text-[#2B2725]/70 text-sm">
                     Show up ready to explore, shift, and design the patterns that will serve you moving forward.
@@ -300,7 +331,7 @@ export default function BookingSuccess() {
           {/* Helpful Tips */}
           <div className="bg-[#F9F5EF] border-2 border-[#D8B46B]/30 p-6 mb-12 max-w-2xl mx-auto">
             <h3 className="font-medium text-[#1E3A32] mb-3 text-center">💡 Quick Tips</h3>
-            <ul className="space-y-2 text-sm text-[#2B2725]/80">
+            <ul className="space-y-2 text-sm text-[#2B2725]/80 text-left">
               <li className="flex items-start gap-2">
                 <span className="text-[#D8B46B] mt-1">•</span>
                 <span>Test your Zoom connection before the session to ensure everything works smoothly</span>
@@ -309,53 +340,47 @@ export default function BookingSuccess() {
                 <span className="text-[#D8B46B] mt-1">•</span>
                 <span>Have a notebook handy to capture insights and action steps</span>
               </li>
-              <li className="flex items-start gap-2">
-                <span className="text-[#D8B46B] mt-1">•</span>
-                <span>Need to reschedule? You can manage your bookings from your dashboard</span>
-              </li>
+              {isAuthenticated && (
+                <li className="flex items-start gap-2">
+                  <span className="text-[#D8B46B] mt-1">•</span>
+                  <span>Need to reschedule? You can manage your bookings from your dashboard</span>
+                </li>
+              )}
             </ul>
           </div>
 
-          {/* Reflection Prompt */}
-          {booking && (
-            <div className="mb-8">
-              <Button
-                onClick={() => setShowReflection(true)}
-                variant="outline"
-                className="border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32]"
-              >
-                <Sparkles size={18} className="mr-2" />
-                Reflect on Your Decision
-              </Button>
-            </div>
-          )}
-
           {/* Actions */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to={createPageUrl("Dashboard")}>
-              <Button className="bg-[#1E3A32] hover:bg-[#2B2725] px-8">
-                Go to Dashboard
-              </Button>
-            </Link>
-            <Link to={createPageUrl("Home")}>
-              <Button variant="outline" className="border-[#1E3A32] text-[#1E3A32] px-8">
-                Return Home
-              </Button>
-            </Link>
+            {isAuthenticated ? (
+              <>
+                <Link to={createPageUrl("Dashboard")}>
+                  <Button className="bg-[#1E3A32] hover:bg-[#2B2725] px-8">
+                    Go to Dashboard
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("Home")}>
+                  <Button variant="outline" className="border-[#1E3A32] text-[#1E3A32] px-8">
+                    Return Home
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                {booking?.amount === 0 && (
+                  <Link to={createPageUrl("Consultations")}>
+                    <Button className="bg-[#1E3A32] hover:bg-[#2B2725] px-8">
+                      Complete Intake Form
+                    </Button>
+                  </Link>
+                )}
+                <Link to={createPageUrl("Home")}>
+                  <Button variant="outline" className="border-[#1E3A32] text-[#1E3A32] px-8">
+                    Return Home
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
-          
-          {showReflection && booking && (
-            <ReflectionPrompt
-              reflectionType="consultation"
-              relatedId={booking.id}
-              relatedTitle={`${booking.service_type?.replace("_", " ")} Session - ${format(new Date(booking.scheduled_date || Date.now()), 'MMM d, yyyy')}`}
-              onComplete={() => setShowReflection(false)}
-              onSkip={() => setShowReflection(false)}
-              promptText="You've just committed to your transformation. What are you feeling right now?"
-              showMoodTracking={true}
-              showBreakthroughTag={false}
-            />
-          )}
 
           {(sessionId || bookingId) && (
             <p className="text-[#2B2725]/40 text-xs mt-8">
