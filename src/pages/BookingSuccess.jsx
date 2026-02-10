@@ -11,13 +11,16 @@ import { format } from "date-fns";
 import ReflectionPrompt from "../components/transformation/ReflectionPrompt";
 
 export default function BookingSuccess() {
+  const [bookingId, setBookingId] = useState(null);
   const [sessionId, setSessionId] = useState(null);
   const [showReflection, setShowReflection] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const sid = params.get("session_id");
+    const bid = params.get("booking_id");
     setSessionId(sid);
+    setBookingId(bid);
 
     // Celebrate with confetti
     confetti({
@@ -29,15 +32,22 @@ export default function BookingSuccess() {
 
   // Fetch booking details
   const { data: booking, isLoading } = useQuery({
-    queryKey: ["booking-success", sessionId],
+    queryKey: ["booking-success", sessionId, bookingId],
     queryFn: async () => {
-      if (!sessionId) return null;
-      const bookings = await base44.entities.Booking.filter({
-        stripe_checkout_session_id: sessionId,
-      });
-      return bookings[0] || null;
+      if (bookingId) {
+        // Direct booking ID (free consultation)
+        const bookings = await base44.entities.Booking.filter({ id: bookingId });
+        return bookings[0] || null;
+      } else if (sessionId) {
+        // Stripe session ID (paid booking)
+        const bookings = await base44.entities.Booking.filter({
+          stripe_checkout_session_id: sessionId,
+        });
+        return bookings[0] || null;
+      }
+      return null;
     },
-    enabled: !!sessionId,
+    enabled: !!(sessionId || bookingId),
   });
 
   const formatAmount = (amount) => {
@@ -97,7 +107,7 @@ export default function BookingSuccess() {
     window.URL.revokeObjectURL(url);
   };
 
-  if (isLoading && sessionId) {
+  if (isLoading && (sessionId || bookingId)) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
         <div className="text-center">
@@ -347,9 +357,9 @@ export default function BookingSuccess() {
             />
           )}
 
-          {sessionId && (
+          {(sessionId || bookingId) && (
             <p className="text-[#2B2725]/40 text-xs mt-8">
-              Session ID: {sessionId}
+              {sessionId ? `Session ID: ${sessionId}` : `Booking ID: ${bookingId}`}
             </p>
           )}
         </motion.div>
