@@ -78,29 +78,38 @@ export default function ConsultationFormEditor() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {(fieldsByStep[step.number] || []).map((field, idx) => (
-                    <motion.div
-                      key={field.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="border border-[#E4D9C4] p-4 rounded-lg"
-                    >
-                      {editingField?.id === field.id ? (
-                        <FormFieldEditor
-                          field={field}
-                          onSave={(data) => {
-                            updateMutation.mutate({ id: field.id, data });
-                          }}
-                          onCancel={() => setEditingField(null)}
-                        />
-                      ) : (
-                        <FormFieldPreview
-                          field={field}
-                          onEdit={() => setEditingField(field)}
-                        />
-                      )}
-                    </motion.div>
-                  ))}
+                  {(fieldsByStep[step.number] || []).length === 0 ? (
+                    <div className="text-center py-12 border-2 border-dashed border-[#D8B46B]/30 rounded-lg">
+                      <p className="text-[#2B2725]/60 mb-2">No fields configured for this step yet</p>
+                      <p className="text-sm text-[#2B2725]/40">
+                        Fields will appear here once they're added to the ConsultationForm entity
+                      </p>
+                    </div>
+                  ) : (
+                    (fieldsByStep[step.number] || []).map((field, idx) => (
+                      <motion.div
+                        key={field.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="border border-[#E4D9C4] p-4 rounded-lg hover:border-[#D8B46B] transition-colors"
+                      >
+                        {editingField?.id === field.id ? (
+                          <FormFieldEditor
+                            field={field}
+                            onSave={(data) => {
+                              updateMutation.mutate({ id: field.id, data });
+                            }}
+                            onCancel={() => setEditingField(null)}
+                          />
+                        ) : (
+                          <FormFieldPreview
+                            field={field}
+                            onEdit={() => setEditingField(field)}
+                          />
+                        )}
+                      </motion.div>
+                    ))
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
