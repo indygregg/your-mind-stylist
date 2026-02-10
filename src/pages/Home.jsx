@@ -20,9 +20,9 @@ export default function Home() {
         canonical="/"
       />
       <HeroSection />
-      <SocialProofStrip />
       <WhatIDo />
       <MindStylingSuite />
+      <SocialProofStrip />
       <FreeMasterclass />
       <Testimonials />
       <ContentHub />
