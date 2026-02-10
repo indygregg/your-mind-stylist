@@ -415,10 +415,10 @@ export default function Programs() {
                       <p className="text-2xl font-bold text-[#1E3A32] mb-6">
                         {formatPrice(product.price, product.billing_interval)}
                       </p>
-                      <Link to={createPageUrl("PurchaseCenter")}>
-                        <Button className="w-full bg-[#6E4F7D] hover:bg-[#8B659B] text-white">
-                          Register Now
-                        </Button>
+                      <Link to={createPageUrl("PocketMindset")}>
+                       <Button className="w-full bg-[#6E4F7D] hover:bg-[#8B659B] text-white">
+                         Learn More
+                       </Button>
                       </Link>
                     </div>
                   ))}
@@ -464,10 +464,10 @@ export default function Programs() {
                     One-day immersion experience <em>(coming soon)</em>
                   </p>
                   <p className="text-xl font-medium text-[#2B2725]/60 mb-6">Coming Soon</p>
-                  <Link to={createPageUrl("Contact")}>
-                    <Button variant="outline" className="w-full border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-white">
-                      Express Interest
-                    </Button>
+                  <Link to={createPageUrl("Bookings")}>
+                   <Button variant="outline" className="w-full border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-white">
+                     Schedule Now
+                   </Button>
                   </Link>
                 </div>
               </div>

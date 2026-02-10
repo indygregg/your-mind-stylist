@@ -100,7 +100,7 @@ export default function LENS() {
                     blockTitle="Hero Video Embed (Paste Vimeo/YouTube iframe code)"
                     fallback="<div class='w-full h-full flex items-center justify-center text-[#2B2725]/40 text-center p-8'><div><p class='font-serif text-xl mb-2'>Video Coming Soon</p><p class='text-sm'>Paste your Vimeo or YouTube embed code in Edit Mode</p></div></div>" 
                     contentType="rich_text"
-                    className="w-full h-full [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:absolute [&_iframe]:inset-0"
+                    className="w-full h-full [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:absolute [&_iframe]:inset-0 [&_a]:hidden"
                   />
                 </div>
               </div>
