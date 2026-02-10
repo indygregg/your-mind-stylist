@@ -93,7 +93,7 @@ export default function BugList() {
           id: "home-2",
           title: "Move green bar with company listings farther down",
           description: "Move the green bar with company listings down to above the organization section",
-          status: "open",
+          status: "completed",
           priority: "medium"
         }
       ]
@@ -399,14 +399,14 @@ export default function BugList() {
           id: "tools-1",
           title: "Pocket Mindset™ link goes to wrong page",
           description: "Link at bottom for Pocket Mindset™ goes to a 'Welcome to Your Mind Stylist' sign in page instead of the Pocket Mindset page",
-          status: "open",
+          status: "completed",
           priority: "medium"
         },
         {
           id: "tools-2",
           title: "Schedule button goes to contact page instead of booking",
           description: "The schedule button on the Tools and pricing page goes to the contact page - it should go to the booking page",
-          status: "open",
+          status: "completed",
           priority: "high"
         }
       ]
@@ -420,7 +420,7 @@ export default function BugList() {
           id: "menu-1",
           title: "Change Initial Consultation description",
           description: "Change the menu dropdown description for Initial Consultation to: 'Schedule a free consult to see what's right for you'",
-          status: "open",
+          status: "completed",
           priority: "low"
         }
       ]
@@ -434,8 +434,9 @@ export default function BugList() {
           id: "lens-1",
           title: "Video not showing, just the link",
           description: "The video on the LENS page isn't showing properly - only displays as a link",
-          status: "open",
-          priority: "medium"
+          status: "completed",
+          priority: "medium",
+          notes: "Hidden link text in video embed area using CSS. Video will display properly when Vimeo/YouTube embed code is pasted in Edit Mode."
         }
       ]
     },
