@@ -126,24 +126,25 @@ function FormFieldPreview({ field, onEdit }) {
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <p className="text-xs text-[#2B2725]/60 mb-1">Field: {field.field_name}</p>
-          <h3 className="font-medium text-[#1E3A32]">{field.label}</h3>
-          {field.required && <span className="text-red-500 text-sm">*</span>}
+          <h3 className="font-medium text-[#1E3A32] text-lg">{field.label}</h3>
+          {field.required && <span className="text-red-500 text-sm ml-1">* Required</span>}
         </div>
         <Button
           variant="outline"
-          size="sm"
+          size="default"
           onClick={onEdit}
-          className="border-[#D8B46B] text-[#1E3A32]"
+          className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10"
         >
-          <Edit2 size={16} className="mr-2" />
-          Edit
+          <Edit2 size={18} className="mr-2" />
+          Edit Field
         </Button>
       </div>
       {field.help_text && (
-        <p className="text-sm text-[#2B2725]/60 italic">{field.help_text}</p>
+        <p className="text-sm text-[#2B2725]/70 italic bg-[#F9F5EF] p-2 rounded border-l-2 border-[#D8B46B]">{field.help_text}</p>
       )}
-      <div className="text-xs text-[#2B2725]/50">
-        Type: <span className="font-mono">{field.field_type}</span>
+      <div className="flex items-center gap-4 text-sm text-[#2B2725]/60">
+        <span>Type: <span className="font-mono font-semibold text-[#1E3A32]">{field.field_type}</span></span>
+        {field.order && <span>Order: {field.order}</span>}
       </div>
     </div>
   );
