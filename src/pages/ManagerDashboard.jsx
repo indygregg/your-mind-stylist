@@ -77,7 +77,6 @@ export default function ManagerDashboard() {
   // Check setup completion
   const hasAvailability = availabilityRules.length > 0;
   const hasAppointmentTypes = appointmentTypes.length > 0;
-  const hasZoomConnected = user?.zoom_access_token ? true : false;
   const hasGoogleCalendar = user?.google_calendar_access_token ? true : false;
   const hasTestedBooking = bookings.length > 0;
 
@@ -93,12 +92,6 @@ export default function ManagerDashboard() {
       label: 'Create your appointment types', 
       completed: hasAppointmentTypes, 
       link: 'ManagerAppointments' 
-    },
-    { 
-      id: 'zoom', 
-      label: 'Connect Zoom (optional)', 
-      completed: hasZoomConnected, 
-      link: 'ZoomConnect' 
     },
     { 
       id: 'google_calendar', 
@@ -139,7 +132,7 @@ export default function ManagerDashboard() {
     { icon: Sparkles, label: "Transformation Analytics", link: "ManagerTransformationAnalytics" },
     { icon: Play, label: "Demo Setup & Preview", link: "DemoSetup" },
     { icon: ShoppingCart, label: "Masterclass Funnel", link: "ManagerMasterclass" },
-    { icon: Video, label: "Zoom Integration", link: "ZoomConnect" },
+    { icon: Settings, label: "Integration Setup", link: "IntegrationSetup" },
     { icon: Users, label: "CRM & Tags", link: "ManagerCRM" },
     { icon: FileVideo, label: "Course Manager", link: "CourseManager" },
     ];
