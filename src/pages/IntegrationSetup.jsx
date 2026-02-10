@@ -24,7 +24,10 @@ export default function IntegrationSetup() {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       setIsGoogleConnected(!!currentUser.hasGoogleCalendar);
-      setIsZoomConnected(!!(currentUser.hasZoom || currentUser.zoom_connected));
+      
+      // Check if Zoom Server-to-Server OAuth is configured
+      const zoomCheck = await base44.functions.invoke('checkZoomCredentials');
+      setIsZoomConnected(zoomCheck.data?.isConfigured || false);
 
       // Check for OAuth callback success/error
       const urlParams = new URLSearchParams(window.location.search);
@@ -63,21 +66,11 @@ export default function IntegrationSetup() {
     }
   };
 
-  const handleConnectZoom = async () => {
-    setConnectingZoom(true);
-    try {
-      // Get Zoom OAuth URL
-      const clientIdResponse = await base44.functions.invoke('getZoomClientId');
-      const clientId = clientIdResponse.data.clientId;
-      
-      const redirectUri = `${window.location.origin}/zoom-callback`;
-      const zoomAuthUrl = `https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}`;
-      
-      window.location.href = zoomAuthUrl;
-    } catch (error) {
-      toast.error('Failed to connect Zoom: ' + error.message);
-      setConnectingZoom(false);
-    }
+  const handleConnectZoom = () => {
+    toast('Zoom is configured with Server-to-Server OAuth. No user connection needed!', {
+      icon: '✅',
+      duration: 4000
+    });
   };
 
   const handleDisconnect = async (service) => {
@@ -94,17 +87,13 @@ export default function IntegrationSetup() {
           hasGoogleCalendar: false
         });
         setIsGoogleConnected(false);
+        toast.success(`${service} disconnected`);
       } else if (service === 'Zoom') {
-        await base44.auth.updateMe({
-          zoom_access_token: null,
-          zoom_refresh_token: null,
-          zoom_token_expires_at: null,
-          zoom_connected: false,
-          hasZoom: false
+        toast('Zoom uses Server-to-Server OAuth. To disconnect, remove the credentials in Settings.', {
+          icon: 'ℹ️',
+          duration: 5000
         });
-        setIsZoomConnected(false);
       }
-      toast.success(`${service} disconnected`);
     } catch (error) {
       toast.error(`Failed to disconnect: ${error.message}`);
     }
@@ -239,38 +228,21 @@ export default function IntegrationSetup() {
                 </div>
 
                 {isZoomConnected ? (
-                  <div className="pt-4 border-t flex flex-col gap-2">
-                    <div className="flex items-center gap-2 text-green-700">
+                  <div className="pt-4 border-t">
+                    <div className="flex items-center gap-2 text-green-700 mb-2">
                       <CheckCircle size={16} />
-                      <span className="text-sm font-medium">Connected</span>
+                      <span className="text-sm font-medium">Connected via Server-to-Server OAuth</span>
                     </div>
-                    <Button
-                      onClick={() => handleDisconnect('Zoom')}
-                      variant="outline"
-                      size="sm"
-                      className="border-red-300 text-red-600 hover:bg-red-50"
-                    >
-                      Disconnect
-                    </Button>
+                    <p className="text-xs text-[#2B2725]/60">
+                      Meetings will be created using your Zoom account automatically
+                    </p>
                   </div>
                 ) : (
-                  <Button
-                    onClick={handleConnectZoom}
-                    disabled={connectingZoom}
-                    className="w-full bg-[#1E3A32] hover:bg-[#2B2725]"
-                  >
-                    {connectingZoom ? (
-                      <>
-                        <RefreshCw size={16} className="mr-2 animate-spin" />
-                        Connecting...
-                      </>
-                    ) : (
-                      <>
-                        <Video size={16} className="mr-2" />
-                        Connect Zoom
-                      </>
-                    )}
-                  </Button>
+                  <div className="pt-4 border-t">
+                    <p className="text-xs text-orange-600 mb-3">
+                      ⚠️ Zoom credentials not configured. Add ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, and ZOOM_CLIENT_SECRET in your app settings.
+                    </p>
+                  </div>
                 )}
               </CardContent>
             </Card>
