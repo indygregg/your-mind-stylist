@@ -6,13 +6,22 @@ const stripe = new Stripe(Deno.env.get("STRIPE_API_KEY"));
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
-        const { service_type, session_count, amount, notes, scheduled_date, appointment_type_id, staff_id, intake_data, affiliate_code, user_email, user_name } = await req.json();
+        const payload = await req.json();
+        const { service_type, session_count, amount, notes, scheduled_date, appointment_type_id, staff_id, intake_data, affiliate_code, user_email, user_name } = payload;
+
+        console.log('Received payload:', { user_email, user_name, amount, service_type });
 
         // For free consultations, allow unauthenticated bookings
         if (amount === 0) {
-            const booking = await base44.asServiceRole.entities.Booking.create({
-                user_email: user_email,
-                user_name: user_name,
+            if (!user_email || !user_name) {
+                return Response.json({ 
+                    error: 'Missing required fields: user_email and user_name are required for free consultations' 
+                }, { status: 400 });
+            }
+
+            const bookingData = {
+                user_email,
+                user_name,
                 staff_id,
                 appointment_type_id,
                 service_type,
@@ -25,7 +34,11 @@ Deno.serve(async (req) => {
                 notes,
                 client_phone: intake_data?.phone,
                 client_contact_preference: intake_data?.contact_preference
-            });
+            };
+
+            console.log('Creating booking with data:', bookingData);
+
+            const booking = await base44.asServiceRole.entities.Booking.create(bookingData);
 
             // Send confirmation emails asynchronously (don't wait)
             fetch(`${req.headers.get('origin')}/api/functions/sendBookingEmail`, {
