@@ -6,19 +6,13 @@ const stripe = new Stripe(Deno.env.get("STRIPE_API_KEY"));
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
-        const user = await base44.auth.me();
+        const { service_type, session_count, amount, notes, scheduled_date, appointment_type_id, staff_id, intake_data, affiliate_code, user_email, user_name } = await req.json();
 
-        if (!user) {
-            return Response.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
-        const { service_type, session_count, amount, notes, scheduled_date, appointment_type_id, staff_id, intake_data, affiliate_code } = await req.json();
-
-        // Free consultations - no payment required
+        // For free consultations, allow unauthenticated bookings
         if (amount === 0) {
             const booking = await base44.asServiceRole.entities.Booking.create({
-                user_email: user.email,
-                user_name: user.full_name,
+                user_email: user_email,
+                user_name: user_name,
                 staff_id,
                 appointment_type_id,
                 service_type,
@@ -51,6 +45,12 @@ Deno.serve(async (req) => {
                 booking_id: booking.id,
                 redirect_url: `${req.headers.get('origin')}/booking-success?booking_id=${booking.id}`
             });
+        }
+
+        // Paid sessions - require authentication
+        const user = await base44.auth.me();
+        if (!user) {
+            return Response.json({ error: 'Please log in to book paid sessions' }, { status: 401 });
         }
 
         // Paid sessions - create Stripe checkout

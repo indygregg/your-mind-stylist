@@ -90,6 +90,8 @@ export default function Bookings() {
         amount: selectedAppointment.price,
         scheduled_date: selectedSlot.start,
         staff_id: primaryManagerId,
+        user_email: clientDetails.email,
+        user_name: clientDetails.name,
         notes: `Brief intro: ${clientDetails.briefIntro}\n\nWhy helpful: ${clientDetails.whyHelpful}`,
         intake_data: {
           phone: clientDetails.phone,
