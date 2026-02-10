@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, Circle, AlertCircle, Clock, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
+import { CheckCircle2, Circle, AlertCircle, Clock, ExternalLink, ChevronDown, ChevronRight, MessageSquare, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import { base44 } from "@/api/base44Client";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function BugList() {
   const [user, setUser] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState(new Set(["home", "freemasterclass", "about"]));
+  const [expandedBugs, setExpandedBugs] = useState(new Set());
+  const [newComment, setNewComment] = useState({});
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -37,6 +42,38 @@ export default function BugList() {
       newExpanded.add(categoryId);
     }
     setExpandedCategories(newExpanded);
+  };
+
+  const toggleBug = (bugId) => {
+    const newExpanded = new Set(expandedBugs);
+    if (newExpanded.has(bugId)) {
+      newExpanded.delete(bugId);
+    } else {
+      newExpanded.add(bugId);
+    }
+    setExpandedBugs(newExpanded);
+  };
+
+  const { data: allComments = [] } = useQuery({
+    queryKey: ['bugComments'],
+    queryFn: () => base44.entities.BugComment.list('-created_date'),
+  });
+
+  const addCommentMutation = useMutation({
+    mutationFn: (data) => base44.entities.BugComment.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bugComments'] });
+      setNewComment({});
+    },
+  });
+
+  const handleAddComment = (bugId) => {
+    if (newComment[bugId]?.trim()) {
+      addCommentMutation.mutate({
+        bug_id: bugId,
+        comment: newComment[bugId]
+      });
+    }
   };
 
   const bugs = [
@@ -505,7 +542,11 @@ export default function BugList() {
 
                   {isExpanded && (
                     <div className="border-t border-gray-100">
-                      {category.items.map((item, index) => (
+                      {category.items.map((item, index) => {
+                        const itemComments = allComments.filter(c => c.bug_id === item.id);
+                        const isExpanded = expandedBugs.has(item.id);
+
+                        return (
                         <div
                           key={item.id}
                           className={`px-6 py-4 ${index !== category.items.length - 1 ? 'border-b border-gray-100' : ''}`}
@@ -528,6 +569,13 @@ export default function BugList() {
                                     {item.deadline}
                                   </Badge>
                                 )}
+                                <button
+                                  onClick={() => toggleBug(item.id)}
+                                  className="ml-auto flex items-center gap-1 text-xs text-[#2B2725]/60 hover:text-[#1E3A32] transition-colors"
+                                >
+                                  <MessageSquare size={14} />
+                                  {itemComments.length > 0 && `(${itemComments.length})`}
+                                </button>
                               </div>
                               <p className="text-sm text-[#2B2725]/70 ml-7">{item.description}</p>
                               {item.notes && (
@@ -535,13 +583,46 @@ export default function BugList() {
                                   Note: {item.notes}
                                 </p>
                               )}
+
+                              {isExpanded && (
+                                <div className="ml-7 mt-4 border-l-2 border-[#D8B46B] pl-4">
+                                  <div className="space-y-3 mb-4">
+                                    {itemComments.map(comment => (
+                                      <div key={comment.id} className="bg-[#F9F5EF] p-3 rounded text-sm">
+                                        <p className="text-[#1E3A32]">{comment.comment}</p>
+                                        <p className="text-xs text-[#2B2725]/50 mt-1">
+                                          {comment.created_by} • {new Date(comment.created_date).toLocaleDateString()}
+                                        </p>
+                                      </div>
+                                    ))}
+                                  </div>
+
+                                  <div className="flex gap-2">
+                                    <Textarea
+                                      placeholder="Add a comment..."
+                                      value={newComment[item.id] || ''}
+                                      onChange={(e) => setNewComment({...newComment, [item.id]: e.target.value})}
+                                      className="flex-1 min-h-[60px]"
+                                    />
+                                    <Button
+                                      size="sm"
+                                      onClick={() => handleAddComment(item.id)}
+                                      disabled={!newComment[item.id]?.trim()}
+                                      className="bg-[#1E3A32] hover:bg-[#2B2725]"
+                                    >
+                                      <Send size={14} />
+                                    </Button>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                             <Badge variant="outline" className="text-xs">
                               {item.status}
                             </Badge>
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
