@@ -39,8 +39,7 @@ export default function Bookings() {
         active: true,
         manager_id: primaryManagerId
       });
-      // Extract data from the response format
-      return results.map(item => ({ ...item.data, id: item.id }));
+      return results;
     },
   });
 
