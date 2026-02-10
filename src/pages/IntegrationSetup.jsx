@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
+import { useNavigate } from "react-router-dom";
+import { createPageUrl } from "../utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -8,6 +10,7 @@ import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 
 export default function IntegrationSetup() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [connectingGoogle, setConnectingGoogle] = useState(false);
@@ -22,6 +25,13 @@ export default function IntegrationSetup() {
   const fetchUser = async () => {
     try {
       const currentUser = await base44.auth.me();
+      
+      // Only managers/admins can access this page
+      if (currentUser.role !== 'admin' && currentUser.custom_role !== 'manager') {
+        navigate(createPageUrl('Dashboard'));
+        return;
+      }
+      
       setUser(currentUser);
       setIsGoogleConnected(!!currentUser.hasGoogleCalendar);
       
@@ -114,7 +124,7 @@ export default function IntegrationSetup() {
           <div className="mb-8">
             <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Connect Your Services</h1>
             <p className="text-[#2B2725]/70">
-              Set up Google Calendar and Zoom to enable automatic bookings and video meetings
+              Set up your Google Calendar and Zoom to enable automatic bookings and video meetings for your clients
             </p>
           </div>
 
@@ -141,7 +151,7 @@ export default function IntegrationSetup() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-sm text-[#2B2725]/80">
-                  Sync your bookings to Google Calendar and block times when you're busy
+                  Connect your Google Calendar to sync bookings and prevent double-booking
                 </p>
 
                 <div className="space-y-2 text-xs text-[#2B2725]/70">
@@ -209,7 +219,7 @@ export default function IntegrationSetup() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-sm text-[#2B2725]/80">
-                  Automatically create Zoom meetings for virtual appointments
+                  Zoom is configured at the app level - meetings are created automatically using your account
                 </p>
 
                 <div className="space-y-2 text-xs text-[#2B2725]/70">
@@ -255,16 +265,16 @@ export default function IntegrationSetup() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <h4 className="font-medium text-[#1E3A32] mb-2">Step 1: Connect Google Calendar</h4>
+                <h4 className="font-medium text-[#1E3A32] mb-2">Step 1: Connect Your Google Calendar</h4>
                 <p className="text-sm text-[#2B2725]/80">
-                  Click "Connect Google Calendar" and sign in with your Google account. This lets your bookings sync to your calendar automatically.
+                  Click "Connect Google Calendar" and sign in with your Google account. This syncs your bookings to your personal calendar and prevents double-booking.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-medium text-[#1E3A32] mb-2">Step 2: Connect Zoom</h4>
+                <h4 className="font-medium text-[#1E3A32] mb-2">Step 2: Zoom (Already Configured)</h4>
                 <p className="text-sm text-[#2B2725]/80">
-                  Click "Connect Zoom" and authorize with your Zoom account. Meeting links will be created automatically for each booking.
+                  Zoom uses Server-to-Server OAuth - no connection needed. Meeting links are created automatically for all bookings using your Zoom account.
                 </p>
               </div>
 
