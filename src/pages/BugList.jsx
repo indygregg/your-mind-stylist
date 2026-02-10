@@ -80,7 +80,7 @@ export default function BugList() {
     {
       category: "Home Page",
       categoryId: "home",
-      priority: "low",
+      priority: "medium",
       items: [
         {
           id: "home-1",
@@ -88,6 +88,13 @@ export default function BugList() {
           description: "The heading is smaller than the company names below it",
           status: "completed",
           priority: "low"
+        },
+        {
+          id: "home-2",
+          title: "Move green bar with company listings farther down",
+          description: "Move the green bar with company listings down to above the organization section",
+          status: "open",
+          priority: "medium"
         }
       ]
     },
@@ -123,6 +130,13 @@ export default function BugList() {
           description: "Using browser back button after clicking edit buttons causes website to crash/quit",
           status: "completed",
           priority: "high"
+        },
+        {
+          id: "about-3",
+          title: "Editing Private Mind Styling section quits the page",
+          description: "Under 'Work with me', when trying to edit the Private Mind Styling section, it quits the page",
+          status: "open",
+          priority: "high"
         }
       ]
     },
@@ -146,6 +160,14 @@ export default function BugList() {
           status: "completed",
           priority: "medium",
           notes: "Programs page now has dedicated Books section. Create products in Manager Dashboard → Product Manager with subtype='book'. They'll automatically appear in the 'Books & Resources' section."
+        },
+        {
+          id: "programs-3",
+          title: "Clarification needed for webinars and books setup",
+          description: "Not sure if can set up multiple webinars and books until Stripe is working. Need guidance on setup process.",
+          status: "open",
+          priority: "medium",
+          notes: "Same system as completed items above - once Stripe is connected, create products in Manager Dashboard with proper subtypes."
         }
       ]
     },
@@ -192,6 +214,14 @@ export default function BugList() {
           status: "completed",
           priority: "high",
           notes: "Added 'Edit Form Questions (Manager)' button on Consultations page that links to ConsultationFormEditor. Managers can edit all intake form questions there."
+        },
+        {
+          id: "consult-3",
+          title: "Need to finalize intake form requirements",
+          description: "Need to link to documents and edit the intake with all required fields. Cannot view current intake form.",
+          status: "open",
+          priority: "high",
+          notes: "Intake form editor is ready at ConsultationFormEditor. Access via 'Edit Form Questions' button on Consultations page."
         }
       ]
     },
@@ -238,6 +268,28 @@ export default function BugList() {
           status: "completed",
           priority: "medium",
           notes: "Course Merger tool added! In Course Manager, click 'Merge Courses' button. Select 2+ courses, they'll be combined into one new course (in selected order) as a draft. Original courses remain unchanged."
+        },
+        {
+          id: "course-4",
+          title: "Cannot select courses for merge button",
+          description: "See the merge button to create one course, but can't select them. Unclear if should create bundle in Product Manager first or merge courses first.",
+          status: "open",
+          priority: "medium",
+          notes: "Course section needs general category on product/services page, then individual options when clicked (like books and webinars structure)."
+        },
+        {
+          id: "course-5",
+          title: "Videos and files not showing in course preview",
+          description: "When previewing courses, none of the videos and files show up even though they've been uploaded to library and connected.",
+          status: "open",
+          priority: "high"
+        },
+        {
+          id: "course-6",
+          title: "Disable comments and discussion features",
+          description: "Need to disable the option to leave comments or discussion - none of the courses work that way.",
+          status: "open",
+          priority: "medium"
         }
       ]
     },
@@ -250,29 +302,30 @@ export default function BugList() {
           id: "booking-1",
           title: "Zoom integration failing",
           description: "Error: Invalid client_id: YOUR_CLIENT_ID (4,700)",
-          status: "completed",
-          priority: "critical"
+          status: "open",
+          priority: "critical",
+          notes: "Getting error: Invalid client_id: YOUR_CLIENT_ID (4,700)"
         },
         {
           id: "booking-2",
           title: "Zoom app disabled temporarily",
           description: "Error: This app has been disabled by Zoom temporarily (4,704)",
-          status: "completed",
-          priority: "critical"
+          status: "open",
+          priority: "critical",
+          notes: "Getting error: This app has been disabled by Zoom temporarily. Please try to install this app again later. (4,704)"
         },
         {
           id: "booking-3",
           title: "Mac Calendar integration - 500 error",
-          description: "Getting 500 error when trying to connect with Mac Calendar. Note: Google Calendar must be connected first before Mac Calendar sync will work.",
+          description: "Getting 500 error when trying to connect with Mac Calendar.",
           status: "open",
-          priority: "high",
-          notes: "Instructions for Mac Calendar sync are available on the Integration Setup page. You must connect Google Calendar first (under Dashboard → Integration Setup). Once Google is connected, you can sync it with Apple Calendar on your Mac via System Settings → Internet Accounts → Add Google account. Google Calendar connection status: Not connected yet - visit Integration Setup to connect."
+          priority: "high"
         },
         {
           id: "booking-4",
           title: "No availability slots showing in test",
           description: "Set up hours for each appointment type but no slots available when testing",
-          status: "completed",
+          status: "open",
           priority: "critical"
         }
       ]
@@ -334,6 +387,55 @@ export default function BugList() {
           status: "open",
           priority: "high",
           notes: "❌ Cannot complete: This app doesn't have access to the Roberta Fernandez email domain or account. Email forwarding requires direct access to that external email system, which is outside this application. You'll need to set this up manually through your email provider's forwarding settings after Feb 2 when RF goes offline."
+        }
+      ]
+    },
+    {
+      category: "Tools/Pricing Page",
+      categoryId: "toolspricing",
+      priority: "high",
+      items: [
+        {
+          id: "tools-1",
+          title: "Pocket Mindset™ link goes to wrong page",
+          description: "Link at bottom for Pocket Mindset™ goes to a 'Welcome to Your Mind Stylist' sign in page instead of the Pocket Mindset page",
+          status: "open",
+          priority: "medium"
+        },
+        {
+          id: "tools-2",
+          title: "Schedule button goes to contact page instead of booking",
+          description: "The schedule button on the Tools and pricing page goes to the contact page - it should go to the booking page",
+          status: "open",
+          priority: "high"
+        }
+      ]
+    },
+    {
+      category: "Menu Dropdown",
+      categoryId: "menudropdown",
+      priority: "low",
+      items: [
+        {
+          id: "menu-1",
+          title: "Change Initial Consultation description",
+          description: "Change the menu dropdown description for Initial Consultation to: 'Schedule a free consult to see what's right for you'",
+          status: "open",
+          priority: "low"
+        }
+      ]
+    },
+    {
+      category: "LENS Page",
+      categoryId: "lens",
+      priority: "medium",
+      items: [
+        {
+          id: "lens-1",
+          title: "Video not showing, just the link",
+          description: "The video on the LENS page isn't showing properly - only displays as a link",
+          status: "open",
+          priority: "medium"
         }
       ]
     },
@@ -423,9 +525,23 @@ export default function BugList() {
           id: "misc-11",
           title: "Pocket Mindset™ purchase email automation",
           description: "Email needs to go out with app setup instructions and code 935384",
-          status: "completed",
+          status: "open",
           priority: "high",
-          notes: "✅ COMPLETE: Email template system is set up! Go to Manager Dashboard → Email Templates. Create a new template for 'Pocket Mindset Purchase' (or edit the existing one). Add your app setup instructions and include the code 935384. Use template variables like {{user_name}}, {{product_name}}, etc. When a customer purchases the Pocket Mindset product, this email will automatically send with all your custom content. Test the email before finalizing."
+          notes: "When a client buys Pocket Mindset™, they need to receive an email with setup instructions: Download app from App Store/Google Play, select new account, enroll in courses under Browse tab, enter code 935384, access in My Programs tab. Include info about 5 Core Courses (delivered over 7-55 days) and 3 Wellbeing Programs (available anytime)."
+        },
+        {
+          id: "misc-12",
+          title: "CRM functionality check",
+          description: "Is the CRM functional for client setup and management?",
+          status: "open",
+          priority: "medium"
+        },
+        {
+          id: "misc-13",
+          title: "Gift products without charging",
+          description: "Need to be able to gift clients certain products without charging them (Pocket Mindset™, workshops, etc.)",
+          status: "open",
+          priority: "high"
         }
       ]
     },
@@ -437,10 +553,9 @@ export default function BugList() {
         {
           id: "dash-1",
           title: "Clarify if AI is generating responses",
-          description: "Is AI generating these responses?",
-          status: "completed",
-          priority: "low",
-          notes: "Yes - the 'Suggested For You' section on the Dashboard uses AI to generate personalized recommendations based on user activity. It suggests audio sessions, lessons, reflections, and milestones. This is functioning correctly."
+          description: "Is AI generating these responses on the dashboard?",
+          status: "open",
+          priority: "low"
         },
         {
           id: "dash-2",
@@ -449,6 +564,13 @@ export default function BugList() {
           status: "completed",
           priority: "medium",
           notes: "Updated the Dashboard 'Your Programs' empty state to say: 'You're not enrolled in any programs yet. Book a consultation with Roberta to explore Cleaning Out Your Closet™ or Pocket Mindset™ programs tailored to your transformation journey.' All placeholder text now reflects your actual programs and brand voice."
+        },
+        {
+          id: "dash-3",
+          title: "Changes to Pocket Mindset text not saving on dashboard",
+          description: "Changed statement on Pocket Mindset™ page under item #4 to 'Enter your favorite sessions in the notes section of your dashboard.' This appears on user dashboard in two places. When trying to edit on user dashboard, changes don't save.",
+          status: "open",
+          priority: "medium"
         }
       ]
     }
