@@ -14,15 +14,52 @@ Deno.serve(async (req) => {
 
         const { service_type, session_count, amount, notes, scheduled_date, appointment_type_id, staff_id, intake_data, affiliate_code } = await req.json();
 
-        // Calculate checkout expiry (30 minutes from now)
+        // Free consultations - no payment required
+        if (amount === 0) {
+            const booking = await base44.asServiceRole.entities.Booking.create({
+                user_email: user.email,
+                user_name: user.full_name,
+                staff_id,
+                appointment_type_id,
+                service_type,
+                session_count: session_count || 1,
+                amount: 0,
+                currency: 'usd',
+                payment_status: 'not_required',
+                booking_status: 'confirmed',
+                scheduled_date,
+                notes,
+                client_phone: intake_data?.phone,
+                client_contact_preference: intake_data?.contact_preference
+            });
+
+            // Send confirmation emails
+            await base44.asServiceRole.functions.invoke('sendBookingEmail', {
+                booking_id: booking.id,
+                recipient_type: 'client'
+            });
+            
+            await base44.asServiceRole.functions.invoke('sendBookingEmail', {
+                booking_id: booking.id,
+                recipient_type: 'manager'
+            });
+
+            return Response.json({
+                success: true,
+                booking_id: booking.id,
+                redirect_url: `${req.headers.get('origin')}/booking-success?booking_id=${booking.id}`
+            });
+        }
+
+        // Paid sessions - create Stripe checkout
         const expiresAt = new Date();
         expiresAt.setMinutes(expiresAt.getMinutes() + 30);
 
-        // Create booking record with soft-hold
         const booking = await base44.asServiceRole.entities.Booking.create({
             user_email: user.email,
             user_name: user.full_name,
             staff_id,
+            appointment_type_id,
             service_type,
             session_count,
             amount,
@@ -33,15 +70,9 @@ Deno.serve(async (req) => {
             checkout_expires_at: expiresAt.toISOString(),
             notes,
             client_phone: intake_data?.phone,
-            client_contact_preference: intake_data?.contact_preference,
-            client_how_heard: intake_data?.how_heard,
-            client_goals: intake_data?.goals,
-            client_concerns: intake_data?.concerns,
-            client_previous_experience: intake_data?.previous_experience,
-            client_health_considerations: intake_data?.health_considerations
+            client_contact_preference: intake_data?.contact_preference
         });
 
-        // Create Stripe checkout session
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'payment',
@@ -67,10 +98,9 @@ Deno.serve(async (req) => {
                 }
             ],
             success_url: `${req.headers.get('origin')}/booking-success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${req.headers.get('origin')}/private-sessions-purchase`
+            cancel_url: `${req.headers.get('origin')}/bookings`
         });
 
-        // Update booking with checkout session ID
         await base44.asServiceRole.entities.Booking.update(booking.id, {
             stripe_checkout_session_id: session.id
         });
