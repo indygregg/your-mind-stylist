@@ -282,8 +282,9 @@ export default function BugList() {
           id: "course-5",
           title: "Videos and files not showing in course preview",
           description: "When previewing courses, none of the videos and files show up even though they've been uploaded to library and connected.",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "Fixed video player to properly handle media URLs. Videos now display correctly in course preview and student view. Make sure media_url or embed_url is set on lessons."
         },
         {
           id: "course-6",
@@ -572,8 +573,9 @@ export default function BugList() {
           id: "dash-3",
           title: "Changes to Pocket Mindset text not saving on dashboard",
           description: "Changed statement on Pocket Mindset™ page under item #4 to 'Enter your favorite sessions in the notes section of your dashboard.' This appears on user dashboard in two places. When trying to edit on user dashboard, changes don't save.",
-          status: "open",
-          priority: "medium"
+          status: "completed",
+          priority: "medium",
+          notes: "Dashboard content is now editable via Manager Bar when in edit mode. All text blocks use CMS system and save properly. Toggle edit mode, click text to edit, and save."
         }
       ]
     }
