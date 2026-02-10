@@ -33,16 +33,18 @@ Deno.serve(async (req) => {
                 client_contact_preference: intake_data?.contact_preference
             });
 
-            // Send confirmation emails
-            await base44.asServiceRole.functions.invoke('sendBookingEmail', {
-                booking_id: booking.id,
-                recipient_type: 'client'
-            });
+            // Send confirmation emails asynchronously (don't wait)
+            fetch(`${req.headers.get('origin')}/api/functions/sendBookingEmail`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ booking_id: booking.id, recipient_type: 'client' })
+            }).catch(() => {});
             
-            await base44.asServiceRole.functions.invoke('sendBookingEmail', {
-                booking_id: booking.id,
-                recipient_type: 'manager'
-            });
+            fetch(`${req.headers.get('origin')}/api/functions/sendBookingEmail`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ booking_id: booking.id, recipient_type: 'manager' })
+            }).catch(() => {});
 
             return Response.json({
                 success: true,
