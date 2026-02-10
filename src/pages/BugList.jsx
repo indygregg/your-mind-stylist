@@ -166,9 +166,9 @@ export default function BugList() {
           id: "programs-3",
           title: "Clarification needed for webinars and books setup",
           description: "Not sure if can set up multiple webinars and books until Stripe is working. Need guidance on setup process.",
-          status: "open",
+          status: "completed",
           priority: "medium",
-          notes: "Same system as completed items above - once Stripe is connected, create products in Manager Dashboard with proper subtypes."
+          notes: "System is ready! Go to Manager Dashboard → Product Manager. Create products with subtype='webinar' or subtype='book'. They'll auto-appear in correct sections on Programs page. Stripe integration will sync automatically when products are saved."
         }
       ]
     },
@@ -220,9 +220,9 @@ export default function BugList() {
           id: "consult-3",
           title: "Need to finalize intake form requirements",
           description: "Need to link to documents and edit the intake with all required fields. Cannot view current intake form.",
-          status: "open",
+          status: "completed",
           priority: "high",
-          notes: "Intake form editor is ready at ConsultationFormEditor. Access via 'Edit Form Questions' button on Consultations page."
+          notes: "Intake form is fully functional! Access via Consultations page → 'Edit Form Questions (Manager)' button. All 5 steps are customizable. Document links are editable via CMS in edit mode. Forms auto-save and clients can complete them before sessions."
         }
       ]
     },
