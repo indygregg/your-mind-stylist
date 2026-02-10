@@ -538,15 +538,17 @@ export default function BugList() {
           id: "misc-12",
           title: "CRM functionality check",
           description: "Is the CRM functional for client setup and management?",
-          status: "open",
-          priority: "medium"
+          status: "completed",
+          priority: "medium",
+          notes: "Yes! CRM is fully functional at Manager Dashboard → CRM. Track leads, clients, messages, bookings, purchases, and activities. Import leads, send emails/SMS, manage stages, and view complete client history."
         },
         {
           id: "misc-13",
           title: "Gift products without charging",
           description: "Need to be able to gift clients certain products without charging them (Pocket Mindset™, workshops, etc.)",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "Gift code system is ready! Go to Manager Dashboard → Product Manager, click any product, select 'Generate Gift Code'. Clients enter code at checkout for 100% discount. Codes are single-use by default but configurable for multiple uses."
         }
       ]
     },
