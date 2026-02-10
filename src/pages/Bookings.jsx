@@ -34,11 +34,13 @@ export default function Bookings() {
 
   const { data: appointmentTypes = [], isLoading } = useQuery({
     queryKey: ["appointmentTypes", primaryManagerId],
-    queryFn: () => {
-      return base44.entities.AppointmentType.filter({ 
+    queryFn: async () => {
+      const results = await base44.entities.AppointmentType.filter({ 
         active: true,
         manager_id: primaryManagerId
       });
+      // Extract data from the response format
+      return results.map(item => ({ ...item.data, id: item.id }));
     },
   });
 
