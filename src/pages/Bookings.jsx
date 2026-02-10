@@ -83,17 +83,22 @@ export default function Bookings() {
     try {
       const response = await base44.functions.invoke('createBookingCheckout', {
         appointment_type_id: selectedAppointment.id,
+        service_type: selectedAppointment.service_type,
+        session_count: selectedAppointment.session_count || 1,
+        amount: selectedAppointment.price,
         scheduled_date: selectedSlot.start,
-        client_name: clientDetails.name,
-        client_email: clientDetails.email,
-        client_phone: clientDetails.phone,
-        client_sms_reminder: clientDetails.smsReminder,
-        client_brief_intro: clientDetails.briefIntro,
-        client_why_helpful: clientDetails.whyHelpful
+        staff_id: primaryManagerId,
+        notes: `Brief intro: ${clientDetails.briefIntro}\n\nWhy helpful: ${clientDetails.whyHelpful}`,
+        intake_data: {
+          phone: clientDetails.phone,
+          contact_preference: clientDetails.smsReminder ? 'sms' : 'email',
+          brief_intro: clientDetails.briefIntro,
+          why_helpful: clientDetails.whyHelpful
+        }
       });
 
       // Redirect to Stripe checkout
-      window.location.href = response.data.checkout_url;
+      window.location.href = response.data.url;
     } catch (error) {
       alert('Failed to create booking: ' + error.message);
       setStep(3);
