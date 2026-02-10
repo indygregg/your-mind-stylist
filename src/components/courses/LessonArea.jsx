@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import VideoPlayer from "./VideoPlayer";
 import CourseAudioPlayer from "./CourseAudioPlayer";
-import LessonComments from "./LessonComments";
+// Removed: import LessonComments from "./LessonComments";
 
 export default function LessonArea({ 
   lesson, 
