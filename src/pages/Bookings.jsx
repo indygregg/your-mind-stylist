@@ -81,24 +81,61 @@ export default function Bookings() {
     setStep(4); // Show confirming state
 
     try {
-      const response = await base44.functions.invoke('createBookingCheckout', {
-        appointment_type_id: selectedAppointment.id,
-        service_type: selectedAppointment.service_type,
-        session_count: selectedAppointment.session_count || 1,
-        amount: selectedAppointment.price,
-        scheduled_date: selectedSlot.start,
-        staff_id: primaryManagerId,
-        notes: `Brief intro: ${clientDetails.briefIntro}\n\nWhy helpful: ${clientDetails.whyHelpful}`,
-        intake_data: {
-          phone: clientDetails.phone,
-          contact_preference: clientDetails.smsReminder ? 'sms' : 'email',
-          brief_intro: clientDetails.briefIntro,
-          why_helpful: clientDetails.whyHelpful
-        }
-      });
+      // Free consultations: Create booking directly
+      if (selectedAppointment.price === 0) {
+        const booking = await base44.entities.Booking.create({
+          user_email: clientDetails.email,
+          user_name: clientDetails.name,
+          staff_id: primaryManagerId,
+          appointment_type_id: selectedAppointment.id,
+          service_type: selectedAppointment.service_type,
+          session_count: selectedAppointment.session_count || 1,
+          amount: 0,
+          currency: 'usd',
+          payment_status: 'not_required',
+          booking_status: 'confirmed',
+          scheduled_date: selectedSlot.start,
+          notes: `Brief intro: ${clientDetails.briefIntro}\n\nWhy helpful: ${clientDetails.whyHelpful}`,
+          client_phone: clientDetails.phone,
+          client_contact_preference: clientDetails.smsReminder ? 'sms' : 'email',
+          client_brief_intro: clientDetails.briefIntro,
+          client_why_helpful: clientDetails.whyHelpful
+        });
 
-      // Redirect to Stripe checkout
-      window.location.href = response.data.url;
+        // Send confirmation emails
+        await base44.functions.invoke('sendBookingEmail', {
+          booking_id: booking.id,
+          recipient_type: 'client'
+        });
+        
+        await base44.functions.invoke('sendBookingEmail', {
+          booking_id: booking.id,
+          recipient_type: 'manager'
+        });
+
+        // Redirect to success page
+        window.location.href = createPageUrl('BookingSuccess') + `?booking_id=${booking.id}`;
+      } else {
+        // Paid sessions: Go through Stripe checkout
+        const response = await base44.functions.invoke('createBookingCheckout', {
+          appointment_type_id: selectedAppointment.id,
+          service_type: selectedAppointment.service_type,
+          session_count: selectedAppointment.session_count || 1,
+          amount: selectedAppointment.price,
+          scheduled_date: selectedSlot.start,
+          staff_id: primaryManagerId,
+          notes: `Brief intro: ${clientDetails.briefIntro}\n\nWhy helpful: ${clientDetails.whyHelpful}`,
+          intake_data: {
+            phone: clientDetails.phone,
+            contact_preference: clientDetails.smsReminder ? 'sms' : 'email',
+            brief_intro: clientDetails.briefIntro,
+            why_helpful: clientDetails.whyHelpful
+          }
+        });
+
+        // Redirect to Stripe checkout
+        window.location.href = response.data.url;
+      }
     } catch (error) {
       alert('Failed to create booking: ' + error.message);
       setStep(3);
