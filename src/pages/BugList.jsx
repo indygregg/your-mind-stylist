@@ -342,8 +342,9 @@ export default function BugList() {
           id: "alchemy-1",
           title: "Configure AI to write in Roberta's voice",
           description: "Need instructions/setup for voice profile",
-          status: "open",
-          priority: "medium"
+          status: "completed",
+          priority: "medium",
+          notes: "Voice Profile Manager is available in Content Studio → Voice Profiles. Create a profile with tone descriptors, writing rules, example text, and preferences. AI will use this profile for all content generation."
         }
       ]
     },
@@ -558,8 +559,9 @@ export default function BugList() {
           id: "dash-1",
           title: "Clarify if AI is generating responses",
           description: "Is AI generating these responses on the dashboard?",
-          status: "open",
-          priority: "low"
+          status: "completed",
+          priority: "low",
+          notes: "Yes, AI generates personalized recommendations, insights, and smart suggestions on the dashboard based on user activity, course progress, and engagement patterns."
         },
         {
           id: "dash-2",
