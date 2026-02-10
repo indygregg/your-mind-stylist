@@ -135,8 +135,9 @@ export default function BugList() {
           id: "about-3",
           title: "Editing Private Mind Styling section quits the page",
           description: "Under 'Work with me', when trying to edit the Private Mind Styling section, it quits the page",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "Fixed CmsText component wrapping in BeliefsSection to prevent page navigation when editing."
         }
       ]
     },
@@ -288,8 +289,9 @@ export default function BugList() {
           id: "course-6",
           title: "Disable comments and discussion features",
           description: "Need to disable the option to leave comments or discussion - none of the courses work that way.",
-          status: "open",
-          priority: "medium"
+          status: "completed",
+          priority: "medium",
+          notes: "Comment sections disabled in all course lessons."
         }
       ]
     },

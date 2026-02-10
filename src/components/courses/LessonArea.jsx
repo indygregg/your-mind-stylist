@@ -196,15 +196,15 @@ export default function LessonArea({
               </div>
             )}
 
-            {/* Lesson Comments/Q&A */}
-            <motion.div
+            {/* Lesson Comments/Q&A - Disabled */}
+            {/* <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
               className="mt-12"
             >
               <LessonComments lessonId={lesson.id} courseId={lesson.course_id} />
-            </motion.div>
+            </motion.div> */}
           </>
         )}
       </div>

@@ -36,25 +36,27 @@ export default function BeliefsSection() {
         <div key={index} className="border-l-2 border-[#D8B46B] pl-6 md:pl-8">
           <h3 className="font-serif text-xl md:text-2xl text-[#F9F5EF] mb-3 flex items-start gap-3">
             <span className="text-[#D8B46B]">{belief.icon}</span>
+            <span className="text-[#F9F5EF]">
+              <CmsText 
+                contentKey={`about.beliefs.item${index + 1}.title`}
+                page="About"
+                blockTitle={`Core Principle ${index + 1} - Title`}
+                fallback={belief.title}
+                contentType="short_text"
+                as="span"
+              />
+            </span>
+          </h3>
+          <p className="text-[#F9F5EF]/70 text-lg leading-relaxed">
             <CmsText 
-              contentKey={`about.beliefs.item${index + 1}.title`}
+              contentKey={`about.beliefs.item${index + 1}.description`}
               page="About"
-              blockTitle={`Core Principle ${index + 1} - Title`}
-              fallback={belief.title}
-              contentType="short_text"
-              className="text-[#F9F5EF]"
+              blockTitle={`Core Principle ${index + 1} - Description`}
+              fallback={belief.description}
+              contentType="rich_text"
               as="span"
             />
-          </h3>
-          <CmsText 
-            contentKey={`about.beliefs.item${index + 1}.description`}
-            page="About"
-            blockTitle={`Core Principle ${index + 1} - Description`}
-            fallback={belief.description}
-            contentType="rich_text"
-            className="text-[#F9F5EF]/70 text-lg leading-relaxed"
-            as="p"
-          />
+          </p>
         </div>
       ))}
     </div>
