@@ -144,8 +144,8 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                     </div>
 
                     {/* Slider */}
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-sm text-[#2B2725]/70">
+                    <div className="space-y-2 lg:space-y-3">
+                      <div className="flex justify-between text-[11px] lg:text-sm text-[#2B2725]/70">
                         <span>{selectedState.left}</span>
                         <span>{selectedState.right}</span>
                       </div>
