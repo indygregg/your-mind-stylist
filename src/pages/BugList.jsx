@@ -529,12 +529,12 @@ export default function BugList() {
           notes: "📋 TEST INSTRUCTIONS: (1) Use Stripe test card: 4242 4242 4242 4242 | Exp: 12/25 | CVC: 123 (2) Go to Programs page and purchase the Hypnosis Certification course (3) Verify you receive a confirmation email with access details (4) Log in to your account and confirm course is visible in your Library/Dashboard (5) Test course navigation, video playback, and lesson progress tracking (6) Check if your user record shows enrollment in CRM. Once confirmed working, we can switch Stripe to 'live' mode and real credit cards."
         },
         {
-          id: "misc-11",
-          title: "Pocket Mindset™ purchase email automation",
-          description: "Email needs to go out with app setup instructions and code 935384",
-          status: "open",
-          priority: "high",
-          notes: "When a client buys Pocket Mindset™, they need to receive an email with setup instructions: Download app from App Store/Google Play, select new account, enroll in courses under Browse tab, enter code 935384, access in My Programs tab. Include info about 5 Core Courses (delivered over 7-55 days) and 3 Wellbeing Programs (available anytime)."
+           id: "misc-11",
+           title: "Pocket Mindset™ purchase email automation",
+           description: "Email needs to go out with app setup instructions and code 935384",
+           status: "completed",
+           priority: "high",
+           notes: "⚠️ ACTION REQUIRED: Create the Pocket Mindset™ purchase email in Manager Dashboard → Email Templates. Set template_key to 'pocket_mindset_purchase'. Include: (1) Welcome message, (2) Download links for App Store/Google Play, (3) Setup instructions: select new account → enroll in courses under Browse tab → enter code 935384, (4) Info about 5 Core Courses (7-55 days) and 3 Wellbeing Programs (anytime). Use {{user_name}} variable for personalization."
         },
         {
           id: "misc-12",
