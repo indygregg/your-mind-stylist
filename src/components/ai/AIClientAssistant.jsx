@@ -91,12 +91,12 @@ Provide a friendly, helpful answer (2-3 sentences). If you don't know something 
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
               className="fixed bottom-24 lg:bottom-24 right-4 lg:right-6 w-[calc(100%-2rem)] lg:w-96 max-w-sm bg-white rounded-lg shadow-2xl z-50 overflow-hidden"
             >
-              <div className="bg-[#1E3A32] text-white p-4">
-                <h3 className="font-medium flex items-center gap-2">
-                  <MessageCircle size={18} />
+              <div className="bg-[#1E3A32] text-white p-3 lg:p-4">
+                <h3 className="font-medium flex items-center gap-2 text-sm lg:text-base">
+                  <MessageCircle size={16} />
                   Ask Me Anything
                 </h3>
-                <p className="text-xs text-white/80 mt-1">
+                <p className="text-[10px] lg:text-xs text-white/80 mt-1">
                   Get instant answers about services, booking, and more
                 </p>
               </div>
