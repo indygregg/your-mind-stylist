@@ -104,7 +104,7 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="lg:hidden fixed bottom-16 left-0 right-0 bg-[#1E3A32] rounded-t-3xl z-40 max-h-[70vh] overflow-y-auto"
+              className="lg:hidden fixed bottom-16 left-0 right-0 bg-[#1E3A32] rounded-t-3xl z-40 max-h-[70vh] overflow-y-auto safe-area-bottom"
             >
               <div className="px-6 py-6">
                 {/* User Info */}
