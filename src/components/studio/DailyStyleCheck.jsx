@@ -89,7 +89,7 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/40 z-[9999] flex items-start lg:items-center justify-center p-4 overflow-y-auto lg:overflow-visible pt-12 lg:pt-0 pb-24 lg:pb-0"
+        className="fixed inset-0 bg-black/40 z-[9999] flex items-start lg:items-center justify-center p-4 overflow-y-auto lg:overflow-visible pt-24 lg:pt-0 pb-24 lg:pb-0"
         onClick={onClose}
       >
         <motion.div
