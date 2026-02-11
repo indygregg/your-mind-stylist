@@ -9,7 +9,12 @@ import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function Blog() {
+  const queryClient = useQueryClient();
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const { pullY, isRefreshing, handlers: pullToRefreshHandlers } = usePullToRefresh(async () => {
+    // No query invalidation needed for static blog content
+    // but can refresh other data like comments or analytics
+  });
 
   const categories = [
     "All",
