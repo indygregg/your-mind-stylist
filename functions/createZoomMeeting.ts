@@ -88,14 +88,12 @@ Deno.serve(async (req) => {
             }
         };
 
-        // For Server-to-Server OAuth, use the account owner's email
-        const userEmail = 'Roberta@FAREhypnosis.com';
-        
-        console.log('Creating Zoom meeting for user:', userEmail);
+        // For Server-to-Server OAuth, use "me" as the user identifier
+        console.log('Creating Zoom meeting...');
         console.log('Access token received:', accessToken ? 'Yes' : 'No');
 
-        // Create Zoom meeting via API
-        const zoomResponse = await fetch(`https://api.zoom.us/v2/users/${userEmail}/meetings`, {
+        // Create Zoom meeting via API - use "me" for Server-to-Server OAuth
+        const zoomResponse = await fetch(`https://api.zoom.us/v2/users/me/meetings`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
@@ -108,7 +106,7 @@ Deno.serve(async (req) => {
             const errorText = await zoomResponse.text();
             console.error('Zoom API error status:', zoomResponse.status);
             console.error('Zoom API error response:', errorText);
-            console.error('Request URL:', `https://api.zoom.us/v2/users/${userEmail}/meetings`);
+            console.error('Request URL:', `https://api.zoom.us/v2/users/me/meetings`);
             console.error('Access token (first 20 chars):', accessToken.substring(0, 20));
             
             // Update booking with failed status
