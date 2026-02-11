@@ -15,7 +15,7 @@ export default function BugReportButton() {
         className="hidden lg:flex fixed left-3 top-20 z-[8888] w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-[#D8B46B] hover:bg-[#C9A55A] text-white shadow-lg items-center justify-center transition-colors"
         title="Report a Bug"
       >
-        <Bug size={20} className="lg:w-6 lg:h-6" />
+        <Bug size={20} className="w-5 h-5 lg:w-6 lg:h-6" />
       </motion.button>
 
       <AnimatePresence>
