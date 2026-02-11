@@ -184,19 +184,19 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                 >
                   <div>
                     <h3 className="font-medium text-[#1E3A32] mb-4">What's your inner voice tone?</h3>
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 lg:gap-3">
                       {voiceTones.map((tone) => (
                         <button
                           key={tone.value}
                           onClick={() => handleVoiceToneSelect(tone.value)}
-                          className={`p-4 rounded-lg border-2 transition-all ${
+                          className={`p-3 lg:p-4 rounded-lg border-2 transition-all text-center ${
                             checkInData.voice_tone === tone.value
                               ? "border-[#D8B46B] bg-[#D8B46B]/10"
                               : "border-[#E4D9C4] hover:border-[#D8B46B]/50"
                           }`}
                         >
-                          <div className="text-2xl mb-2">{tone.icon}</div>
-                          <div className="text-sm font-medium text-[#1E3A32]">{tone.label}</div>
+                          <div className="text-lg lg:text-2xl mb-1 lg:mb-2">{tone.icon}</div>
+                          <div className="text-xs lg:text-sm font-medium text-[#1E3A32]">{tone.label}</div>
                         </button>
                       ))}
                     </div>
