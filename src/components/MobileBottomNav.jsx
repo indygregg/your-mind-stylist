@@ -58,12 +58,8 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
               <button
                 key={link.page}
                 onClick={() => {
-                  if (currentPageName === link.page) {
-                    handleActiveTabClick(link.page);
-                  } else {
-                    handleNavClick(link.page);
-                    window.location.href = createPageUrl(link.page);
-                  }
+                  haptics.light();
+                  handleNavClick(link.page);
                 }}
                 className={`flex flex-col items-center justify-center gap-1 transition-colors ${
                   currentPageName === link.page
