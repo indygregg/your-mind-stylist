@@ -148,12 +148,16 @@ async function managerCancel(base44, booking, data) {
         notes: booking.notes ? `${booking.notes}\n\nCancelled by manager. Reason: ${data.reason || 'Not provided'}` : `Cancelled by manager. Reason: ${data.reason || 'Not provided'}`
     });
 
-    // Notify client
-    await base44.asServiceRole.integrations.Core.SendEmail({
-        to: booking.user_email,
-        subject: 'Session Cancelled',
-        body: generateCancellationEmail(booking, data.reason)
-    });
+    // Notify client (try to send email, but don't fail if recipient is not a registered user)
+    try {
+        await base44.asServiceRole.integrations.Core.SendEmail({
+            to: booking.user_email,
+            subject: 'Session Cancelled',
+            body: generateCancellationEmail(booking, data.reason)
+        });
+    } catch (emailError) {
+        console.log('Could not send cancellation email:', emailError.message);
+    }
 
     return Response.json({
         success: true,
