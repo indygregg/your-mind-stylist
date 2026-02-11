@@ -102,7 +102,7 @@ Provide a friendly, helpful answer (2-3 sentences). If you don't know something 
               </div>
 
               {/* Conversation */}
-              <div className="h-96 overflow-y-auto p-4 space-y-3 bg-[#F9F5EF]">
+              <div className="h-64 lg:h-96 overflow-y-auto p-3 lg:p-4 space-y-3 bg-[#F9F5EF]">
                 {conversation.length === 0 && (
                   <div>
                     <p className="text-sm text-[#2B2725]/70 mb-3">
