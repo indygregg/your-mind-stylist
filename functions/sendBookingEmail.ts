@@ -119,76 +119,19 @@ Deno.serve(async (req) => {
             }
         }
 
-        // Try to send email via Core.SendEmail, but if it fails (unregistered user), use MailerLite
-        let emailSent = false;
-        try {
-            await base44.asServiceRole.integrations.Core.SendEmail({
-                to: recipient,
-                subject: subject,
-                body: emailHtml
-            });
-            emailSent = true;
-        } catch (emailError) {
-            console.log('Core.SendEmail failed (likely unregistered user), will use MailerLite:', emailError.message);
-        }
-
-        // If Core.SendEmail failed, try to send via MailerLite API directly
-        if (!emailSent && recipient_type === 'client') {
-            try {
-                const apiKey = Deno.env.get('MAILERLITE_API_KEY');
-                if (apiKey) {
-                    // First ensure subscriber exists
-                    await fetch('https://connect.mailerlite.com/api/subscribers', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`,
-                        },
-                        body: JSON.stringify({
-                            email: bookingData.user_email,
-                            fields: {
-                                name: bookingData.user_name || '',
-                            }
-                        })
-                    });
-
-                    // Send transactional email
-                    const emailResponse = await fetch('https://connect.mailerlite.com/api/campaigns', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${apiKey}`,
-                        },
-                        body: JSON.stringify({
-                            type: 'regular',
-                            name: `Booking Confirmation - ${bookingData.id}`,
-                            emails: [bookingData.user_email],
-                            groups: [],
-                            from: 'roberta@yourmindstylist.com',
-                            from_name: 'Roberta Fernandez - Your Mind Stylist',
-                            subject: subject,
-                            content: emailHtml
-                        })
-                    });
-
-                    if (emailResponse.ok) {
-                        emailSent = true;
-                        console.log('Email sent via MailerLite');
-                    } else {
-                        console.error('MailerLite campaign failed:', await emailResponse.text());
-                    }
-                }
-            } catch (mlError) {
-                console.error('MailerLite send error:', mlError.message);
-            }
-        }
+        // Send email via Core.SendEmail
+        await base44.asServiceRole.integrations.Core.SendEmail({
+            to: recipient,
+            subject: subject,
+            body: emailHtml
+        });
 
         // Add to MailerLite for automation sequences (client only)
         if (recipient_type === 'client') {
             await addToMailerLite(bookingData.user_email, bookingData.user_name, bookingData);
         }
 
-        return Response.json({ success: emailSent, sent_to: recipient, method: emailSent ? 'email_sent' : 'email_failed' });
+        return Response.json({ success: true, sent_to: recipient });
 
     } catch (error) {
         console.error('Email send error:', error);

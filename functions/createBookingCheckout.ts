@@ -60,23 +60,25 @@ Deno.serve(async (req) => {
                     }
                 }
 
-                // Send confirmation emails
+                // Send confirmation emails (don't let email failures block the booking)
                 try {
-                    await base44.asServiceRole.functions.invoke('sendBookingEmail', {
+                    const clientEmailResult = await base44.asServiceRole.functions.invoke('sendBookingEmail', {
                         booking_id: booking.id,
                         recipient_type: 'client'
                     });
+                    console.log('Client email result:', clientEmailResult.data);
                 } catch (error) {
-                    console.error('Failed to send client email:', error);
+                    console.error('Failed to send client email:', error.message);
                 }
 
                 try {
-                    await base44.asServiceRole.functions.invoke('sendBookingEmail', {
+                    const managerEmailResult = await base44.asServiceRole.functions.invoke('sendBookingEmail', {
                         booking_id: booking.id,
                         recipient_type: 'manager'
                     });
+                    console.log('Manager email result:', managerEmailResult.data);
                 } catch (error) {
-                    console.error('Failed to send manager email:', error);
+                    console.error('Failed to send manager email:', error.message);
                 }
 
             return Response.json({
