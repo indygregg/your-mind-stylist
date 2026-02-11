@@ -121,10 +121,10 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
+                  className="space-y-4 lg:space-y-6"
                 >
                   <div>
-                    <h3 className="font-medium text-[#1E3A32] mb-4">How are you showing up?</h3>
+                    <h3 className="font-medium text-[#1E3A32] text-sm lg:text-base mb-3 lg:mb-4">How are you showing up?</h3>
                     
                     {/* State Type Selector */}
                     <div className="flex flex-wrap gap-2 mb-4">
