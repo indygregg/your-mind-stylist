@@ -729,40 +729,41 @@ export default function BugList() {
                         return (
                         <div
                           key={item.id}
-                          className={`px-6 py-4 ${index !== category.items.length - 1 ? 'border-b border-gray-100' : ''}`}
+                          className={`px-4 md:px-6 py-3 md:py-4 ${index !== category.items.length - 1 ? 'border-b border-gray-100' : ''}`}
                         >
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                {item.status === "completed" ? (
-                                 <CheckCircle2 size={18} className="text-green-600 flex-shrink-0" />
-                                ) : (
-                                 <Circle size={18} className="text-orange-500 flex-shrink-0" />
-                                )}
-                                <h4 className="font-medium text-[#1E3A32]">{item.title}</h4>
-                                <Badge className={getPriorityColor(item.priority)}>
-                                  {item.priority}
-                                </Badge>
-                                {item.deadline && (
-                                  <Badge className="bg-red-100 text-red-800 border-red-200">
-                                    <Clock size={12} className="mr-1" />
-                                    {item.deadline}
-                                  </Badge>
-                                )}
-                                <button
-                                  onClick={() => toggleBug(item.id)}
-                                  className="ml-auto flex items-center gap-1 text-xs text-[#2B2725]/60 hover:text-[#1E3A32] transition-colors"
-                                >
-                                  <MessageSquare size={14} />
-                                  {itemComments.length > 0 && `(${itemComments.length})`}
-                                </button>
-                              </div>
-                              <p className="text-sm text-[#2B2725]/70 ml-7">{item.description}</p>
-                              {item.notes && (
-                                <p className="text-xs text-[#2B2725]/50 ml-7 mt-2 italic">
-                                  Note: {item.notes}
-                                </p>
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-start gap-2 flex-wrap">
+                              {item.status === "completed" ? (
+                                <CheckCircle2 size={16} className="text-green-600 flex-shrink-0 mt-0.5" />
+                              ) : (
+                                <Circle size={16} className="text-orange-500 flex-shrink-0 mt-0.5" />
                               )}
+                              <h4 className="font-medium text-[#1E3A32] text-sm md:text-base flex-1">{item.title}</h4>
+                            </div>
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <Badge className={`${getPriorityColor(item.priority)} text-xs`}>
+                                {item.priority}
+                              </Badge>
+                              {item.deadline && (
+                                <Badge className="bg-red-100 text-red-800 border-red-200 text-xs">
+                                  <Clock size={12} className="mr-1" />
+                                  {item.deadline}
+                                </Badge>
+                              )}
+                              <button
+                                onClick={() => toggleBug(item.id)}
+                                className="flex items-center gap-1 text-xs text-[#2B2725]/60 hover:text-[#1E3A32] transition-colors ml-auto"
+                              >
+                                <MessageSquare size={14} />
+                                {itemComments.length > 0 && `${itemComments.length}`}
+                              </button>
+                            </div>
+                            <p className="text-xs md:text-sm text-[#2B2725]/70">{item.description}</p>
+                            {item.notes && (
+                              <p className="text-xs text-[#2B2725]/50 italic">
+                                Note: {item.notes}
+                              </p>
+                            )}
 
                               {isExpanded && (
                                 <div className="ml-7 mt-4 border-l-2 border-[#D8B46B] pl-4">
