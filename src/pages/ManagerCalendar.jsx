@@ -104,8 +104,8 @@ export default function ManagerCalendar() {
           </div>
         </div>
 
-        {/* Calendar Navigation */}
-        <div className="bg-white shadow-md mb-6">
+        {/* Calendar (Desktop Only) */}
+        <div className="hidden lg:block bg-white shadow-md mb-6">
           <div className="flex items-center justify-between p-6 border-b border-[#E4D9C4]">
             <div className="flex items-center gap-4">
               <Button
@@ -136,14 +136,12 @@ export default function ManagerCalendar() {
           </div>
           
           <div className="p-6">
-
           {/* Calendar Grid */}
           <div className="grid grid-cols-7 gap-1">
             {/* Day Headers */}
             {["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((day) => (
               <div key={day} className="text-center font-semibold text-[#1E3A32] text-sm py-3 bg-[#F9F5EF]">
-                <span className="hidden md:inline">{day}</span>
-                <span className="md:hidden">{day.slice(0, 3)}</span>
+                {day}
               </div>
             ))}
 
