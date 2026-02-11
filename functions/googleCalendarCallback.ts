@@ -55,7 +55,17 @@ Deno.serve(async (req) => {
         });
 
         console.log('Redirecting to success page');
-        return Response.redirect('https://yourmindstylist.com/ManagerDashboard?calendar_connected=true', 302);
+        const redirectUrl = 'https://yourmindstylist.com/ManagerDashboard?calendar_connected=true';
+        return new Response(
+            `<html><head><meta http-equiv="refresh" content="0;url=${redirectUrl}"></head><body>Connecting... redirecting to dashboard.</body></html>`,
+            { 
+                status: 200,
+                headers: { 
+                    'Content-Type': 'text/html',
+                    'Location': redirectUrl 
+                } 
+            }
+        );
     } catch (error) {
         console.error('Google Calendar OAuth error:', error);
         console.error('Error stack:', error.stack);
