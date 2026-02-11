@@ -145,8 +145,8 @@ Provide a friendly, helpful answer (2-3 sentences). If you don't know something 
               </div>
 
               {/* Input */}
-              <form onSubmit={handleSubmit} className="p-4 border-t border-[#E4D9C4] bg-white">
-                <div className="flex gap-2">
+              <form onSubmit={handleSubmit} className="p-3 lg:p-4 border-t border-[#E4D9C4] bg-white">
+                <div className="flex gap-2 text-sm">
                   <Input
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
