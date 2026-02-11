@@ -120,15 +120,27 @@ Deno.serve(async (req) => {
         }
 
         // Send email via Core.SendEmail
-        await base44.asServiceRole.integrations.Core.SendEmail({
-            to: recipient,
-            subject: subject,
-            body: emailHtml
-        });
+        console.log(`Sending ${recipient_type} email to:`, recipient);
+        try {
+            await base44.asServiceRole.integrations.Core.SendEmail({
+                to: recipient,
+                subject: subject,
+                body: emailHtml
+            });
+            console.log('Email sent successfully to:', recipient);
+        } catch (emailError) {
+            console.error('Failed to send email:', emailError);
+            throw emailError;
+        }
 
         // Add to MailerLite for automation sequences (client only)
         if (recipient_type === 'client') {
-            await addToMailerLite(bookingData.user_email, bookingData.user_name, bookingData);
+            try {
+                await addToMailerLite(bookingData.user_email, bookingData.user_name, bookingData);
+                console.log('Added to MailerLite:', bookingData.user_email);
+            } catch (mlError) {
+                console.error('MailerLite sync failed (non-critical):', mlError.message);
+            }
         }
 
         return Response.json({ success: true, sent_to: recipient });

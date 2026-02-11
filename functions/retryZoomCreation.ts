@@ -29,8 +29,12 @@ Deno.serve(async (req) => {
         }
 
         // Get appointment type to check if Zoom is enabled
+        if (!booking.appointment_type_id) {
+            return Response.json({ error: 'Booking has no appointment type assigned' }, { status: 400 });
+        }
+
         const appointmentTypes = await base44.asServiceRole.entities.AppointmentType.filter({
-            service_type: booking.service_type
+            id: booking.appointment_type_id
         });
 
         if (appointmentTypes.length === 0) {
