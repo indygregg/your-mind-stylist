@@ -13,14 +13,14 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        // Get user's stored tokens
-        const userData = await base44.asServiceRole.entities.User.filter({ id: user.id });
-        const userRecord = userData[0];
-
-        if (!userRecord?.google_calendar_access_token) {
+        // Get access token using app connector
+        let accessToken;
+        try {
+            accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
+        } catch (err) {
             return Response.json({ 
                 connected: false, 
-                message: 'No Google Calendar tokens found' 
+                message: 'No Google Calendar connector authorized' 
             });
         }
 
@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
             'https://www.googleapis.com/calendar/v3/calendars/primary/events?maxResults=1',
             {
                 headers: {
-                    'Authorization': `Bearer ${userRecord.google_calendar_access_token}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json'
                 }
             }
