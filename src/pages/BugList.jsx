@@ -765,37 +765,37 @@ export default function BugList() {
                               </p>
                             )}
 
-                              {isExpanded && (
-                                <div className="ml-7 mt-4 border-l-2 border-[#D8B46B] pl-4">
-                                  <div className="space-y-3 mb-4">
-                                    {itemComments.map(comment => (
-                                      <div key={comment.id} className="bg-[#F9F5EF] p-3 rounded text-sm">
-                                        <p className="text-[#1E3A32]">{comment.comment}</p>
-                                        <p className="text-xs text-[#2B2725]/50 mt-1">
-                                          {comment.created_by} • {new Date(comment.created_date).toLocaleDateString()}
-                                        </p>
-                                      </div>
-                                    ))}
-                                  </div>
-
-                                  <div className="flex gap-2">
-                                    <Textarea
-                                      placeholder="Add a comment..."
-                                      value={newComment[item.id] || ''}
-                                      onChange={(e) => setNewComment({...newComment, [item.id]: e.target.value})}
-                                      className="flex-1 min-h-[60px]"
-                                    />
-                                    <Button
-                                      size="sm"
-                                      onClick={() => handleAddComment(item.id)}
-                                      disabled={!newComment[item.id]?.trim()}
-                                      className="bg-[#1E3A32] hover:bg-[#2B2725]"
-                                    >
-                                      <Send size={14} />
-                                    </Button>
-                                  </div>
+                            {isExpanded && (
+                              <div className="mt-3 border-l-2 border-[#D8B46B] pl-3">
+                                <div className="space-y-2 mb-3">
+                                  {itemComments.map(comment => (
+                                    <div key={comment.id} className="bg-[#F9F5EF] p-2 md:p-3 rounded text-xs md:text-sm">
+                                      <p className="text-[#1E3A32]">{comment.comment}</p>
+                                      <p className="text-[11px] text-[#2B2725]/50 mt-1">
+                                        {comment.created_by} • {new Date(comment.created_date).toLocaleDateString()}
+                                      </p>
+                                    </div>
+                                  ))}
                                 </div>
-                              )}
+
+                                <div className="flex flex-col md:flex-row gap-2">
+                                  <Textarea
+                                    placeholder="Add a comment..."
+                                    value={newComment[item.id] || ''}
+                                    onChange={(e) => setNewComment({...newComment, [item.id]: e.target.value})}
+                                    className="flex-1 min-h-[50px]"
+                                  />
+                                  <Button
+                                    size="sm"
+                                    onClick={() => handleAddComment(item.id)}
+                                    disabled={!newComment[item.id]?.trim()}
+                                    className="bg-[#1E3A32] hover:bg-[#2B2725] md:flex-shrink-0"
+                                  >
+                                    <Send size={14} />
+                                  </Button>
+                                </div>
+                              </div>
+                            )}
                             </div>
                             <Badge variant="outline" className="text-xs">
                               {item.status}
