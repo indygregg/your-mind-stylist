@@ -19,6 +19,13 @@ Deno.serve(async (req) => {
                 }, { status: 400 });
             }
 
+            if (!appointment_type_id) {
+                console.error('Missing appointment_type_id in payload:', payload);
+                return Response.json({ 
+                    error: 'Missing required field: appointment_type_id' 
+                }, { status: 400 });
+            }
+
             const bookingData = {
                 user_email,
                 user_name,
