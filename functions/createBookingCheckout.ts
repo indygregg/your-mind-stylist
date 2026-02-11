@@ -74,25 +74,35 @@ Deno.serve(async (req) => {
                 }
 
                 // Send confirmation emails (don't let email failures block the booking)
+                console.log('=== ATTEMPTING TO SEND CONFIRMATION EMAILS ===');
+                console.log('Booking ID:', booking.id);
+                console.log('User email:', user_email);
+
                 try {
+                    console.log('Invoking sendBookingEmail for client...');
                     const clientEmailResult = await base44.asServiceRole.functions.invoke('sendBookingEmail', {
                         booking_id: booking.id,
                         recipient_type: 'client'
                     });
-                    console.log('Client email result:', clientEmailResult.data);
+                    console.log('✓ Client email sent successfully:', clientEmailResult.data);
                 } catch (error) {
-                    console.error('Failed to send client email:', error.message);
+                    console.error('✗ FAILED to send client email:', error);
+                    console.error('Error details:', error.message, error.stack);
                 }
 
                 try {
+                    console.log('Invoking sendBookingEmail for manager...');
                     const managerEmailResult = await base44.asServiceRole.functions.invoke('sendBookingEmail', {
                         booking_id: booking.id,
                         recipient_type: 'manager'
                     });
-                    console.log('Manager email result:', managerEmailResult.data);
+                    console.log('✓ Manager email sent successfully:', managerEmailResult.data);
                 } catch (error) {
-                    console.error('Failed to send manager email:', error.message);
+                    console.error('✗ FAILED to send manager email:', error);
+                    console.error('Error details:', error.message, error.stack);
                 }
+
+                console.log('=== EMAIL SENDING PROCESS COMPLETE ===');
 
                 // Add to CRM as lead
                 try {

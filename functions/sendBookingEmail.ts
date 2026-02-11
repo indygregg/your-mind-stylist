@@ -33,17 +33,30 @@ Deno.serve(async (req) => {
         const base44 = createClientFromRequest(req);
         const { booking_id, recipient_type } = await req.json();
 
+        console.log('=== SEND BOOKING EMAIL START ===');
+        console.log('Booking ID:', booking_id);
+        console.log('Recipient type:', recipient_type);
+
         if (!booking_id || !recipient_type) {
+            console.error('Missing required parameters');
             return Response.json({ error: 'booking_id and recipient_type required' }, { status: 400 });
         }
 
         // Fetch booking details
+        console.log('Fetching booking from database...');
         const booking = await base44.asServiceRole.entities.Booking.filter({ id: booking_id });
         if (!booking || booking.length === 0) {
+            console.error('Booking not found in database');
             return Response.json({ error: 'Booking not found' }, { status: 404 });
         }
 
         const bookingData = booking[0];
+        console.log('Booking data retrieved:', {
+            user_email: bookingData.user_email,
+            user_name: bookingData.user_name,
+            service_type: bookingData.service_type,
+            scheduled_date: bookingData.scheduled_date
+        });
 
         // Get custom email template if exists
         const templateKey = recipient_type === 'manager' 
