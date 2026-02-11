@@ -18,20 +18,46 @@ Deno.serve(async (req) => {
         }
         const booking = bookings[0];
 
-        // Get manager's Zoom access token (use created_by or assigned manager)
-        const managerId = booking.created_by;
-        const tokenResponse = await base44.asServiceRole.functions.invoke('getZoomToken', {
-            user_id: managerId
-        });
-        
-        if (!tokenResponse.data.access_token) {
+        // Get Zoom access token directly
+        const ZOOM_ACCOUNT_ID = Deno.env.get('ZOOM_ACCOUNT_ID');
+        const ZOOM_CLIENT_ID = Deno.env.get('ZOOM_CLIENT_ID');
+        const ZOOM_CLIENT_SECRET = Deno.env.get('ZOOM_CLIENT_SECRET');
+
+        if (!ZOOM_ACCOUNT_ID || !ZOOM_CLIENT_ID || !ZOOM_CLIENT_SECRET) {
             return Response.json({ 
-                error: 'Manager Zoom not connected',
-                details: tokenResponse.data
+                error: 'Zoom credentials not configured',
+                message: 'Please set ZOOM_ACCOUNT_ID, ZOOM_CLIENT_ID, and ZOOM_CLIENT_SECRET'
             }, { status: 500 });
         }
 
-        const accessToken = tokenResponse.data.access_token;
+        // Get access token using Server-to-Server OAuth
+        const tokenUrl = 'https://zoom.us/oauth/token';
+        const credentials = btoa(`${ZOOM_CLIENT_ID}:${ZOOM_CLIENT_SECRET}`);
+
+        const body = new URLSearchParams();
+        body.append('grant_type', 'account_credentials');
+        body.append('account_id', ZOOM_ACCOUNT_ID);
+
+        const tokenResponse = await fetch(tokenUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${credentials}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: body.toString()
+        });
+
+        if (!tokenResponse.ok) {
+            const tokenError = await tokenResponse.text();
+            console.error('Zoom token error:', tokenError);
+            return Response.json({ 
+                error: 'Failed to get Zoom access token',
+                details: tokenError
+            }, { status: tokenResponse.status });
+        }
+
+        const tokenData = await tokenResponse.json();
+        const accessToken = tokenData.access_token;
 
 
 
