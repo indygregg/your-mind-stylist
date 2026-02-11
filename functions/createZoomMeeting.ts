@@ -88,8 +88,12 @@ Deno.serve(async (req) => {
             }
         };
 
-        // Create Zoom meeting via API
-        const zoomResponse = await fetch('https://api.zoom.us/v2/users/me/meetings', {
+        // Get Zoom user email (use manager's email)
+        const managers = await base44.asServiceRole.entities.User.filter({ id: managerId });
+        const userEmail = managers.length > 0 ? managers[0].email : 'me';
+
+        // Create Zoom meeting via API (use email instead of 'me' for Server-to-Server OAuth)
+        const zoomResponse = await fetch(`https://api.zoom.us/v2/users/${userEmail}/meetings`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
