@@ -40,10 +40,11 @@ export default function Dashboard() {
   const [recommendations, setRecommendations] = useState([]);
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const [pastBookings, setPastBookings] = useState([]);
-  const [pullRefreshY, setPullRefreshY] = useState(0);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const suggestions = useSmartSuggestions();
   const queryClient = useQueryClient();
+  const { pullY, isRefreshing, handlers: pullToRefreshHandlers } = usePullToRefresh(async () => {
+    await handleRefresh();
+  });
 
   const fetchBookings = useCallback(async (currentUser) => {
     const allBookings = await base44.entities.Booking.filter({ user_email: currentUser.email });
