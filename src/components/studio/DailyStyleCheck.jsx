@@ -89,14 +89,14 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/40 z-[9999] flex items-center justify-center p-4 overflow-y-auto lg:overflow-visible pb-24 lg:pb-0"
+        className="fixed inset-0 bg-black/40 z-[9999] flex items-start lg:items-center justify-center p-4 overflow-y-auto lg:overflow-visible pt-12 lg:pt-0 pb-24 lg:pb-0"
         onClick={onClose}
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[calc(100vh-120px)] lg:max-h-[90vh] overflow-y-auto my-auto"
+          className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[calc(100vh-160px)] lg:max-h-[90vh] overflow-y-auto mt-0 lg:my-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
