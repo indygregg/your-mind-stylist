@@ -16,8 +16,8 @@ Deno.serve(async (req) => {
     }
 
     // Get Google Calendar refresh token from user data
-    const userData = await base44.entities.User.read(user.id);
-    const refreshToken = userData.google_calendar_refresh_token;
+    const userData = await base44.entities.User.filter({ id: user.id });
+    const refreshToken = userData[0]?.google_calendar_refresh_token;
     
     if (!refreshToken) {
       return Response.json({ 
