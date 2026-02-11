@@ -25,8 +25,6 @@ async function addToMailerLite(email, name, bookingData) {
     console.log('MailerLite sync failed (non-critical):', error.message);
   }
 }
-import { renderToStaticMarkup } from 'npm:react-dom@18.2.0/server';
-import React from 'npm:react@18.2.0';
 
 Deno.serve(async (req) => {
     try {
