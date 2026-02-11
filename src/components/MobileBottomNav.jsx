@@ -63,10 +63,16 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
           {quickLinks.map((link) => {
             const Icon = getIcon(link.page);
             return (
-              <Link
+              <button
                 key={link.page}
-                to={createPageUrl(link.page)}
-                onClick={handleNavClick}
+                onClick={() => {
+                  if (currentPageName === link.page) {
+                    handleActiveTabClick(link.page);
+                  } else {
+                    handleNavClick(link.page);
+                    window.location.href = createPageUrl(link.page);
+                  }
+                }}
                 className={`flex flex-col items-center justify-center gap-1 transition-colors ${
                   currentPageName === link.page
                     ? "text-[#D8B46B]"
@@ -75,7 +81,7 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
               >
                 <Icon size={20} />
                 <span className="text-[10px]">{link.name}</span>
-              </Link>
+              </button>
             );
           })}
           {moreLinks.length > 0 && (
