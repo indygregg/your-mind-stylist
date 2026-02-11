@@ -40,6 +40,26 @@ Deno.serve(async (req) => {
 
             const booking = await base44.asServiceRole.entities.Booking.create(bookingData);
 
+                // Get appointment type to check if Zoom should be auto-created
+                const appointmentTypes = await base44.asServiceRole.entities.AppointmentType.filter({
+                    id: appointment_type_id
+                });
+
+                // Auto-create Zoom meeting if enabled for this appointment type
+                if (appointmentTypes.length > 0 && appointmentTypes[0].zoom_enabled) {
+                    try {
+                        await base44.asServiceRole.functions.invoke('createZoomMeeting', {
+                            booking_id: booking.id,
+                            topic: `${service_type?.replace(/_/g, ' ')} - ${user_name}`,
+                            start_time: scheduled_date,
+                            duration: appointmentTypes[0].duration || 60
+                        });
+                    } catch (zoomError) {
+                        console.error('Failed to create Zoom meeting:', zoomError);
+                        // Don't fail the booking if Zoom creation fails
+                    }
+                }
+
                 // Send confirmation emails
                 try {
                     await base44.asServiceRole.functions.invoke('sendBookingEmail', {
