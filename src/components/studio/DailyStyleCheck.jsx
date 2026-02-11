@@ -101,13 +101,13 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="sticky top-0 bg-white border-b border-[#E4D9C4] p-4 lg:p-6 flex justify-between items-start lg:items-center gap-4">
+          <div className="sticky top-0 bg-white border-b border-[#E4D9C4] p-3 lg:p-6 flex justify-between items-start gap-2 lg:gap-4">
             <div className="flex-1">
-              <h2 className="font-serif text-lg lg:text-2xl text-[#1E3A32]">Daily Style Check™</h2>
-              <p className="text-xs lg:text-sm text-[#2B2725]/60">Quick check-in • Everything optional</p>
+              <h2 className="font-serif text-base lg:text-2xl text-[#1E3A32]">Daily Style Check™</h2>
+              <p className="text-[10px] lg:text-sm text-[#2B2725]/60">Quick check-in • Everything optional</p>
             </div>
             <Button variant="ghost" size="icon" onClick={onClose} className="flex-shrink-0">
-              <X size={20} />
+              <X size={18} />
             </Button>
           </div>
 
