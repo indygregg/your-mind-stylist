@@ -125,21 +125,13 @@ export default function Dashboard() {
   };
 
   const handleRefresh = async () => {
-    setIsRefreshing(true);
-    haptics.light(); // Haptic feedback on refresh trigger
     try {
       await fetchBookings(user);
       const stats = await base44.functions.invoke('getStudioStats', {});
       setStudioStats(stats.data);
-      haptics.success(); // Success haptic
     } catch (error) {
       console.error('Refresh error:', error);
-      haptics.error(); // Error haptic
     }
-    setTimeout(() => {
-      setIsRefreshing(false);
-      setPullRefreshY(0);
-    }, 500);
   };
   
   const programs = useMemo(() => [
