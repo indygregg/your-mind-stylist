@@ -12,7 +12,7 @@ export default function BugReportButton() {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
-        className="fixed left-4 top-1/2 -translate-y-1/2 z-[8888] w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-[#D8B46B] hover:bg-[#C9A55A] text-white shadow-lg flex items-center justify-center transition-colors"
+        className="fixed left-3 top-20 z-[8888] w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-[#D8B46B] hover:bg-[#C9A55A] text-white shadow-lg flex items-center justify-center transition-colors"
         title="Report a Bug"
       >
         <Bug size={20} className="lg:w-6 lg:h-6" />
