@@ -12,10 +12,17 @@ import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function Library() {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [courses, setCourses] = useState([]);
   const [userProgress, setUserProgress] = useState([]);
   const [showDashboard, setShowDashboard] = useState(true);
+  const { pullY, isRefreshing, handlers: pullToRefreshHandlers } = usePullToRefresh(async () => {
+    await queryClient.invalidateQueries({ queryKey: ["userCourseProgress"] });
+    await queryClient.invalidateQueries({ queryKey: ["userLessonProgress"] });
+    await queryClient.invalidateQueries({ queryKey: ["upcomingBookings"] });
+    await queryClient.invalidateQueries({ queryKey: ["publishedResources"] });
+  });
   const [userAccess, setUserAccess] = useState({
     hasToolkit: false,
     hasPocketVisualization: false,
