@@ -74,8 +74,23 @@ export default function Bookings() {
   };
 
   const handleSubmitDetails = async () => {
-    if (!clientDetails.name || !clientDetails.email || !clientDetails.phone || !clientDetails.briefIntro || !clientDetails.whyHelpful) {
+    // Trim all fields
+    const trimmedName = clientDetails.name.trim();
+    const trimmedEmail = clientDetails.email.trim();
+    const trimmedPhone = clientDetails.phone.trim();
+    const trimmedBriefIntro = clientDetails.briefIntro.trim();
+    const trimmedWhyHelpful = clientDetails.whyHelpful.trim();
+
+    // Validate all required fields are not empty
+    if (!trimmedName || !trimmedEmail || !trimmedPhone || !trimmedBriefIntro || !trimmedWhyHelpful) {
       alert("Please fill in all required fields");
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      alert("Please enter a valid email address");
       return;
     }
 
@@ -89,11 +104,11 @@ export default function Bookings() {
         amount: selectedAppointment.price,
         scheduled_date: selectedSlot.start,
         staff_id: primaryManagerId,
-        user_email: clientDetails.email,
-        user_name: clientDetails.name,
-        notes: `Brief intro: ${clientDetails.briefIntro}\n\nWhy helpful: ${clientDetails.whyHelpful}`,
+        user_email: trimmedEmail,
+        user_name: trimmedName,
+        notes: `Brief intro: ${trimmedBriefIntro}\n\nWhy helpful: ${trimmedWhyHelpful}`,
         intake_data: {
-          phone: clientDetails.phone,
+          phone: trimmedPhone,
           contact_preference: clientDetails.smsReminder ? 'sms' : 'email'
         }
       });
