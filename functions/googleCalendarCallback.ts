@@ -59,10 +59,6 @@ Deno.serve(async (req) => {
     } catch (error) {
         console.error('Google Calendar OAuth error:', error);
         console.error('Error stack:', error.stack);
-        const redirectUrl = `https://yourmindstylist.com/CalendarSettings?error=server_error&message=${encodeURIComponent(error.message)}`;
-        return new Response(null, {
-            status: 302,
-            headers: { 'Location': redirectUrl }
-        });
+        return Response.redirect(`https://yourmindstylist.com/ManagerDashboard?error=${encodeURIComponent(error.message)}`, 302);
     }
 });
