@@ -40,18 +40,24 @@ Deno.serve(async (req) => {
 
             const booking = await base44.asServiceRole.entities.Booking.create(bookingData);
 
-            // Send confirmation emails asynchronously (don't wait)
-            fetch(`${req.headers.get('origin')}/api/functions/sendBookingEmail`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ booking_id: booking.id, recipient_type: 'client' })
-            }).catch(() => {});
-            
-            fetch(`${req.headers.get('origin')}/api/functions/sendBookingEmail`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ booking_id: booking.id, recipient_type: 'manager' })
-            }).catch(() => {});
+                // Send confirmation emails
+                try {
+                    await base44.asServiceRole.functions.invoke('sendBookingEmail', {
+                        booking_id: booking.id,
+                        recipient_type: 'client'
+                    });
+                } catch (error) {
+                    console.error('Failed to send client email:', error);
+                }
+
+                try {
+                    await base44.asServiceRole.functions.invoke('sendBookingEmail', {
+                        booking_id: booking.id,
+                        recipient_type: 'manager'
+                    });
+                } catch (error) {
+                    console.error('Failed to send manager email:', error);
+                }
 
             return Response.json({
                 success: true,
