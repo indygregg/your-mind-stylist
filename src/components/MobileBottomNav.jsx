@@ -181,6 +181,58 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
                 </button>
               </div>
             </motion.div>
+
+            {/* Bug Report Modal */}
+            <AnimatePresence>
+              {bugReportOpen && <BugReportModal onClose={() => setBugReportOpen(false)} />}
+            </AnimatePresence>
+
+            {/* Chat Window */}
+            <AnimatePresence>
+              {chatOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  className="absolute bottom-full left-4 right-4 mb-2 bg-white rounded-lg shadow-2xl z-50 overflow-hidden w-[calc(100%-2rem)]"
+                >
+                  <div className="bg-[#1E3A32] text-white p-3">
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-medium text-sm flex items-center gap-2">
+                        <MessageCircle size={16} />
+                        Ask Me Anything
+                      </h3>
+                      <button
+                        onClick={() => setChatOpen(false)}
+                        className="text-white/80 hover:text-white"
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+                    <p className="text-xs text-white/70 mt-1">Quick answers</p>
+                  </div>
+
+                  <div className="p-3 space-y-2 bg-[#F9F5EF] max-h-48 overflow-y-auto">
+                    {chatConversation.length === 0 ? (
+                      <p className="text-xs text-[#2B2725]/70">How can I help?</p>
+                    ) : (
+                      chatConversation.map((msg, idx) => (
+                        <div
+                          key={idx}
+                          className={`p-2 rounded text-xs ${
+                            msg.role === "user"
+                              ? "bg-[#D8B46B] text-white"
+                              : "bg-white text-[#2B2725]"
+                          }`}
+                        >
+                          {msg.content}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </>
         )}
       </AnimatePresence>
