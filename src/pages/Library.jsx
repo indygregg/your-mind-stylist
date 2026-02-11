@@ -8,6 +8,8 @@ import ProgramCard from "../components/library/ProgramCard";
 import StudentDashboard from "../components/library/StudentDashboard";
 import AILearningPathRecommender from "../components/library/AILearningPathRecommender";
 import { base44 } from "@/api/base44Client";
+import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Library() {
   const [user, setUser] = useState(null);
