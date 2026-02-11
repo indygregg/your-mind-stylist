@@ -554,6 +554,48 @@ export default function BugList() {
       ]
     },
     {
+      category: "Mobile Readiness",
+      categoryId: "mobilereadiness",
+      priority: "high",
+      items: [
+        {
+          id: "mobile-1",
+          title: "Update Layout & AuthLayout to use CSS brand variables",
+          description: "Replace hardcoded Tailwind colors with CSS variables (--cream, --forest-green, etc.) to support dark mode theme",
+          status: "open",
+          priority: "medium"
+        },
+        {
+          id: "mobile-2",
+          title: "Apply safe-area classes for notched devices",
+          description: "Add .safe-area-top to fixed header and .safe-area-bottom to MobileBottomNav.jsx to prevent clipping on iPhone notches",
+          status: "open",
+          priority: "high"
+        },
+        {
+          id: "mobile-3",
+          title: "Add Delete Account to Profile Settings",
+          description: "Implement Delete Account section in Profile Settings with confirmation dialog",
+          status: "open",
+          priority: "medium"
+        },
+        {
+          id: "mobile-4",
+          title: "Implement pull-to-refresh on Dashboard & Library",
+          description: "Add native-style pull-to-refresh using framer-motion on Dashboard and Library scroll views",
+          status: "open",
+          priority: "medium"
+        },
+        {
+          id: "mobile-5",
+          title: "MobileBottomNav: Reset route on active tab tap",
+          description: "When user taps active tab icon in MobileBottomNav, reset that tab's route to its root page",
+          status: "open",
+          priority: "low"
+        }
+      ]
+    },
+    {
       category: "User Dashboard",
       categoryId: "userdashboard",
       priority: "medium",
