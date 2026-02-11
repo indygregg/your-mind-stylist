@@ -76,7 +76,8 @@ Provide a friendly, helpful answer (2-3 sentences). If you don't know something 
         {/* Chat Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-[#1E3A32] text-white shadow-lg hover:bg-[#2B2725] transition-all z-50 flex items-center justify-center"
+          className="fixed bottom-20 lg:bottom-6 right-6 w-14 h-14 rounded-full bg-[#1E3A32] text-white shadow-lg hover:bg-[#2B2725] transition-all z-40 flex items-center justify-center"
+          title="Ask a question"
         >
           {isOpen ? "✕" : <MessageCircle size={24} />}
         </button>
@@ -88,7 +89,7 @@ Provide a friendly, helpful answer (2-3 sentences). If you don't know something 
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              className="fixed bottom-24 right-6 w-96 bg-white rounded-lg shadow-2xl z-50 overflow-hidden"
+              className="fixed bottom-24 lg:bottom-24 right-4 lg:right-6 w-[calc(100%-2rem)] lg:w-96 max-w-sm bg-white rounded-lg shadow-2xl z-50 overflow-hidden"
             >
               <div className="bg-[#1E3A32] text-white p-4">
                 <h3 className="font-medium flex items-center gap-2">
