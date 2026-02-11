@@ -38,7 +38,7 @@ export function SmartSuggestion({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -20, scale: 0.95 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
-          className="fixed bottom-6 right-6 z-50 max-w-sm"
+          className="fixed z-50 max-w-sm hidden lg:block bottom-6 right-6"
         >
           <div className="bg-gradient-to-br from-[#D8B46B] to-[#C9A55B] p-[2px] rounded-lg shadow-2xl">
             <div className="bg-white rounded-lg p-5">
