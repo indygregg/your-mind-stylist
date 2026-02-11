@@ -199,7 +199,7 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Header */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 safe-area-top ${
           isScrolled
             ? "bg-[#F9F5EF]/95 backdrop-blur-md shadow-sm"
             : "bg-transparent"
