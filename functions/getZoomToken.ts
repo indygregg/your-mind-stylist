@@ -17,13 +17,18 @@ Deno.serve(async (req) => {
         // Get access token using Server-to-Server OAuth
         const tokenUrl = 'https://zoom.us/oauth/token';
         const credentials = btoa(`${ZOOM_CLIENT_ID}:${ZOOM_CLIENT_SECRET}`);
+        
+        const body = new URLSearchParams();
+        body.append('grant_type', 'account_credentials');
+        body.append('account_id', ZOOM_ACCOUNT_ID);
 
-        const tokenResponse = await fetch(`${tokenUrl}?grant_type=account_credentials&account_id=${ZOOM_ACCOUNT_ID}`, {
+        const tokenResponse = await fetch(tokenUrl, {
             method: 'POST',
             headers: {
                 'Authorization': `Basic ${credentials}`,
                 'Content-Type': 'application/x-www-form-urlencoded'
-            }
+            },
+            body: body.toString()
         });
 
         if (!tokenResponse.ok) {
