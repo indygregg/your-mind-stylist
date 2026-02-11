@@ -7,10 +7,20 @@ import haptics from "@/components/utils/haptics";
 
 export default function MobileBottomNav({ user, currentPageName, navLinks, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeTabState, setActiveTabState] = useState(null);
 
-  const handleNavClick = () => {
+  const handleNavClick = (pageName) => {
     haptics.light();
     setMenuOpen(false);
+    setActiveTabState(pageName);
+  };
+
+  const handleActiveTabClick = (pageName) => {
+    haptics.light();
+    // Reset to root page for this tab
+    const rootPage = pageName === "Dashboard" ? "Dashboard" : pageName;
+    window.history.pushState(null, '', createPageUrl(rootPage));
+    window.location.href = createPageUrl(rootPage);
   };
 
   const getIcon = (pageName) => {
