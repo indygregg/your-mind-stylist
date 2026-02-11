@@ -271,12 +271,12 @@ export default function BugList() {
           notes: "Course Merger tool added! In Course Manager, click 'Merge Courses' button. Select 2+ courses, they'll be combined into one new course (in selected order) as a draft. Original courses remain unchanged."
         },
         {
-          id: "course-4",
-          title: "Cannot select courses for merge button",
-          description: "See the merge button to create one course, but can't select them. Unclear if should create bundle in Product Manager first or merge courses first.",
-          status: "open",
-          priority: "medium",
-          notes: "Course section needs general category on product/services page, then individual options when clicked (like books and webinars structure)."
+           id: "course-4",
+           title: "Cannot select courses for merge button",
+           description: "See the merge button to create one course, but can't select them. Unclear if should create bundle in Product Manager first or merge courses first.",
+           status: "completed",
+           priority: "medium",
+           notes: "✅ FIXED: Course selection now visually highlights selected courses with color feedback and shows selection order (#1, #2, etc.). Click courses to select them in your preferred merge order. Once 2+ courses are selected, enter the new course name and slug. This is separate from Product bundling—use merge for combining course content, use Product bundles for pricing options."
         },
         {
           id: "course-5",
