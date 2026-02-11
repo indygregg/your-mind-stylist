@@ -96,12 +96,24 @@ export default function Blog() {
       : latestPosts.filter((post) => post.category === selectedCategory);
 
   return (
-    <div className="bg-[#F9F5EF]">
+    <div className="bg-[#F9F5EF]" {...pullToRefreshHandlers}>
       <SEO
         title="Your Mind Styling Journal | Articles & Reflections"
         description="Your Mind Styling Journal offers weekly articles, Monday Mentions, and Thursday Thoughts on mindset, emotional intelligence, and inner pattern shifts."
         canonical="/blog"
       />
+      {/* Pull to Refresh Indicator */}
+      {pullY > 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: pullY / 100 }}
+          className="flex justify-center py-4 fixed top-20 left-0 right-0 z-40"
+        >
+          <div className={`text-[#D8B46B] ${isRefreshing ? 'animate-spin' : ''}`}>
+            {isRefreshing ? '↻' : '↓'} {isRefreshing ? 'Refreshing...' : 'Pull to refresh'}
+          </div>
+        </motion.div>
+      )}
       {/* Hero Section */}
       <section className="pt-32 pb-20">
         <div className="max-w-5xl mx-auto px-6">
