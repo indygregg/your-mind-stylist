@@ -151,6 +151,18 @@ export default function AuthLayout({ children, currentPageName }) {
           --warm-sand: #E4D9C4;
         }
         
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --forest-green: #2B4A40;
+            --soft-gold: #E4C589;
+            --cream: #1A1714;
+            --charcoal: #E8E4DE;
+            --dusty-sage: #7A8B77;
+            --soft-plum: #8B6B9D;
+            --warm-sand: #3D3430;
+          }
+        }
+        
         body {
           font-family: 'Inter', sans-serif;
           background-color: var(--cream);
