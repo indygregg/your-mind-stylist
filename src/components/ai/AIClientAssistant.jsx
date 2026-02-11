@@ -137,11 +137,11 @@ Provide a friendly, helpful answer (2-3 sentences). If you don't know something 
                 ))}
 
                 {isLoading && (
-                  <div className="flex items-center gap-2 p-3 bg-white rounded-lg text-sm">
-                    <Loader2 size={14} className="animate-spin" />
-                    Thinking...
-                  </div>
-                )}
+                   <div className="flex items-center gap-2 p-2 lg:p-3 bg-white rounded-lg text-xs lg:text-sm">
+                     <Loader2 size={12} className="animate-spin" />
+                     Thinking...
+                   </div>
+                 )}
               </div>
 
               {/* Input */}
