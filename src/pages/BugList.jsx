@@ -587,8 +587,9 @@ export default function BugList() {
           id: "mobile-4",
           title: "Implement pull-to-refresh on Dashboard, Library & Blog",
           description: "Add native-style pull-to-refresh using framer-motion on Dashboard, Library, and Blog listing scroll views",
-          status: "open",
-          priority: "medium"
+          status: "completed",
+          priority: "medium",
+          notes: "✅ COMPLETED: Created reusable usePullToRefresh hook with haptic feedback. Implemented on Dashboard (refreshes bookings & stats), Library (refreshes course progress & resources), and Blog (pull-to-refresh UI). Smooth animations with framer-motion. Touch-based interaction for mobile."
         },
         {
           id: "mobile-5",
