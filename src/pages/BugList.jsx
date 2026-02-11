@@ -563,8 +563,9 @@ export default function BugList() {
           id: "mobile-1",
           title: "Update Layout & AuthLayout to use CSS brand variables",
           description: "Replace hardcoded Tailwind colors with CSS variables (--cream, --forest-green, etc.) to support dark mode theme",
-          status: "open",
-          priority: "medium"
+          status: "completed",
+          priority: "medium",
+          notes: "✅ FIXED: Added dark mode CSS variables to both Layout and AuthLayout. @media (prefers-color-scheme: dark) media query automatically switches all brand colors when user's device is in dark mode. Variables update system-wide."
         },
         {
           id: "mobile-2",
