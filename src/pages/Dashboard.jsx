@@ -177,7 +177,10 @@ export default function Dashboard() {
         />
       )}
       
-      <div className="max-w-6xl mx-auto px-6">
+      <div 
+        className="max-w-6xl mx-auto px-6"
+        {...pullToRefreshHandlers}
+      >
         <PaymentFailureBanner 
           status={subscriptionStatus}
           onUpdatePayment={handleUpdatePayment}
@@ -187,29 +190,16 @@ export default function Dashboard() {
         {user && <OnboardingChecklist user={user} />}
         
         <motion.div
-          drag="y"
-          dragConstraints={{ top: 0, bottom: 0 }}
-          dragElastic={{ top: 0.3, bottom: 0 }}
-          onDragEnd={(e, info) => {
-            if (info.offset.y > 100 && window.scrollY === 0) {
-              handleRefresh();
-            }
-          }}
-          onDrag={(e, info) => {
-            if (window.scrollY === 0 && info.offset.y > 0) {
-              setPullRefreshY(Math.min(info.offset.y, 100));
-            }
-          }}
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="touch-pan-y"
         >
           {/* Pull to Refresh Indicator */}
-          {pullRefreshY > 0 && (
+          {pullY > 0 && (
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: pullRefreshY / 100 }}
+              animate={{ opacity: pullY / 100 }}
               className="flex justify-center py-4"
             >
               <div className={`text-[#D8B46B] ${isRefreshing ? 'animate-spin' : ''}`}>
