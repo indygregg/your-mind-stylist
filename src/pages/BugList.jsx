@@ -595,8 +595,9 @@ export default function BugList() {
           id: "mobile-5",
           title: "MobileBottomNav: Reset route on active tab tap",
           description: "When user taps active tab icon in MobileBottomNav, reset that tab's route to its root page",
-          status: "open",
-          priority: "low"
+          status: "completed",
+          priority: "low",
+          notes: "✅ FIXED: Double-tap an active bottom nav tab to reset to root page. Single tap navigates normally. Haptic feedback on all taps."
         }
       ]
     },
