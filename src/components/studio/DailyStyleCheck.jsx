@@ -266,14 +266,14 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                     </div>
                   </div>
 
-                  <div className="flex gap-3 pt-4">
-                    <Button variant="outline" onClick={() => setStep(2)}>
+                  <div className="flex gap-2 lg:gap-3 pt-4 flex-col lg:flex-row">
+                    <Button variant="outline" onClick={() => setStep(2)} className="flex-1 text-sm lg:text-base">
                       Back
                     </Button>
-                    <Button variant="outline" onClick={handleSubmit} className="flex-1">
+                    <Button variant="outline" onClick={handleSubmit} className="flex-1 text-sm lg:text-base">
                       Skip & Save
                     </Button>
-                    <Button onClick={handleSubmit} className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725]">
+                    <Button onClick={handleSubmit} className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725] text-sm lg:text-base">
                       Save Check-In
                     </Button>
                   </div>
