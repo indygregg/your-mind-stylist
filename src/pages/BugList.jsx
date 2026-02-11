@@ -669,14 +669,14 @@ export default function BugList() {
         >
           {/* Header */}
           <div className="mb-8">
-            <h1 className="font-serif text-4xl text-[#1E3A32] mb-4">Bug & Issue Tracker</h1>
-            <p className="text-[#2B2725]/70">
+            <h1 className="font-serif text-2xl md:text-4xl text-[#1E3A32] mb-4">Bug & Issue Tracker</h1>
+            <p className="text-sm md:text-base text-[#2B2725]/70">
               Roberta's reported issues and change requests
             </p>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-5 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 mb-8">
             <div className="bg-white p-4 border-l-4 border-[#1E3A32]">
               <div className="text-2xl font-bold text-[#1E3A32]">{stats.total}</div>
               <div className="text-sm text-[#2B2725]/60">Total Issues</div>
