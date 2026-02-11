@@ -124,14 +124,7 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
                   {moreLinks.map((link) => (
                     <button
                       key={link.page}
-                      onClick={() => {
-                        if (currentPageName === link.page) {
-                          handleActiveTabClick(link.page);
-                        } else {
-                          handleNavClick(link.page);
-                          window.location.href = createPageUrl(link.page);
-                        }
-                      }}
+                      onClick={() => handleNavClick(link.page)}
                       className={`block w-full text-left py-3 px-4 rounded-lg transition-colors ${
                         currentPageName === link.page
                           ? "bg-[#D8B46B]/20 text-[#D8B46B]"
