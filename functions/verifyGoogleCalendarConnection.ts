@@ -38,24 +38,20 @@ Deno.serve(async (req) => {
         if (calendarRes.status === 401) {
             return Response.json({ 
                 connected: false, 
-                message: 'Token is invalid or expired',
-                hasTokens: true,
-                needsRefresh: true
+                message: 'Token is invalid or expired'
             });
         }
 
         if (!calendarRes.ok) {
             return Response.json({ 
                 connected: false, 
-                message: `Calendar API returned ${calendarRes.status}: ${calendarRes.statusText}`,
-                hasTokens: true
+                message: `Calendar API returned ${calendarRes.status}: ${calendarRes.statusText}`
             });
         }
 
         return Response.json({ 
             connected: true, 
-            message: 'Successfully connected to Google Calendar',
-            hasTokens: true
+            message: 'Successfully connected to Google Calendar'
         });
     } catch (error) {
         console.error('Verification error:', error);
