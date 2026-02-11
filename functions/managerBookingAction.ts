@@ -32,6 +32,8 @@ Deno.serve(async (req) => {
                 return await managerReschedule(base44, booking, data);
             case 'cancel':
                 return await managerCancel(base44, booking, data);
+            case 'delete':
+                return await deleteBooking(base44, booking);
             default:
                 return Response.json({ error: 'Invalid action' }, { status: 400 });
         }
@@ -287,4 +289,25 @@ function generateCancellationEmail(booking, reason) {
             </div>
         </div>
     `;
+}
+
+async function deleteBooking(base44, booking) {
+    // Delete from Google Calendar if synced
+    if (booking.google_calendar_event_id) {
+        try {
+            await base44.asServiceRole.functions.invoke('deleteCalendarEvent', {
+                event_id: booking.google_calendar_event_id
+            });
+        } catch (error) {
+            console.error('Error deleting calendar event:', error);
+        }
+    }
+
+    // Permanently delete the booking
+    await base44.asServiceRole.entities.Booking.delete(booking.id);
+
+    return Response.json({
+        success: true,
+        message: 'Booking permanently deleted'
+    });
 }

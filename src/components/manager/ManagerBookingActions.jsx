@@ -289,6 +289,36 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
           </DialogContent>
         </Dialog>
       )}
+
+      {/* Delete (for cancelled bookings) */}
+      {booking.booking_status === 'cancelled' && (
+        <Dialog open={dialogOpen === 'delete'} onOpenChange={(open) => setDialogOpen(open ? 'delete' : null)}>
+          <DialogTrigger asChild>
+            <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700">
+              <XCircle size={14} className="mr-2" />
+              Delete
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delete Booking</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p className="text-sm text-[#2B2725]">
+                Are you sure you want to permanently delete this booking? This action cannot be undone.
+              </p>
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => setDialogOpen(null)} disabled={loading} className="flex-1">
+                  Cancel
+                </Button>
+                <Button onClick={() => handleAction('delete')} disabled={loading} className="flex-1 bg-red-600 hover:bg-red-700 text-white">
+                  {loading ? 'Deleting...' : 'Delete Permanently'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
     </div>
   );
