@@ -194,6 +194,31 @@ Deno.serve(async (req) => {
                             // Continue even if tagging fails
                         }
 
+                        // Add to CRM as lead
+                        try {
+                            const existingLeads = await base44.asServiceRole.entities.Lead.filter({
+                                email: session.customer_email
+                            });
+
+                            if (existingLeads.length > 0) {
+                                await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, {
+                                    last_activity_date: new Date().toISOString(),
+                                    notes: `${existingLeads[0].notes || ''}\n[${new Date().toLocaleDateString()}] Purchased: ${product.name}`
+                                });
+                            } else {
+                                await base44.asServiceRole.entities.Lead.create({
+                                    name: session.customer_details?.name || 'Unknown',
+                                    email: session.customer_email,
+                                    stage: 'customer',
+                                    source: 'product_purchase',
+                                    last_activity_date: new Date().toISOString(),
+                                    notes: `Purchased: ${product.name}`
+                                });
+                            }
+                        } catch (crmError) {
+                            console.error('Failed to add to CRM (non-critical):', crmError.message);
+                        }
+
                         await base44.asServiceRole.integrations.Core.SendEmail({
                             to: session.customer_email,
                             subject: `Welcome to ${product.name}`,
@@ -260,6 +285,31 @@ Deno.serve(async (req) => {
                         });
                     } catch (tagError) {
                         console.error('Auto-tagging failed:', tagError);
+                    }
+
+                    // Add to CRM as lead
+                    try {
+                        const existingLeads = await base44.asServiceRole.entities.Lead.filter({
+                            email: session.customer_email
+                        });
+
+                        if (existingLeads.length > 0) {
+                            await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, {
+                                last_activity_date: new Date().toISOString(),
+                                notes: `${existingLeads[0].notes || ''}\n[${new Date().toLocaleDateString()}] Signed up for free masterclass`
+                            });
+                        } else {
+                            await base44.asServiceRole.entities.Lead.create({
+                                name: session.customer_details?.name || 'Unknown',
+                                email: session.customer_email,
+                                stage: 'masterclass_lead',
+                                source: 'free_masterclass',
+                                last_activity_date: new Date().toISOString(),
+                                notes: 'Signed up for free masterclass'
+                            });
+                        }
+                    } catch (crmError) {
+                        console.error('Failed to add to CRM (non-critical):', crmError.message);
                     }
 
                     // Send welcome email with masterclass access

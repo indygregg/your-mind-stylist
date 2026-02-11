@@ -118,6 +118,29 @@ Deno.serve(async (req) => {
       console.log('MailerLite sync failed (non-critical):', mlError.message);
     }
 
+    // Add to CRM as lead
+    try {
+      const existingLeads = await base44.asServiceRole.entities.Lead.filter({ email });
+
+      if (existingLeads.length > 0) {
+        await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, {
+          last_activity_date: new Date().toISOString(),
+          notes: `${existingLeads[0].notes || ''}\n[${new Date().toLocaleDateString()}] Signed up for free masterclass`
+        });
+      } else {
+        await base44.asServiceRole.entities.Lead.create({
+          name: full_name || 'Unknown',
+          email,
+          stage: 'masterclass_lead',
+          source: 'free_masterclass',
+          last_activity_date: new Date().toISOString(),
+          notes: 'Signed up for free masterclass'
+        });
+      }
+    } catch (crmError) {
+      console.log('Failed to add to CRM (non-critical):', crmError.message);
+    }
+
     return Response.json({ success: true });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
