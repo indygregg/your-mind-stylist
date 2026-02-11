@@ -709,13 +709,13 @@ export default function BugList() {
                 <div key={category.categoryId} className="bg-white rounded-lg shadow-sm overflow-hidden">
                   <button
                     onClick={() => toggleCategory(category.categoryId)}
-                    className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors"
+                    className="w-full px-4 md:px-6 py-3 md:py-4 flex items-start md:items-center justify-between gap-2 hover:bg-gray-50 transition-colors"
                   >
-                    <div className="flex items-center gap-4">
-                      {isExpanded ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
-                      <h3 className="font-serif text-xl text-[#1E3A32]">{category.category}</h3>
-                      <Badge className={getPriorityColor(categoryPriority)}>
-                        {category.items.length} {category.items.length === 1 ? 'issue' : 'issues'}
+                    <div className="flex items-start md:items-center gap-2 md:gap-4 flex-1 min-w-0">
+                      {isExpanded ? <ChevronDown size={18} className="flex-shrink-0" /> : <ChevronRight size={18} className="flex-shrink-0" />}
+                      <h3 className="font-serif text-base md:text-xl text-[#1E3A32] truncate">{category.category}</h3>
+                      <Badge className={`${getPriorityColor(categoryPriority)} text-xs md:text-sm flex-shrink-0`}>
+                        {category.items.length}
                       </Badge>
                     </div>
                   </button>
