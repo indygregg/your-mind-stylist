@@ -48,7 +48,7 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
   return (
     <>
       {/* Bottom Navigation Bar - Mobile Only */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#1E3A32] border-t border-[#F9F5EF]/10 z-50">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#1E3A32] border-t border-[#F9F5EF]/10 z-50 safe-area-bottom">
         <div className={`grid ${moreLinks.length > 0 ? 'grid-cols-4' : 'grid-cols-3'} h-16`}>
           {quickLinks.map((link) => {
             const Icon = getIcon(link.page);
