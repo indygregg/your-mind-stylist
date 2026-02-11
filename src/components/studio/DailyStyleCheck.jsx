@@ -202,14 +202,14 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                     </div>
                   </div>
 
-                  <div className="flex gap-3 pt-4">
-                    <Button variant="outline" onClick={() => setStep(1)}>
+                  <div className="flex gap-2 lg:gap-3 pt-4 flex-col lg:flex-row">
+                    <Button variant="outline" onClick={() => setStep(1)} className="flex-1 text-sm lg:text-base">
                       Back
                     </Button>
-                    <Button variant="outline" onClick={() => setStep(3)} className="flex-1">
+                    <Button variant="outline" onClick={() => setStep(3)} className="flex-1 text-sm lg:text-base">
                       Skip
                     </Button>
-                    <Button onClick={() => setStep(3)} disabled={!checkInData.voice_tone} className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725]">
+                    <Button onClick={() => setStep(3)} disabled={!checkInData.voice_tone} className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725] text-sm lg:text-base">
                       Continue
                     </Button>
                   </div>
