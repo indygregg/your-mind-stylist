@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import CmsText from "../components/cms/CmsText";
 import OnboardingModal from "../components/onboarding/OnboardingModal";
-import OnboardingChecklist from "../components/onboarding/OnboardingChecklist";
+import OnboardingQuickCards from "../components/onboarding/OnboardingQuickCards";
 import DashboardTooltips from "../components/onboarding/DashboardTooltips";
 import PaymentFailureBanner from "../components/purchase/PaymentFailureBanner";
 import { base44 } from "@/api/base44Client";
