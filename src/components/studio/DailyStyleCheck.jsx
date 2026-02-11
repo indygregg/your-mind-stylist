@@ -126,12 +126,12 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                     <h3 className="font-medium text-[#1E3A32] mb-4">How are you showing up?</h3>
                     
                     {/* State Type Selector */}
-                    <div className="flex gap-2 mb-4">
+                    <div className="flex flex-wrap gap-2 mb-4">
                       {stateOptions.map((option) => (
                         <button
                           key={option.key}
                           onClick={() => handleStateKeyChange(option.key)}
-                          className={`px-3 py-1.5 rounded text-sm transition-colors ${
+                          className={`px-2 lg:px-3 py-1.5 rounded text-xs lg:text-sm transition-colors flex-1 lg:flex-none ${
                             checkInData.state_key === option.key
                               ? "bg-[#D8B46B] text-white"
                               : "bg-[#F9F5EF] text-[#2B2725]/70 hover:bg-[#E4D9C4]"
