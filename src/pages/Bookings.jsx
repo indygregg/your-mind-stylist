@@ -273,7 +273,15 @@ export default function Bookings() {
             <div className="max-w-3xl mx-auto">
               <div className="flex items-center justify-between">
                 <button
-                  onClick={() => setStep(step - 1)}
+                  onClick={() => {
+                    if (step === 2) {
+                      setSelectedAppointment(null);
+                      setSelectedSlot(null);
+                    } else if (step === 3) {
+                      setSelectedSlot(null);
+                    }
+                    setStep(step - 1);
+                  }}
                   className="flex items-center gap-2 text-[#2B2725]/70 hover:text-[#1E3A32] transition-colors cursor-pointer min-h-[44px] px-3"
                 >
                   <ArrowLeft size={18} />
