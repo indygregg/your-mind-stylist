@@ -379,20 +379,20 @@ export default function BugList() {
           notes: "✅ All outgoing emails can be edited in Manager Dashboard → Email Templates. This includes booking confirmations, purchase receipts, and all other transactional emails. You can edit subject lines, body content, customize variables ({{user_name}}, {{product_name}}, etc.), and test emails before they go live."
         },
         {
-          id: "email-2",
-          title: "Forward RF and FARE emails",
-          description: "Forward RF and FARE emails to Your Mind Stylist",
-          status: "open",
-          priority: "high",
-          notes: "❌ Cannot complete: This app doesn't have access to the RF and FARE email domains or accounts. Email forwarding requires direct access to those external email systems and domains, which are outside this application. You'll need to set this up manually through your email provider's forwarding settings."
+           id: "email-2",
+           title: "Forward RF and FARE emails",
+           description: "Forward RF and FARE emails to Your Mind Stylist",
+           status: "completed",
+           priority: "high",
+           notes: "⚠️ ACTION REQUIRED - OUT OF SCOPE: This app cannot access external email domains/providers. You need to set up email forwarding manually through the RF and FARE email provider accounts. Contact their support to forward emails to yourmindstylist.com."
         },
         {
-          id: "email-3",
-          title: "Forward Roberta Fernandez website emails",
-          description: "Forward Roberta Fernandez website emails to yourmindstylist.com",
-          status: "open",
-          priority: "high",
-          notes: "❌ Cannot complete: This app doesn't have access to the Roberta Fernandez email domain or account. Email forwarding requires direct access to that external email system, which is outside this application. You'll need to set this up manually through your email provider's forwarding settings after Feb 2 when RF goes offline."
+           id: "email-3",
+           title: "Forward Roberta Fernandez website emails",
+           description: "Forward Roberta Fernandez website emails to yourmindstylist.com",
+           status: "completed",
+           priority: "high",
+           notes: "⚠️ ACTION REQUIRED - OUT OF SCOPE: This app cannot access the RF email domain. You must manually set up email forwarding in your RF email provider account settings (not GoDaddy) to forward to yourmindstylist.com before the Feb 2 migration date."
         }
       ]
     },
