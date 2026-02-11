@@ -168,7 +168,7 @@ export default function Layout({ children, currentPageName }) {
         <ScrollToTop />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
-        
+
         :root {
           --forest-green: #1E3A32;
           --soft-gold: #D8B46B;
@@ -178,20 +178,32 @@ export default function Layout({ children, currentPageName }) {
           --soft-plum: #6E4F7D;
           --warm-sand: #E4D9C4;
         }
-        
+
+        @media (prefers-color-scheme: dark) {
+          :root {
+            --forest-green: #2B4A40;
+            --soft-gold: #E4C589;
+            --cream: #1A1714;
+            --charcoal: #E8E4DE;
+            --dusty-sage: #7A8B77;
+            --soft-plum: #8B6B9D;
+            --warm-sand: #3D3430;
+          }
+        }
+
         body {
           font-family: 'Inter', sans-serif;
           background-color: var(--cream);
         }
-        
+
         h1, h2, h3, h4, h5, h6 {
           font-family: 'Playfair Display', serif;
         }
-        
+
         .font-serif {
           font-family: 'Playfair Display', serif;
         }
-        
+
         .font-sans {
           font-family: 'Inter', sans-serif;
         }
