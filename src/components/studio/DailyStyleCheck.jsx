@@ -97,7 +97,7 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
-          className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[calc(100vh-200px)] lg:max-h-[90vh] overflow-y-auto my-auto"
+          className="bg-white rounded-lg lg:rounded-xl shadow-2xl w-full mx-4 max-w-lg max-h-[calc(100vh-240px)] lg:max-h-[90vh] overflow-y-auto my-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
