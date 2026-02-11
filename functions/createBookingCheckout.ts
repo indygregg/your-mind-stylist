@@ -87,6 +87,35 @@ Deno.serve(async (req) => {
                     console.error('Failed to send manager email:', error.message);
                 }
 
+                // Add to CRM as lead
+                try {
+                    const existingLeads = await base44.asServiceRole.entities.Lead.filter({
+                        email: user_email
+                    });
+
+                    if (existingLeads.length > 0) {
+                        // Update existing lead
+                        await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, {
+                            last_activity_date: new Date().toISOString(),
+                            notes: `${existingLeads[0].notes || ''}\n[${new Date().toLocaleDateString()}] Booked: ${service_type} - ${scheduled_date ? new Date(scheduled_date).toLocaleString() : 'Date TBD'}`
+                        });
+                    } else {
+                        // Create new lead
+                        await base44.asServiceRole.entities.Lead.create({
+                            name: user_name,
+                            email: user_email,
+                            phone: intake_data?.phone,
+                            stage: 'booked',
+                            source: 'booking_system',
+                            last_activity_date: new Date().toISOString(),
+                            notes: `Initial booking: ${service_type} - ${scheduled_date ? new Date(scheduled_date).toLocaleString() : 'Date TBD'}`
+                        });
+                    }
+                    console.log('Lead created/updated in CRM for:', user_email);
+                } catch (crmError) {
+                    console.error('Failed to add to CRM (non-critical):', crmError.message);
+                }
+
             return Response.json({
                 success: true,
                 booking_id: booking.id,
