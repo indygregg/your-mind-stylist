@@ -74,12 +74,12 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
   ];
 
   const voiceTones = [
-    { value: "supportive", label: "Supportive", icon: "💚" },
-    { value: "neutral", label: "Neutral", icon: "⚪" },
-    { value: "critical", label: "Critical", icon: "🔴" },
-    { value: "urgent", label: "Urgent", icon: "⚡" },
-    { value: "avoidant", label: "Avoidant", icon: "🌫️" }
-  ];
+      { value: "supportive", label: "Kind", icon: "💚" },
+      { value: "neutral", label: "Neutral", icon: "⚪" },
+      { value: "critical", label: "Critical", icon: "🔴" },
+      { value: "urgent", label: "Urgent", icon: "⚡" },
+      { value: "avoidant", label: "Avoidant", icon: "🌫️" }
+    ];
 
   const selectedState = stateOptions.find(s => s.key === checkInData.state_key);
 
