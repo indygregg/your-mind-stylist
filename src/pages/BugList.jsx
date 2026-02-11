@@ -570,8 +570,9 @@ export default function BugList() {
           id: "mobile-2",
           title: "Apply safe-area classes for notched devices",
           description: "Add .safe-area-top to fixed header and .safe-area-bottom to MobileBottomNav.jsx to prevent clipping on iPhone notches",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "✅ FIXED: Added safe-area-top to Layout header and safe-area-bottom to MobileBottomNav and its menu panel. Content now respects notch/home indicator areas on iPhone 12+, iPad with notch, and other notched devices."
         },
         {
           id: "mobile-3",
