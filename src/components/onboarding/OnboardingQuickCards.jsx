@@ -103,9 +103,9 @@ export default function OnboardingQuickCards({ user }) {
                 onClick={() => setExpandedCard(isExpanded ? null : card.id)}
               >
                 <div className="p-5">
-                  <div className="flex items-start gap-3 mb-3">
-                    <CardIcon size={24} className="text-[#1E3A32] flex-shrink-0" />
-                    <div className="flex-1">
+                  <div className="flex items-start gap-3 mb-3 justify-between w-full">
+                    <div className="flex items-start gap-3 flex-1">
+                      <CardIcon size={24} className="text-[#1E3A32] flex-shrink-0" />
                       <h4 className={`font-medium text-[#1E3A32] ${isComplete ? "line-through text-[#2B2725]/60" : ""}`}>
                         {card.title}
                       </h4>
