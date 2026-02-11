@@ -186,8 +186,8 @@ export default function Dashboard() {
           onUpdatePayment={handleUpdatePayment}
         />
 
-        {/* Onboarding Checklist */}
-        {user && <OnboardingChecklist user={user} />}
+        {/* Onboarding Quick Cards */}
+         {user && <OnboardingQuickCards user={user} />}
         
         <motion.div
           initial={{ opacity: 0, y: 30 }}
