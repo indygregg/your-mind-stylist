@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
             return Response.json({
                 success: true,
                 booking_id: booking.id,
-                redirect_url: `${req.headers.get('origin')}/booking-success?booking_id=${booking.id}`
+                redirect_url: `${req.headers.get('origin')}/BookingSuccess?booking_id=${booking.id}`
             });
         }
 
@@ -112,7 +112,7 @@ Deno.serve(async (req) => {
                     quantity: 1
                 }
             ],
-            success_url: `${req.headers.get('origin')}/booking-success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${req.headers.get('origin')}/BookingSuccess?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${req.headers.get('origin')}/bookings`
         });
 
