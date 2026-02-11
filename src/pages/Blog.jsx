@@ -5,6 +5,8 @@ import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
+import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState("All");
