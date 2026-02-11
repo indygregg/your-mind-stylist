@@ -298,12 +298,12 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                   </div>
 
                   <div className="space-y-3">
-                    <Button onClick={() => { onComplete?.(); onClose(); }} className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
+                    <Button onClick={() => { onComplete?.(); onClose(); }} className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-sm lg:text-base">
                       Back to Studio
                     </Button>
-                    
+
                     <div className="pt-4 border-t border-[#E4D9C4]">
-                      <p className="text-sm text-[#1E3A32] mb-2 font-medium">Your Stylist's Pick™</p>
+                      <p className="text-xs lg:text-sm text-[#1E3A32] mb-2 font-medium">Your Stylist's Pick™</p>
                       <p className="text-xs text-[#2B2725]/60 mb-3">
                         {checkInData.state_value > 70 && checkInData.state_key === "calm_activated"
                           ? "Want a quick reset to bring your system down a notch?"
@@ -312,11 +312,11 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                           : "Want a 2-minute pause to lock in the state you want to carry forward?"
                         }
                       </p>
-                      <div className="flex gap-2">
+                      <div className="flex flex-col lg:flex-row gap-2">
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="flex-1"
+                          className="flex-1 text-xs lg:text-sm"
                           onClick={() => {
                             if (onComplete) {
                               onComplete({ showPauseSuggestion: true, checkInData });
@@ -327,7 +327,7 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                           <Sparkles size={14} className="mr-2" />
                           Start a Style Pause™
                         </Button>
-                        <Button variant="ghost" size="sm" onClick={onClose}>
+                        <Button variant="ghost" size="sm" onClick={onClose} className="text-xs lg:text-sm">
                           Skip
                         </Button>
                       </div>
