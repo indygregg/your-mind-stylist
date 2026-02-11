@@ -186,6 +186,28 @@ export default function Dashboard() {
           onUpdatePayment={handleUpdatePayment}
         />
 
+        {/* Daily Style Check CTA - Featured at top */}
+        <div className="mb-8">
+          <div className="bg-gradient-to-r from-[#D8B46B] to-[#C9A55A] p-6 rounded-lg text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-serif text-xl mb-2">
+                  <CmsText cmsKey="dashboard.style_check.title" defaultText="Daily Style Check™" />
+                </h3>
+                <p className="text-white/90 text-sm">
+                  <CmsText cmsKey="dashboard.style_check.subtitle" defaultText="Quick check-in • Everything optional" />
+                </p>
+              </div>
+              <Button
+                onClick={() => setShowStyleCheck(true)}
+                className="bg-white text-[#1E3A32] hover:bg-white/90 min-h-[48px] px-6"
+              >
+                Check In Now
+              </Button>
+            </div>
+          </div>
+        </div>
+
         {/* Onboarding Quick Cards */}
          {user && <OnboardingQuickCards user={user} />}
         
