@@ -347,8 +347,20 @@ export default function Library() {
   }
 
   return (
-    <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
+    <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24" {...pullToRefreshHandlers}>
       <div className="max-w-6xl mx-auto px-6">
+        {/* Pull to Refresh Indicator */}
+        {pullY > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: pullY / 100 }}
+            className="flex justify-center py-4"
+          >
+            <div className={`text-[#D8B46B] ${isRefreshing ? 'animate-spin' : ''}`}>
+              {isRefreshing ? '↻' : '↓'} {isRefreshing ? 'Refreshing...' : 'Pull to refresh'}
+            </div>
+          </motion.div>
+        )}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
