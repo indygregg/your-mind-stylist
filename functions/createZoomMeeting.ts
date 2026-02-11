@@ -105,10 +105,10 @@ Deno.serve(async (req) => {
         if (!zoomResponse.ok) {
             const errorText = await zoomResponse.text();
             console.error('Zoom API error status:', zoomResponse.status);
-            console.error('Zoom API error response:', errorText);
+            console.error('Zoom API error response (full):', errorText);
             console.error('Request URL:', `https://api.zoom.us/v2/users/me/meetings`);
             console.error('Access token (first 20 chars):', accessToken.substring(0, 20));
-            
+
             // Update booking with failed status
             await base44.asServiceRole.entities.Booking.update(booking_id, {
                 zoom_status: 'failed'
@@ -116,7 +116,8 @@ Deno.serve(async (req) => {
 
             return Response.json({ 
                 error: 'Failed to create Zoom meeting',
-                details: errorText
+                details: errorText,
+                status: zoomResponse.status
             }, { status: zoomResponse.status });
         }
 
