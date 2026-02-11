@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    
+
     // Get authenticated user
     const user = await base44.auth.me();
     if (!user) {
@@ -15,37 +15,15 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Get Google Calendar refresh token from user data
-    const userData = await base44.entities.User.filter({ id: user.id });
-    const refreshToken = userData[0]?.google_calendar_refresh_token;
-    
-    if (!refreshToken) {
+    // Get access token using app connector (already authorized)
+    let accessToken;
+    try {
+      accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
+    } catch (err) {
       return Response.json({ 
         error: 'Google Calendar not connected. Please authorize in Manager Settings first.' 
       }, { status: 400 });
     }
-
-    // Get new access token using refresh token
-    const clientId = Deno.env.get('GOOGLE_CALENDAR_CLIENT_ID');
-    const clientSecret = Deno.env.get('GOOGLE_CALENDAR_CLIENT_SECRET');
-
-    const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
-        refresh_token: refreshToken,
-        grant_type: 'refresh_token'
-      })
-    });
-
-    const tokenData = await tokenRes.json();
-    if (!tokenRes.ok) {
-      throw new Error(`Failed to refresh Google token: ${tokenData.error}`);
-    }
-
-    const accessToken = tokenData.access_token;
     
     // Fetch events from Google Calendar (next 90 days)
     const now = new Date();
