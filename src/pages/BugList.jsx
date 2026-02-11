@@ -796,10 +796,10 @@ export default function BugList() {
                                 </div>
                               </div>
                             )}
-                            </div>
-                            <Badge variant="outline" className="text-xs flex-shrink-0">
-                              {item.status}
-                            </Badge>
+                          </div>
+                          <Badge variant="outline" className="text-xs flex-shrink-0">
+                            {item.status}
+                          </Badge>
                         </div>
                         );
                       })}
