@@ -115,18 +115,59 @@ Deno.serve(async (req) => {
                 : bookingData.user_email;
 
         } else {
-            // Fallback to default React components
-            const BookingConfirmationClient = (await import('../components/email/BookingConfirmationClient.js')).default;
-            const BookingConfirmationManager = (await import('../components/email/BookingConfirmationManager.js')).default;
+            // Fallback to simple HTML emails
+            const formatDate = (date) => {
+                if (!date) return "Not scheduled yet";
+                return new Date(date).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "2-digit"
+                });
+            };
 
             if (recipient_type === 'client') {
-                emailHtml = renderToStaticMarkup(React.createElement(BookingConfirmationClient, { booking: bookingData }));
-                subject = 'Your Private Session Booking is Confirmed';
+                subject = 'Your Session Booking is Confirmed ✓';
                 recipient = bookingData.user_email;
+                emailHtml = `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #1E3A32;">Your Session is Confirmed!</h2>
+                        <p>Hi ${bookingData.user_name},</p>
+                        <p>Thank you for booking with Your Mind Stylist. We're excited to work with you!</p>
+                        <div style="background: #F9F5EF; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                            <h3 style="color: #1E3A32; margin-top: 0;">Session Details</h3>
+                            <p><strong>Date & Time:</strong> ${formatDate(bookingData.scheduled_date)}</p>
+                            <p><strong>Service:</strong> ${bookingData.service_type.replace(/_/g, ' ').toUpperCase()}</p>
+                            ${bookingData.zoom_join_url ? `<p><strong>Zoom Link:</strong> <a href="${bookingData.zoom_join_url}" style="color: #D8B46B;">${bookingData.zoom_join_url}</a></p>` : '<p><em>Zoom link will be sent closer to your session date</em></p>'}
+                        </div>
+                        <p>If you have any questions, please don't hesitate to reach out.</p>
+                        <p>Looking forward to our session!</p>
+                        <p style="color: #666; margin-top: 40px;">Roberta Fernandez<br>Your Mind Stylist</p>
+                    </div>
+                `;
             } else if (recipient_type === 'manager') {
-                emailHtml = renderToStaticMarkup(React.createElement(BookingConfirmationManager, { booking: bookingData }));
                 subject = `New Booking: ${bookingData.user_name} - ${bookingData.service_type}`;
                 recipient = 'roberta@yourmindstylist.com';
+                emailHtml = `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #1E3A32;">New Booking Received</h2>
+                        <div style="background: #F9F5EF; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                            <h3 style="color: #1E3A32; margin-top: 0;">Client Information</h3>
+                            <p><strong>Name:</strong> ${bookingData.user_name}</p>
+                            <p><strong>Email:</strong> ${bookingData.user_email}</p>
+                            <p><strong>Phone:</strong> ${bookingData.client_phone || 'Not provided'}</p>
+                            <h3 style="color: #1E3A32;">Session Details</h3>
+                            <p><strong>Date & Time:</strong> ${formatDate(bookingData.scheduled_date)}</p>
+                            <p><strong>Service:</strong> ${bookingData.service_type.replace(/_/g, ' ').toUpperCase()}</p>
+                            <p><strong>Status:</strong> ${bookingData.booking_status}</p>
+                            ${bookingData.notes ? `<p><strong>Notes:</strong> ${bookingData.notes}</p>` : ''}
+                            ${bookingData.zoom_start_url ? `<p><strong>Zoom Host Link:</strong> <a href="${bookingData.zoom_start_url}" style="color: #D8B46B;">${bookingData.zoom_start_url}</a></p>` : '<p><em>Zoom meeting pending creation</em></p>'}
+                        </div>
+                        <p><a href="https://yourmindstylist.com/ManagerCalendar" style="background: #1E3A32; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;">View in Calendar</a></p>
+                    </div>
+                `;
             } else {
                 return Response.json({ error: 'Invalid recipient_type' }, { status: 400 });
             }
