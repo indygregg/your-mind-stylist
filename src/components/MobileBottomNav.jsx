@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
-import { Home, BookOpen, ShoppingCart, Menu, X, Settings, Users, FileText, MessageSquare, Headphones, LayoutDashboard, UsersRound, Bug } from "lucide-react";
+import { Home, BookOpen, ShoppingCart, Menu, X, Settings, Users, FileText, MessageSquare, Headphones, LayoutDashboard, UsersRound, Bug, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import haptics from "@/components/utils/haptics";
-import BugReportModal from "@/components/bug-tracker/BugReportModal";
+import BugReportModal from "./bug-tracker/BugReportModal";
 
 export default function MobileBottomNav({ user, currentPageName, navLinks, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bugReportOpen, setBugReportOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatQuery, setChatQuery] = useState("");
+  const [chatConversation, setChatConversation] = useState([]);
+  const [chatLoading, setChatLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleNavClick = (pageName) => {
@@ -51,11 +55,6 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
 
   return (
     <>
-      {/* Bug Report Modal */}
-      <AnimatePresence>
-        {bugReportOpen && <BugReportModal onClose={() => setBugReportOpen(false)} />}
-      </AnimatePresence>
-
       {/* Bottom Navigation Bar - Mobile Only */}
       <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#1E3A32] border-t border-[#F9F5EF]/10 z-50 safe-area-bottom">
         <div className={`grid ${moreLinks.length > 0 ? 'grid-cols-4' : 'grid-cols-3'} h-16`}>
@@ -143,17 +142,32 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
                   ))}
                 </div>
 
-                {/* Bug Report Button */}
-                <button
-                  onClick={() => {
-                    haptics.light();
-                    setBugReportOpen(true);
-                  }}
-                  className="block w-full text-left py-3 px-4 rounded-lg transition-colors text-[#D8B46B] hover:bg-[#D8B46B]/10 flex items-center gap-3 font-medium"
-                >
-                  <Bug size={18} />
-                  Report a Bug
-                </button>
+                {/* Divider */}
+                <div className="py-4 border-t border-[#F9F5EF]/10 space-y-2">
+                  {/* Bug Report Button */}
+                  <button
+                    onClick={() => {
+                      haptics.light();
+                      setBugReportOpen(true);
+                    }}
+                    className="flex items-center gap-3 w-full text-left py-3 px-4 rounded-lg text-[#F9F5EF]/80 hover:bg-[#F9F5EF]/10 transition-colors"
+                  >
+                    <Bug size={18} className="text-[#D8B46B]" />
+                    Report a Bug
+                  </button>
+
+                  {/* Chat Button */}
+                  <button
+                    onClick={() => {
+                      haptics.light();
+                      setChatOpen(!chatOpen);
+                    }}
+                    className="flex items-center gap-3 w-full text-left py-3 px-4 rounded-lg text-[#F9F5EF]/80 hover:bg-[#F9F5EF]/10 transition-colors"
+                  >
+                    <MessageCircle size={18} className="text-[#D8B46B]" />
+                    Ask Anything
+                  </button>
+                </div>
 
                 {/* Logout Button */}
                 <button
