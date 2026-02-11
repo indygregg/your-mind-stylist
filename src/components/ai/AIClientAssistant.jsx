@@ -113,10 +113,10 @@ Provide a friendly, helpful answer (2-3 sentences). If you don't know something 
                         <button
                           key={idx}
                           onClick={() => handleQuickQuestion(q.label)}
-                          className="flex items-center gap-2 w-full p-2 bg-white hover:bg-[#D8B46B]/10 rounded text-left text-sm"
+                          className="flex items-center gap-2 w-full p-2 bg-white hover:bg-[#D8B46B]/10 rounded text-left text-xs lg:text-sm"
                         >
-                          <q.icon size={14} className="text-[#D8B46B]" />
-                          {q.label}
+                          <q.icon size={12} className="text-[#D8B46B] flex-shrink-0" />
+                          <span className="line-clamp-2">{q.label}</span>
                         </button>
                       ))}
                     </div>
