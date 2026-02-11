@@ -111,7 +111,7 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
           </div>
 
           {/* Content */}
-          <div className="p-6">
+          <div className="p-4 lg:p-6">
             <AnimatePresence mode="wait">
               {/* Step 1: State Selection */}
               {step === 1 && (
