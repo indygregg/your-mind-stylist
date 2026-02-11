@@ -581,8 +581,8 @@ export default function BugList() {
         },
         {
           id: "mobile-4",
-          title: "Implement pull-to-refresh on Dashboard & Library",
-          description: "Add native-style pull-to-refresh using framer-motion on Dashboard and Library scroll views",
+          title: "Implement pull-to-refresh on Dashboard, Library & Blog",
+          description: "Add native-style pull-to-refresh using framer-motion on Dashboard, Library, and Blog listing scroll views",
           status: "open",
           priority: "medium"
         },
