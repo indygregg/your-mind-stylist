@@ -677,25 +677,25 @@ export default function BugList() {
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 mb-8">
-            <div className="bg-white p-4 border-l-4 border-[#1E3A32]">
-              <div className="text-2xl font-bold text-[#1E3A32]">{stats.total}</div>
-              <div className="text-sm text-[#2B2725]/60">Total Issues</div>
+            <div className="bg-white p-3 md:p-4 border-l-4 border-[#1E3A32]">
+              <div className="text-xl md:text-2xl font-bold text-[#1E3A32]">{stats.total}</div>
+              <div className="text-xs md:text-sm text-[#2B2725]/60">Total Issues</div>
             </div>
-            <div className="bg-white p-4 border-l-4 border-red-500">
-              <div className="text-2xl font-bold text-red-700">{stats.critical}</div>
-              <div className="text-sm text-[#2B2725]/60">Critical</div>
+            <div className="bg-white p-3 md:p-4 border-l-4 border-red-500">
+              <div className="text-xl md:text-2xl font-bold text-red-700">{stats.critical}</div>
+              <div className="text-xs md:text-sm text-[#2B2725]/60">Critical</div>
             </div>
-            <div className="bg-white p-4 border-l-4 border-orange-500">
-              <div className="text-2xl font-bold text-orange-700">{stats.high}</div>
-              <div className="text-sm text-[#2B2725]/60">High Priority</div>
+            <div className="bg-white p-3 md:p-4 border-l-4 border-orange-500">
+              <div className="text-xl md:text-2xl font-bold text-orange-700">{stats.high}</div>
+              <div className="text-xs md:text-sm text-[#2B2725]/60">High Priority</div>
             </div>
-            <div className="bg-white p-4 border-l-4 border-yellow-500">
-              <div className="text-2xl font-bold text-yellow-700">{stats.medium}</div>
-              <div className="text-sm text-[#2B2725]/60">Medium Priority</div>
+            <div className="bg-white p-3 md:p-4 border-l-4 border-yellow-500">
+              <div className="text-xl md:text-2xl font-bold text-yellow-700">{stats.medium}</div>
+              <div className="text-xs md:text-sm text-[#2B2725]/60">Medium Priority</div>
             </div>
-            <div className="bg-white p-4 border-l-4 border-blue-500">
-              <div className="text-2xl font-bold text-blue-700">{stats.low}</div>
-              <div className="text-sm text-[#2B2725]/60">Low Priority</div>
+            <div className="bg-white p-3 md:p-4 border-l-4 border-blue-500">
+              <div className="text-xl md:text-2xl font-bold text-blue-700">{stats.low}</div>
+              <div className="text-xs md:text-sm text-[#2B2725]/60">Low Priority</div>
             </div>
           </div>
 
