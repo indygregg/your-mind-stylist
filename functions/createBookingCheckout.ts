@@ -44,9 +44,11 @@ Deno.serve(async (req) => {
             };
 
             console.log('Creating booking with data:', bookingData);
+            console.log('Appointment type ID being saved:', appointment_type_id);
 
             const booking = await base44.asServiceRole.entities.Booking.create(bookingData);
-            console.log('Booking created:', booking.id);
+            console.log('Booking created successfully:', booking.id);
+            console.log('Booking appointment_type_id after creation:', booking.appointment_type_id);
 
                 // Get appointment type to check if Zoom should be auto-created
                 const appointmentTypes = await base44.asServiceRole.entities.AppointmentType.filter({
