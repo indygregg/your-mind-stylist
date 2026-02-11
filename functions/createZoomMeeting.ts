@@ -104,7 +104,10 @@ Deno.serve(async (req) => {
 
         if (!zoomResponse.ok) {
             const errorText = await zoomResponse.text();
-            console.error('Zoom API error:', errorText);
+            console.error('Zoom API error status:', zoomResponse.status);
+            console.error('Zoom API error response:', errorText);
+            console.error('Request URL:', `https://api.zoom.us/v2/users/${userEmail}/meetings`);
+            console.error('Access token (first 20 chars):', accessToken.substring(0, 20));
             
             // Update booking with failed status
             await base44.asServiceRole.entities.Booking.update(booking_id, {
