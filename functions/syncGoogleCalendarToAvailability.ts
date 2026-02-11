@@ -25,15 +25,16 @@ Deno.serve(async (req) => {
       }, { status: 400 });
     }
     
-    // Fetch events from Google Calendar (next 90 days)
+    // Fetch events from Google Calendar (next 30 days only - faster)
     const now = new Date();
-    const in90Days = new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000);
-    
+    const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+
     const calendarRes = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/primary/events?` +
       `timeMin=${now.toISOString()}&` +
-      `timeMax=${in90Days.toISOString()}&` +
+      `timeMax=${in30Days.toISOString()}&` +
       `singleEvents=true&` +
+      `maxResults=100&` +
       `orderBy=startTime`,
       {
         headers: {
@@ -49,17 +50,6 @@ Deno.serve(async (req) => {
 
     const calendarData = await calendarRes.json();
     const events = calendarData.items || [];
-
-    // Clear existing synced rules for this manager
-    const existingRules = await base44.asServiceRole.entities.AvailabilityRule.filter({
-      manager_id: user.id,
-      source: 'calendar_sync'
-    });
-
-    // Delete old synced rules
-    for (const rule of existingRules) {
-      await base44.asServiceRole.entities.AvailabilityRule.delete(rule.id);
-    }
 
     // Create blocked rules for each calendar event
     const rulesToCreate = [];
