@@ -69,6 +69,16 @@ Deno.serve(async (req) => {
     } catch (error) {
         console.error('Google Calendar OAuth error:', error);
         console.error('Error stack:', error.stack);
-        return Response.redirect(`https://yourmindstylist.com/ManagerDashboard?error=${encodeURIComponent(error.message)}`, 302);
+        const errorUrl = `https://yourmindstylist.com/ManagerDashboard?error=${encodeURIComponent(error.message)}`;
+        return new Response(
+            `<html><head><meta http-equiv="refresh" content="0;url=${errorUrl}"></head><body>Error occurred. Redirecting...</body></html>`,
+            { 
+                status: 200,
+                headers: { 
+                    'Content-Type': 'text/html',
+                    'Location': errorUrl 
+                } 
+            }
+        );
     }
 });
