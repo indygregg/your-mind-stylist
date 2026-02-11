@@ -47,12 +47,18 @@ Deno.serve(async (req) => {
         // Store tokens in user record
         const base44 = createClientFromRequest(req);
         console.log('Updating user:', state);
-        await base44.asServiceRole.entities.User.update(state, {
-            google_calendar_access_token: tokens.access_token,
-            google_calendar_refresh_token: tokens.refresh_token,
-            google_calendar_token_expiry: new Date(Date.now() + tokens.expires_in * 1000).toISOString(),
-            hasGoogleCalendar: true
-        });
+        try {
+            const updateResult = await base44.auth.updateMe({
+                google_calendar_access_token: tokens.access_token,
+                google_calendar_refresh_token: tokens.refresh_token,
+                google_calendar_token_expiry: new Date(Date.now() + tokens.expires_in * 1000).toISOString(),
+                hasGoogleCalendar: true
+            });
+            console.log('User update successful:', !!updateResult);
+        } catch (updateError) {
+            console.error('User update failed:', updateError.message);
+            throw new Error(`Failed to save tokens: ${updateError.message}`);
+        }
 
         console.log('Redirecting to success page');
         const redirectUrl = 'https://yourmindstylist.com/ManagerDashboard?calendar_connected=true';
