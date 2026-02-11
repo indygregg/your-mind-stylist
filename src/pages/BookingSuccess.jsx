@@ -37,9 +37,9 @@ export default function BookingSuccess() {
 
         if (bid || sid) {
           if (bid) {
-            // Direct booking ID (free consultation) - use service role
-            const bookings = await base44.asServiceRole.entities.Booking.filter({ id: bid });
-            setBooking(bookings[0] || null);
+            // Direct booking ID (free consultation) - call backend function
+            const response = await base44.functions.invoke('getBookingDetails', { booking_id: bid });
+            setBooking(response.data.booking || null);
           } else if (sid && authStatus) {
             // Stripe session ID (paid booking) - requires auth
             const bookings = await base44.entities.Booking.filter({
