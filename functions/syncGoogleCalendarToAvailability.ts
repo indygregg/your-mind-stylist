@@ -15,8 +15,37 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Get Google Calendar access token
-    const accessToken = await base44.connectors.getAccessToken('googlecalendar');
+    // Get Google Calendar refresh token from user data
+    const userData = await base44.entities.User.read(user.id);
+    const refreshToken = userData.google_calendar_refresh_token;
+    
+    if (!refreshToken) {
+      return Response.json({ 
+        error: 'Google Calendar not connected. Please authorize in Manager Settings first.' 
+      }, { status: 400 });
+    }
+
+    // Get new access token using refresh token
+    const clientId = Deno.env.get('GOOGLE_CALENDAR_CLIENT_ID');
+    const clientSecret = Deno.env.get('GOOGLE_CALENDAR_CLIENT_SECRET');
+
+    const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        client_id: clientId,
+        client_secret: clientSecret,
+        refresh_token: refreshToken,
+        grant_type: 'refresh_token'
+      })
+    });
+
+    const tokenData = await tokenRes.json();
+    if (!tokenRes.ok) {
+      throw new Error(`Failed to refresh Google token: ${tokenData.error}`);
+    }
+
+    const accessToken = tokenData.access_token;
     
     // Fetch events from Google Calendar (next 90 days)
     const now = new Date();
