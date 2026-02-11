@@ -156,12 +156,24 @@ Deno.serve(async (req) => {
                             <p><strong>Name:</strong> ${bookingData.user_name}</p>
                             <p><strong>Email:</strong> ${bookingData.user_email}</p>
                             <p><strong>Phone:</strong> ${bookingData.client_phone || 'Not provided'}</p>
-                            <h3 style="color: #1E3A32;">Session Details</h3>
+                            ${bookingData.client_contact_preference ? `<p><strong>Preferred Contact:</strong> ${bookingData.client_contact_preference}</p>` : ''}
+                            
+                            <h3 style="color: #1E3A32; margin-top: 20px;">Session Details</h3>
                             <p><strong>Date & Time:</strong> ${formatDate(bookingData.scheduled_date)}</p>
                             <p><strong>Service:</strong> ${bookingData.service_type.replace(/_/g, ' ').toUpperCase()}</p>
                             <p><strong>Status:</strong> ${bookingData.booking_status}</p>
-                            ${bookingData.notes ? `<p><strong>Notes:</strong> ${bookingData.notes}</p>` : ''}
                             ${bookingData.zoom_start_url ? `<p><strong>Zoom Host Link:</strong> <a href="${bookingData.zoom_start_url}" style="color: #D8B46B;">${bookingData.zoom_start_url}</a></p>` : '<p><em>Zoom meeting pending creation</em></p>'}
+                            
+                            ${bookingData.client_how_heard || bookingData.client_goals || bookingData.client_concerns || bookingData.client_previous_experience || bookingData.client_health_considerations ? `
+                            <h3 style="color: #1E3A32; margin-top: 20px;">Consultation Form Responses</h3>
+                            ${bookingData.client_how_heard ? `<p><strong>How They Heard About You:</strong><br>${bookingData.client_how_heard}</p>` : ''}
+                            ${bookingData.client_goals ? `<p><strong>Goals:</strong><br>${bookingData.client_goals}</p>` : ''}
+                            ${bookingData.client_concerns ? `<p><strong>Concerns:</strong><br>${bookingData.client_concerns}</p>` : ''}
+                            ${bookingData.client_previous_experience ? `<p><strong>Previous Experience:</strong><br>${bookingData.client_previous_experience}</p>` : ''}
+                            ${bookingData.client_health_considerations ? `<p><strong>Health Considerations:</strong><br>${bookingData.client_health_considerations}</p>` : ''}
+                            ` : ''}
+                            
+                            ${bookingData.notes ? `<h3 style="color: #1E3A32; margin-top: 20px;">Additional Notes</h3><p>${bookingData.notes}</p>` : ''}
                         </div>
                         <p><a href="https://yourmindstylist.com/ManagerCalendar" style="background: #1E3A32; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;">View in Calendar</a></p>
                     </div>
