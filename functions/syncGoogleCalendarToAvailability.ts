@@ -51,20 +51,50 @@ Deno.serve(async (req) => {
     const calendarData = await calendarRes.json();
     const events = calendarData.items || [];
 
+    // Get user's timezone from availability settings
+    const settingsRes = await base44.asServiceRole.entities.AvailabilitySettings.filter(
+      { manager_id: user.id },
+      '-created_date',
+      1
+    );
+    const userTimezone = settingsRes.length > 0 ? settingsRes[0].timezone : 'America/Los_Angeles';
+
+    // Helper to convert UTC time to user's timezone
+    const formatTimeInTimezone = (date, timezone) => {
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone,
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+      return formatter.format(new Date(date));
+    };
+
+    // Helper to convert UTC date to user's timezone date
+    const getDateInTimezone = (date, timezone) => {
+      const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: timezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+      return formatter.format(new Date(date));
+    };
+
     // Create blocked rules for each calendar event
     const rulesToCreate = [];
     for (const event of events) {
       if (event.status === 'cancelled') continue;
 
-      const startTime = new Date(event.start.dateTime || event.start.date);
-      const endTime = new Date(event.end.dateTime || event.end.date);
+      const startTimeUTC = event.start.dateTime || event.start.date;
+      const endTimeUTC = event.end.dateTime || event.end.date;
 
       rulesToCreate.push({
         manager_id: user.id,
         rule_type: 'blocked',
-        specific_date: startTime.toISOString().split('T')[0],
-        start_time: String(startTime.getHours()).padStart(2, '0') + ':' + String(startTime.getMinutes()).padStart(2, '0'),
-        end_time: String(endTime.getHours()).padStart(2, '0') + ':' + String(endTime.getMinutes()).padStart(2, '0'),
+        specific_date: getDateInTimezone(startTimeUTC, userTimezone),
+        start_time: formatTimeInTimezone(startTimeUTC, userTimezone),
+        end_time: formatTimeInTimezone(endTimeUTC, userTimezone),
         is_available: false,
         reason: `Calendar event: ${event.summary}`,
         source: 'calendar_sync',
