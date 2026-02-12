@@ -269,7 +269,7 @@ export default function Bookings() {
 
         {/* Progress Indicator - Show on steps 2, 3, 4 */}
         {step > 1 && step < 4 && (
-          <div className="bg-white border-b border-[#E4D9C4] py-6 px-6">
+          <div className="bg-white border-b border-[#E4D9C4] py-6 px-6 pt-32">
             <div className="max-w-3xl mx-auto">
               <div className="flex items-center justify-between">
                 <button
