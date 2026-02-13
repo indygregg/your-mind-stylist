@@ -133,6 +133,7 @@ export default function ManagerDashboard() {
     { icon: Play, label: "Demo Setup & Preview", link: "DemoSetup" },
     { icon: ShoppingCart, label: "Masterclass Funnel", link: "ManagerMasterclass" },
     { icon: Settings, label: "Integration Setup", link: "IntegrationSetup" },
+    { icon: Calendar, label: "Sync Google Calendar", link: "ManagerCalendarSync" },
     { icon: Users, label: "CRM & Tags", link: "ManagerCRM" },
     { icon: FileVideo, label: "Course Manager", link: "CourseManager" },
     ];

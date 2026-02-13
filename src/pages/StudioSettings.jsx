@@ -45,7 +45,7 @@ export default function StudioSettings() {
             </div>
             <div>
               <Label>Primary Domain</Label>
-              <Input value="themindstylist.com" disabled className="max-w-md" />
+              <Input value="yourmindstylist.com" disabled className="max-w-md" />
               <p className="text-xs text-[#2B2725]/60 mt-1">Read-only</p>
             </div>
             <div>
