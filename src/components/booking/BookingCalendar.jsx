@@ -14,6 +14,7 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loading, setLoading] = useState(false);
   const [availableDates, setAvailableDates] = useState(new Set());
+  const [blockedDates, setBlockedDates] = useState(new Set());
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showRecurringModal, setShowRecurringModal] = useState(false);
 
@@ -38,6 +39,14 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
       // Extract unique dates that have slots
       const dates = new Set(response.data.slots.map(slot => slot.date));
       setAvailableDates(dates);
+
+      // Get blocked dates from calendar sync
+      const blockedRules = await base44.entities.AvailabilityRule.filter({
+        source: 'calendar_sync',
+        is_available: false
+      });
+      const blocked = new Set(blockedRules.map(rule => rule.specific_date).filter(Boolean));
+      setBlockedDates(blocked);
     } catch (error) {
       console.error('Error loading slots:', error);
     } finally {
@@ -115,6 +124,7 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
           {monthDays.map((day, idx) => {
             const dateStr = format(day, 'yyyy-MM-dd');
             const isAvailable = availableDates.has(dateStr);
+            const isBlocked = blockedDates.has(dateStr);
             const isSelected = selectedDate && isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentMonth);
 
@@ -124,14 +134,18 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
                 onClick={() => handleDateClick(day)}
                 disabled={!isAvailable || !isCurrentMonth}
                 className={`
-                  aspect-square p-2 text-sm rounded transition-all
+                  aspect-square p-2 text-sm rounded transition-all relative
                   ${isCurrentMonth ? 'text-[#1E3A32]' : 'text-[#2B2725]/30'}
+                  ${isBlocked && isCurrentMonth ? 'bg-gray-100 border border-gray-300' : ''}
                   ${isAvailable ? 'bg-[#D8B46B]/10 hover:bg-[#D8B46B]/20 cursor-pointer' : 'cursor-not-allowed'}
                   ${isSelected ? 'bg-[#1E3A32] text-[#F9F5EF]' : ''}
-                  ${!isAvailable && isCurrentMonth ? 'opacity-40' : ''}
+                  ${!isAvailable && !isBlocked && isCurrentMonth ? 'opacity-40' : ''}
                 `}
               >
                 {format(day, 'd')}
+                {isBlocked && isCurrentMonth && (
+                  <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-gray-500 rounded-full" />
+                )}
               </button>
             );
           })}
@@ -141,6 +155,12 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-[#D8B46B]/20 rounded"></div>
             <span>Available</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-gray-100 border border-gray-300 rounded relative">
+              <div className="absolute top-0 right-0 w-1 h-1 bg-gray-500 rounded-full"></div>
+            </div>
+            <span>Blocked</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-[#1E3A32] rounded"></div>
