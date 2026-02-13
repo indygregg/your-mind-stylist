@@ -174,18 +174,33 @@ Deno.serve(async (req) => {
                 return (currentSlot < bufferEnd && slotEndTime > bufferStart);
               });
               
-              // Check for conflicts with blocked rules (from calendar sync)
-              const isBlocked = blockedRules.some(blockedRule => {
-                const [blockStartHour, blockStartMin] = blockedRule.start_time.split(':').map(Number);
-                const [blockEndHour, blockEndMin] = blockedRule.end_time.split(':').map(Number);
+              // Check for conflicts with blocked time rules
+              const hasBlockedConflict = blockedRules.some(blockedRule => {
+                const [blockStartHour, blockStartMinute] = blockedRule.start_time.split(':').map(Number);
+                const [blockEndHour, blockEndMinute] = blockedRule.end_time.split(':').map(Number);
                 
-                const blockStart = toManagerTime(`${dateStr}T${blockedRule.start_time}:00`);
-                const blockEnd = toManagerTime(`${dateStr}T${blockedRule.end_time}:00`);
+                const blockStartTimeStr = `${dateStr}T${blockedRule.start_time}:00`;
+                const blockEndTimeStr = `${dateStr}T${blockedRule.end_time}:00`;
                 
+                const toManagerTime = (timeStr) => {
+                  const [datePart, timePart] = timeStr.split('T');
+                  const [year, month, day] = datePart.split('-').map(Number);
+                  const [hour, minute] = timePart.split(':').map(Number);
+                  
+                  const isDST = new Date(year, month - 1, day).toLocaleString('en-US', { timeZone: settings.timezone, timeZoneName: 'short' }).includes('PDT');
+                  const offsetHours = isDST ? 7 : 8;
+                  
+                  return new Date(Date.UTC(year, month - 1, day, hour + offsetHours, minute, 0));
+                };
+                
+                const blockStart = toManagerTime(blockStartTimeStr);
+                const blockEnd = toManagerTime(blockEndTimeStr);
+                
+                // Check if slot overlaps with blocked time
                 return (currentSlot < blockEnd && slotEndTime > blockStart);
               });
               
-              if (!hasConflict && !isBlocked) {
+              if (!hasConflict && !hasBlockedConflict) {
                 availableSlots.push({
                   start: currentSlot.toISOString(),
                   end: slotEndTime.toISOString(),
