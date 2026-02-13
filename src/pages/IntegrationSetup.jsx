@@ -5,7 +5,7 @@ import { createPageUrl } from "../utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle, Calendar, Video, AlertCircle, RefreshCw } from "lucide-react";
+import { CheckCircle, Calendar, Video, AlertCircle, RefreshCw, Upload } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
 
