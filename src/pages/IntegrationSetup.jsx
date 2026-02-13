@@ -200,7 +200,7 @@ export default function IntegrationSetup() {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-[#2B2725]/80">
-                Import your existing calendar events (from Acuity or Apple Calendar) as blocked times to prevent double-booking
+                Import your existing calendar events as blocked times to prevent double-booking. Works with any iCal feed (Acuity, Google Calendar, Apple Calendar, etc.)
               </p>
 
               <div className="space-y-3">
@@ -212,12 +212,13 @@ export default function IntegrationSetup() {
                     type="text"
                     value={icalUrl}
                     onChange={(e) => setIcalUrl(e.target.value)}
-                    placeholder="e.g., https://acuity.com/schedules/..."
+                    placeholder="e.g., https://calendar.google.com/calendar/ical/..."
                     className="w-full px-4 py-2 border border-[#D8B46B]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D8B46B] text-sm"
                   />
-                  <p className="text-xs text-[#2B2725]/60 mt-2">
-                    Paste your public iCal URL from your calendar service
-                  </p>
+                  <div className="text-xs text-[#2B2725]/60 mt-2 space-y-1">
+                    <p><strong>How to find your iCal feed:</strong></p>
+                    <p>Navigate to your calendar provider's settings (Google Calendar, Apple Calendar, Acuity, etc.), enable public access, and copy the URL in ".ics" format under the "Integrate" or "Share" section.</p>
+                  </div>
                 </div>
 
                 <Button
