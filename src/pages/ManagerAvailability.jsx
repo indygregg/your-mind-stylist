@@ -53,6 +53,16 @@ export default function ManagerAvailability() {
     enabled: !!user,
   });
 
+  // Fetch calendar-synced blocked times
+  const { data: blockedTimes = [] } = useQuery({
+    queryKey: ['blocked-times', user?.id],
+    queryFn: () => base44.entities.AvailabilityRule.filter({ 
+      manager_id: user.id,
+      source: 'calendar_sync'
+    }),
+    enabled: !!user,
+  });
+
   // Fetch appointment types
   const { data: appointmentTypes = [] } = useQuery({
     queryKey: ['appointment-types'],
@@ -270,6 +280,53 @@ export default function ManagerAvailability() {
             </Button>
           </Card>
         </motion.div>
+
+        {/* Calendar Synced Blocked Times */}
+        {blockedTimes.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Card className="p-6 mb-8 bg-blue-50 border-blue-200">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="font-serif text-2xl text-[#1E3A32] mb-1">Calendar Synced Blocked Times</h2>
+                  <p className="text-sm text-[#2B2725]/70">
+                    {blockedTimes.length} blocked time{blockedTimes.length !== 1 ? 's' : ''} imported from Google Calendar
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {blockedTimes.slice(0, 10).map((block) => (
+                  <div key={block.id} className="flex items-center justify-between bg-white p-3 rounded border border-blue-200">
+                    <div className="flex items-center gap-3">
+                      <Calendar size={16} className="text-blue-600" />
+                      <div>
+                        <p className="text-sm font-medium text-[#1E3A32]">
+                          {block.specific_date} • {block.start_time} - {block.end_time}
+                        </p>
+                        <p className="text-xs text-[#2B2725]/60">{block.reason}</p>
+                      </div>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleDeleteTimeSlot(block.id)}
+                    >
+                      <Trash2 size={14} className="text-red-600" />
+                    </Button>
+                  </div>
+                ))}
+                {blockedTimes.length > 10 && (
+                  <p className="text-xs text-[#2B2725]/60 text-center pt-2">
+                    Showing 10 of {blockedTimes.length} blocked times
+                  </p>
+                )}
+              </div>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Weekly Schedule */}
         <motion.div
