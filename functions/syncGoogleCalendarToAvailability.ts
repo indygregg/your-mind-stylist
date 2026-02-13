@@ -11,7 +11,8 @@ Deno.serve(async (req) => {
     }
 
     // Only admins/managers can sync
-    if (user.role !== 'admin') {
+    const isManager = user.role === 'admin' || user.role === 'manager' || user.custom_role === 'manager';
+    if (!isManager) {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
