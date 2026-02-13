@@ -15,6 +15,7 @@ export default function IntegrationSetup() {
   const [loading, setLoading] = useState(true);
   const [connectingGoogle, setConnectingGoogle] = useState(false);
   const [connectingZoom, setConnectingZoom] = useState(false);
+  const [syncingCalendar, setSyncingCalendar] = useState(false);
   const [isGoogleConnected, setIsGoogleConnected] = useState(false);
   const [isZoomConnected, setIsZoomConnected] = useState(false);
 
@@ -81,6 +82,22 @@ export default function IntegrationSetup() {
       icon: '✅',
       duration: 4000
     });
+  };
+
+  const handleSyncCalendar = async () => {
+    setSyncingCalendar(true);
+    try {
+      const result = await base44.functions.invoke('syncGoogleCalendarToAvailability');
+      if (result.data?.success) {
+        toast.success(`Synced ${result.data.synced_events} calendar events as blocked times!`);
+      } else {
+        toast.error('Failed to sync: ' + result.data?.error);
+      }
+    } catch (error) {
+      toast.error('Failed to sync calendar: ' + error.message);
+    } finally {
+      setSyncingCalendar(false);
+    }
   };
 
   const handleDisconnect = async (service) => {
@@ -175,6 +192,26 @@ export default function IntegrationSetup() {
                       <CheckCircle size={16} />
                       <span className="text-sm font-medium">Connected</span>
                     </div>
+                    <Button
+                      onClick={handleSyncCalendar}
+                      disabled={syncingCalendar}
+                      className="w-full bg-[#D8B46B] hover:bg-[#C5A35B] text-[#1E3A32]"
+                    >
+                      {syncingCalendar ? (
+                        <>
+                          <RefreshCw size={16} className="mr-2 animate-spin" />
+                          Syncing...
+                        </>
+                      ) : (
+                        <>
+                          <RefreshCw size={16} className="mr-2" />
+                          Sync Calendar Now
+                        </>
+                      )}
+                    </Button>
+                    <p className="text-xs text-[#2B2725]/60 text-center">
+                      Import blocked times from Google Calendar
+                    </p>
                     <Button
                       onClick={() => handleDisconnect('Google Calendar')}
                       variant="outline"
