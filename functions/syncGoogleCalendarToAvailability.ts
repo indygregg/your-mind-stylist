@@ -16,12 +16,13 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    // Get access token from user's personal Google Calendar connection
-    const accessToken = user.google_calendar_access_token;
-    if (!accessToken) {
+    // Get access token using app connector (already authorized)
+    let accessToken;
+    try {
+      accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
+    } catch (err) {
       return Response.json({ 
-        error: 'Google Calendar not connected. Please connect your Google Calendar first.',
-        requiresAuth: true
+        error: 'Google Calendar not connected. Please authorize in Manager Settings first.' 
       }, { status: 400 });
     }
     
