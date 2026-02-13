@@ -174,7 +174,18 @@ Deno.serve(async (req) => {
                 return (currentSlot < bufferEnd && slotEndTime > bufferStart);
               });
               
-              if (!hasConflict) {
+              // Check for conflicts with blocked rules (from calendar sync)
+              const isBlocked = blockedRules.some(blockedRule => {
+                const [blockStartHour, blockStartMin] = blockedRule.start_time.split(':').map(Number);
+                const [blockEndHour, blockEndMin] = blockedRule.end_time.split(':').map(Number);
+                
+                const blockStart = toManagerTime(`${dateStr}T${blockedRule.start_time}:00`);
+                const blockEnd = toManagerTime(`${dateStr}T${blockedRule.end_time}:00`);
+                
+                return (currentSlot < blockEnd && slotEndTime > blockStart);
+              });
+              
+              if (!hasConflict && !isBlocked) {
                 availableSlots.push({
                   start: currentSlot.toISOString(),
                   end: slotEndTime.toISOString(),
