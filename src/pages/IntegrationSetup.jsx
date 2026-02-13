@@ -89,7 +89,15 @@ export default function IntegrationSetup() {
     try {
       const result = await base44.functions.invoke('syncGoogleCalendarToAvailability');
       if (result.data?.success) {
-        toast.success(`Synced ${result.data.synced_events} calendar events as blocked times!`);
+        const count = result.data.synced_events || 0;
+        if (count > 0) {
+          toast.success(`✅ Synced ${count} calendar event${count !== 1 ? 's' : ''} as blocked times! View them in Availability Management.`);
+        } else {
+          toast('No calendar events found in the next 30 days to block. Your calendar is clear!', {
+            icon: '📅',
+            duration: 5000
+          });
+        }
       } else {
         toast.error('Failed to sync: ' + result.data?.error);
       }
