@@ -81,9 +81,20 @@ Deno.serve(async (req) => {
 
     while (currentDate <= endDate) {
       const dayOfWeek = currentDate.getDay();
+      const dateStr = currentDate.toISOString().split('T')[0];
       
-      // Find availability rules for this day
-      const dayRules = availabilityRules.filter(rule => rule.day_of_week === dayOfWeek);
+      // Find availability rules for this day (both recurring day_of_week and specific_date)
+      const dayRules = availabilityRules.filter(rule => 
+        (rule.day_of_week === dayOfWeek && !rule.specific_date && rule.is_available) ||
+        (rule.specific_date === dateStr && rule.is_available)
+      );
+      
+      // Find blocked rules for this day
+      const blockedRules = availabilityRules.filter(rule =>
+        ((rule.day_of_week === dayOfWeek && !rule.specific_date) ||
+         (rule.specific_date === dateStr)) &&
+        !rule.is_available
+      );
       
       if (dayRules.length > 0) {
         for (const rule of dayRules) {
