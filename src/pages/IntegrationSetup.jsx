@@ -136,6 +136,32 @@ export default function IntegrationSetup() {
     }
   };
 
+  const handleImportIcal = async () => {
+    if (!icalUrl.trim()) {
+      toast.error('Please enter a valid iCal URL');
+      return;
+    }
+
+    setImportingIcal(true);
+    try {
+      const result = await base44.functions.invoke('importIcalFeed', {
+        ical_url: icalUrl
+      });
+
+      if (result.data?.success) {
+        const count = result.data.imported_events || 0;
+        toast.success(`✅ Imported ${count} event${count !== 1 ? 's' : ''} from your iCal! They're now blocked in your availability.`);
+        setIcalUrl("");
+      } else {
+        toast.error('Failed to import: ' + result.data?.error);
+      }
+    } catch (error) {
+      toast.error('Failed to import iCal: ' + error.message);
+    } finally {
+      setImportingIcal(false);
+    }
+  };
+
   if (loading) {
     return <div className="min-h-screen bg-[#F9F5EF] pt-24 flex items-center justify-center">
       <RefreshCw className="animate-spin text-[#D8B46B]" size={32} />
