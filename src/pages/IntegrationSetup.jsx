@@ -18,6 +18,8 @@ export default function IntegrationSetup() {
   const [syncingCalendar, setSyncingCalendar] = useState(false);
   const [isGoogleConnected, setIsGoogleConnected] = useState(false);
   const [isZoomConnected, setIsZoomConnected] = useState(false);
+  const [importingIcal, setImportingIcal] = useState(false);
+  const [icalUrl, setIcalUrl] = useState("");
 
   useEffect(() => {
     fetchUser();
