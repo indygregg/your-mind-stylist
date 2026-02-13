@@ -91,11 +91,52 @@ Deno.serve(async (req) => {
           const [startHour, startMinute] = rule.start_time.split(':').map(Number);
           const [endHour, endMinute] = rule.end_time.split(':').map(Number);
           
-          const slotStart = new Date(currentDate);
-          slotStart.setHours(startHour, startMinute, 0, 0);
+          // Create date string in manager's timezone
+          const dateStr = currentDate.toISOString().split('T')[0];
+          const startTimeStr = `${dateStr}T${rule.start_time}:00`;
+          const endTimeStr = `${dateStr}T${rule.end_time}:00`;
           
-          const slotEnd = new Date(currentDate);
-          slotEnd.setHours(endHour, endMinute, 0, 0);
+          // Parse as local time in manager's timezone by creating a formatter
+          const toManagerTime = (timeStr) => {
+            const [datePart, timePart] = timeStr.split('T');
+            const [year, month, day] = datePart.split('-').map(Number);
+            const [hour, minute] = timePart.split(':').map(Number);
+            
+            // Create date parts in manager's timezone
+            const formatter = new Intl.DateTimeFormat('en-US', {
+              timeZone: settings.timezone,
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false
+            });
+            
+            // Create UTC date for the manager's local time
+            const parts = formatter.formatToParts(new Date(year, month - 1, day, hour, minute, 0));
+            const utcDate = new Date(Date.UTC(year, month - 1, day, hour, minute, 0));
+            
+            // Get offset for manager's timezone at this date
+            const managerDate = new Date(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00`);
+            const managerStr = managerDate.toLocaleString('en-US', { timeZone: settings.timezone });
+            const utcStr = managerDate.toLocaleString('en-US', { timeZone: 'UTC' });
+            
+            // Simple approach: create date in UTC, then adjust for timezone offset
+            const testDate = new Date(year, month - 1, day, hour, minute, 0);
+            const zonedStr = testDate.toLocaleString('en-US', { timeZone: settings.timezone, hour12: false });
+            
+            // Better approach: Use ISO string with timezone offset
+            // For America/Los_Angeles, we need to add 7 or 8 hours to get UTC
+            const isDST = new Date(year, month - 1, day).toLocaleString('en-US', { timeZone: settings.timezone, timeZoneName: 'short' }).includes('PDT');
+            const offsetHours = isDST ? 7 : 8; // PDT is UTC-7, PST is UTC-8
+            
+            return new Date(Date.UTC(year, month - 1, day, hour + offsetHours, minute, 0));
+          };
+          
+          const slotStart = toManagerTime(startTimeStr);
+          const slotEnd = toManagerTime(endTimeStr);
           
           // Generate time slots
           let currentSlot = new Date(slotStart);
