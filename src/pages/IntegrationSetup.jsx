@@ -190,6 +190,57 @@ export default function IntegrationSetup() {
             </Alert>
           )}
 
+          {/* iCal Import Card */}
+          <Card className="border-[#D8B46B] mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <Upload className="text-[#D8B46B]" />
+                <span>Import from Apple/Acuity iCal</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-[#2B2725]/80">
+                Import your existing calendar events (from Acuity or Apple Calendar) as blocked times to prevent double-booking
+              </p>
+
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-[#1E3A32] mb-2">
+                    iCal Feed URL
+                  </label>
+                  <input
+                    type="text"
+                    value={icalUrl}
+                    onChange={(e) => setIcalUrl(e.target.value)}
+                    placeholder="e.g., https://acuity.com/schedules/..."
+                    className="w-full px-4 py-2 border border-[#D8B46B]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D8B46B] text-sm"
+                  />
+                  <p className="text-xs text-[#2B2725]/60 mt-2">
+                    Paste your public iCal URL from your calendar service
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handleImportIcal}
+                  disabled={importingIcal || !icalUrl.trim()}
+                  className="w-full bg-[#D8B46B] hover:bg-[#C5A35B] text-[#1E3A32]"
+                >
+                  {importingIcal ? (
+                    <>
+                      <RefreshCw size={16} className="mr-2 animate-spin" />
+                      Importing...
+                    </>
+                  ) : (
+                    <>
+                      <Upload size={16} className="mr-2" />
+                      Import Events
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             {/* Google Calendar Card */}
             <Card className={`${isGoogleConnected ? 'border-green-300 bg-green-50/30' : 'border-[#D8B46B]'}`}>
