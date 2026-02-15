@@ -170,7 +170,8 @@ export default function CourseMerger({ open, onClose }) {
                 >
                   <Checkbox
                     checked={selectedCourseIds.includes(course.id)}
-                    onCheckedChange={() => toggleCourseSelection(course.id)}
+                    onCheckedChange={(checked) => toggleCourseSelection(course.id)}
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
