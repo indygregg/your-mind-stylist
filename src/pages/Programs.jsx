@@ -37,7 +37,8 @@ export default function Programs() {
     },
   });
 
-  // Filter products by subtype
+  // Filter products by subtype and linkage
+  const courses = products.filter(p => p.related_course_id);
   const books = products.filter(p => p.product_subtype === "book");
   const webinarProducts = products.filter(p => p.product_subtype === "webinar");
 
@@ -342,6 +343,39 @@ export default function Programs() {
                           }`}
                         >
                           Get Started
+                        </Button>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Courses & Training */}
+            {courses.length > 0 && (
+              <div className="mb-20">
+                <div className="flex items-center gap-3 mb-8">
+                  <BookOpen size={28} className="text-[#6E4F7D]" />
+                  <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
+                    Courses & Training
+                  </h3>
+                </div>
+                <p className="text-[#2B2725]/70 mb-8">Comprehensive learning programs to master Mind Styling techniques</p>
+
+                <div className="grid md:grid-cols-3 gap-6">
+                  {courses.map((course) => (
+                    <div key={course.id} className="bg-white p-8 border border-[#E4D9C4] hover:border-[#6E4F7D] transition-all">
+                      <h4 className="font-serif text-xl text-[#1E3A32] mb-3">{course.name}</h4>
+                      {course.tagline && (
+                        <p className="text-[#2B2725]/60 text-sm mb-4">{course.tagline}</p>
+                      )}
+                      <p className="text-[#2B2725]/70 text-sm mb-4">{course.short_description}</p>
+                      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
+                        {formatPrice(course.price, course.billing_interval)}
+                      </p>
+                      <Link to={course.slug ? createPageUrl(`ProductPage?slug=${course.slug}`) : createPageUrl("PurchaseCenter")}>
+                        <Button className="w-full bg-[#6E4F7D] hover:bg-[#8B659B] text-white">
+                          Learn More
                         </Button>
                       </Link>
                     </div>
