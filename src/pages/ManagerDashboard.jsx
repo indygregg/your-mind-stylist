@@ -7,12 +7,12 @@ import { motion } from "framer-motion";
 import { Mail, FileText, AlertCircle, Calendar, Clock, MessageSquare, DollarSign, TrendingUp, Users, BarChart3, Plus, ChevronDown, ChevronUp, Sparkles, Settings, Package, PenSquare, FileVideo, Headphones, Target, Image, Download, X, CheckCircle, Circle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import AIManagerAssistant from "../components/ai/AIManagerAssistant";
+import AIManagerAssistant from "@/components/ai/AIManagerAssistant";
 import { PersonalizedGreeting } from "@/components/ui/PersonalizedGreeting";
-import ManagerDashboardNow from "../components/manager/ManagerDashboardNow";
-import ManagerDashboardHealth from "../components/manager/ManagerDashboardHealth";
-import ManagerDashboardCreate from "../components/manager/ManagerDashboardCreate";
-import ManagerDashboardOperations from "../components/manager/ManagerDashboardOperations";
+import ManagerDashboardNow from "@/components/manager/ManagerDashboardNow";
+import ManagerDashboardHealth from "@/components/manager/ManagerDashboardHealth";
+import ManagerDashboardCreate from "@/components/manager/ManagerDashboardCreate";
+import ManagerDashboardOperations from "@/components/manager/ManagerDashboardOperations";
 
 export default function ManagerDashboard() {
   const [user, setUser] = useState(null);
