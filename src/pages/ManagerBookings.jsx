@@ -118,7 +118,7 @@ export default function ManagerBookings() {
 
   const handleSyncToCalendar = async (booking) => {
     try {
-      await base44.functions.invoke('createGoogleCalendarEvent', {
+      const response = await base44.functions.invoke('createGoogleCalendarEvent', {
         booking_id: booking.id,
         booking_data: {
           user_name: booking.user_name,
@@ -128,10 +128,17 @@ export default function ManagerBookings() {
           notes: booking.notes
         }
       });
-      alert('Successfully synced to Google Calendar!');
+      
+      console.log('Calendar sync response:', response);
+      
+      if (response.data.success) {
+        alert(`✓ Synced to Google Calendar!\nEvent ID: ${response.data.calendar_event_id}`);
+      } else {
+        alert(response.data.message || 'Sync completed');
+      }
     } catch (error) {
       console.error('Failed to sync to calendar:', error);
-      alert('Failed to sync to calendar: ' + error.message);
+      alert('Failed to sync to calendar: ' + (error.response?.data?.error || error.message));
     }
   };
 
