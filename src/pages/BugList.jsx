@@ -11,7 +11,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function BugList() {
   const [user, setUser] = useState(null);
-  const [expandedCategories, setExpandedCategories] = useState(new Set(["home", "freemasterclass", "about"]));
+  const [expandedCategories, setExpandedCategories] = useState(new Set());
   const [expandedBugs, setExpandedBugs] = useState(new Set());
   const [newComment, setNewComment] = useState({});
   const navigate = useNavigate();
@@ -669,6 +669,12 @@ export default function BugList() {
   const bugs = React.useMemo(() => {
     return [...staticBugs, ...groupedBugs];
   }, [groupedBugs]);
+
+  // Auto-expand all categories on initial load
+  React.useEffect(() => {
+    const allCategories = new Set(bugs.map(b => b.categoryId));
+    setExpandedCategories(allCategories);
+  }, [bugs.length]);
 
   const getPriorityColor = (priority) => {
     switch (priority) {
