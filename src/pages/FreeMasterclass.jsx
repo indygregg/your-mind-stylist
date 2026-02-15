@@ -5,6 +5,7 @@ import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Play, CheckCircle, Lightbulb, Shield, Brain, Users, Star } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
+import { base44 } from "@/api/base44Client";
 
 export default function FreeMasterclass() {
   const learnings = [
@@ -151,55 +152,82 @@ export default function FreeMasterclass() {
               />
             </p>
 
-            {/* Video Preview */}
+            {/* Email Capture Form */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="aspect-video bg-[#2B2725] mb-10 relative overflow-hidden rounded-lg"
+              className="max-w-md mx-auto"
             >
-              <CmsText
-                contentKey="freemasterclass.hero.video_embed"
-                page="FreeMasterclass"
-                blockTitle="Masterclass Video Embed - Paste your Vimeo embed code here"
-                fallback={`<iframe src="https://player.vimeo.com/video/1153707003?fl=ml&fe=ec&badge=0&autopause=0&player_id=0&app_id=58479" allow="autoplay; fullscreen; picture-in-picture; clipboard-write" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" title="Imposter Syndrome Masterclass"></iframe>`}
-                contentType="rich_text"
-                className="w-full h-full [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:absolute [&_iframe]:inset-0"
-              />
+              <div className="bg-white p-8 rounded-lg shadow-lg">
+                <h3 className="font-serif text-2xl text-[#1E3A32] mb-4 text-center">
+                  <CmsText 
+                    contentKey="freemasterclass.hero.form_title" 
+                    page="FreeMasterclass"
+                    blockTitle="Email Form Title"
+                    fallback="Get Instant Access" 
+                    contentType="short_text"
+                  />
+                </h3>
+                <p className="text-[#2B2725]/70 text-sm mb-6 text-center">
+                  <CmsText 
+                    contentKey="freemasterclass.hero.form_description" 
+                    page="FreeMasterclass"
+                    blockTitle="Email Form Description"
+                    fallback="Enter your email to watch the masterclass now" 
+                    contentType="short_text"
+                  />
+                </p>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    const email = formData.get('email');
+                    const name = formData.get('name');
+                    
+                    try {
+                      await base44.functions.invoke('sendMasterclassConfirmation', {
+                        email,
+                        name,
+                        masterclass_title: "Imposter Syndrome & Other Myths to Ditch"
+                      });
+                      window.location.href = "/app/signup?intent=masterclass&email=" + encodeURIComponent(email);
+                    } catch (error) {
+                      alert('Error: ' + error.message);
+                    }
+                  }}
+                  className="space-y-4"
+                >
+                  <div>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Your Name"
+                      required
+                      className="w-full px-4 py-3 border border-[#E4D9C4] rounded focus:border-[#D8B46B] focus:outline-none text-[#1E3A32]"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Your Email"
+                      required
+                      className="w-full px-4 py-3 border border-[#E4D9C4] rounded focus:border-[#D8B46B] focus:outline-none text-[#1E3A32]"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300 rounded"
+                  >
+                    Watch Free Masterclass Now
+                  </button>
+                </form>
+                <p className="text-xs text-[#2B2725]/50 mt-4 text-center">
+                  We respect your privacy. Unsubscribe anytime.
+                </p>
+              </div>
             </motion.div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/app/signup?intent=masterclass"
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
-              >
-                <CmsText 
-                  contentKey="freemasterclass.hero.button1" 
-                  page="FreeMasterclass"
-                  blockTitle="Hero Button 1 Text"
-                  fallback="Watch the Free Webinar" 
-                  contentType="short_text"
-                  as="span"
-                />
-                <ArrowRight
-                  size={16}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
-              <Link
-                to={createPageUrl("Contact")}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
-              >
-                <CmsText 
-                  contentKey="freemasterclass.hero.button2" 
-                  page="FreeMasterclass"
-                  blockTitle="Hero Button 2 Text"
-                  fallback="Contact Roberta" 
-                  contentType="short_text"
-                  as="span"
-                />
-              </Link>
-            </div>
           </motion.div>
         </div>
       </section>
@@ -603,58 +631,24 @@ export default function FreeMasterclass() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {offerings.map((offering, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-[#F9F5EF] p-8 hover:shadow-lg transition-shadow"
-              >
-                <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center mb-6">
-                  <offering.icon size={24} className="text-[#1E3A32]" />
-                </div>
-                <h3 className="font-serif text-xl text-[#1E3A32] mb-3 flex items-start gap-2">
-                  <span className="text-[#D8B46B]">✦</span>
-                  <CmsText 
-                    contentKey={`freemasterclass.deeper.offering${index + 1}.title`}
-                    page="FreeMasterclass"
-                    blockTitle={`Go Deeper - Offering ${index + 1} Title`}
-                    fallback={offering.title}
-                    contentType="short_text"
-                    as="span"
-                  />
-                </h3>
-                <p className="text-[#2B2725]/70 leading-relaxed mb-6">
-                  <CmsText 
-                    contentKey={`freemasterclass.deeper.offering${index + 1}.description`}
-                    page="FreeMasterclass"
-                    blockTitle={`Go Deeper - Offering ${index + 1} Description`}
-                    fallback={offering.description}
-                    contentType="rich_text"
-                  />
-                </p>
-                <Link
-                  to={createPageUrl(offering.link)}
-                  className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all"
-                >
-                  <CmsText 
-                    contentKey={`freemasterclass.deeper.offering${index + 1}.cta`}
-                    page="FreeMasterclass"
-                    blockTitle={`Go Deeper - Offering ${index + 1} CTA`}
-                    fallback="Learn More"
-                    contentType="short_text"
-                    as="span"
-                  />
-                  <ArrowRight
-                    size={16}
-                    className="group-hover:translate-x-1 transition-transform"
-                  />
-                </Link>
-              </motion.div>
-            ))}
+          <div className="text-center">
+            <Link
+              to={createPageUrl("Bookings")}
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-lg tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+            >
+              <CmsText 
+                contentKey="freemasterclass.deeper.schedule_button" 
+                page="FreeMasterclass"
+                blockTitle="Go Deeper - Schedule Button"
+                fallback="Schedule a Consultation" 
+                contentType="short_text"
+                as="span"
+              />
+              <ArrowRight
+                size={20}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </Link>
           </div>
         </div>
       </section>
@@ -687,38 +681,23 @@ export default function FreeMasterclass() {
               />
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/app/signup?intent=masterclass"
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
-              >
-                <CmsText 
-                  contentKey="freemasterclass.final.button1" 
-                  page="FreeMasterclass"
-                  blockTitle="Final CTA - Button 1 Text"
-                  fallback="Watch the Free Webinar" 
-                  contentType="short_text"
-                  as="span"
-                />
-                <ArrowRight
-                  size={16}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
-              <Link
-                to={createPageUrl("Contact")}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
-              >
-                <CmsText 
-                  contentKey="freemasterclass.final.button2" 
-                  page="FreeMasterclass"
-                  blockTitle="Final CTA - Button 2 Text"
-                  fallback="Contact Roberta" 
-                  contentType="short_text"
-                  as="span"
-                />
-              </Link>
-            </div>
+            <Link
+              to={createPageUrl("Bookings")}
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
+            >
+              <CmsText 
+                contentKey="freemasterclass.final.button" 
+                page="FreeMasterclass"
+                blockTitle="Final CTA - Button Text"
+                fallback="Schedule Your Consultation" 
+                contentType="short_text"
+                as="span"
+              />
+              <ArrowRight
+                size={16}
+                className="group-hover:translate-x-1 transition-transform"
+              />
+            </Link>
           </motion.div>
         </div>
       </section>

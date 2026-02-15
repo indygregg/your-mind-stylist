@@ -1,22 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../../utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Play, Sparkles } from "lucide-react";
 import CmsText from "../cms/CmsText";
-import MasterclassEmailCapture from "./MasterclassEmailCapture";
 
 export default function FreeMasterclass() {
-  const [showEmailCapture, setShowEmailCapture] = useState(false);
   const navigate = useNavigate();
 
   const handleVideoClick = () => {
-    setShowEmailCapture(true);
+    navigate(createPageUrl("FreeMasterclass"));
   };
 
   const handleEmailSuccess = () => {
     setShowEmailCapture(false);
-    navigate(createPageUrl("FreeMasterclass"));
   };
 
   return (
@@ -119,11 +116,7 @@ export default function FreeMasterclass() {
         </div>
       </div>
 
-      <MasterclassEmailCapture
-        isOpen={showEmailCapture}
-        onClose={() => setShowEmailCapture(false)}
-        onSuccess={handleEmailSuccess}
-      />
+
     </section>
   );
 }
