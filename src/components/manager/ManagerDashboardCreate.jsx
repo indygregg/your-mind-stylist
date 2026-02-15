@@ -34,6 +34,12 @@ const createGroups = [
     ]
   },
   {
+    title: "Content Voice",
+    items: [
+      { icon: Sparkles, label: "Voice Profiles", link: "ManagerVoiceProfiles" },
+    ]
+  },
+  {
     title: "Resources",
     items: [
       { icon: FileText, label: "Resource Library", link: "ManagerResources" },
