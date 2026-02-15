@@ -59,6 +59,11 @@ export default function BugList() {
     queryFn: () => base44.entities.BugComment.list('-created_date'),
   });
 
+  const { data: bugReports = [], isLoading: bugsLoading } = useQuery({
+    queryKey: ['bugReports'],
+    queryFn: () => base44.entities.BugReport.list('-created_date'),
+  });
+
   const addCommentMutation = useMutation({
     mutationFn: (data) => base44.entities.BugComment.create(data),
     onSuccess: () => {
@@ -76,7 +81,33 @@ export default function BugList() {
     }
   };
 
-  const bugs = [
+  // Group bug reports by page
+  const groupedBugs = React.useMemo(() => {
+    const grouped = {};
+    bugReports.forEach(bug => {
+      const page = bug.page_url || 'Other';
+      if (!grouped[page]) {
+        grouped[page] = {
+          category: page,
+          categoryId: page.toLowerCase().replace(/\s+/g, '-'),
+          priority: bug.priority?.toLowerCase() || 'medium',
+          items: []
+        };
+      }
+      grouped[page].items.push({
+        id: bug.id,
+        title: bug.title,
+        description: bug.description,
+        status: bug.status === 'Resolved' ? 'completed' : 'open',
+        priority: bug.priority?.toLowerCase() || 'medium',
+        notes: bug.admin_notes,
+        reporter: bug.reporter_name
+      });
+    });
+    return Object.values(grouped);
+  }, [bugReports]);
+
+  const staticBugs = [
     {
       category: "Home Page",
       categoryId: "home",
@@ -634,6 +665,11 @@ export default function BugList() {
     }
   ];
 
+  // Combine static bugs with database bugs
+  const bugs = React.useMemo(() => {
+    return [...staticBugs, ...groupedBugs];
+  }, [groupedBugs]);
+
   const getPriorityColor = (priority) => {
     switch (priority) {
       case "critical": return "bg-red-100 text-red-800 border-red-200";
@@ -652,7 +688,7 @@ export default function BugList() {
     low: bugs.reduce((acc, cat) => acc + cat.items.filter(i => i.priority === "low").length, 0),
   };
 
-  if (!user) {
+  if (!user || bugsLoading) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
         <div className="animate-pulse text-[#1E3A32]">Loading...</div>
