@@ -83,7 +83,15 @@ export default function HeroSection() {
                 to={createPageUrl("Bookings")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm font-semibold tracking-wide hover:bg-[#C5A35B] transition-all duration-300 shadow-lg"
               >
-                Experience Hypnosis with Roberta
+                <CmsText
+                  contentKey="home.hero.cta_experience"
+                  page="home"
+                  blockTitle="Homepage Hero Experience CTA"
+                  contentType="short_text"
+                  maxLength={60}
+                  fallback="Experience Hypnosis with Roberta"
+                  as="span"
+                />
                 <ArrowRight
                   size={16}
                   className="group-hover:translate-x-1 transition-transform"
