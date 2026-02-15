@@ -130,40 +130,10 @@ export default function ManagerDashboard() {
     setSetupDismissed(true);
   };
 
-  const quickActions = [
-    { icon: AlertCircle, label: "Bug & Issue Tracker", link: "BugList" },
-    { icon: PenSquare, label: "Create New Blog Post", link: "BlogEditor?mode=new" },
-    { icon: Package, label: "Product Manager", link: "ManagerProducts" },
-    { icon: TrendingUp, label: "Product Analytics", link: "ManagerProductAnalytics" },
-    { icon: Calendar, label: "Booking Calendar", link: "ManagerCalendar" },
-    { icon: Clock, label: "Manage Availability", link: "ManagerAvailability" },
-    { icon: Settings, label: "Manage Appointment Types", link: "ManagerAppointmentTypes" },
-    { icon: FileText, label: "Edit Consultation Form", link: "ConsultationFormEditor" },
-    { icon: Clock, label: "Waiting List", link: "ManagerWaitingList" },
-    { icon: Users, label: "Client Analytics", link: "ManagerClientAnalytics" },
-    { icon: FileText, label: "Resource Library", link: "ManagerResources" },
-    { icon: Mail, label: "Email Templates", link: "ManagerEmailTemplates" },
-    { icon: BarChart3, label: "Booking Analytics", link: "ManagerAnalytics" },
-    { icon: Sparkles, label: "Transformation Analytics", link: "ManagerTransformationAnalytics" },
-    { icon: Play, label: "Demo Setup & Preview", link: "DemoSetup" },
-    { icon: ShoppingCart, label: "Masterclass Funnel", link: "ManagerMasterclass" },
-    { icon: Settings, label: "Integration Setup", link: "IntegrationSetup" },
-    { icon: Calendar, label: "Sync Google Calendar", link: "ManagerCalendarSync" },
-    { icon: Users, label: "CRM & Tags", link: "ManagerCRM" },
-    { icon: FileVideo, label: "Course Manager", link: "CourseManager" },
-    ];
-
   const { data: courses = [] } = useQuery({
     queryKey: ["allCourses"],
     queryFn: () => base44.entities.Course.list(),
   });
-
-  const snapshotCards = [
-    { icon: Calendar, label: "Active Bookings", value: bookings.filter(b => b.booking_status === 'confirmed').length, color: "#D8B46B", link: "ManagerBookings" },
-    { icon: FileVideo, label: "Published Courses", value: courses.filter(c => c.status === 'published').length, color: "#6E4F7D", link: "CourseManager" },
-    { icon: Mail, label: "Unanswered messages", value: messages.length, color: "#A6B7A3", link: "MessagesManager" },
-    { icon: FileText, label: "Pending Intake Forms", value: consultationIntakes.length, color: "#1E3A32", link: "ManagerIntakeReview" },
-  ];
 
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
