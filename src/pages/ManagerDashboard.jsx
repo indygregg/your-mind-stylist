@@ -85,46 +85,7 @@ export default function ManagerDashboard() {
 
 
 
-  // Check setup completion
-  const hasAvailability = availabilityRules.length > 0;
-  const hasAppointmentTypes = appointmentTypes.length > 0;
-  const hasGoogleCalendar = user?.google_calendar_access_token ? true : false;
-  const hasTestedBooking = bookings.length > 0;
 
-  const setupSteps = [
-    { 
-      id: 'availability', 
-      label: 'Set your availability', 
-      completed: hasAvailability, 
-      link: 'ManagerAvailability' 
-    },
-    { 
-      id: 'appointment_types', 
-      label: 'Create your appointment types', 
-      completed: hasAppointmentTypes, 
-      link: 'ManagerAppointments' 
-    },
-    { 
-      id: 'google_calendar', 
-      label: 'Connect your calendar (Google or Mac)', 
-      completed: hasGoogleCalendar, 
-      link: 'IntegrationSetup'
-    },
-    { 
-      id: 'test', 
-      label: 'Test a booking', 
-      completed: hasTestedBooking, 
-      link: 'Bookings' 
-    },
-  ];
-
-  const completedSteps = setupSteps.filter(s => s.completed).length;
-  const allComplete = completedSteps === setupSteps.length;
-
-  const handleDismissSetup = () => {
-    localStorage.setItem('booking_setup_dismissed', 'true');
-    setSetupDismissed(true);
-  };
 
   const { data: courses = [] } = useQuery({
     queryKey: ["allCourses"],
