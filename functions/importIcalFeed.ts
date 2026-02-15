@@ -20,8 +20,14 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'ical_url is required' }, { status: 400 });
     }
 
+    // Convert webcal:// to https:// for proper fetching
+    let fetchUrl = ical_url;
+    if (ical_url.startsWith('webcal://')) {
+      fetchUrl = ical_url.replace('webcal://', 'https://');
+    }
+
     // Fetch iCal feed
-    const feedRes = await fetch(ical_url);
+    const feedRes = await fetch(fetchUrl);
     if (!feedRes.ok) {
       return Response.json({ error: 'Failed to fetch iCal feed' }, { status: 400 });
     }
