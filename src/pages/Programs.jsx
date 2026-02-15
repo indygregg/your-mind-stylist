@@ -260,7 +260,7 @@ export default function Programs() {
                       >
                         {formatPrice(product.price, product.billing_interval)}
                       </p>
-                      <Link to={createPageUrl("PurchaseCenter")}>
+                      <Link to={product.slug ? createPageUrl(`ProductPage?slug=${product.slug}`) : createPageUrl("PurchaseCenter")}>
                         <Button
                           className={`w-full ${
                             product.ui_group === "featured"
