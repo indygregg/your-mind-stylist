@@ -116,6 +116,25 @@ export default function ManagerBookings() {
     }
   };
 
+  const handleSyncToCalendar = async (booking) => {
+    try {
+      await base44.functions.invoke('createGoogleCalendarEvent', {
+        booking_id: booking.id,
+        booking_data: {
+          user_name: booking.user_name,
+          user_email: booking.user_email,
+          scheduled_date: booking.scheduled_date,
+          client_phone: booking.client_phone,
+          notes: booking.notes
+        }
+      });
+      alert('Successfully synced to Google Calendar!');
+    } catch (error) {
+      console.error('Failed to sync to calendar:', error);
+      alert('Failed to sync to calendar: ' + error.message);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
@@ -565,19 +584,31 @@ export default function ManagerBookings() {
                 )}
 
                 {/* Actions */}
-                <div className="flex gap-3 pt-4 border-t border-[#E4D9C4]">
+                <div className="flex flex-col gap-3 pt-4 border-t border-[#E4D9C4]">
+                  <div className="flex gap-3">
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => {
+                        window.location.href = `mailto:${selectedBooking.user_email}`;
+                      }}
+                    >
+                      <Mail size={16} className="mr-2" />
+                      Email Client
+                    </Button>
+                    {selectedBooking.scheduled_date && (
+                      <Button
+                        variant="outline"
+                        className="flex-1"
+                        onClick={() => handleSyncToCalendar(selectedBooking)}
+                      >
+                        <Calendar size={16} className="mr-2" />
+                        Sync to Calendar
+                      </Button>
+                    )}
+                  </div>
                   <Button
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => {
-                      window.location.href = `mailto:${selectedBooking.user_email}`;
-                    }}
-                  >
-                    <Mail size={16} className="mr-2" />
-                    Email Client
-                  </Button>
-                  <Button
-                    className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725]"
+                    className="w-full bg-[#1E3A32] hover:bg-[#2B2725]"
                     onClick={() => setSelectedBooking(null)}
                   >
                     Close

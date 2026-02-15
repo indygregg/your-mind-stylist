@@ -148,6 +148,9 @@ import PrivateSessionsPurchase from './pages/PrivateSessionsPurchase';
 import ProductPage from './pages/ProductPage';
 import ProfileSettings from './pages/ProfileSettings';
 import Programs from './pages/Programs';
+import ProgramsBooks from './pages/ProgramsBooks';
+import ProgramsCourses from './pages/ProgramsCourses';
+import ProgramsWebinars from './pages/ProgramsWebinars';
 import PublicPagesList from './pages/PublicPagesList';
 import PurchaseCenter from './pages/PurchaseCenter';
 import PurchaseComplete from './pages/PurchaseComplete';
@@ -177,9 +180,6 @@ import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import ProgramsCourses from './pages/ProgramsCourses';
-import ProgramsBooks from './pages/ProgramsBooks';
-import ProgramsWebinars from './pages/ProgramsWebinars';
 import __Layout from './Layout.jsx';
 
 
@@ -285,6 +285,9 @@ export const PAGES = {
     "ProductPage": ProductPage,
     "ProfileSettings": ProfileSettings,
     "Programs": Programs,
+    "ProgramsBooks": ProgramsBooks,
+    "ProgramsCourses": ProgramsCourses,
+    "ProgramsWebinars": ProgramsWebinars,
     "PublicPagesList": PublicPagesList,
     "PurchaseCenter": PurchaseCenter,
     "PurchaseComplete": PurchaseComplete,
@@ -314,9 +317,6 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "ProgramsCourses": ProgramsCourses,
-    "ProgramsBooks": ProgramsBooks,
-    "ProgramsWebinars": ProgramsWebinars,
 }
 
 export const pagesConfig = {
