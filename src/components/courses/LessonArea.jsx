@@ -173,13 +173,14 @@ export default function LessonArea({
         )}
 
             {/* Resources */}
-            {lesson.resources && lesson.resources.length > 0 && (
+            {((lesson.resources && lesson.resources.length > 0) || (lesson.attached_resource_ids && lesson.attached_resource_ids.length > 0)) && (
               <div className="mt-12">
                 <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Resources</h2>
                 <div className="grid gap-4">
-                  {lesson.resources.map((resource, index) => (
+                  {/* Legacy inline resources */}
+                  {lesson.resources && lesson.resources.map((resource, index) => (
                     <a
-                      key={index}
+                      key={`legacy-${index}`}
                       href={resource.url}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -192,6 +193,12 @@ export default function LessonArea({
                       <Download size={18} className="text-[#D8B46B]" />
                     </a>
                   ))}
+                  {/* Note: Attached resources from Resource entity need to be fetched separately */}
+                  {lesson.attached_resource_ids && lesson.attached_resource_ids.length > 0 && (
+                    <p className="text-sm text-[#2B2725]/60 p-4 bg-white rounded-lg">
+                      {lesson.attached_resource_ids.length} resource(s) attached (fetching not implemented in preview)
+                    </p>
+                  )}
                 </div>
               </div>
             )}
