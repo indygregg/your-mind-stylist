@@ -139,27 +139,43 @@ export default function CourseManager() {
     <div className="min-h-screen bg-[#F9F5EF] py-8">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Course Manager</h1>
-            <p className="text-[#2B2725]/70">Create and manage your courses</p>
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Course Manager</h1>
+              <p className="text-[#2B2725]/70">Create and manage your courses</p>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                onClick={() => setShowMerger(true)}
+                variant="outline"
+                className="border-[#D8B46B] text-[#1E3A32]"
+              >
+                <Merge size={16} className="mr-2" />
+                Merge Courses
+              </Button>
+              <Button
+                onClick={() => window.location.href = createPageUrl("CourseBuilder")}
+                className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
+              >
+                <Plus size={16} className="mr-2" />
+                Create Course
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-3">
-            <Button
-              onClick={() => setShowMerger(true)}
-              variant="outline"
-              className="border-[#D8B46B] text-[#1E3A32]"
-            >
-              <Merge size={16} className="mr-2" />
-              Merge Courses
-            </Button>
-            <Button
-              onClick={() => window.location.href = createPageUrl("CourseBuilder")}
-              className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
-            >
-              <Plus size={16} className="mr-2" />
-              Create Course
-            </Button>
+
+          {/* Quick Guide */}
+          <div className="bg-[#D8B46B]/10 border-l-4 border-[#D8B46B] p-4 rounded-r">
+            <h3 className="font-medium text-[#1E3A32] mb-2">💡 How to Display Courses on Programs Page</h3>
+            <ol className="text-sm text-[#2B2725]/80 space-y-1 list-decimal list-inside">
+              <li><strong>Publish your courses</strong> - Set status to "Published" (they'll appear in Library for enrolled students)</li>
+              <li><strong>Create Products in Manager Products</strong> - For each course, create a Product and link it using the "Related Course" field</li>
+              <li><strong>Set Product category</strong> - Choose "foundation", "mid_level", or "high_touch" to control where it displays</li>
+              <li><strong>Optional: Create a bundle</strong> - Use "Merge Courses" to combine multiple courses, then create one Product linking to the merged course</li>
+            </ol>
+            <p className="text-xs text-[#2B2725]/60 mt-2">
+              Courses will display like Books and Webinars - as individual cards in their category section.
+            </p>
           </div>
         </div>
 
