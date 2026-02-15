@@ -489,18 +489,19 @@ export default function ManagerBookings() {
                     <div className="bg-[#F9F5EF] p-4 space-y-3">
                       <div>
                         <p className="text-xs text-[#2B2725]/70 mb-1">Client Join URL:</p>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-start gap-2">
                           <a 
                             href={selectedBooking.zoom_join_url} 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="text-sm text-[#2D8CFF] hover:underline truncate flex-1"
+                            className="text-sm text-[#2D8CFF] hover:underline break-all flex-1 mt-1"
                           >
                             {selectedBooking.zoom_join_url}
                           </a>
                           <Button
                             size="sm"
                             variant="ghost"
+                            className="flex-shrink-0"
                             onClick={() => {
                               navigator.clipboard.writeText(selectedBooking.zoom_join_url);
                             }}
@@ -512,18 +513,19 @@ export default function ManagerBookings() {
                       {selectedBooking.zoom_start_url && (
                         <div>
                           <p className="text-xs text-[#2B2725]/70 mb-1">Host Start URL:</p>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-start gap-2">
                             <a 
                               href={selectedBooking.zoom_start_url} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="text-sm text-[#2D8CFF] hover:underline truncate flex-1"
+                              className="text-sm text-[#2D8CFF] hover:underline break-all flex-1 mt-1"
                             >
                               {selectedBooking.zoom_start_url}
                             </a>
                             <Button
                               size="sm"
                               variant="ghost"
+                              className="flex-shrink-0"
                               onClick={() => {
                                 navigator.clipboard.writeText(selectedBooking.zoom_start_url);
                               }}
