@@ -16,7 +16,11 @@ export default function ManagerCalendar() {
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["bookings"],
-    queryFn: () => base44.entities.Booking.list("-scheduled_date"),
+    queryFn: async () => {
+      const allBookings = await base44.entities.Booking.list("-scheduled_date");
+      // Filter to only show bookings with scheduled dates
+      return allBookings.filter(b => b.scheduled_date);
+    },
   });
 
   const monthStart = startOfMonth(currentDate);
