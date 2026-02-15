@@ -98,37 +98,6 @@ export default function ManagerDashboard() {
         {/* Personalized Welcome */}
         <PersonalizedGreeting user={user} variant="dashboard" />
 
-        {/* Transition Guide Alert */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="mb-8"
-        >
-          <Alert className="bg-gradient-to-r from-[#D8B46B]/20 to-[#D8B46B]/10 border-2 border-[#D8B46B] shadow-lg">
-            <AlertCircle className="text-[#D8B46B]" size={24} />
-            <AlertDescription>
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h3 className="font-serif text-xl text-[#1E3A32] mb-2">
-                    Transitioning from Acuity?
-                  </h3>
-                  <p className="text-[#2B2725]/80 mb-3">
-                    Follow our step-by-step guide to smoothly migrate your booking system while keeping your existing clients happy.
-                  </p>
-                  <Link
-                    to={createPageUrl("TransitionGuide")}
-                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors rounded"
-                  >
-                    View Transition Guide
-                    <ArrowRight size={16} />
-                  </Link>
-                </div>
-              </div>
-            </AlertDescription>
-          </Alert>
-        </motion.div>
-
         {/* NOW Section */}
         <ManagerDashboardNow user={user} bookings={bookings} messages={messages} consultationIntakes={consultationIntakes} />
 
