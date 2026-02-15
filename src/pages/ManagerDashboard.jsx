@@ -297,298 +297,56 @@ export default function ManagerDashboard() {
           </motion.div>
         )}
 
-        {/* Analytics Dashboard Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="mb-12"
-        >
-          <Link to={createPageUrl("ManagerAnalytics")}>
-            <div className="bg-gradient-to-br from-[#6E4F7D] to-[#8B659B] p-8 md:p-10 shadow-xl relative overflow-hidden hover:shadow-2xl transition-all duration-300 group cursor-pointer">
-              {/* Decorative background */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-32 -mt-32"></div>
+        {/* NOW Section */}
+        <ManagerDashboardNow user={user} bookings={bookings} messages={messages} consultationIntakes={consultationIntakes} />
 
-              <div className="relative z-10">
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-3">
-                      <BarChart3 size={28} className="text-white" />
-                      <span className="text-white/80 text-xs tracking-[0.2em] uppercase">Live Dashboard</span>
-                    </div>
-                    <h2 className="font-serif text-3xl md:text-4xl text-white mb-3">
-                      Booking Analytics
-                    </h2>
-                    <p className="text-white/80 text-lg max-w-2xl">
-                      Track your business performance, revenue trends, and client insights in real-time.
-                    </p>
-                  </div>
-                  <div className="hidden md:block">
-                    <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
-                      <TrendingUp size={24} className="text-white" />
-                    </div>
-                  </div>
-                </div>
+        {/* HEALTH Section */}
+        <ManagerDashboardHealth courses={courses} bookings={bookings} />
 
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                    <DollarSign size={20} className="text-white/80 mb-2" />
-                    <p className="text-white text-sm font-medium mb-1">Revenue Tracking</p>
-                    <p className="text-white/60 text-xs">Daily, weekly, monthly</p>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                    <Calendar size={20} className="text-white/80 mb-2" />
-                    <p className="text-white text-sm font-medium mb-1">Booking Volume</p>
-                    <p className="text-white/60 text-xs">Popular services</p>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                    <Users size={20} className="text-white/80 mb-2" />
-                    <p className="text-white text-sm font-medium mb-1">Client Retention</p>
-                    <p className="text-white/60 text-xs">Returning clients</p>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                    <TrendingUp size={20} className="text-white/80 mb-2" />
-                    <p className="text-white text-sm font-medium mb-1">Performance</p>
-                    <p className="text-white/60 text-xs">Service metrics</p>
-                  </div>
-                </div>
-
-                <div className="mt-6 flex items-center gap-2 text-white group-hover:gap-3 transition-all">
-                  <span className="text-sm font-medium">View Full Analytics Dashboard</span>
-                  <span className="text-lg">→</span>
-                </div>
-              </div>
-            </div>
-          </Link>
-        </motion.div>
-
-        {/* Content Alchemy Suite - Featured */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="mb-12"
-        >
-          <div className="bg-gradient-to-br from-[#1E3A32] to-[#2B4A40] p-8 md:p-10 rounded-lg shadow-xl relative overflow-hidden">
-            {/* Decorative background */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#D8B46B] opacity-10 rounded-full -mr-32 -mt-32"></div>
-            
-            <div className="relative z-10">
-              <div className="flex items-start justify-between mb-6">
-                <div>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Sparkles size={24} className="text-[#D8B46B]" />
-                    <span className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase">New</span>
-                  </div>
-                  <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-3">
-                    Content Alchemy Suite
-                  </h2>
-                  <p className="text-[#F9F5EF]/80 text-lg max-w-2xl">
-                    Transform every blog post into a content empire. Write once, distribute everywhere—with AI-powered magic.
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                  <Target size={20} className="text-[#D8B46B] mb-2" />
-                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Social Media Transformer</p>
-                  <p className="text-[#F9F5EF]/60 text-xs">Platform-optimized posts</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                  <Image size={20} className="text-[#D8B46B] mb-2" />
-                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Visual Intelligence</p>
-                  <p className="text-[#F9F5EF]/60 text-xs">AI-generated branded images</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                  <Download size={20} className="text-[#D8B46B] mb-2" />
-                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Lead Magnets</p>
-                  <p className="text-[#F9F5EF]/60 text-xs">PDF guides & worksheets</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                  <Sparkles size={20} className="text-[#D8B46B] mb-2" />
-                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">SEO & Quote Graphics</p>
-                  <p className="text-[#F9F5EF]/60 text-xs">Optimize & share wisdom</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                  <FileText size={20} className="text-[#D8B46B] mb-2" />
-                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Script Writer</p>
-                  <p className="text-[#F9F5EF]/60 text-xs">Blog, lesson, and webinar scripts</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                  <Mail size={20} className="text-[#D8B46B] mb-2" />
-                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Email Sequences</p>
-                  <p className="text-[#F9F5EF]/60 text-xs">For launches, sales, and nurturing</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                  <Headphones size={20} className="text-[#D8B46B] mb-2" />
-                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Pocket Visualization™ Script Generator</p>
-                  <p className="text-[#F9F5EF]/60 text-xs">Creates new tracks with guided language</p>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg">
-                  <FileVideo size={20} className="text-[#D8B46B] mb-2" />
-                  <p className="text-[#F9F5EF] text-sm font-medium mb-1">Course Outline Generator</p>
-                  <p className="text-[#F9F5EF]/60 text-xs">Built from simple prompts or transcripts</p>
-                </div>
-              </div>
-
-              <Link
-                to={createPageUrl("ContentStudio")}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-[#D8B46B] text-[#1E3A32] font-medium hover:bg-[#F9F5EF] transition-all"
-              >
-                <Sparkles size={18} />
-                Open Content Alchemy Suite
-              </Link>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Quick Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-12"
-        >
-          <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Quick Actions</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {quickActions.map((action, index) => (
-              <Link
-                key={index}
-                to={createPageUrl(action.link)}
-                className="bg-white p-6 hover:shadow-lg transition-shadow group"
-              >
-                <action.icon size={32} className="text-[#D8B46B] mb-4" />
-                <p className="text-[#1E3A32] font-medium group-hover:text-[#D8B46B] transition-colors">
-                  {action.label}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Snapshot Cards */}
+        {/* CREATE Section (Collapsible) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mb-12"
+          className="mb-8"
         >
-          <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">At a Glance</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {snapshotCards.map((card, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 + index * 0.05 }}
-                className="bg-white p-6 hover:shadow-lg transition-shadow"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <card.icon size={28} style={{ color: card.color }} />
-                  <span className="text-3xl font-serif" style={{ color: card.color }}>
-                    {card.value}
-                  </span>
-                </div>
-                {card.link ? (
-                  <Link
-                    to={createPageUrl(card.link)}
-                    className="text-[#2B2725]/70 hover:text-[#1E3A32] transition-colors"
-                  >
-                    {card.label} →
-                  </Link>
-                ) : (
-                  <p className="text-[#2B2725]/70">{card.label}</p>
-                )}
-              </motion.div>
-            ))}
-          </div>
+          <button
+            onClick={() => toggleSection('create')}
+            className="w-full flex items-center justify-between p-6 bg-white hover:shadow-lg transition-shadow group"
+          >
+            <h2 className="font-serif text-2xl text-[#1E3A32]">Create</h2>
+            {expandedSections.create ? (
+              <ChevronUp size={24} className="text-[#D8B46B]" />
+            ) : (
+              <ChevronDown size={24} className="text-[#2B2725]/40" />
+            )}
+          </button>
+          {expandedSections.create && (
+            <ManagerDashboardCreate />
+          )}
         </motion.div>
 
-        {/* AI Manager Assistant */}
+        {/* OPERATIONS Section (Collapsible) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
-          className="mb-12"
+          className="mb-8"
         >
-          <AIManagerAssistant />
-        </motion.div>
-
-        {/* Recent Activity */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Recent Activity</h2>
-          <div className="grid lg:grid-cols-3 gap-6">
-            {/* Latest Blog Posts */}
-            <div className="bg-white p-6">
-              <h3 className="font-medium text-[#1E3A32] mb-4 flex items-center gap-2">
-                <FileText size={20} className="text-[#D8B46B]" />
-                Latest Blog Posts
-              </h3>
-              <div className="space-y-3">
-                {blogPosts.slice(0, 3).map((post) => (
-                  <div key={post.id} className="border-l-2 border-[#D8B46B] pl-3">
-                    <p className="text-sm text-[#1E3A32] font-medium">{post.title}</p>
-                    <p className="text-xs text-[#2B2725]/60">{post.category}</p>
-                  </div>
-                ))}
-              </div>
-              <Link
-                to={createPageUrl("BlogManager")}
-                className="text-sm text-[#1E3A32] hover:text-[#D8B46B] mt-4 inline-block"
-              >
-                View all posts →
-              </Link>
-            </div>
-
-            {/* Latest Messages */}
-            <div className="bg-white p-6">
-              <h3 className="font-medium text-[#1E3A32] mb-4 flex items-center gap-2">
-                <Mail size={20} className="text-[#6E4F7D]" />
-                Recent Messages
-              </h3>
-              <div className="space-y-3">
-                {messages.slice(0, 3).map((msg) => (
-                  <div key={msg.id} className="border-l-2 border-[#6E4F7D] pl-3">
-                    <p className="text-sm text-[#1E3A32] font-medium">{msg.name}</p>
-                    <p className="text-xs text-[#2B2725]/60">{msg.type}</p>
-                  </div>
-                ))}
-              </div>
-              <Link
-                to={createPageUrl("MessagesManager")}
-                className="text-sm text-[#1E3A32] hover:text-[#6E4F7D] mt-4 inline-block"
-              >
-                View all messages →
-              </Link>
-            </div>
-
-            {/* Drafts */}
-            <div className="bg-white p-6">
-              <h3 className="font-medium text-[#1E3A32] mb-4 flex items-center gap-2">
-                <PenSquare size={20} className="text-[#A6B7A3]" />
-                Drafts
-              </h3>
-              <div className="space-y-3">
-                {drafts.slice(0, 3).map((draft) => (
-                  <div key={draft.id} className="border-l-2 border-[#A6B7A3] pl-3">
-                    <p className="text-sm text-[#1E3A32] font-medium">{draft.title}</p>
-                    <p className="text-xs text-[#2B2725]/60">Draft</p>
-                  </div>
-                ))}
-              </div>
-              <Link
-                to={createPageUrl("BlogManager")}
-                className="text-sm text-[#1E3A32] hover:text-[#A6B7A3] mt-4 inline-block"
-              >
-                View all drafts →
-              </Link>
-            </div>
-          </div>
+          <button
+            onClick={() => toggleSection('operations')}
+            className="w-full flex items-center justify-between p-6 bg-white hover:shadow-lg transition-shadow group"
+          >
+            <h2 className="font-serif text-2xl text-[#1E3A32]">Operations</h2>
+            {expandedSections.operations ? (
+              <ChevronUp size={24} className="text-[#D8B46B]" />
+            ) : (
+              <ChevronDown size={24} className="text-[#2B2725]/40" />
+            )}
+          </button>
+          {expandedSections.operations && (
+            <ManagerDashboardOperations />
+          )}
         </motion.div>
       </div>
     </div>
