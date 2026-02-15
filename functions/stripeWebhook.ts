@@ -219,18 +219,84 @@ Deno.serve(async (req) => {
                             console.error('Failed to add to CRM (non-critical):', crmError.message);
                         }
 
-                        await base44.asServiceRole.integrations.Core.SendEmail({
-                            to: session.customer_email,
-                            subject: `Welcome to ${product.name}`,
-                            body: `
-                                <h2>Your purchase is confirmed!</h2>
-                                <p>Thank you for purchasing ${product.name}.</p>
-                                <p>You now have access to all included content.</p>
-                                <p>Log in to your dashboard to get started: https://yourmindstylist.com/login</p>
-                                <br>
-                                <p>Roberta Fernandez<br>Your Mind Stylist</p>
-                            `
-                        });
+                        // Check if this is Pocket Mindset purchase - send special email
+                        if (product.key === 'pocket-mindset' || product.slug === 'pocket-mindset') {
+                            await base44.asServiceRole.integrations.Core.SendEmail({
+                                to: session.customer_email,
+                                subject: 'Welcome to Pocket Mindset™ - Account Setup Instructions',
+                                body: `
+                                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #F9F5EF;">
+                                        <div style="text-align: center; padding: 30px 20px; background-color: #1E3A32;">
+                                            <h1 style="color: #F9F5EF; font-family: Georgia, serif; font-size: 28px; margin: 0 0 10px 0;">Welcome to Pocket Mindset™</h1>
+                                            <p style="color: #D8B46B; font-size: 14px; margin: 0; letter-spacing: 2px; text-transform: uppercase;">Your Mind Styling Journey Begins</p>
+                                        </div>
+                                        
+                                        <div style="background-color: #FFFFFF; padding: 40px 30px;">
+                                            <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Hi ${session.customer_details?.name || 'there'},</p>
+                                            
+                                            <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">Thank you for your purchase! Here is the information you need to set up your Pocket Mindset account.</p>
+                                            
+                                            <div style="background-color: #F9F5EF; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+                                                <h2 style="color: #1E3A32; font-size: 20px; margin: 0 0 15px 0; font-family: Georgia, serif;">Step 1: Download the App</h2>
+                                                <p style="color: #2B2725; font-size: 15px; line-height: 1.6; margin: 0;">Download Pocket Mindset from the Apple App Store or the Google Play Store.</p>
+                                            </div>
+                                            
+                                            <div style="background-color: #E4D9C4; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+                                                <h2 style="color: #1E3A32; font-size: 20px; margin: 0 0 15px 0; font-family: Georgia, serif;">Step 2: Set Up Your Account</h2>
+                                                <ol style="color: #2B2725; font-size: 15px; line-height: 1.8; margin: 0; padding-left: 20px;">
+                                                    <li>Select <strong>new account</strong></li>
+                                                    <li>Under the <strong>Browse tab</strong>, enroll in the Courses and Programs of your choice</li>
+                                                    <li>Enter this code when prompted: <span style="background-color: #1E3A32; color: #D8B46B; padding: 4px 12px; border-radius: 4px; font-weight: bold; font-size: 18px; display: inline-block; margin: 5px 0;">935384</span></li>
+                                                </ol>
+                                            </div>
+                                            
+                                            <div style="margin-bottom: 30px;">
+                                                <h2 style="color: #1E3A32; font-size: 20px; margin: 0 0 15px 0; font-family: Georgia, serif;">Step 3: Access Your Content</h2>
+                                                <p style="color: #2B2725; font-size: 15px; line-height: 1.6; margin: 0 0 15px 0;">Once you enroll in a Course or Wellbeing Program, you will access it in the <strong>My Programs tab</strong>, where all modules remain available for listening.</p>
+                                            </div>
+                                            
+                                            <div style="background-color: #F9F5EF; padding: 20px; margin-bottom: 30px; border-radius: 4px;">
+                                                <h2 style="color: #1E3A32; font-size: 20px; margin: 0 0 20px 0; font-family: Georgia, serif;">What's Included</h2>
+                                                
+                                                <div style="margin-bottom: 20px;">
+                                                    <h3 style="color: #6E4F7D; font-size: 16px; margin: 0 0 10px 0; font-weight: bold;">5 Core Courses</h3>
+                                                    <p style="color: #2B2725; font-size: 14px; line-height: 1.6; margin: 0;">For stress, pain, sleep, weight, and smoking cessation. The Course modules are delivered one at a time over 7 to 55 days.</p>
+                                                </div>
+                                                
+                                                <div>
+                                                    <h3 style="color: #6E4F7D; font-size: 16px; margin: 0 0 10px 0; font-weight: bold;">3 Wellbeing Programs</h3>
+                                                    <p style="color: #2B2725; font-size: 14px; line-height: 1.6; margin: 0;">Physical, financial, and emotional/mental - which can be used in conjunction with the Courses, or at any time, in any order. These recordings are listed alphabetically and cover a very wide range of issues.</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div style="border-top: 2px solid #D8B46B; padding-top: 20px;">
+                                                <p style="color: #2B2725; font-size: 15px; line-height: 1.6; margin: 0 0 10px 0;">Questions or need help? We're here for you.</p>
+                                                <p style="color: #2B2725; font-size: 15px; line-height: 1.6; margin: 0;">Email: <a href="mailto:roberta@yourmindstylist.com" style="color: #1E3A32; text-decoration: none;">roberta@yourmindstylist.com</a></p>
+                                            </div>
+                                        </div>
+                                        
+                                        <div style="text-align: center; padding: 20px; color: #2B2725; font-size: 12px;">
+                                            <p style="margin: 0 0 10px 0;">© ${new Date().getFullYear()} Your Mind Stylist. All rights reserved.</p>
+                                            <p style="margin: 0;"><a href="https://yourmindstylist.com" style="color: #1E3A32; text-decoration: none;">yourmindstylist.com</a></p>
+                                        </div>
+                                    </div>
+                                `
+                            });
+                        } else {
+                            // Standard product purchase email for all other products
+                            await base44.asServiceRole.integrations.Core.SendEmail({
+                                to: session.customer_email,
+                                subject: `Welcome to ${product.name}`,
+                                body: `
+                                    <h2>Your purchase is confirmed!</h2>
+                                    <p>Thank you for purchasing ${product.name}.</p>
+                                    <p>You now have access to all included content.</p>
+                                    <p>Log in to your dashboard to get started: https://yourmindstylist.com/login</p>
+                                    <br>
+                                    <p>Roberta Fernandez<br>Your Mind Stylist</p>
+                                `
+                            });
+                        }
                     }
                 }
                 
