@@ -177,6 +177,9 @@ import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
+import ProgramsCourses from './pages/ProgramsCourses';
+import ProgramsBooks from './pages/ProgramsBooks';
+import ProgramsWebinars from './pages/ProgramsWebinars';
 import __Layout from './Layout.jsx';
 
 
@@ -311,6 +314,9 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
+    "ProgramsCourses": ProgramsCourses,
+    "ProgramsBooks": ProgramsBooks,
+    "ProgramsWebinars": ProgramsWebinars,
 }
 
 export const pagesConfig = {

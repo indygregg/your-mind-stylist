@@ -351,121 +351,87 @@ export default function Programs() {
               </div>
             )}
 
-            {/* Courses & Training */}
+            {/* Category Cards - Courses */}
             {courses.length > 0 && (
-              <div className="mb-20">
-                <div className="flex items-center gap-3 mb-8">
-                  <BookOpen size={28} className="text-[#6E4F7D]" />
-                  <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
-                    Courses & Training
-                  </h3>
-                </div>
-                <p className="text-[#2B2725]/70 mb-8">Comprehensive learning programs to master Mind Styling techniques</p>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                  {courses.map((course) => (
-                    <div key={course.id} className="bg-white p-8 border border-[#E4D9C4] hover:border-[#6E4F7D] transition-all">
-                      <h4 className="font-serif text-xl text-[#1E3A32] mb-3">{course.name}</h4>
-                      {course.tagline && (
-                        <p className="text-[#2B2725]/60 text-sm mb-4">{course.tagline}</p>
-                      )}
-                      <p className="text-[#2B2725]/70 text-sm mb-4">{course.short_description}</p>
-                      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
-                        {formatPrice(course.price, course.billing_interval)}
-                      </p>
-                      <Link to={course.slug ? createPageUrl(`ProductPage?slug=${course.slug}`) : createPageUrl("PurchaseCenter")}>
-                        <Button className="w-full bg-[#6E4F7D] hover:bg-[#8B659B] text-white">
-                          Learn More
-                        </Button>
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Books & Resources */}
-            {books.length > 0 && (
-              <div className="mb-20">
-                <div className="flex items-center gap-3 mb-8">
-                  <BookOpen size={28} className="text-[#D8B46B]" />
-                  <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
-                    Books & Resources
-                  </h3>
-                </div>
-                <p className="text-[#2B2725]/70 mb-8">Deep dives and practical guides</p>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                  {books.map((book) => (
-                    <div key={book.id} className="bg-white p-8 border border-[#E4D9C4] hover:border-[#D8B46B] transition-all">
-                      <h4 className="font-serif text-xl text-[#1E3A32] mb-3">{book.name}</h4>
-                      {book.tagline && (
-                        <p className="text-[#2B2725]/60 text-sm mb-4">{book.tagline}</p>
-                      )}
-                      <p className="text-[#2B2725]/70 text-sm mb-4">{book.short_description}</p>
-                      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
-                        {formatPrice(book.price, book.billing_interval)}
-                      </p>
-                      <Link to={book.slug ? createPageUrl(`ProductPage?slug=${book.slug}`) : createPageUrl("PurchaseCenter")}>
-                        <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
-                          Get the Book
-                        </Button>
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Webinars */}
-            {(webinars.length > 0 || webinarProducts.length > 0) && (
-              <div className="mb-20">
-                <div className="flex items-center gap-3 mb-8">
-                  <Sparkles size={28} className="text-[#6E4F7D]" />
-                  <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">
-                    Webinars & Live Events
-                  </h3>
-                </div>
-                <p className="text-[#2B2725]/70 mb-8">Join live sessions and workshops</p>
-
-                <div className="grid md:grid-cols-3 gap-6">
-                  {webinars.map((webinar) => (
-                    <div key={webinar.id} className="bg-white p-8 border border-[#E4D9C4] hover:border-[#6E4F7D] transition-all">
-                      <h4 className="font-serif text-xl text-[#1E3A32] mb-3">{webinar.title}</h4>
-                      <p className="text-[#2B2725]/70 text-sm mb-4">{webinar.short_description}</p>
-                      {webinar.event_date && (
-                        <p className="text-sm text-[#D8B46B] mb-4">
-                          {new Date(webinar.event_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+              <div className="mb-12">
+                <Link to={createPageUrl("ProgramsCourses")}>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gradient-to-br from-[#6E4F7D] to-[#8B659B] text-white p-8 cursor-pointer group"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-4">
+                          <BookOpen size={32} className="text-white" />
+                          <h3 className="font-serif text-3xl">Courses & Training</h3>
+                        </div>
+                        <p className="text-white/90 text-lg mb-4">
+                          Comprehensive learning programs to master Mind Styling techniques
                         </p>
-                      )}
-                      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
-                        {webinar.price ? `$${(webinar.price / 100).toFixed(2)}` : "Free"}
-                      </p>
-                      <Link to={createPageUrl(`WebinarPage?id=${webinar.id}`)}>
-                        <Button className="w-full bg-[#6E4F7D] hover:bg-[#8B659B] text-white">
-                          Learn More
-                        </Button>
-                      </Link>
+                        <p className="text-white/80 text-sm">
+                          {courses.length} {courses.length === 1 ? 'course' : 'courses'} available • View all pricing and details
+                        </p>
+                      </div>
+                      <ArrowRight size={28} className="text-white/60 group-hover:text-white group-hover:translate-x-2 transition-all" />
                     </div>
-                  ))}
-                  {webinarProducts.map((product) => (
-                    <div key={product.id} className="bg-white p-8 border border-[#E4D9C4] hover:border-[#6E4F7D] transition-all">
-                      <h4 className="font-serif text-xl text-[#1E3A32] mb-3">{product.name}</h4>
-                      {product.tagline && (
-                        <p className="text-[#2B2725]/60 text-sm mb-4">{product.tagline}</p>
-                      )}
-                      <p className="text-[#2B2725]/70 text-sm mb-4">{product.short_description}</p>
-                      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
-                        {formatPrice(product.price, product.billing_interval)}
-                      </p>
-                      <Link to={createPageUrl("PocketMindset")}>
-                       <Button className="w-full bg-[#6E4F7D] hover:bg-[#8B659B] text-white">
-                         Learn More
-                       </Button>
-                      </Link>
+                  </motion.div>
+                </Link>
+              </div>
+            )}
+
+            {/* Category Cards - Books */}
+            {books.length > 0 && (
+              <div className="mb-12">
+                <Link to={createPageUrl("ProgramsBooks")}>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gradient-to-br from-[#D8B46B] to-[#C5A35B] text-[#1E3A32] p-8 cursor-pointer group"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-4">
+                          <BookOpen size={32} />
+                          <h3 className="font-serif text-3xl">Books & Resources</h3>
+                        </div>
+                        <p className="text-[#1E3A32]/90 text-lg mb-4">
+                          Deep dives and practical guides for your transformation journey
+                        </p>
+                        <p className="text-[#1E3A32]/80 text-sm">
+                          {books.length} {books.length === 1 ? 'book' : 'books'} available • View all pricing and details
+                        </p>
+                      </div>
+                      <ArrowRight size={28} className="text-[#1E3A32]/60 group-hover:text-[#1E3A32] group-hover:translate-x-2 transition-all" />
                     </div>
-                  ))}
-                </div>
+                  </motion.div>
+                </Link>
+              </div>
+            )}
+
+            {/* Category Cards - Webinars */}
+            {(webinars.length > 0 || webinarProducts.length > 0) && (
+              <div className="mb-12">
+                <Link to={createPageUrl("ProgramsWebinars")}>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gradient-to-br from-[#1E3A32] to-[#2B4A40] text-white p-8 cursor-pointer group"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-4">
+                          <Sparkles size={32} className="text-[#D8B46B]" />
+                          <h3 className="font-serif text-3xl">Webinars & Live Events</h3>
+                        </div>
+                        <p className="text-white/90 text-lg mb-4">
+                          Join live sessions and workshops for real-time learning
+                        </p>
+                        <p className="text-white/80 text-sm">
+                          {webinars.length + webinarProducts.length} {webinars.length + webinarProducts.length === 1 ? 'event' : 'events'} available • View all pricing and details
+                        </p>
+                      </div>
+                      <ArrowRight size={28} className="text-white/60 group-hover:text-white group-hover:translate-x-2 transition-all" />
+                    </div>
+                  </motion.div>
+                </Link>
               </div>
             )}
 
