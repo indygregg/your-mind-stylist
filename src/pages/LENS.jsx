@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
 import { CheckCircle } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
+import VideoEmbed from "../components/cms/VideoEmbed";
 
 export default function LENS() {
   return (
@@ -94,13 +95,11 @@ export default function LENS() {
 
                 {/* Video Container */}
                 <div className="relative aspect-video bg-[#E4D9C4] overflow-hidden">
-                  <CmsText 
-                    contentKey="lens.hero.video_embed" 
+                  <VideoEmbed
+                    contentKey="lens.hero.video_embed"
                     page="LENS"
-                    blockTitle="Hero Video Embed (Paste Vimeo/YouTube iframe code)"
-                    fallback="<div class='w-full h-full flex items-center justify-center text-[#2B2725]/40 text-center p-8'><div><p class='font-serif text-xl mb-2'>Video Coming Soon</p><p class='text-sm'>Paste your Vimeo or YouTube embed code in Edit Mode</p></div></div>" 
-                    contentType="rich_text"
-                    className="w-full h-full [&_iframe]:w-full [&_iframe]:h-full [&_iframe]:absolute [&_iframe]:inset-0 [&_a]:hidden"
+                    blockTitle="Hero Video (Paste Vimeo or YouTube URL)"
+                    fallback=""
                   />
                 </div>
               </div>
