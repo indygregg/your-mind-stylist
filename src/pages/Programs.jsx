@@ -106,7 +106,13 @@ export default function Programs() {
               to={createPageUrl("Bookings")}
               className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm font-semibold tracking-wide hover:bg-[#C5A35B] transition-all duration-300 shadow-lg"
             >
-              Experience Hypnosis with Roberta
+              <CmsText 
+                contentKey="programs.hero.cta_experience" 
+                page="Programs"
+                blockTitle="Hero Experience CTA"
+                fallback="Experience Hypnosis with Roberta" 
+                contentType="short_text"
+              />
               <ArrowRight size={16} />
             </Link>
           </motion.div>
