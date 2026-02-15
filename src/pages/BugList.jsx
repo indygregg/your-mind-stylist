@@ -515,14 +515,7 @@ export default function BugList() {
           priority: "high",
           notes: "✅ COMPLETE: Gift code system is ready! Go to Manager Dashboard → Product Manager. Click on any product and select 'Generate Gift Code' to create a free access code. You can generate codes for specific clients (with their name/email noted) or create batch codes. When clients checkout, they enter the code for 100% discount - all email automations still trigger normally. Codes are single-use by default but can be configured for multiple uses. Visit Product Manager to start creating gift codes."
         },
-        {
-          id: "misc-5",
-          title: "Set up bundling in Stripe",
-          description: "Need bundling option so don't have to rebuild training course",
-          status: "completed",
-          priority: "high",
-          notes: "Bundle system is ready! Go to Manager Dashboard → Product Manager → Click 'Create Bundle'. Follow 4-step wizard: (1) Name your bundle, (2) Select products to include, (3) Set bundle price (system calculates savings), (4) Review & publish. Bundles auto-sync with Stripe."
-        },
+
         {
           id: "misc-6",
           title: "Add video to Initial Consultation page",
@@ -575,14 +568,7 @@ export default function BugList() {
           priority: "medium",
           notes: "Yes! CRM is fully functional at Manager Dashboard → CRM. Track leads, clients, messages, bookings, purchases, and activities. Import leads, send emails/SMS, manage stages, and view complete client history."
         },
-        {
-          id: "misc-13",
-          title: "Gift products without charging",
-          description: "Need to be able to gift clients certain products without charging them (Pocket Mindset™, workshops, etc.)",
-          status: "completed",
-          priority: "high",
-          notes: "Gift code system is ready! Go to Manager Dashboard → Product Manager, click any product, select 'Generate Gift Code'. Clients enter code at checkout for 100% discount. Codes are single-use by default but configurable for multiple uses."
-        }
+
       ]
     },
     {
