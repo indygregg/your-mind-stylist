@@ -78,10 +78,19 @@ export default function Consultations() {
                 <VideoEmbed
                   contentKey="consultations.hero.video_url"
                   page="Consultations"
-                  blockTitle="Hero Video URL"
-                  fallback="https://vimeo.com/1158905462?fl=ip&fe=ec"
+                  blockTitle="Hero Video URL (Initial Consultation Welcome)"
+                  fallback="https://vimeo.com/1158905462"
                 />
               </div>
+              <p className="text-sm text-[#F9F5EF]/70 mt-4 text-center">
+                <CmsText 
+                  contentKey="consultations.hero.video_caption" 
+                  page="Consultations"
+                  blockTitle="Hero Video Caption"
+                  fallback="Welcome to Your Initial Consultation - Watch this video for instructions" 
+                  contentType="short_text"
+                />
+              </p>
             </motion.div>
           </div>
         </div>
@@ -255,13 +264,32 @@ export default function Consultations() {
                           contentType="rich_text"
                         />
                       </div>
-                      <CmsText 
-                        contentKey="consultations.step1.doc1.link" 
-                        page="Consultations"
-                        blockTitle="Document 1 Link"
-                        fallback='<a href="#" class="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"><Download size={14} />Download PDF</a>' 
-                        contentType="rich_text"
-                      />
+                      <a 
+                        href="#" 
+                        className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          alert('Please upload the Welcome Letter PDF in the CMS and update this link.');
+                        }}
+                      >
+                        <Download size={14} />
+                        <CmsText 
+                          contentKey="consultations.step1.doc1.link_text" 
+                          page="Consultations"
+                          blockTitle="Document 1 Link Text"
+                          fallback="Download Welcome Letter PDF" 
+                          contentType="short_text"
+                        />
+                      </a>
+                      <p className="text-xs text-[#2B2725]/40 mt-1">
+                        <CmsText 
+                          contentKey="consultations.step1.doc1.link_url" 
+                          page="Consultations"
+                          blockTitle="Document 1 Link URL (paste full URL here)"
+                          fallback="Upload PDF and paste URL here via CMS" 
+                          contentType="short_text"
+                        />
+                      </p>
                     </div>
 
                     <div>
@@ -286,13 +314,32 @@ export default function Consultations() {
                           contentType="rich_text"
                         />
                       </div>
-                      <CmsText 
-                        contentKey="consultations.step1.doc2.link" 
-                        page="Consultations"
-                        blockTitle="Document 2 Link"
-                        fallback='<a href="#" class="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"><Download size={14} />Download PDF</a>' 
-                        contentType="rich_text"
-                      />
+                      <a 
+                        href="#" 
+                        className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          alert('Please upload the Online Instructions PDF in the CMS and update this link.');
+                        }}
+                      >
+                        <Download size={14} />
+                        <CmsText 
+                          contentKey="consultations.step1.doc2.link_text" 
+                          page="Consultations"
+                          blockTitle="Document 2 Link Text"
+                          fallback="Download Online Instructions PDF" 
+                          contentType="short_text"
+                        />
+                      </a>
+                      <p className="text-xs text-[#2B2725]/40 mt-1">
+                        <CmsText 
+                          contentKey="consultations.step1.doc2.link_url" 
+                          page="Consultations"
+                          blockTitle="Document 2 Link URL (paste full URL here)"
+                          fallback="Upload PDF and paste URL here via CMS" 
+                          contentType="short_text"
+                        />
+                      </p>
                     </div>
 
                     <div>
@@ -317,13 +364,51 @@ export default function Consultations() {
                           contentType="rich_text"
                         />
                       </div>
-                      <CmsText 
-                        contentKey="consultations.step1.doc3.link" 
-                        page="Consultations"
-                        blockTitle="Document 3 Link"
-                        fallback='<div class="flex flex-col gap-2"><a href="#" class="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"><Download size={14} />Adult Rights PDF</a><a href="#" class="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"><Download size={14} />Minor Rights PDF</a></div>' 
-                        contentType="rich_text"
-                      />
+                      <div className="flex flex-col gap-2">
+                        <a 
+                          href="#" 
+                          className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            alert('Please upload the Adult Bill of Rights PDF in the CMS and update this link.');
+                          }}
+                        >
+                          <Download size={14} />
+                          <CmsText 
+                            contentKey="consultations.step1.doc3.adult_link_text" 
+                            page="Consultations"
+                            blockTitle="Document 3 Adult Link Text"
+                            fallback="Download Adult Bill of Rights PDF" 
+                            contentType="short_text"
+                          />
+                        </a>
+                        <a 
+                          href="#" 
+                          className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            alert('Please upload the Minor Bill of Rights PDF in the CMS and update this link.');
+                          }}
+                        >
+                          <Download size={14} />
+                          <CmsText 
+                            contentKey="consultations.step1.doc3.minor_link_text" 
+                            page="Consultations"
+                            blockTitle="Document 3 Minor Link Text"
+                            fallback="Download Minor Bill of Rights PDF" 
+                            contentType="short_text"
+                          />
+                        </a>
+                        <p className="text-xs text-[#2B2725]/40 mt-1">
+                          <CmsText 
+                            contentKey="consultations.step1.doc3.link_urls" 
+                            page="Consultations"
+                            blockTitle="Document 3 Link URLs (paste both PDF URLs here)"
+                            fallback="Upload PDFs and paste URLs here via CMS" 
+                            contentType="short_text"
+                          />
+                        </p>
+                      </div>
                     </div>
 
                     <div>
@@ -334,27 +419,28 @@ export default function Consultations() {
                             contentKey="consultations.step1.doc4.title" 
                             page="Consultations"
                             blockTitle="Document 4 Title"
-                            fallback="Watch the Video" 
+                            fallback="Learn About Hypnosis" 
                             contentType="short_text"
                           />
                         </h4>
                       </div>
-                      <div className="text-sm text-[#2B2725]/70 mb-2">
+                      <div className="text-sm text-[#2B2725]/70 mb-3">
                         <CmsText 
                           contentKey="consultations.step1.doc4.description" 
                           page="Consultations"
                           blockTitle="Document 4 Description"
-                          fallback="This short video will help you prepare for your consultation." 
+                          fallback="Watch this video to understand what hypnosis is and how it can help you." 
                           contentType="rich_text"
                         />
                       </div>
-                      <CmsText 
-                        contentKey="consultations.step1.doc4.link" 
-                        page="Consultations"
-                        blockTitle="Document 4 Link"
-                        fallback='<a href="https://vimeo.com/example" target="_blank" rel="noopener noreferrer" class="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors">Watch Video <ExternalLink size={14} /></a>' 
-                        contentType="rich_text"
-                      />
+                      <div className="aspect-video rounded-lg overflow-hidden border border-[#E4D9C4] mb-2">
+                        <VideoEmbed
+                          contentKey="consultations.step1.hypnosis_video_url"
+                          page="Consultations"
+                          blockTitle="Learn About Hypnosis Video URL"
+                          fallback="https://vimeo.com/1164998743"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

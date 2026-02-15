@@ -45,7 +45,7 @@ export default function ConsultationFormEditor() {
 
   // Delete field mutation
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.ConsultationForm.delete({ id }),
+    mutationFn: (id) => base44.entities.ConsultationForm.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['consultationForm'] });
     },
