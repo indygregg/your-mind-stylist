@@ -378,7 +378,7 @@ export default function ManagerBookings() {
 
         {/* Booking Detail Dialog */}
         <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="font-serif text-2xl text-[#1E3A32]">
                 Booking Details
