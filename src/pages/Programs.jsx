@@ -90,7 +90,7 @@ export default function Programs() {
                 contentType="short_text"
               />
             </h1>
-            <p className="text-[#2B2725]/80 text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto">
+            <p className="text-[#2B2725]/80 text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto mb-8">
               <CmsText 
                 contentKey="programs.hero.description" 
                 page="Programs"
@@ -99,6 +99,15 @@ export default function Programs() {
                 contentType="rich_text"
               />
             </p>
+            
+            {/* Primary CTA */}
+            <Link
+              to={createPageUrl("Bookings")}
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm font-semibold tracking-wide hover:bg-[#C5A35B] transition-all duration-300 shadow-lg"
+            >
+              Experience Hypnosis with Roberta
+              <ArrowRight size={16} />
+            </Link>
           </motion.div>
         </div>
       </section>
