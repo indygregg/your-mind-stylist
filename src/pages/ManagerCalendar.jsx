@@ -23,6 +23,11 @@ export default function ManagerCalendar() {
     },
   });
 
+  const { data: blockedTimes = [] } = useQuery({
+    queryKey: ["blockedTimes"],
+    queryFn: () => base44.entities.AvailabilityRule.filter({ rule_type: "blocked", active: true }),
+  });
+
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   const calendarStart = startOfWeek(monthStart);
@@ -35,11 +40,21 @@ export default function ManagerCalendar() {
       if (booking.scheduled_date) {
         const dateKey = format(new Date(booking.scheduled_date), "yyyy-MM-dd");
         if (!map[dateKey]) map[dateKey] = [];
-        map[dateKey].push(booking);
+        map[dateKey].push({ type: 'booking', ...booking });
       }
     });
+    
+    // Add blocked times to the map
+    blockedTimes.forEach((rule) => {
+      if (rule.specific_date) {
+        const dateKey = rule.specific_date;
+        if (!map[dateKey]) map[dateKey] = [];
+        map[dateKey].push({ type: 'blocked', ...rule });
+      }
+    });
+    
     return map;
-  }, [bookings]);
+  }, [bookings, blockedTimes]);
 
   const getStatusColor = (status) => {
     const colors = {
@@ -180,33 +195,52 @@ export default function ManagerCalendar() {
                     )}
                   </div>
                   <div className="space-y-1.5">
-                    {dayBookings.slice(0, 3).map((booking) => (
-                      <button
-                        key={booking.id}
-                        onClick={() => setSelectedBooking(booking)}
-                        className={`w-full text-left px-2 py-1.5 rounded transition-all text-xs ${
-                          booking.booking_status === 'confirmed' 
-                            ? 'bg-green-100 hover:bg-green-200 border border-green-300' 
-                            : booking.booking_status === 'cancelled'
-                            ? 'bg-red-100 hover:bg-red-200 border border-red-300'
-                            : 'bg-blue-100 hover:bg-blue-200 border border-blue-300'
-                        }`}
-                      >
-                        <div className="font-medium truncate flex items-center gap-1">
-                          <Clock size={10} className="flex-shrink-0" />
-                          <span>{booking.scheduled_date && format(new Date(booking.scheduled_date), "h:mm a")}</span>
-                        </div>
-                        <div className="text-[10px] truncate font-medium mt-0.5 flex items-center gap-1">
-                          {booking.user_name}
-                          {booking.zoom_status === 'created' && (
-                            <Video size={10} className="text-blue-600 flex-shrink-0" />
-                          )}
-                          {booking.zoom_status === 'failed' && (
-                            <AlertCircle size={10} className="text-red-500 flex-shrink-0" />
-                          )}
-                        </div>
-                      </button>
-                    ))}
+                    {dayBookings.slice(0, 3).map((item) => {
+                      if (item.type === 'blocked') {
+                        return (
+                          <div
+                            key={item.id}
+                            className="w-full text-left px-2 py-1.5 rounded bg-gray-100 border border-gray-300 text-xs"
+                          >
+                            <div className="font-medium truncate flex items-center gap-1">
+                              <Clock size={10} className="flex-shrink-0" />
+                              <span>{item.start_time} - {item.end_time}</span>
+                            </div>
+                            <div className="text-[10px] truncate text-gray-600 mt-0.5">
+                              🚫 {item.reason || 'Blocked'}
+                            </div>
+                          </div>
+                        );
+                      }
+                      
+                      return (
+                        <button
+                          key={item.id}
+                          onClick={() => setSelectedBooking(item)}
+                          className={`w-full text-left px-2 py-1.5 rounded transition-all text-xs ${
+                            item.booking_status === 'confirmed' 
+                              ? 'bg-green-100 hover:bg-green-200 border border-green-300' 
+                              : item.booking_status === 'cancelled'
+                              ? 'bg-red-100 hover:bg-red-200 border border-red-300'
+                              : 'bg-blue-100 hover:bg-blue-200 border border-blue-300'
+                          }`}
+                        >
+                          <div className="font-medium truncate flex items-center gap-1">
+                            <Clock size={10} className="flex-shrink-0" />
+                            <span>{item.scheduled_date && format(new Date(item.scheduled_date), "h:mm a")}</span>
+                          </div>
+                          <div className="text-[10px] truncate font-medium mt-0.5 flex items-center gap-1">
+                            {item.user_name}
+                            {item.zoom_status === 'created' && (
+                              <Video size={10} className="text-blue-600 flex-shrink-0" />
+                            )}
+                            {item.zoom_status === 'failed' && (
+                              <AlertCircle size={10} className="text-red-500 flex-shrink-0" />
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
                     {dayBookings.length > 3 && (
                       <div className="text-xs text-[#2B2725]/60 text-center py-1">
                         +{dayBookings.length - 3} more
