@@ -187,7 +187,7 @@ export default function Programs() {
                       <p className="text-2xl font-bold text-[#1E3A32] mb-6">
                         {formatPrice(product.price, product.billing_interval)}
                       </p>
-                      <Link to={createPageUrl("PurchaseCenter")}>
+                      <Link to={product.slug ? createPageUrl(`ProductPage?slug=${product.slug}`) : createPageUrl("PurchaseCenter")}>
                         <Button
                           className={`w-full ${
                             product.ui_group === "hero"
@@ -333,7 +333,7 @@ export default function Programs() {
                       >
                         {formatPrice(product.price, product.billing_interval)}
                       </p>
-                      <Link to={createPageUrl("PurchaseCenter")}>
+                      <Link to={product.slug ? createPageUrl(`ProductPage?slug=${product.slug}`) : createPageUrl("PurchaseCenter")}>
                         <Button
                           className={`w-full ${
                             product.ui_group === "featured"
@@ -372,7 +372,7 @@ export default function Programs() {
                       <p className="text-2xl font-bold text-[#1E3A32] mb-6">
                         {formatPrice(book.price, book.billing_interval)}
                       </p>
-                      <Link to={createPageUrl("PurchaseCenter")}>
+                      <Link to={book.slug ? createPageUrl(`ProductPage?slug=${book.slug}`) : createPageUrl("PurchaseCenter")}>
                         <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
                           Get the Book
                         </Button>
@@ -454,10 +454,10 @@ export default function Programs() {
                   <p className="text-[#2B2725]/70 text-sm mb-4">
                     Full training for professional practice
                   </p>
-                  <p className="text-xl font-medium text-[#2B2725]/60 mb-6">TBD</p>
+                  <p className="text-xl font-medium text-[#D8B46B] mb-6">Contact for Pricing</p>
                   <Link to={createPageUrl("LearnHypnosis")}>
                     <Button variant="outline" className="w-full border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-white">
-                      Join Waitlist
+                      Learn More & Join Waitlist
                     </Button>
                   </Link>
                 </div>
@@ -472,10 +472,10 @@ export default function Programs() {
                   <p className="text-[#2B2725]/70 text-sm mb-4">
                     One-day immersion experience <em>(coming soon)</em>
                   </p>
-                  <p className="text-xl font-medium text-[#2B2725]/60 mb-6">Coming Soon</p>
+                  <p className="text-xl font-medium text-[#D8B46B] mb-6">Contact for Pricing</p>
                   <Link to={createPageUrl("Bookings")}>
                    <Button variant="outline" className="w-full border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-white">
-                     Schedule Now
+                     Book Consultation
                    </Button>
                   </Link>
                 </div>
@@ -636,7 +636,7 @@ export default function Programs() {
                     .filter(p => p.ui_group === "hero" || p.ui_group === "featured")
                     .slice(0, 5)
                     .map((product) => (
-                      <Link key={product.id} to={product.slug ? createPageUrl(product.slug) : createPageUrl("PurchaseCenter")}>
+                      <Link key={product.id} to={product.slug ? createPageUrl(`ProductPage?slug=${product.slug}`) : createPageUrl("PurchaseCenter")}>
                         <Button className="w-full h-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#F9F5EF] py-6 flex flex-col items-center justify-center gap-2">
                           <span className="text-sm font-normal">{product.name}</span>
                           <span className="text-lg font-bold">{formatPrice(product.price, product.billing_interval)}</span>
