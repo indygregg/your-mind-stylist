@@ -264,32 +264,27 @@ export default function Consultations() {
                           contentType="rich_text"
                         />
                       </div>
-                      <a 
-                        href="#" 
-                        className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          alert('Please upload the Welcome Letter PDF in the CMS and update this link.');
-                        }}
+                      <CmsText 
+                        contentKey="consultations.step1.doc1.link_url" 
+                        page="Consultations"
+                        blockTitle="Document 1 Link URL (paste full https:// URL here)"
+                        fallback=""
+                        contentType="short_text"
                       >
-                        <Download size={14} />
-                        <CmsText 
-                          contentKey="consultations.step1.doc1.link_text" 
-                          page="Consultations"
-                          blockTitle="Document 1 Link Text"
-                          fallback="Download Welcome Letter PDF" 
-                          contentType="short_text"
-                        />
-                      </a>
-                      <p className="text-xs text-[#2B2725]/40 mt-1">
-                        <CmsText 
-                          contentKey="consultations.step1.doc1.link_url" 
-                          page="Consultations"
-                          blockTitle="Document 1 Link URL (paste full URL here)"
-                          fallback="Upload PDF and paste URL here via CMS" 
-                          contentType="short_text"
-                        />
-                      </p>
+                        {(url) => url && url.startsWith('http') ? (
+                          <a 
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+                          >
+                            <Download size={14} />
+                            <span>Download Welcome Letter PDF</span>
+                          </a>
+                        ) : (
+                          <span className="text-xs text-[#2B2725]/40">Upload PDF and paste URL via CMS Edit Mode</span>
+                        )}
+                      </CmsText>
                     </div>
 
                     <div>
@@ -314,32 +309,27 @@ export default function Consultations() {
                           contentType="rich_text"
                         />
                       </div>
-                      <a 
-                        href="#" 
-                        className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          alert('Please upload the Online Instructions PDF in the CMS and update this link.');
-                        }}
+                      <CmsText 
+                        contentKey="consultations.step1.doc2.link_url" 
+                        page="Consultations"
+                        blockTitle="Document 2 Link URL (paste full https:// URL here)"
+                        fallback=""
+                        contentType="short_text"
                       >
-                        <Download size={14} />
-                        <CmsText 
-                          contentKey="consultations.step1.doc2.link_text" 
-                          page="Consultations"
-                          blockTitle="Document 2 Link Text"
-                          fallback="Download Online Instructions PDF" 
-                          contentType="short_text"
-                        />
-                      </a>
-                      <p className="text-xs text-[#2B2725]/40 mt-1">
-                        <CmsText 
-                          contentKey="consultations.step1.doc2.link_url" 
-                          page="Consultations"
-                          blockTitle="Document 2 Link URL (paste full URL here)"
-                          fallback="Upload PDF and paste URL here via CMS" 
-                          contentType="short_text"
-                        />
-                      </p>
+                        {(url) => url && url.startsWith('http') ? (
+                          <a 
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+                          >
+                            <Download size={14} />
+                            <span>Download Online Instructions PDF</span>
+                          </a>
+                        ) : (
+                          <span className="text-xs text-[#2B2725]/40">Upload PDF and paste URL via CMS Edit Mode</span>
+                        )}
+                      </CmsText>
                     </div>
 
                     <div>
@@ -365,49 +355,49 @@ export default function Consultations() {
                         />
                       </div>
                       <div className="flex flex-col gap-2">
-                        <a 
-                          href="#" 
-                          className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            alert('Please upload the Adult Bill of Rights PDF in the CMS and update this link.');
-                          }}
+                        <CmsText 
+                          contentKey="consultations.step1.doc3.adult_url" 
+                          page="Consultations"
+                          blockTitle="Document 3 Adult URL (paste full https:// URL)"
+                          fallback=""
+                          contentType="short_text"
                         >
-                          <Download size={14} />
-                          <CmsText 
-                            contentKey="consultations.step1.doc3.adult_link_text" 
-                            page="Consultations"
-                            blockTitle="Document 3 Adult Link Text"
-                            fallback="Download Adult Bill of Rights PDF" 
-                            contentType="short_text"
-                          />
-                        </a>
-                        <a 
-                          href="#" 
-                          className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            alert('Please upload the Minor Bill of Rights PDF in the CMS and update this link.');
-                          }}
+                          {(url) => url && url.startsWith('http') ? (
+                            <a 
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+                            >
+                              <Download size={14} />
+                              <span>Download Adult Bill of Rights PDF</span>
+                            </a>
+                          ) : (
+                            <span className="text-xs text-[#2B2725]/40">Upload Adult PDF and paste URL via CMS Edit Mode</span>
+                          )}
+                        </CmsText>
+                        
+                        <CmsText 
+                          contentKey="consultations.step1.doc3.minor_url" 
+                          page="Consultations"
+                          blockTitle="Document 3 Minor URL (paste full https:// URL)"
+                          fallback=""
+                          contentType="short_text"
                         >
-                          <Download size={14} />
-                          <CmsText 
-                            contentKey="consultations.step1.doc3.minor_link_text" 
-                            page="Consultations"
-                            blockTitle="Document 3 Minor Link Text"
-                            fallback="Download Minor Bill of Rights PDF" 
-                            contentType="short_text"
-                          />
-                        </a>
-                        <p className="text-xs text-[#2B2725]/40 mt-1">
-                          <CmsText 
-                            contentKey="consultations.step1.doc3.link_urls" 
-                            page="Consultations"
-                            blockTitle="Document 3 Link URLs (paste both PDF URLs here)"
-                            fallback="Upload PDFs and paste URLs here via CMS" 
-                            contentType="short_text"
-                          />
-                        </p>
+                          {(url) => url && url.startsWith('http') ? (
+                            <a 
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+                            >
+                              <Download size={14} />
+                              <span>Download Minor Bill of Rights PDF</span>
+                            </a>
+                          ) : (
+                            <span className="text-xs text-[#2B2725]/40">Upload Minor PDF and paste URL via CMS Edit Mode</span>
+                          )}
+                        </CmsText>
                       </div>
                     </div>
 

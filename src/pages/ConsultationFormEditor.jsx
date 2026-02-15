@@ -158,36 +158,46 @@ export default function ConsultationFormEditor() {
                                     }`}
                                   >
                                     {editingField?.id === field.id ? (
-                                      <FormFieldEditor
-                                        field={field}
-                                        onSave={(data) => {
-                                          updateMutation.mutate({ id: field.id, data });
-                                        }}
-                                        onCancel={() => setEditingField(null)}
-                                        onDelete={() => {
-                                          if (confirm('Delete this field?')) {
-                                            deleteMutation.mutate(field.id);
-                                            setEditingField(null);
-                                          }
-                                        }}
-                                      />
+                                     <FormFieldEditor
+                                       field={field}
+                                       onSave={(data) => {
+                                         updateMutation.mutate({ id: field.id, data });
+                                       }}
+                                       onCancel={() => setEditingField(null)}
+                                       onDelete={async () => {
+                                         if (confirm('Are you sure you want to delete this field? This cannot be undone.')) {
+                                           try {
+                                             await base44.entities.ConsultationForm.delete(field.id);
+                                             queryClient.invalidateQueries({ queryKey: ['consultationForm'] });
+                                             setEditingField(null);
+                                           } catch (error) {
+                                             alert('Failed to delete field: ' + error.message);
+                                           }
+                                         }
+                                       }}
+                                     />
                                     ) : (
-                                      <div className="flex items-start gap-3">
-                                        <div {...provided.dragHandleProps} className="mt-1 cursor-grab active:cursor-grabbing">
-                                          <GripVertical size={20} className="text-[#2B2725]/40" />
-                                        </div>
-                                        <div className="flex-1">
-                                          <FormFieldPreview
-                                            field={field}
-                                            onEdit={() => setEditingField(field)}
-                                            onDelete={() => {
-                                              if (confirm('Delete this field?')) {
-                                                deleteMutation.mutate(field.id);
-                                              }
-                                            }}
-                                          />
-                                        </div>
-                                      </div>
+                                     <div className="flex items-start gap-3">
+                                       <div {...provided.dragHandleProps} className="mt-1 cursor-grab active:cursor-grabbing">
+                                         <GripVertical size={20} className="text-[#2B2725]/40" />
+                                       </div>
+                                       <div className="flex-1">
+                                         <FormFieldPreview
+                                           field={field}
+                                           onEdit={() => setEditingField(field)}
+                                           onDelete={async () => {
+                                             if (confirm('Are you sure you want to delete this field? This cannot be undone.')) {
+                                               try {
+                                                 await base44.entities.ConsultationForm.delete(field.id);
+                                                 queryClient.invalidateQueries({ queryKey: ['consultationForm'] });
+                                               } catch (error) {
+                                                 alert('Failed to delete field: ' + error.message);
+                                               }
+                                             }
+                                           }}
+                                         />
+                                       </div>
+                                     </div>
                                     )}
                                   </div>
                                 )}
