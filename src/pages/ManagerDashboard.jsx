@@ -41,10 +41,6 @@ export default function ManagerDashboard() {
     fetchUser();
   }, []);
 
-  const [setupDismissed, setSetupDismissed] = useState(() => {
-    return localStorage.getItem('booking_setup_dismissed') === 'true';
-  });
-
   const toggleSection = (section) => {
     setExpandedSections(prev => ({
       ...prev,
