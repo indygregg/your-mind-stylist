@@ -360,12 +360,12 @@ export default function Dashboard() {
             </h2>
             <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
               {[
-                { label: "Style Pauses™", page: "StylePauses", icon: Sparkles, description: "1-3 minute resets." },
-                { label: "Library", page: "Library", icon: Layers, description: "Access your programs." },
-                { label: "Pocket Mindset™", page: "PocketMindset", icon: Sparkles, description: "Daily emotional reset tools." },
-                { label: "Notes", page: "StudioNotes", icon: Edit3, description: "Capture insights as you learn." },
-                { label: "Free Masterclass", page: "FreeMasterclass", icon: Play, description: "Watch anytime." },
-                { label: "Read Blog", page: "Blog", icon: BookOpen, description: "Articles and insights." },
+                { label: "Style Pauses™", page: "StylePauses", icon: Sparkles, descriptionKey: "dashboard.quicklinks.style_pauses", fallback: "1-3 minute resets." },
+                { label: "Library", page: "Library", icon: Layers, descriptionKey: "dashboard.quicklinks.library", fallback: "Access your programs." },
+                { label: "Pocket Mindset™", page: "PocketMindset", icon: Sparkles, descriptionKey: "dashboard.quicklinks.pocket_mindset", fallback: "Enter your favorite sessions in the notes section of your dashboard." },
+                { label: "Notes", page: "StudioNotes", icon: Edit3, descriptionKey: "dashboard.quicklinks.notes", fallback: "Capture insights as you learn." },
+                { label: "Free Masterclass", page: "FreeMasterclass", icon: Play, descriptionKey: "dashboard.quicklinks.masterclass", fallback: "Watch anytime." },
+                { label: "Read Blog", page: "Blog", icon: BookOpen, descriptionKey: "dashboard.quicklinks.blog", fallback: "Articles and insights." },
               ].map((link) => (
                 <Link
                   key={link.label}
@@ -375,7 +375,15 @@ export default function Dashboard() {
                 >
                   <link.icon size={20} className="text-[#D8B46B]" />
                   <span className="text-[#1E3A32] text-sm font-medium">{link.label}</span>
-                  <span className="text-[#2B2725]/60 text-xs">{link.description}</span>
+                  <span className="text-[#2B2725]/60 text-xs">
+                    <CmsText 
+                      contentKey={link.descriptionKey}
+                      page="Dashboard"
+                      blockTitle={`Quick Link ${link.label} Description`}
+                      fallback={link.fallback}
+                      contentType="short_text"
+                    />
+                  </span>
                 </Link>
               ))}
             </div>
