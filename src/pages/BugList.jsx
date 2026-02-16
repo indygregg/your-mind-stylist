@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, Circle, AlertCircle, Clock, ExternalLink, ChevronDown, ChevronRight, MessageSquare, Send } from "lucide-react";
+import { CheckCircle2, Circle, AlertCircle, Clock, ExternalLink, ChevronDown, ChevronRight, MessageSquare, Send, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
@@ -72,6 +72,13 @@ export default function BugList() {
     },
   });
 
+  const toggleTestedMutation = useMutation({
+    mutationFn: ({ id, tested }) => base44.entities.BugReport.update(id, { tested }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bugReports'] });
+    },
+  });
+
   const handleAddComment = (bugId) => {
     if (newComment[bugId]?.trim()) {
       addCommentMutation.mutate({
@@ -79,6 +86,10 @@ export default function BugList() {
         comment: newComment[bugId]
       });
     }
+  };
+
+  const handleToggleTested = (itemId, currentTested) => {
+    toggleTestedMutation.mutate({ id: itemId, tested: !currentTested });
   };
 
   // Group bug reports by page
@@ -91,7 +102,8 @@ export default function BugList() {
           category: page,
           categoryId: page.toLowerCase().replace(/\s+/g, '-'),
           priority: bug.priority?.toLowerCase() || 'medium',
-          items: []
+          items: [],
+          tested: false
         };
       }
       grouped[page].items.push({
@@ -101,11 +113,51 @@ export default function BugList() {
         status: bug.status === 'Resolved' ? 'completed' : 'open',
         priority: bug.priority?.toLowerCase() || 'medium',
         notes: bug.admin_notes,
-        reporter: bug.reporter_name
+        reporter: bug.reporter_name,
+        tested: bug.tested || false,
+        fromDatabase: true
       });
     });
+    
+    // Calculate category tested status
+    Object.values(grouped).forEach(cat => {
+      cat.tested = cat.items.every(item => item.tested);
+    });
+    
     return Object.values(grouped);
   }, [bugReports]);
+
+  const [staticBugStates, setStaticBugStates] = useState(() => {
+    const saved = localStorage.getItem('staticBugStates');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const [categoryStates, setCategoryStates] = useState(() => {
+    const saved = localStorage.getItem('categoryStates');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  useEffect(() => {
+    localStorage.setItem('staticBugStates', JSON.stringify(staticBugStates));
+  }, [staticBugStates]);
+
+  useEffect(() => {
+    localStorage.setItem('categoryStates', JSON.stringify(categoryStates));
+  }, [categoryStates]);
+
+  const toggleStaticItemTested = (itemId) => {
+    setStaticBugStates(prev => ({
+      ...prev,
+      [itemId]: !prev[itemId]
+    }));
+  };
+
+  const toggleCategoryTested = (categoryId) => {
+    setCategoryStates(prev => ({
+      ...prev,
+      [categoryId]: !prev[categoryId]
+    }));
+  };
 
   const staticBugs = [
     {
@@ -651,10 +703,19 @@ export default function BugList() {
     }
   ];
 
-  // Combine static bugs with database bugs
+  // Combine static bugs with database bugs and apply states
   const bugs = React.useMemo(() => {
-    return [...staticBugs, ...groupedBugs];
-  }, [groupedBugs]);
+    const enhanced = staticBugs.map(cat => ({
+      ...cat,
+      tested: categoryStates[cat.categoryId] || false,
+      items: cat.items.map(item => ({
+        ...item,
+        tested: staticBugStates[item.id] || false,
+        fromDatabase: false
+      }))
+    }));
+    return [...enhanced, ...groupedBugs];
+  }, [groupedBugs, staticBugStates, categoryStates]);
 
   // Auto-expand all categories on initial load
   React.useEffect(() => {
@@ -735,18 +796,31 @@ export default function BugList() {
               
               return (
                 <div key={category.categoryId} className="bg-white rounded-lg shadow-sm overflow-hidden">
-                  <button
-                    onClick={() => toggleCategory(category.categoryId)}
-                    className="w-full px-4 md:px-6 py-3 md:py-4 flex items-start md:items-center justify-between gap-2 hover:bg-gray-50 transition-colors"
-                  >
-                    <div className="flex items-start md:items-center gap-2 md:gap-4 flex-1 min-w-0">
-                      {isExpanded ? <ChevronDown size={18} className="flex-shrink-0" /> : <ChevronRight size={18} className="flex-shrink-0" />}
-                      <h3 className="font-serif text-base md:text-xl text-[#1E3A32] truncate">{category.category}</h3>
-                      <Badge className={`${getPriorityColor(categoryPriority)} text-xs md:text-sm flex-shrink-0`}>
-                        {category.items.length}
-                      </Badge>
-                    </div>
-                  </button>
+                  <div className="flex items-stretch">
+                    <button
+                      onClick={() => toggleCategory(category.categoryId)}
+                      className="flex-1 px-4 md:px-6 py-3 md:py-4 flex items-start md:items-center justify-between gap-2 hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex items-start md:items-center gap-2 md:gap-4 flex-1 min-w-0">
+                        {isExpanded ? <ChevronDown size={18} className="flex-shrink-0" /> : <ChevronRight size={18} className="flex-shrink-0" />}
+                        <h3 className={`font-serif text-base md:text-xl flex-1 truncate ${category.tested ? 'line-through text-[#2B2725]/40' : 'text-[#1E3A32]'}`}>
+                          {category.category}
+                        </h3>
+                        <Badge className={`${getPriorityColor(categoryPriority)} text-xs md:text-sm flex-shrink-0`}>
+                          {category.items.length}
+                        </Badge>
+                      </div>
+                    </button>
+                    <Button
+                      onClick={() => toggleCategoryTested(category.categoryId)}
+                      variant={category.tested ? "default" : "outline"}
+                      size="sm"
+                      className={`m-2 ${category.tested ? 'bg-green-600 hover:bg-green-700' : ''}`}
+                      title="Mark category as tested"
+                    >
+                      <Check size={16} />
+                    </Button>
+                  </div>
 
                   {isExpanded && (
                     <div className="border-t border-gray-100">
@@ -766,7 +840,18 @@ export default function BugList() {
                               ) : (
                                 <Circle size={16} className="text-orange-500 flex-shrink-0 mt-0.5" />
                               )}
-                              <h4 className="font-medium text-[#1E3A32] text-sm md:text-base flex-1">{item.title}</h4>
+                              <h4 className={`font-medium text-sm md:text-base flex-1 ${item.tested ? 'line-through text-[#2B2725]/40' : 'text-[#1E3A32]'}`}>
+                                {item.title}
+                              </h4>
+                              <Button
+                                onClick={() => item.fromDatabase ? handleToggleTested(item.id, item.tested) : toggleStaticItemTested(item.id)}
+                                variant={item.tested ? "default" : "outline"}
+                                size="sm"
+                                className={`${item.tested ? 'bg-green-600 hover:bg-green-700' : ''}`}
+                                title="Mark as tested"
+                              >
+                                <Check size={14} />
+                              </Button>
                             </div>
                             <div className="flex items-center gap-2 flex-wrap">
                               <Badge className={`${getPriorityColor(item.priority)} text-xs`}>
@@ -786,7 +871,9 @@ export default function BugList() {
                                 {itemComments.length > 0 && `${itemComments.length}`}
                               </button>
                             </div>
-                            <p className="text-xs md:text-sm text-[#2B2725]/70">{item.description}</p>
+                            <p className={`text-xs md:text-sm ${item.tested ? 'line-through text-[#2B2725]/40' : 'text-[#2B2725]/70'}`}>
+                              {item.description}
+                            </p>
                             {item.notes && (
                               <p className="text-xs text-[#2B2725]/50 italic">
                                 Note: {item.notes}

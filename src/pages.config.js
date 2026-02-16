@@ -136,6 +136,7 @@ import ManagerResources from './pages/ManagerResources';
 import ManagerSettings from './pages/ManagerSettings';
 import ManagerSubscriptionAnalytics from './pages/ManagerSubscriptionAnalytics';
 import ManagerTransformationAnalytics from './pages/ManagerTransformationAnalytics';
+import ManagerVoiceProfiles from './pages/ManagerVoiceProfiles';
 import ManagerWaitingList from './pages/ManagerWaitingList';
 import ManagerWebinarEditor from './pages/ManagerWebinarEditor';
 import Masterclass from './pages/Masterclass';
@@ -165,6 +166,7 @@ import StudioDashboard from './pages/StudioDashboard';
 import StudioDevDocs from './pages/StudioDevDocs';
 import StudioLegal from './pages/StudioLegal';
 import StudioLegalEditor from './pages/StudioLegalEditor';
+import Welcome from './pages/Welcome';
 import StudioLogs from './pages/StudioLogs';
 import StudioNotes from './pages/StudioNotes';
 import StudioPricing from './pages/StudioPricing';
@@ -176,11 +178,9 @@ import TransformationDemo from './pages/TransformationDemo';
 import TransformationStory from './pages/TransformationStory';
 import TransitionGuide from './pages/TransitionGuide';
 import WebinarPage from './pages/WebinarPage';
-import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import ManagerVoiceProfiles from './pages/ManagerVoiceProfiles';
 import __Layout from './Layout.jsx';
 
 
@@ -274,6 +274,7 @@ export const PAGES = {
     "ManagerSettings": ManagerSettings,
     "ManagerSubscriptionAnalytics": ManagerSubscriptionAnalytics,
     "ManagerTransformationAnalytics": ManagerTransformationAnalytics,
+    "ManagerVoiceProfiles": ManagerVoiceProfiles,
     "ManagerWaitingList": ManagerWaitingList,
     "ManagerWebinarEditor": ManagerWebinarEditor,
     "Masterclass": Masterclass,
@@ -303,6 +304,7 @@ export const PAGES = {
     "StudioDevDocs": StudioDevDocs,
     "StudioLegal": StudioLegal,
     "StudioLegalEditor": StudioLegalEditor,
+    "Welcome": Welcome,
     "StudioLogs": StudioLogs,
     "StudioNotes": StudioNotes,
     "StudioPricing": StudioPricing,
@@ -314,11 +316,9 @@ export const PAGES = {
     "TransformationStory": TransformationStory,
     "TransitionGuide": TransitionGuide,
     "WebinarPage": WebinarPage,
-    "Welcome": Welcome,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "ManagerVoiceProfiles": ManagerVoiceProfiles,
 }
 
 export const pagesConfig = {
