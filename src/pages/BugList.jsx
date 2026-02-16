@@ -628,6 +628,22 @@ export default function BugList() {
           priority: "medium",
           notes: "Yes! CRM is fully functional at Manager Dashboard → CRM. Track leads, clients, messages, bookings, purchases, and activities. Import leads, send emails/SMS, manage stages, and view complete client history."
         },
+        {
+          id: "misc-14",
+          title: "Update sitemap with all current pages",
+          description: "Sitemap needs to include all public pages for SEO",
+          status: "completed",
+          priority: "low",
+          notes: "✅ COMPLETE: Sitemap updated with all public pages including Home, About, Blog, Programs, Bookings, Contact, Consultations, LENS, Cleaning Out Your Closet, Pocket Mindset, Learn Hypnosis, Podcast, and Accessibility. Dynamic pages (blog posts, products) auto-generate. The sitemap auto-updates when new content is published."
+        },
+        {
+          id: "misc-15",
+          title: "Clarify product vs course setup workflow",
+          description: "Question: Do courses also have to be set up under products, or will they automatically appear there?",
+          status: "completed",
+          priority: "low",
+          notes: "✅ CLARIFIED: Courses and Products are separate systems that work together. (1) Create your COURSE in Course Manager - this is the learning content (modules, lessons, videos). (2) Create a PRODUCT in Product Manager to sell it - this handles pricing and Stripe. (3) Link them together: In Product Manager, set the product's 'related_course_id' to your course ID, OR in Course Manager edit the course and link a product. Once linked, when someone buys the product, they automatically get access to the course. Products can exist without courses (for books, webinars, consultations), and courses can be created first as drafts before you're ready to sell them."
+        }
 
       ]
     },
