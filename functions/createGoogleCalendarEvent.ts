@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     }
 
     // Extract event details from booking
-    const eventTitle = `Appointment: ${booking_data.user_name}`;
+    const eventTitle = booking_data.user_name;
     const eventDescription = `
 Client: ${booking_data.user_name}
 Email: ${booking_data.user_email}
