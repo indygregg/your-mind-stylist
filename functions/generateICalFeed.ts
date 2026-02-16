@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
             icalContent += `DTSTAMP:${dtstamp}\r\n`;
             icalContent += `DTSTART:${dtstart}\r\n`;
             icalContent += `DTEND:${dtend}\r\n`;
-            icalContent += `SUMMARY:${booking.service_type?.replace(/_/g, ' ')} - ${booking.user_name}\r\n`;
+            icalContent += `SUMMARY:${booking.user_name}\r\n`;
             icalContent += `DESCRIPTION:${description}\r\n`;
             if (booking.zoom_join_url) {
                 icalContent += `LOCATION:${booking.zoom_join_url}\r\n`;
