@@ -106,23 +106,7 @@ Deno.serve(async (req) => {
 
                 console.log('=== EMAIL SENDING PROCESS COMPLETE ===');
 
-                // Sync to Google Calendar
-                try {
-                    console.log('Syncing booking to Google Calendar...');
-                    const calendarResult = await base44.asServiceRole.functions.invoke('createGoogleCalendarEvent', {
-                        booking_id: booking.id,
-                        booking_data: {
-                            user_name,
-                            user_email,
-                            scheduled_date,
-                            client_phone: intake_data?.phone,
-                            notes
-                        }
-                    });
-                    console.log('✓ Calendar event created:', calendarResult.data);
-                } catch (calendarError) {
-                    console.error('✗ Failed to sync to calendar (non-critical):', calendarError.message);
-                }
+
 
                 // Add to CRM as lead
                 try {
