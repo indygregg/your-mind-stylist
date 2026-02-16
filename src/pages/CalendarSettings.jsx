@@ -110,22 +110,23 @@ export default function CalendarSettings() {
           </p>
         </div>
 
-        {/* iCal Feed - PRIMARY OPTION */}
-        <Card className="mb-6 border-2 border-[#D8B46B]">
+        {/* iCal Feed - OPTIONAL/LEGACY */}
+        <Card className="mb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
-              <Calendar className="text-[#D8B46B]" />
-              iCal Calendar Feed
+              <Calendar className="text-[#2B2725]/50" />
+              iCal Calendar Feed (Optional - Legacy Method)
             </CardTitle>
             <CardDescription>
-              Works with Apple Calendar, Google Calendar, Outlook, and any calendar app that supports iCal feeds
+              ⚠️ Not needed if you use Google Calendar! Bookings now automatically sync to Google Calendar. Only use this if you need to subscribe in other calendar apps that don't connect to Google.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center gap-3 text-green-600 mb-4">
-                <CheckCircle size={20} />
-                <span className="font-medium">Your personal calendar feed is ready</span>
+              <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                <p className="text-sm text-blue-900">
+                  <strong>💡 Recommended:</strong> If you use Apple Calendar or any other calendar app, connect it to your Google Calendar instead of using this feed. That way you'll get automatic real-time updates instead of waiting for the feed to refresh.
+                </p>
               </div>
               
               <div>
@@ -161,10 +162,12 @@ export default function CalendarSettings() {
                 </p>
               </div>
 
-              <div className="bg-[#F9F5EF] p-4 rounded-lg space-y-3">
-                <h4 className="font-medium text-[#1E3A32] mb-2">How to subscribe:</h4>
+              <details className="bg-[#F9F5EF] p-4 rounded-lg">
+                <summary className="font-medium text-[#1E3A32] mb-2 cursor-pointer">
+                  Show subscription instructions (if needed)
+                </summary>
                 
-                <div className="space-y-3 text-sm text-[#2B2725]/80">
+                <div className="space-y-3 text-sm text-[#2B2725]/80 mt-3">
                   <div>
                     <p className="font-medium text-[#1E3A32] mb-1">📱 Apple Calendar (iPhone/Mac):</p>
                     <ol className="list-decimal list-inside space-y-1 pl-4">
@@ -193,7 +196,7 @@ export default function CalendarSettings() {
                     </ol>
                   </div>
                 </div>
-              </div>
+              </details>
             </div>
           </CardContent>
         </Card>
@@ -347,13 +350,13 @@ export default function CalendarSettings() {
               <div className="w-6 h-6 rounded-full bg-[#D8B46B]/20 flex items-center justify-center flex-shrink-0 text-[#D8B46B] font-medium">
                 1
               </div>
-              <p><strong>Website → Your Calendar:</strong> Your calendar app checks the feed for updates every few hours</p>
+              <p><strong>Website → Google Calendar:</strong> All bookings automatically sync to Google Calendar (and to your iCal if connected to Google)</p>
             </div>
             <div className="flex gap-3">
               <div className="w-6 h-6 rounded-full bg-[#D8B46B]/20 flex items-center justify-center flex-shrink-0 text-[#D8B46B] font-medium">
                 2
               </div>
-              <p><strong>Your Calendar → Website:</strong> Click "Sync Now" to import events and block booking times</p>
+              <p><strong>Google Calendar → Website:</strong> Click "Sync Now" to import your personal events and block those booking times</p>
             </div>
             <div className="flex gap-3">
               <div className="w-6 h-6 rounded-full bg-[#D8B46B]/20 flex items-center justify-center flex-shrink-0 text-[#D8B46B] font-medium">
