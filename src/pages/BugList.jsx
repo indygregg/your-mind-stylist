@@ -725,11 +725,7 @@ export default function BugList() {
     return [...enhanced, ...groupedBugs];
   }, [groupedBugs, staticBugStates, categoryStates]);
 
-  // Auto-expand all categories on initial load
-  React.useEffect(() => {
-    const allCategories = new Set(bugs.map(b => b.categoryId));
-    setExpandedCategories(allCategories);
-  }, [bugs.length]);
+
 
   const getPriorityColor = (priority) => {
     switch (priority) {
