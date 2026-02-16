@@ -115,7 +115,6 @@ import ManagerAvailability from './pages/ManagerAvailability';
 import ManagerBookings from './pages/ManagerBookings';
 import ManagerCRM from './pages/ManagerCRM';
 import ManagerCalendar from './pages/ManagerCalendar';
-import ManagerCalendarSync from './pages/ManagerCalendarSync';
 import ManagerClientAnalytics from './pages/ManagerClientAnalytics';
 import ManagerCourseAnalytics from './pages/ManagerCourseAnalytics';
 import ManagerDashboard from './pages/ManagerDashboard';
@@ -253,7 +252,6 @@ export const PAGES = {
     "ManagerBookings": ManagerBookings,
     "ManagerCRM": ManagerCRM,
     "ManagerCalendar": ManagerCalendar,
-    "ManagerCalendarSync": ManagerCalendarSync,
     "ManagerClientAnalytics": ManagerClientAnalytics,
     "ManagerCourseAnalytics": ManagerCourseAnalytics,
     "ManagerDashboard": ManagerDashboard,

@@ -29,11 +29,10 @@ const operationsGroups = [
     ]
   },
   {
-    title: "Integrations",
-    items: [
-      { icon: Zap, label: "Integration Setup", link: "IntegrationSetup" },
-      { icon: Calendar, label: "Calendar Sync", link: "ManagerCalendarSync" },
-    ]
+   title: "Integrations",
+   items: [
+     { icon: Zap, label: "Integration Setup", link: "IntegrationSetup" },
+   ]
   },
   {
     title: "Advanced",
