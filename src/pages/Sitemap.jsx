@@ -16,8 +16,13 @@ export default function Sitemap() {
         { loc: "/programs", priority: "0.9" },
         { loc: "/bookings", priority: "0.8" },
         { loc: "/contact", priority: "0.8" },
-        { loc: "/pricing", priority: "0.8" },
+        { loc: "/consultations", priority: "0.8" },
+        { loc: "/lens", priority: "0.8" },
+        { loc: "/cleaning-out-your-closet", priority: "0.8" },
+        { loc: "/pocket-mindset", priority: "0.8" },
+        { loc: "/learn-hypnosis", priority: "0.8" },
         { loc: "/podcast", priority: "0.7" },
+        { loc: "/accessibility", priority: "0.5" },
       ];
 
       // Fetch published blog posts
