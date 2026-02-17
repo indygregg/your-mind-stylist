@@ -1,5 +1,6 @@
 import React from "react";
 import { Sparkles } from "lucide-react";
+import CmsText from "../cms/CmsText";
 
 export default function IncludedSectionGrid() {
   const includedItems = [
@@ -21,7 +22,16 @@ export default function IncludedSectionGrid() {
             size={20} 
             className="text-[#6E4F7D] flex-shrink-0 mt-1"
           />
-          <p className="text-[#2B2725]/80">{item}</p>
+          <p className="text-[#2B2725]/80">
+            <CmsText 
+              contentKey={`hypnosis.included.item${idx + 1}`}
+              page="LearnHypnosis"
+              blockTitle={`Included Item ${idx + 1}`}
+              fallback={item}
+              contentType="rich_text"
+              as="span"
+            />
+          </p>
         </div>
       ))}
     </div>

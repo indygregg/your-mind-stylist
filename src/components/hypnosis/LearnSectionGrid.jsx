@@ -42,7 +42,16 @@ export default function LearnSectionGrid() {
                 size={18} 
                 className="text-[#6E4F7D] flex-shrink-0 mt-1"
               />
-              <p className="text-[#2B2725]/80">{skill}</p>
+              <p className="text-[#2B2725]/80">
+                <CmsText 
+                  contentKey={`hypnosis.learn.core.skill${idx + 1}`}
+                  page="LearnHypnosis"
+                  blockTitle={`Core Skill ${idx + 1}`}
+                  fallback={skill}
+                  contentType="rich_text"
+                  as="span"
+                />
+              </p>
             </div>
           ))}
         </div>
@@ -66,7 +75,16 @@ export default function LearnSectionGrid() {
                 size={18} 
                 className="text-[#D8B46B] flex-shrink-0 mt-1"
               />
-              <p className="text-[#2B2725]/80">{practice}</p>
+              <p className="text-[#2B2725]/80">
+                <CmsText 
+                  contentKey={`hypnosis.learn.practical.item${idx + 1}`}
+                  page="LearnHypnosis"
+                  blockTitle={`Practical Application ${idx + 1}`}
+                  fallback={practice}
+                  contentType="rich_text"
+                  as="span"
+                />
+              </p>
             </div>
           ))}
         </div>
