@@ -33,9 +33,14 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Google Calendar not connected' }, { status: 400 });
     }
 
+    // Only sync confirmed or scheduled bookings
+    if (!['confirmed', 'scheduled'].includes(booking.booking_status)) {
+      return Response.json({ success: true, message: 'Booking not in a syncable status, skipping.' });
+    }
+
     // Create calendar event
     const eventData = {
-      summary: `${booking.service_type} Session with ${booking.user_name}`,
+      summary: booking.user_name,
       description: `Booking ID: ${booking.id}\nClient: ${booking.user_name}\nEmail: ${booking.user_email}\nPhone: ${booking.client_phone || 'N/A'}\n\n${booking.zoom_join_url ? `Join Zoom Meeting: ${booking.zoom_join_url}\nPassword: ${booking.zoom_password || 'N/A'}` : 'Zoom link will be added soon'}`,
       location: booking.zoom_join_url || 'Virtual - Zoom link pending',
       start: {
