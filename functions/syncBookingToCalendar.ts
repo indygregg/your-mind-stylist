@@ -1,15 +1,22 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
 
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
+    const body = await req.json();
+
+    // Support both entity automation payload and direct call
+    let booking_id;
+    if (body.event && body.event.entity_id) {
+      booking_id = body.event.entity_id;
+    } else {
+      booking_id = body.booking_id;
     }
 
-    const { booking_id } = await req.json();
+    if (!booking_id) {
+      return Response.json({ error: 'booking_id is required' }, { status: 400 });
+    }
 
     // Get booking
     const bookings = await base44.asServiceRole.entities.Booking.filter({ id: booking_id });
