@@ -530,6 +530,27 @@ export default function BugList() {
       ]
     },
     {
+      category: "Page Editing Issues",
+      categoryId: "pageediting",
+      priority: "high",
+      items: [
+        {
+          id: "edit-1",
+          title: "Hypnosis Training Page - Cannot edit sections",
+          description: "Unable to edit the 'What you'll learn' or 'What's in the training' sections",
+          status: "open",
+          priority: "high"
+        },
+        {
+          id: "edit-2",
+          title: "Organization Page - Cannot edit sections",
+          description: "Unable to edit the 'What you'll learn' or testimonial sections",
+          status: "open",
+          priority: "high"
+        }
+      ]
+    },
+    {
       category: "Miscellaneous",
       categoryId: "misc",
       priority: "high",
