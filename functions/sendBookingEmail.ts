@@ -116,7 +116,7 @@ Deno.serve(async (req) => {
 
         } else {
             // Fallback to simple HTML emails
-            const formatDate = (date) => {
+            const formatDateTz = (date, tz) => {
                 if (!date) return "Not scheduled yet";
                 return new Date(date).toLocaleDateString("en-US", {
                     weekday: "long",
@@ -124,9 +124,13 @@ Deno.serve(async (req) => {
                     month: "long",
                     day: "numeric",
                     hour: "numeric",
-                    minute: "2-digit"
+                    minute: "2-digit",
+                    timeZone: tz,
+                    timeZoneName: "short"
                 });
             };
+            // Client sees their local time (no forced tz), manager sees PST
+            const formatDate = (date) => formatDateTz(date, 'America/Los_Angeles');
 
             if (recipient_type === 'client') {
                 subject = 'Your Session Booking is Confirmed ✓';
