@@ -84,23 +84,49 @@ Deno.serve(async (req) => {
     const rulesToCreate = [];
     for (const event of events) {
       if (event.status === 'cancelled') continue;
-      if (!event.start?.dateTime) continue; // skip all-day events
 
-      const startTimeUTC = event.start.dateTime;
-      const endTimeUTC = event.end.dateTime;
+      if (event.start?.dateTime) {
+        // Timed event
+        const startTimeUTC = event.start.dateTime;
+        const endTimeUTC = event.end.dateTime;
 
-      rulesToCreate.push({
-        manager_id: managerId,
-        rule_type: 'blocked',
-        specific_date: getDateInTimezone(startTimeUTC, userTimezone),
-        start_time: formatTimeInTimezone(startTimeUTC, userTimezone),
-        end_time: formatTimeInTimezone(endTimeUTC, userTimezone),
-        is_available: false,
-        reason: `Calendar event: ${event.summary || 'Busy'}`,
-        source: 'calendar_sync',
-        external_event_id: event.id,
-        active: true
-      });
+        rulesToCreate.push({
+          manager_id: managerId,
+          rule_type: 'blocked',
+          specific_date: getDateInTimezone(startTimeUTC, userTimezone),
+          start_time: formatTimeInTimezone(startTimeUTC, userTimezone),
+          end_time: formatTimeInTimezone(endTimeUTC, userTimezone),
+          is_available: false,
+          reason: `Calendar event: ${event.summary || 'Busy'}`,
+          source: 'calendar_sync',
+          external_event_id: event.id,
+          active: true
+        });
+      } else if (event.start?.date) {
+        // All-day event — block the entire day (00:00 to 23:59)
+        const dateStr = event.start.date; // already YYYY-MM-DD
+        const endDateStr = event.end?.date || dateStr;
+
+        // All-day events can span multiple days; create a rule per day
+        let d = new Date(dateStr + 'T00:00:00Z');
+        const endD = new Date(endDateStr + 'T00:00:00Z');
+        while (d < endD) {
+          const dayStr = d.toISOString().split('T')[0];
+          rulesToCreate.push({
+            manager_id: managerId,
+            rule_type: 'blocked',
+            specific_date: dayStr,
+            start_time: '00:00',
+            end_time: '23:59',
+            is_available: false,
+            reason: `All-day event: ${event.summary || 'Busy'}`,
+            source: 'calendar_sync',
+            external_event_id: event.id,
+            active: true
+          });
+          d.setUTCDate(d.getUTCDate() + 1);
+        }
+      }
     }
 
     if (rulesToCreate.length > 0) {
