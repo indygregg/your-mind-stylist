@@ -142,6 +142,13 @@ async function managerReschedule(base44, booking, data) {
         }
     }
 
+    // Sync to Google Calendar
+    try {
+        await base44.asServiceRole.functions.invoke('syncBookingToCalendar', { booking_id: booking.id });
+    } catch (error) {
+        console.error('Error syncing to Google Calendar after reschedule:', error);
+    }
+
     // Notify client
     await base44.asServiceRole.integrations.Core.SendEmail({
         to: booking.user_email,
