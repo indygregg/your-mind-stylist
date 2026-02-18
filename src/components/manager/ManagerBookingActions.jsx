@@ -16,7 +16,13 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
     session_notes: "",
     manager_notes: "",
     new_date: "",
-    reason: ""
+    reason: "",
+    new_appointment_type_id: ""
+  });
+
+  const { data: appointmentTypes = [] } = useQuery({
+    queryKey: ["appointment-types"],
+    queryFn: () => base44.entities.AppointmentType.filter({ active: true }),
   });
 
   const handleAction = async (action) => {
