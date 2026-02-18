@@ -236,6 +236,24 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
                 />
               </div>
               <div>
+                <Label>Change Appointment Type (Optional)</Label>
+                <select
+                  value={formData.new_appointment_type_id}
+                  onChange={(e) => setFormData({ ...formData, new_appointment_type_id: e.target.value })}
+                  className="w-full border border-input rounded-md px-3 py-2 text-sm mt-1"
+                >
+                  <option value="">Keep current type</option>
+                  {appointmentTypes.map(at => (
+                    <option key={at.id} value={at.id}>
+                      {at.name} {at.zoom_enabled ? '(Zoom)' : '(In-Person)'}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-[#2B2725]/60 mt-1">
+                  If switching to a Zoom-enabled type, a new Zoom link will be created.
+                </p>
+              </div>
+              <div>
                 <Label>Reason (Optional)</Label>
                 <Textarea
                   value={formData.reason}
@@ -248,8 +266,67 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
                 <Button variant="outline" onClick={() => setDialogOpen(null)} disabled={loading} className="flex-1">
                   Cancel
                 </Button>
-                <Button onClick={() => handleAction('reschedule')} disabled={loading} className="flex-1">
+                <Button onClick={() => handleAction('reschedule')} disabled={!formData.new_date || loading} className="flex-1">
                   {loading ? 'Rescheduling...' : 'Reschedule'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Change Appointment Type */}
+      {!['cancelled', 'completed', 'expired'].includes(booking.booking_status) && (
+        <Dialog open={dialogOpen === 'change_type'} onOpenChange={(open) => setDialogOpen(open ? 'change_type' : null)}>
+          <DialogTrigger asChild>
+            <Button size="sm" variant="outline">
+              <ArrowRightLeft size={14} className="mr-2" />
+              Change Type
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Change Appointment Type</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <p className="text-sm text-[#2B2725]/70">
+                Current type: <strong>{appointmentTypes.find(a => a.id === booking.appointment_type_id)?.name || booking.service_type}</strong>
+              </p>
+              <div>
+                <Label>New Appointment Type *</Label>
+                <select
+                  value={formData.new_appointment_type_id}
+                  onChange={(e) => setFormData({ ...formData, new_appointment_type_id: e.target.value })}
+                  className="w-full border border-input rounded-md px-3 py-2 text-sm mt-1"
+                >
+                  <option value="">Select new type...</option>
+                  {appointmentTypes.filter(at => at.id !== booking.appointment_type_id).map(at => (
+                    <option key={at.id} value={at.id}>
+                      {at.name} {at.zoom_enabled ? '(Zoom ✓)' : '(In-Person)'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {formData.new_appointment_type_id && appointmentTypes.find(a => a.id === formData.new_appointment_type_id)?.zoom_enabled && (
+                <div className="bg-blue-50 border border-blue-200 p-3 rounded text-sm text-blue-800">
+                  A new Zoom meeting link will be created automatically.
+                </div>
+              )}
+              <div>
+                <Label>Reason (Optional)</Label>
+                <Textarea
+                  value={formData.reason}
+                  onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+                  placeholder="Reason for changing type..."
+                  rows={2}
+                />
+              </div>
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => setDialogOpen(null)} disabled={loading} className="flex-1">
+                  Cancel
+                </Button>
+                <Button onClick={() => handleAction('change_type')} disabled={!formData.new_appointment_type_id || loading} className="flex-1">
+                  {loading ? 'Updating...' : 'Change Type'}
                 </Button>
               </div>
             </div>
