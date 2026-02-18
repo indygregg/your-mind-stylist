@@ -102,30 +102,43 @@ async function managerReschedule(base44, booking, data) {
 
     const oldDate = booking.scheduled_date;
 
-    await base44.asServiceRole.entities.Booking.update(booking.id, {
+    // Determine appointment type (may be changing)
+    let appointmentType = null;
+    const updatePayload = {
         scheduled_date: newScheduledDate.toISOString(),
         reminder_24h_sent: false,
         reminder_1h_sent: false,
         notes: booking.notes ? `${booking.notes}\n\nRescheduled by manager from ${oldDate ? new Date(oldDate).toLocaleString() : 'unscheduled'}. Reason: ${data.reason || 'Not provided'}` : `Rescheduled by manager. Reason: ${data.reason || 'Not provided'}`
-    });
+    };
 
-    // Update Zoom meeting if exists
-    if (booking.zoom_meeting_id) {
-        try {
-            const appointmentTypes = await base44.asServiceRole.entities.AppointmentType.filter({
-                service_type: booking.service_type
-            });
-            
-            if (appointmentTypes.length > 0 && appointmentTypes[0].zoom_enabled) {
-                await base44.asServiceRole.functions.invoke('createZoomMeeting', {
-                    booking_id: booking.id,
-                    scheduled_date: newScheduledDate.toISOString(),
-                    duration: appointmentTypes[0].duration,
-                    topic: `${booking.service_type?.replace(/_/g, ' ')} - ${booking.user_name}`
-                });
+    if (data.new_appointment_type_id) {
+        const types = await base44.asServiceRole.entities.AppointmentType.filter({ id: data.new_appointment_type_id });
+        if (types.length > 0) {
+            appointmentType = types[0];
+            updatePayload.appointment_type_id = appointmentType.id;
+            updatePayload.service_type = appointmentType.service_type;
+            // Clear old zoom data if switching to in-person
+            if (!appointmentType.zoom_enabled) {
+                updatePayload.zoom_meeting_id = null;
+                updatePayload.zoom_join_url = null;
+                updatePayload.zoom_start_url = null;
+                updatePayload.zoom_password = null;
+                updatePayload.zoom_status = 'pending';
             }
+        }
+    } else if (booking.appointment_type_id) {
+        const types = await base44.asServiceRole.entities.AppointmentType.filter({ id: booking.appointment_type_id });
+        if (types.length > 0) appointmentType = types[0];
+    }
+
+    await base44.asServiceRole.entities.Booking.update(booking.id, updatePayload);
+
+    // Create/update Zoom if the appointment type has zoom enabled
+    if (appointmentType?.zoom_enabled) {
+        try {
+            await base44.asServiceRole.functions.invoke('createZoomMeeting', { booking_id: booking.id });
         } catch (error) {
-            console.error('Error updating Zoom meeting:', error);
+            console.error('Error creating Zoom meeting:', error);
         }
     }
 
@@ -139,6 +152,55 @@ async function managerReschedule(base44, booking, data) {
     return Response.json({
         success: true,
         message: 'Booking rescheduled successfully'
+    });
+}
+
+async function changeAppointmentType(base44, booking, data) {
+    if (!data.new_appointment_type_id) {
+        return Response.json({ error: 'New appointment type is required' }, { status: 400 });
+    }
+
+    const types = await base44.asServiceRole.entities.AppointmentType.filter({ id: data.new_appointment_type_id });
+    if (types.length === 0) {
+        return Response.json({ error: 'Appointment type not found' }, { status: 404 });
+    }
+    const newType = types[0];
+
+    const updatePayload = {
+        appointment_type_id: newType.id,
+        service_type: newType.service_type,
+    };
+
+    // If switching to in-person, clear zoom data
+    if (!newType.zoom_enabled) {
+        updatePayload.zoom_meeting_id = null;
+        updatePayload.zoom_join_url = null;
+        updatePayload.zoom_start_url = null;
+        updatePayload.zoom_password = null;
+        updatePayload.zoom_status = 'pending';
+    }
+
+    await base44.asServiceRole.entities.Booking.update(booking.id, updatePayload);
+
+    // If switching to Zoom-enabled type, create a Zoom meeting
+    if (newType.zoom_enabled && booking.scheduled_date) {
+        try {
+            await base44.asServiceRole.functions.invoke('createZoomMeeting', { booking_id: booking.id });
+        } catch (error) {
+            console.error('Error creating Zoom meeting after type change:', error);
+        }
+    }
+
+    // Notify client of the change
+    await base44.asServiceRole.integrations.Core.SendEmail({
+        to: booking.user_email,
+        subject: 'Your Session Type Has Been Updated',
+        body: generateTypeChangeEmail(booking, newType, data.reason)
+    });
+
+    return Response.json({
+        success: true,
+        message: `Appointment type changed to "${newType.name}"${newType.zoom_enabled && booking.scheduled_date ? ' and Zoom link created' : ''}`
     });
 }
 
