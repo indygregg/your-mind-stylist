@@ -5,8 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Calendar, XCircle, StickyNote, Video, RefreshCw, AlertCircle } from "lucide-react";
+import { CheckCircle, Calendar, XCircle, StickyNote, Video, RefreshCw, AlertCircle, ArrowRightLeft } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ManagerBookingActions({ booking, onSuccess }) {
   const [dialogOpen, setDialogOpen] = useState(null);
