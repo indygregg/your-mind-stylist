@@ -37,7 +37,7 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
       if (response.data.success) {
         alert(response.data.message);
         setDialogOpen(null);
-        setFormData({ session_notes: "", manager_notes: "", new_date: "", reason: "" });
+        setFormData({ session_notes: "", manager_notes: "", new_date: "", reason: "", new_appointment_type_id: "" });
         if (onSuccess) onSuccess();
       }
     } catch (error) {
