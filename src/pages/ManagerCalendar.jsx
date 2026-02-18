@@ -453,9 +453,7 @@ export default function ManagerCalendar() {
                     <div>Stripe Session: {selectedBooking.stripe_checkout_session_id}</div>
                   )}
                 </div>
-                </div>
-              );
-            })()}
+                </div>}
                 </DialogContent>
                 </Dialog>
 
