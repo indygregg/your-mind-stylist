@@ -72,34 +72,64 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
     return now.toISOString().slice(0, 16);
   };
 
-  const getZoomStatusBadge = () => {
-    const status = booking.zoom_status || 'pending';
-    const colors = {
-      created: 'bg-green-100 text-green-800',
-      pending: 'bg-yellow-100 text-yellow-800',
-      failed: 'bg-red-100 text-red-800'
-    };
-    return (
-      <Badge className={colors[status]}>
-        Zoom: {status}
-      </Badge>
-    );
+  // Determine meeting modality from appointment type
+  const currentAppointmentType = appointmentTypes.find(a => a.id === booking.appointment_type_id);
+  const appointmentTypeName = (currentAppointmentType?.name || booking.service_type || "").toLowerCase();
+  const isPhone = !currentAppointmentType?.zoom_enabled && (
+    appointmentTypeName.includes('phone') || appointmentTypeName.includes('call')
+  );
+  const isZoom = currentAppointmentType?.zoom_enabled || booking.zoom_status === 'created';
+  const isInPerson = !isZoom && !isPhone;
+
+  const getMeetingModality = () => {
+    if (isZoom) return { label: 'Virtual Meeting (Zoom)', icon: <Video size={16} className="text-[#2D8CFF]" />, color: 'text-[#2D8CFF]', bg: 'bg-[#E8F4FD] border-[#2D8CFF]' };
+    if (isPhone) return { label: 'Phone Call', icon: <Phone size={16} className="text-purple-600" />, color: 'text-purple-600', bg: 'bg-purple-50 border-purple-200' };
+    return { label: 'In-Person Meeting', icon: <MapPin size={16} className="text-[#1E3A32]" />, color: 'text-[#1E3A32]', bg: 'bg-[#F9F5EF] border-[#A6B7A3]' };
   };
+
+  const modality = getMeetingModality();
 
   return (
     <div className="space-y-4">
-      {/* Zoom Status Section */}
+      {/* Meeting Type + Zoom Status Section */}
       {booking.scheduled_date && (
         <div className="pt-4 border-t border-[#E4D9C4]">
-          <div className="flex items-center justify-between mb-2">
+          {/* Meeting modality badge */}
+          <div className={`flex items-center justify-between p-3 rounded border mb-3 ${modality.bg}`}>
             <div className="flex items-center gap-2">
-              <Video size={16} className="text-[#2D8CFF]" />
-              <span className="text-sm font-medium text-[#1E3A32]">Virtual Meeting</span>
+              {modality.icon}
+              <span className={`text-sm font-medium ${modality.color}`}>{modality.label}</span>
             </div>
-            {getZoomStatusBadge()}
+            {isZoom && (
+              <Badge className={{
+                created: 'bg-green-100 text-green-800',
+                pending: 'bg-yellow-100 text-yellow-800',
+                failed: 'bg-red-100 text-red-800'
+              }[booking.zoom_status || 'pending']}>
+                Zoom: {booking.zoom_status || 'pending'}
+              </Badge>
+            )}
           </div>
-          
-          {booking.zoom_status === 'failed' && (
+
+          {/* Phone: show client phone number */}
+          {isPhone && (
+            <div className="bg-purple-50 border border-purple-200 p-3 rounded flex items-start gap-2 mb-2">
+              <Phone size={16} className="text-purple-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-xs text-purple-700 font-medium mb-0.5">Client Phone Number</p>
+                {booking.client_phone ? (
+                  <a href={`tel:${booking.client_phone}`} className="text-sm text-purple-900 font-semibold hover:underline">
+                    {booking.client_phone}
+                  </a>
+                ) : (
+                  <p className="text-sm text-purple-600 italic">No phone number provided</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Zoom: show status and actions */}
+          {isZoom && booking.zoom_status === 'failed' && (
             <div className="bg-red-50 border border-red-200 p-3 rounded flex items-start gap-2 mb-2">
               <AlertCircle size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
@@ -112,7 +142,7 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
             </div>
           )}
           
-          {booking.zoom_status === 'pending' && booking.scheduled_date && (
+          {isZoom && booking.zoom_status === 'pending' && (
             <div className="bg-yellow-50 border border-yellow-200 p-3 rounded flex items-start gap-2 mb-2">
               <AlertCircle size={16} className="text-yellow-600 mt-0.5 flex-shrink-0" />
               <div className="flex-1">
@@ -122,6 +152,14 @@ export default function ManagerBookingActions({ booking, onSuccess }) {
                   {loading ? 'Creating...' : 'Create Zoom Meeting'}
                 </Button>
               </div>
+            </div>
+          )}
+
+          {/* In-Person: informational */}
+          {isInPerson && (
+            <div className="bg-[#F9F5EF] border border-[#A6B7A3] p-3 rounded flex items-start gap-2 mb-2">
+              <MapPin size={16} className="text-[#1E3A32] mt-0.5 flex-shrink-0" />
+              <p className="text-sm text-[#1E3A32]">This is an in-person session at Roberta's office.</p>
             </div>
           )}
         </div>
