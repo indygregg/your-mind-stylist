@@ -28,20 +28,38 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No manager assigned to this appointment type' }, { status: 400 });
     }
 
-    // Get appointment-specific rules first, fallback to default rules
+    // Get appointment-specific availability rules
     let availabilityRules = await base44.asServiceRole.entities.AvailabilityRule.filter({ 
       manager_id: managerId,
       appointment_type_id: appointment_type_id,
       active: true 
     });
 
-    // If no specific rules, use default rules
+    // If no specific rules, use default rules for generating slots
     if (availabilityRules.length === 0) {
       availabilityRules = await base44.asServiceRole.entities.AvailabilityRule.filter({ 
         manager_id: managerId,
         appointment_type_id: null,
         active: true 
       });
+    }
+
+    // ALWAYS also load the general blocked rules (appointment_type_id: null)
+    // Calendar sync rules always have appointment_type_id: null — they must block ALL appointment types
+    const generalBlockedRules = await base44.asServiceRole.entities.AvailabilityRule.filter({
+      manager_id: managerId,
+      appointment_type_id: null,
+      rule_type: 'blocked',
+      active: true
+    });
+
+    // Merge general blocked rules into availabilityRules (deduplicate by id)
+    const ruleIds = new Set(availabilityRules.map(r => r.id));
+    for (const r of generalBlockedRules) {
+      if (!ruleIds.has(r.id)) {
+        availabilityRules.push(r);
+        ruleIds.add(r.id);
+      }
     }
 
     // Get appointment-specific settings first, fallback to default settings
