@@ -120,11 +120,19 @@ Deno.serve(async (req) => {
 
     event = await response.json();
 
-    // Update booking with calendar event ID (only needed on create)
-    if (!existingEventId) {
+    // IMPORTANT: Only update booking on first creation (to avoid triggering the entity automation in a loop)
+    // When called directly from managerBookingAction, old_data is undefined so we skip this update safely
+    if (!existingEventId && !old_data) {
       await base44.asServiceRole.entities.Booking.update(booking_id, {
         google_calendar_event_id: event.id,
       });
+    } else if (!existingEventId && old_data) {
+      // Called from entity automation - save event ID only if it wasn't set before
+      if (!old_data.google_calendar_event_id) {
+        await base44.asServiceRole.entities.Booking.update(booking_id, {
+          google_calendar_event_id: event.id,
+        });
+      }
     }
 
     return Response.json({
