@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
                 }).format(amount / 100);
             };
 
-            const formatDate = (date) => {
+            const formatDate = (date, tz = 'America/Los_Angeles') => {
                 if (!date) return "Not scheduled yet";
                 return new Date(date).toLocaleDateString("en-US", {
                     weekday: "long",
@@ -90,7 +90,9 @@ Deno.serve(async (req) => {
                     month: "long",
                     day: "numeric",
                     hour: "numeric",
-                    minute: "2-digit"
+                    minute: "2-digit",
+                    timeZone: tz,
+                    timeZoneName: "short"
                 });
             };
 
