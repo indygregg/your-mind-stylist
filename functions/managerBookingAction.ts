@@ -355,6 +355,39 @@ function generateCancellationEmail(booking, reason) {
     `;
 }
 
+function generateTypeChangeEmail(booking, newType, reason) {
+    return `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #F9F5EF;">
+            <div style="background-color: #1E3A32; padding: 40px 20px; text-align: center;">
+                <h1 style="color: #F9F5EF; font-family: Georgia, serif; font-size: 28px; margin: 0;">
+                    Session Updated
+                </h1>
+            </div>
+            <div style="background-color: #FFFFFF; padding: 40px 30px;">
+                <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin-top: 0;">
+                    Hi ${booking.user_name},
+                </p>
+                <p style="color: #2B2725; font-size: 16px; line-height: 1.6;">
+                    Your upcoming session type has been updated to <strong>${newType.name}</strong>${reason ? ` — ${reason}` : ''}.
+                </p>
+                ${newType.zoom_enabled ? `
+                <div style="background-color: #E8F4FD; border: 2px solid #2D8CFF; padding: 20px; margin: 20px 0;">
+                    <p style="color: #1E3A32; font-weight: 600; margin: 0 0 8px 0;">Virtual Session — Zoom link</p>
+                    <p style="color: #2B2725; margin: 0; font-size: 14px;">A Zoom meeting has been created for your session. You will receive the link shortly or can find it in your booking confirmation.</p>
+                </div>` : `
+                <div style="background-color: #FFF8E8; border: 2px solid #D8B46B; padding: 20px; margin: 20px 0;">
+                    <p style="color: #1E3A32; font-weight: 600; margin: 0 0 8px 0;">In-Person Session</p>
+                    <p style="color: #2B2725; margin: 0; font-size: 14px;">This session will take place in person. Please reach out if you have any questions about the location.</p>
+                </div>`}
+                <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin-bottom: 0;">
+                    Roberta Fernandez<br />
+                    <span style="color: #D8B46B; font-size: 14px;">Your Mind Stylist</span>
+                </p>
+            </div>
+        </div>
+    `;
+}
+
 async function deleteBooking(base44, booking) {
     // Delete from Google Calendar if synced
     if (booking.google_calendar_event_id) {
