@@ -451,7 +451,8 @@ export default function ManagerCalendar() {
                   )}
                 </div>
                 </div>
-                )}
+              );
+            })()}
                 </DialogContent>
                 </Dialog>
 
