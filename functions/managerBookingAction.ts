@@ -30,6 +30,8 @@ Deno.serve(async (req) => {
                 return await addManagerNotes(base44, booking, data);
             case 'reschedule':
                 return await managerReschedule(base44, booking, data);
+            case 'change_type':
+                return await changeAppointmentType(base44, booking, data);
             case 'cancel':
                 return await managerCancel(base44, booking, data);
             case 'delete':
