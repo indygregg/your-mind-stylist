@@ -31,16 +31,17 @@ Deno.serve(async (req) => {
       appointmentType = types[0];
     }
 
-    const formatDate = (dateString) => {
+    const formatDate = (dateString, tz = 'America/Los_Angeles') => {
       if (!dateString) return 'TBD';
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
+      return new Date(dateString).toLocaleDateString('en-US', { 
         weekday: 'long', 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric',
         hour: 'numeric',
-        minute: '2-digit'
+        minute: '2-digit',
+        timeZone: tz,
+        timeZoneName: 'short'
       });
     };
 
