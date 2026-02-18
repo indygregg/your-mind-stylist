@@ -265,16 +265,36 @@ export default function ManagerCalendar() {
             <DialogHeader>
               <DialogTitle>Booking Details</DialogTitle>
             </DialogHeader>
-            {selectedBooking && (
+            {selectedBooking && (() => {
+              const apptType = appointmentTypes.find(a => a.id === selectedBooking.appointment_type_id);
+              const apptName = (apptType?.name || selectedBooking.service_type || "").toLowerCase();
+              const isPhone = !apptType?.zoom_enabled && (apptName.includes('phone') || apptName.includes('call'));
+              const isZoom = apptType?.zoom_enabled || selectedBooking.zoom_status === 'created';
+
+              return (
               <div className="space-y-6">
                 {/* Status Badge */}
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <Badge className={getStatusColor(selectedBooking.booking_status)}>
                     {selectedBooking.booking_status?.replace(/_/g, " ").toUpperCase()}
                   </Badge>
                   <Badge className={getStatusColor(selectedBooking.payment_status)}>
                     Payment: {selectedBooking.payment_status?.toUpperCase()}
                   </Badge>
+                  {/* Meeting type pill */}
+                  {isZoom ? (
+                    <span className="flex items-center gap-1 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
+                      <Video size={11} /> Virtual (Zoom)
+                    </span>
+                  ) : isPhone ? (
+                    <span className="flex items-center gap-1 text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-medium">
+                      <Phone size={11} /> Phone Call
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1 text-xs bg-[#A6B7A3]/30 text-[#1E3A32] px-2 py-1 rounded-full font-medium">
+                      <MapPin size={11} /> In-Person
+                    </span>
+                  )}
                 </div>
 
                 {/* Client Info */}
@@ -291,6 +311,21 @@ export default function ManagerCalendar() {
                         {selectedBooking.user_email}
                       </a>
                     </div>
+                    {selectedBooking.client_phone && (
+                      <div className="flex items-center gap-2">
+                        <Phone size={14} className={isPhone ? "text-purple-600" : "text-[#A6B7A3]"} />
+                        <a href={`tel:${selectedBooking.client_phone}`} className={`${isPhone ? "text-purple-700 font-semibold" : "text-[#1E3A32]"} hover:underline`}>
+                          {selectedBooking.client_phone}
+                        </a>
+                        {isPhone && <span className="text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">Call this number</span>}
+                      </div>
+                    )}
+                    {isPhone && !selectedBooking.client_phone && (
+                      <div className="flex items-center gap-2">
+                        <Phone size={14} className="text-purple-600" />
+                        <span className="text-purple-600 italic text-xs">No phone number on file</span>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -317,7 +352,7 @@ export default function ManagerCalendar() {
                   <div className="flex items-start gap-3">
                     <span className="text-sm text-[#2B2725]/60 w-24">Service:</span>
                     <span className="text-[#1E3A32] font-medium">
-                      {selectedBooking.service_type?.replace(/_/g, " ").toUpperCase()}
+                      {apptType?.name || selectedBooking.service_type?.replace(/_/g, " ").toUpperCase()}
                     </span>
                   </div>
                   {selectedBooking.session_count > 1 && (
