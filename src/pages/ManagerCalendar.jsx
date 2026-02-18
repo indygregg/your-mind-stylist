@@ -265,14 +265,17 @@ export default function ManagerCalendar() {
             <DialogHeader>
               <DialogTitle>Booking Details</DialogTitle>
             </DialogHeader>
-            {selectedBooking && (() => {
-              const apptType = appointmentTypes.find(a => a.id === selectedBooking.appointment_type_id);
-              const apptName = (apptType?.name || selectedBooking.service_type || "").toLowerCase();
-              const isPhone = !apptType?.zoom_enabled && (apptName.includes('phone') || apptName.includes('call'));
-              const isZoom = apptType?.zoom_enabled || selectedBooking.zoom_status === 'created';
-
-              return (
-              <div className="space-y-6">
+            {selectedBooking && <BookingDetailContent
+              selectedBooking={selectedBooking}
+              appointmentTypes={appointmentTypes}
+              getStatusColor={getStatusColor}
+              formatAmount={formatAmount}
+              onSuccess={() => {
+                queryClient.invalidateQueries({ queryKey: ["bookings"] });
+                setSelectedBooking(null);
+              }}
+            />}
+            {false && <div className="space-y-6">
                 {/* Status Badge */}
                 <div className="flex items-center gap-3 flex-wrap">
                   <Badge className={getStatusColor(selectedBooking.booking_status)}>
