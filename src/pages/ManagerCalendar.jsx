@@ -14,6 +14,11 @@ export default function ManagerCalendar() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const queryClient = useQueryClient();
 
+  const { data: appointmentTypes = [] } = useQuery({
+    queryKey: ["appointment-types"],
+    queryFn: () => base44.entities.AppointmentType.filter({ active: true }),
+  });
+
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["bookings"],
     queryFn: async () => {
