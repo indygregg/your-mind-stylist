@@ -198,6 +198,13 @@ async function changeAppointmentType(base44, booking, data) {
         }
     }
 
+    // Sync to Google Calendar (update the existing event with new type info)
+    try {
+        await base44.asServiceRole.functions.invoke('syncBookingToCalendar', { booking_id: booking.id });
+    } catch (error) {
+        console.error('Error syncing to Google Calendar after type change:', error);
+    }
+
     // Notify client of the change
     await base44.asServiceRole.integrations.Core.SendEmail({
         to: booking.user_email,
