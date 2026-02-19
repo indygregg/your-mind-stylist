@@ -712,24 +712,25 @@ export default function BugList() {
                 id: "feb19-email-1",
                 title: "No templates showing under Email Templates section",
                 description: "The Email Templates manager is displaying no templates. They may need to be seeded or the page may have a loading issue.",
-                status: "open",
-                priority: "high"
+                status: "completed",
+                priority: "high",
+                notes: "Fixed: Email Templates page now shows a 'Create Default Templates' button when empty. Clicking it seeds all standard templates (booking confirmations, reminders, Pocket Mindset™, purchase confirmation, etc.)."
               },
               {
                 id: "feb19-email-2",
                 title: "Ability to send emails directly to CRM contacts",
                 description: "Roberta wants to be able to compose and send emails directly to CRM contacts from within the app.",
-                status: "open",
+                status: "completed",
                 priority: "medium",
-                notes: "CRM already supports per-contact email. Bulk/broadcast email to a filtered segment is the next step and will need to be built."
+                notes: "Added 'Send Email' button inside the lead details dialog in CRM. Opens a compose dialog with subject, body, and sends directly to the contact. Activity is logged automatically."
               },
               {
                 id: "feb19-email-3",
                 title: "Add Pocket Mindset™ purchase confirmation email",
                 description: "Create the purchase confirmation email for Pocket Mindset™ with app setup instructions and access code 935384.",
-                status: "open",
+                status: "completed",
                 priority: "high",
-                notes: "Email body: 'Here is the information you need to set up your Pocket Mindset™ account. Download from App Store or Google Play. Select new account, enroll under Browse tab, enter code 935384. Two content types: 5 Core Courses (7–55 days) and 3 Wellbeing Programs (anytime, any order). Enjoy!'"
+                notes: "Pocket Mindset™ template added to the default templates set. Go to Email Templates → Create Default Templates to seed it. Key: pocket_mindset_purchase."
               }
             ]
           },
