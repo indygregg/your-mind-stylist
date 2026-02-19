@@ -621,6 +621,196 @@ export default function BugList() {
 
       ]
     },
+          // ── NEW BUGS LOGGED: 2026-02-19 ─────────────────────────────────────
+          {
+            category: "🗓️ Feb 19 — Home Page",
+            categoryId: "feb19-home",
+            priority: "medium",
+            items: [
+              {
+                id: "feb19-home-1",
+                title: "Remove inline email forms — link to Masterclass page instead (3 places)",
+                description: "There are 3 places on the Home page where an email capture form is shown inline. These should be replaced with a link/button that navigates to the Masterclass page where the real form lives.",
+                status: "open",
+                priority: "medium"
+              }
+            ]
+          },
+          {
+            category: "🗓️ Feb 19 — About Me Page",
+            categoryId: "feb19-about",
+            priority: "high",
+            items: [
+              {
+                id: "feb19-about-1",
+                title: "Editing 'Private Mind Styling' still shows 404 and back button quits page",
+                description: "Under Work With Me, clicking to edit the Private Mind Styling section still routes to a 404 page. The back button also still causes the page to quit. Previously marked resolved but issue persists.",
+                status: "open",
+                priority: "high"
+              }
+            ]
+          },
+          {
+            category: "🗓️ Feb 19 — Initial Consultation Page",
+            categoryId: "feb19-consultation",
+            priority: "high",
+            items: [
+              {
+                id: "feb19-consult-1",
+                title: "Forms don't show or download when clicking them",
+                description: "The downloadable forms on the Initial Consultation page are not showing or downloading when clicked.",
+                status: "open",
+                priority: "high"
+              },
+              {
+                id: "feb19-consult-2",
+                title: "Can submitted intake forms be deleted after downloading?",
+                description: "For privacy/security reasons, Roberta wants to be able to delete client intake form submissions after downloading them.",
+                status: "open",
+                priority: "medium",
+                notes: "Yes — this can be done. A 'Delete after download' option will be added to the intake review page in Manager Dashboard."
+              }
+            ]
+          },
+          {
+            category: "🗓️ Feb 19 — Free Masterclass Page",
+            categoryId: "feb19-masterclass",
+            priority: "critical",
+            items: [
+              {
+                id: "feb19-mc-1",
+                title: "Form returns 500 error on submission",
+                description: "The Free Masterclass signup form is returning a 500 server error when submitted.",
+                status: "open",
+                priority: "critical"
+              },
+              {
+                id: "feb19-mc-2",
+                title: "All button links on this page go to a 404 page",
+                description: "Every button/link on the Free Masterclass page routes to a non-existent page (404).",
+                status: "open",
+                priority: "critical"
+              },
+              {
+                id: "feb19-mc-3",
+                title: "Remove one of the two redundant bottom rows",
+                description: "The bottom two rows ('Want to go deeper' and 'Ready to stop feeling') are redundant — one should be removed.",
+                status: "open",
+                priority: "low"
+              }
+            ]
+          },
+          {
+            category: "🗓️ Feb 19 — Email Templates",
+            categoryId: "feb19-email",
+            priority: "high",
+            items: [
+              {
+                id: "feb19-email-1",
+                title: "No templates showing under Email Templates section",
+                description: "The Email Templates manager is displaying no templates. They may need to be seeded or the page may have a loading issue.",
+                status: "open",
+                priority: "high"
+              },
+              {
+                id: "feb19-email-2",
+                title: "Ability to send emails directly to CRM contacts",
+                description: "Roberta wants to be able to compose and send emails directly to CRM contacts from within the app.",
+                status: "open",
+                priority: "medium",
+                notes: "CRM already supports per-contact email. Bulk/broadcast email to a filtered segment is the next step and will need to be built."
+              },
+              {
+                id: "feb19-email-3",
+                title: "Add Pocket Mindset™ purchase confirmation email",
+                description: "Create the purchase confirmation email for Pocket Mindset™ with app setup instructions and access code 935384.",
+                status: "open",
+                priority: "high",
+                notes: "Email body: 'Here is the information you need to set up your Pocket Mindset™ account. Download from App Store or Google Play. Select new account, enroll under Browse tab, enter code 935384. Two content types: 5 Core Courses (7–55 days) and 3 Wellbeing Programs (anytime, any order). Enjoy!'"
+              }
+            ]
+          },
+          {
+            category: "🗓️ Feb 19 — Programs Page",
+            categoryId: "feb19-programs",
+            priority: "high",
+            items: [
+              {
+                id: "feb19-prog-1",
+                title: "Need general listing for Webinars, Books, Hypnosis Training with correct individual prices",
+                description: "Programs page needs to support multiple products per section each with their own price. Currently the Retreat shows as free — needs to be fixed.",
+                status: "open",
+                priority: "high",
+                notes: "Set the correct price on each product in Product Manager. The Programs page displays whatever price is stored on the product record."
+              },
+              {
+                id: "feb19-prog-2",
+                title: "Product links don't lead to a purchase flow (also on user dashboard)",
+                description: "Clicking a product on the Programs page or user dashboard does not take the user to checkout or any purchase flow.",
+                status: "open",
+                priority: "high"
+              }
+            ]
+          },
+          {
+            category: "🗓️ Feb 19 — Course Manager",
+            categoryId: "feb19-courses",
+            priority: "high",
+            items: [
+              {
+                id: "feb19-course-1",
+                title: "Videos and files don't show in course preview (uploaded and connected)",
+                description: "When previewing courses, most videos and files are not showing up, even though they have been uploaded to the library and connected. Issue was previously marked resolved but has reappeared.",
+                status: "open",
+                priority: "high"
+              },
+              {
+                id: "feb19-course-2",
+                title: "Cannot change display order of courses",
+                description: "There is no working way to reorder courses as they appear to students.",
+                status: "open",
+                priority: "medium"
+              }
+            ]
+          },
+          {
+            category: "🗓️ Feb 19 — User Dashboard",
+            categoryId: "feb19-dashboard",
+            priority: "high",
+            items: [
+              {
+                id: "feb19-dash-1",
+                title: "Buy/purchase links on user dashboard are not connected",
+                description: "Purchase/buy links on the user dashboard do not lead to an actual checkout flow.",
+                status: "open",
+                priority: "high"
+              },
+              {
+                id: "feb19-dash-2",
+                title: "Duplication of 'Want More' section after Masterclass",
+                description: "Two 'Want More' sections appear after the Masterclass section at the bottom of the dashboard. Editing one changes both because they share the same CMS block.",
+                status: "open",
+                priority: "medium"
+              }
+            ]
+          },
+          {
+            category: "🗓️ Feb 19 — Misc / Questions",
+            categoryId: "feb19-misc",
+            priority: "low",
+            items: [
+              {
+                id: "feb19-misc-1",
+                title: "Can a single user be added without a CSV import?",
+                description: "Roberta wants to add individual users manually without using a CSV spreadsheet.",
+                status: "open",
+                priority: "low",
+                notes: "Yes! In Manager Dashboard → CRM → Leads, click 'Add Lead' to create a single contact manually. You can also invite users via the Users section using just their email address."
+              }
+            ]
+          },
+          // ── END NEW BUGS 2026-02-19 ─────────────────────────────────────────
+
     {
       category: "Mobile Readiness",
       categoryId: "mobilereadiness",
