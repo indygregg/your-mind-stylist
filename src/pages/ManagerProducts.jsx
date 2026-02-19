@@ -218,6 +218,7 @@ export default function ManagerProducts() {
       price: product.price ? (product.price / 100).toString() : "",
       features: product.features || [""],
       template_choice: product.template_choice || "detailed",
+      product_subtype: product.product_subtype || "",
       related_course_id: product.related_course_id || "",
       access_grants: product.access_grants || [],
       payment_plan_options: product.payment_plan_options || [],
