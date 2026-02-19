@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import CmsText from "../cms/CmsText";
-import MasterclassEmailCapture from "./MasterclassEmailCapture";
 
 export default function WhatIDo() {
-  const [showEmailCapture, setShowEmailCapture] = useState(false);
-
   return (
     <section className="py-24 md:py-32 bg-[#F9F5EF]">
       <div className="max-w-7xl mx-auto px-6">
