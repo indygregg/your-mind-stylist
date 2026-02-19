@@ -44,7 +44,7 @@ export default function FreeMasterclass() {
               <div className="absolute bottom-4 right-4 px-4 py-2 bg-black/50 backdrop-blur-sm">
                 <span className="text-white text-sm">On-Demand • Free</span>
               </div>
-            </div>
+            </Link>
 
             {/* Floating Badge */}
             <motion.div
