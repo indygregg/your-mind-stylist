@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Users, TrendingUp, Target, DollarSign, Search, Filter, Mail, Phone, Calendar, MessageSquare, CheckCircle2, Clock, Upload } from "lucide-react";
+import { Users, TrendingUp, Target, DollarSign, Search, Filter, Mail, Phone, Calendar, MessageSquare, CheckCircle2, Clock, Upload, Send, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import SendSMSDialog from "../components/crm/SendSMSDialog";
