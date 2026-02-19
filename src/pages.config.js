@@ -180,6 +180,8 @@ import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
+import Shop from './pages/Shop';
+import Cart from './pages/Cart';
 import __Layout from './Layout.jsx';
 
 
@@ -317,6 +319,8 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
+    "Shop": Shop,
+    "Cart": Cart,
 }
 
 export const pagesConfig = {
