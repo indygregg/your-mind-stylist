@@ -392,6 +392,7 @@ export default function Layout({ children, currentPageName }) {
                 ))}
 
                 <div className={`flex items-center gap-3 ml-6 pl-6 border-l ${hasDarkHero ? 'border-white/20' : 'border-[#D8B46B]/20'}`}>
+                  <CartIcon hasDarkHero={hasDarkHero} />
                   <a
                     href="https://yourmindstylist.com/login"
                     onClick={() => haptics.light()}
