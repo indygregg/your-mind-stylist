@@ -538,15 +538,17 @@ export default function BugList() {
           id: "edit-1",
           title: "Hypnosis Training Page - Cannot edit sections",
           description: "Unable to edit the 'What you'll learn' or 'What's in the training' sections",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "✅ FIXED: All sections on the Hypnosis Training page (What You'll Learn, Core Skills, Practical Applications, What's Included) are now fully editable via the Manager Bar in edit mode."
         },
         {
           id: "edit-2",
           title: "Organization Page - Cannot edit sections",
           description: "Unable to edit the 'What you'll learn' or testimonial sections",
-          status: "open",
-          priority: "high"
+          status: "completed",
+          priority: "high",
+          notes: "✅ FIXED: Speaking & Training (Organization) page now has full CMS editing for all sections including Topics, Testimonials, Who I Work With, and all other content blocks."
         }
       ]
     },
