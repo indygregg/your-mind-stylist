@@ -428,24 +428,24 @@ export default function Blog() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
               <Link
-                to={createPageUrl("Certification")}
+                to={createPageUrl("LearnHypnosis")}
                 className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
               >
-                The Mind Styling Certification™
+                Hypnosis Training
               </Link>
               <span className="hidden sm:block text-[#2B2725]/30">•</span>
               <Link
-                to={createPageUrl("PrivateSessions")}
+                to={createPageUrl("CleaningOutYourCloset")}
                 className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
               >
                 Private Mind Styling (1:1)
               </Link>
               <span className="hidden sm:block text-[#2B2725]/30">•</span>
               <Link
-                to={createPageUrl("InnerRehearsal")}
+                to={createPageUrl("Programs")}
                 className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
               >
-                The Inner Rehearsal Sessions™
+                All Programs & Pricing
               </Link>
             </div>
 
