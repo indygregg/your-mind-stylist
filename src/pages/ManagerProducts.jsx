@@ -606,10 +606,53 @@ export default function ManagerProducts() {
           </DialogHeader>
 
           <div className="space-y-6 py-4">
+
+            {/* Quick Guide */}
+            {!editingProduct && (
+              <div className="bg-[#1E3A32]/5 border border-[#1E3A32]/20 rounded-lg p-4 text-sm text-[#1E3A32]">
+                <p className="font-semibold mb-2 flex items-center gap-2"><Info size={14}/> What type of product are you creating?</p>
+                <div className="grid grid-cols-3 gap-3 mt-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData(f => ({ ...f, product_subtype: 'webinar', type: 'one_time', category: 'foundation' }))}
+                    className={`p-3 rounded border text-center transition-all ${formData.product_subtype === 'webinar' ? 'border-[#1E3A32] bg-[#1E3A32] text-white' : 'border-[#D8B46B] hover:bg-[#D8B46B]/10'}`}
+                  >
+                    <Video size={18} className="mx-auto mb-1"/>
+                    <span className="text-xs font-medium">Webinar</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(f => ({ ...f, product_subtype: 'book', type: 'one_time', category: 'foundation' }))}
+                    className={`p-3 rounded border text-center transition-all ${formData.product_subtype === 'book' ? 'border-[#1E3A32] bg-[#1E3A32] text-white' : 'border-[#D8B46B] hover:bg-[#D8B46B]/10'}`}
+                  >
+                    <BookOpen size={18} className="mx-auto mb-1"/>
+                    <span className="text-xs font-medium">Book</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(f => ({ ...f, product_subtype: 'course', type: 'one_time', category: 'mid_level' }))}
+                    className={`p-3 rounded border text-center transition-all ${formData.product_subtype === 'course' ? 'border-[#1E3A32] bg-[#1E3A32] text-white' : 'border-[#D8B46B] hover:bg-[#D8B46B]/10'}`}
+                  >
+                    <GraduationCap size={18} className="mx-auto mb-1"/>
+                    <span className="text-xs font-medium">Hypnosis Class / Course</span>
+                  </button>
+                </div>
+                {formData.product_subtype === 'webinar' && (
+                  <p className="mt-3 text-xs text-[#2B2725]/70 bg-white p-2 rounded">Webinars appear in the <strong>Webinars & Live Events</strong> section on your Programs page. After saving, they'll be visible there automatically.</p>
+                )}
+                {formData.product_subtype === 'book' && (
+                  <p className="mt-3 text-xs text-[#2B2725]/70 bg-white p-2 rounded">Books appear in the <strong>Books & Resources</strong> section on your Programs page. After saving, they'll be visible there automatically.</p>
+                )}
+                {formData.product_subtype === 'course' && (
+                  <p className="mt-3 text-xs text-[#2B2725]/70 bg-white p-2 rounded">This creates a <strong>sellable product</strong> for your hypnosis class. Link it to your actual course content using the "Linked Course" field below.</p>
+                )}
+              </div>
+            )}
+
             {/* Basic Info */}
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <Label>Product Key *</Label>
+                <Label>Product Key * <span className="text-xs font-normal text-[#2B2725]/50">(short internal ID, no spaces)</span></Label>
                 <Input
                   value={formData.key}
                   onChange={(e) => {
