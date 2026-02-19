@@ -67,13 +67,6 @@ export default function BugList() {
     },
   });
 
-  const toggleTestedMutation = useMutation({
-    mutationFn: ({ id, tested }) => base44.entities.BugReport.update(id, { tested }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bugReports'] });
-    },
-  });
-
   const handleAddComment = (bugId) => {
     if (newComment[bugId]?.trim()) {
       addCommentMutation.mutate({
