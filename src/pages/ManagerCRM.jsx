@@ -701,6 +701,71 @@ export default function ManagerCRM() {
           </DialogContent>
         </Dialog>
 
+        {/* Email Compose Dialog */}
+        <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
+          <DialogContent className="max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Send Email to {selectedLead?.full_name || selectedLead?.email}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label>To</Label>
+                <Input value={selectedLead?.email || ""} readOnly className="bg-gray-50" />
+              </div>
+              <div>
+                <Label>Subject</Label>
+                <Input
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  placeholder="Email subject..."
+                />
+              </div>
+              <div>
+                <Label>Message</Label>
+                <Textarea
+                  value={emailBody}
+                  onChange={(e) => setEmailBody(e.target.value)}
+                  placeholder="Write your message..."
+                  className="min-h-[160px]"
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setEmailDialogOpen(false)}>Cancel</Button>
+                <Button
+                  disabled={!emailSubject.trim() || !emailBody.trim() || sendingEmail}
+                  onClick={async () => {
+                    setSendingEmail(true);
+                    try {
+                      await base44.integrations.Core.SendEmail({
+                        to: selectedLead.email,
+                        from_name: "Roberta Fernandez - Your Mind Stylist",
+                        subject: emailSubject,
+                        body: emailBody,
+                      });
+                      await base44.entities.LeadActivity.create({
+                        lead_id: selectedLead.id,
+                        activity_type: "email_sent",
+                        description: `Email sent: "${emailSubject}"`,
+                      });
+                      queryClient.invalidateQueries({ queryKey: ["leadActivities"] });
+                      toast.success("Email sent!");
+                      setEmailDialogOpen(false);
+                    } catch (e) {
+                      toast.error("Failed to send email: " + e.message);
+                    } finally {
+                      setSendingEmail(false);
+                    }
+                  }}
+                  className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
+                >
+                  {sendingEmail ? <Loader2 size={14} className="animate-spin mr-2" /> : <Send size={14} className="mr-2" />}
+                  Send Email
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         {/* SMS Dialog */}
         <SendSMSDialog
           open={smsDialogOpen}
