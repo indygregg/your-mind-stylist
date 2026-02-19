@@ -54,8 +54,8 @@ export default function WhatIDo() {
                   className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
                 />
               </Link>
-              <button
-                onClick={() => setShowEmailCapture(true)}
+              <Link
+                to={createPageUrl("FreeMasterclass")}
                 className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:text-[#D8B46B] transition-colors"
               >
                 Watch the Free Webinar
@@ -63,7 +63,7 @@ export default function WhatIDo() {
                   size={18}
                   className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
                 />
-              </button>
+              </Link>
             </div>
           </motion.div>
 
