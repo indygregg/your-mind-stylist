@@ -144,7 +144,6 @@ import NotFound from './pages/NotFound';
 import PocketMindset from './pages/PocketMindset';
 import PocketVisualizationPurchase from './pages/PocketVisualizationPurchase';
 import Podcast from './pages/Podcast';
-import Pricing from './pages/Pricing';
 import PrivateSessionsPurchase from './pages/PrivateSessionsPurchase';
 import ProductPage from './pages/ProductPage';
 import ProfileSettings from './pages/ProfileSettings';
@@ -283,7 +282,6 @@ export const PAGES = {
     "PocketMindset": PocketMindset,
     "PocketVisualizationPurchase": PocketVisualizationPurchase,
     "Podcast": Podcast,
-    "Pricing": Pricing,
     "PrivateSessionsPurchase": PrivateSessionsPurchase,
     "ProductPage": ProductPage,
     "ProfileSettings": ProfileSettings,

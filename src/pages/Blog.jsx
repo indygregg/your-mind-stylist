@@ -29,71 +29,7 @@ export default function Blog() {
     "Inner Rehearsal",
   ];
 
-  const featuredPost = {
-    category: "Thursday Thoughts",
-    title: "The Stories You Tell Yourself About Who You Are",
-    excerpt:
-      "Most of us live inside narratives we didn't consciously write. We carry stories about who we are, what we're capable of, and what we deserve — and those stories shape everything.",
-    readTime: 5,
-    slug: "stories-you-tell-yourself",
-    date: "Dec 5, 2024",
-  };
 
-  const latestPosts = [
-    {
-      category: "Monday Mentions",
-      title: "One Question to Start Your Week With",
-      excerpt: "Before the week starts pulling you forward, ask yourself: What story am I telling myself about this week?",
-      readTime: 3,
-      slug: "question-to-start-week",
-      date: "Dec 9, 2024",
-    },
-    {
-      category: "Emotional Intelligence",
-      title: "Emotional Intelligence Isn't About Being Nice",
-      excerpt: "Emotional intelligence is often misunderstood as being soft, agreeable, or perpetually calm. But that's not what it is.",
-      readTime: 6,
-      slug: "ei-not-being-nice",
-      date: "Dec 3, 2024",
-    },
-    {
-      category: "Communication",
-      title: "How to Say What You Mean Without Apologizing for It",
-      excerpt: "If you find yourself softening every sentence, over-explaining your position, or apologizing before you even begin — this is for you.",
-      readTime: 5,
-      slug: "say-what-you-mean",
-      date: "Nov 28, 2024",
-    },
-    {
-      category: "Identity & Confidence",
-      title: "The Confidence Myth: Why Waiting to Feel Ready Keeps You Stuck",
-      excerpt: "Confidence doesn't arrive before action. It builds because of action.",
-      readTime: 4,
-      slug: "confidence-myth",
-      date: "Nov 21, 2024",
-    },
-    {
-      category: "Leadership & Teams",
-      title: "The Silent Patterns That Shape Team Culture",
-      excerpt: "Culture isn't built by vision statements. It's built by the unspoken patterns that repeat every day.",
-      readTime: 7,
-      slug: "silent-patterns-team-culture",
-      date: "Nov 14, 2024",
-    },
-    {
-      category: "Thursday Thoughts",
-      title: "What If You Stopped Proving and Started Being?",
-      excerpt: "A reflective note to carry into your weekend: What would change if you stopped trying to prove yourself?",
-      readTime: 4,
-      slug: "stopped-proving",
-      date: "Nov 7, 2024",
-    },
-  ];
-
-  const filteredPosts =
-    selectedCategory === "All"
-      ? latestPosts
-      : latestPosts.filter((post) => post.category === selectedCategory);
 
   return (
     <div className="bg-[#F9F5EF]" {...pullToRefreshHandlers}>
