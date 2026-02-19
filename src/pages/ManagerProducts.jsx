@@ -12,6 +12,7 @@ import { Plus, Edit, Trash2, Eye, EyeOff, DollarSign, Sparkles, RefreshCw, Exter
 import { toast } from "react-hot-toast";
 import ReactQuill from "react-quill";
 import BundleCreator from "../components/manager/BundleCreator";
+import ProductCard from "../components/manager/ProductCard";
 
 export default function ManagerProducts() {
   const queryClient = useQueryClient();
