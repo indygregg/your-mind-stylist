@@ -208,12 +208,36 @@ export default function ManagerEmailTemplates() {
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Email Templates</h1>
-          <p className="text-[#2B2725]/70">
-            Manage notification templates for the entire platform
-          </p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Email Templates</h1>
+            <p className="text-[#2B2725]/70">
+              Manage notification templates for the entire platform
+            </p>
+          </div>
+          {templates.length === 0 && !isLoading && (
+            <Button
+              onClick={handleSeedTemplates}
+              disabled={seeding}
+              className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
+            >
+              <PlusCircle size={16} className="mr-2" />
+              {seeding ? "Creating..." : "Create Default Templates"}
+            </Button>
+          )}
         </div>
+
+        {templates.length === 0 && !isLoading && (
+          <div className="text-center py-16 bg-white rounded-lg border border-[#E4D9C4]">
+            <Mail size={48} className="mx-auto text-[#D8B46B] mb-4" />
+            <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">No templates yet</h3>
+            <p className="text-[#2B2725]/60 mb-6">Click "Create Default Templates" to populate the standard set including Pocket Mindset™, booking confirmations, reminders, and more.</p>
+            <Button onClick={handleSeedTemplates} disabled={seeding} className="bg-[#1E3A32] hover:bg-[#2B2725] text-white">
+              <PlusCircle size={16} className="mr-2" />
+              {seeding ? "Creating..." : "Create Default Templates"}
+            </Button>
+          </div>
+        )}
 
         <Tabs defaultValue="manager_notification" className="space-y-6">
           <TabsList>
