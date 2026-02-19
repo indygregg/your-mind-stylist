@@ -70,6 +70,7 @@ import Bookings from './pages/Bookings';
 import BugList from './pages/BugList';
 import BuyPrograms from './pages/BuyPrograms';
 import CalendarSettings from './pages/CalendarSettings';
+import Cart from './pages/Cart';
 import CertPurchase from './pages/CertPurchase';
 import Certification from './pages/Certification';
 import CleaningOutYourCloset from './pages/CleaningOutYourCloset';
@@ -157,6 +158,7 @@ import PurchaseComplete from './pages/PurchaseComplete';
 import PurchaseSuccess from './pages/PurchaseSuccess';
 import Resources from './pages/Resources';
 import RobotsText from './pages/RobotsText';
+import Shop from './pages/Shop';
 import Sitemap from './pages/Sitemap';
 import SpeakingTraining from './pages/SpeakingTraining';
 import StaffManagement from './pages/StaffManagement';
@@ -180,8 +182,6 @@ import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import Shop from './pages/Shop';
-import Cart from './pages/Cart';
 import __Layout from './Layout.jsx';
 
 
@@ -209,6 +209,7 @@ export const PAGES = {
     "BugList": BugList,
     "BuyPrograms": BuyPrograms,
     "CalendarSettings": CalendarSettings,
+    "Cart": Cart,
     "CertPurchase": CertPurchase,
     "Certification": Certification,
     "CleaningOutYourCloset": CleaningOutYourCloset,
@@ -296,6 +297,7 @@ export const PAGES = {
     "PurchaseSuccess": PurchaseSuccess,
     "Resources": Resources,
     "RobotsText": RobotsText,
+    "Shop": Shop,
     "Sitemap": Sitemap,
     "SpeakingTraining": SpeakingTraining,
     "StaffManagement": StaffManagement,
@@ -319,8 +321,6 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "Shop": Shop,
-    "Cart": Cart,
 }
 
 export const pagesConfig = {
