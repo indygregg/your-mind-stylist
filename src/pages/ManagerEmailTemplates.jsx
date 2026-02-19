@@ -77,11 +77,30 @@ export default function ManagerEmailTemplates() {
   const [editedTemplate, setEditedTemplate] = useState(null);
   const [testDialogOpen, setTestDialogOpen] = useState(false);
   const [testEmail, setTestEmail] = useState("");
+  const [seeding, setSeeding] = useState(false);
 
   const { data: templates = [], isLoading } = useQuery({
     queryKey: ["emailTemplates"],
     queryFn: () => base44.entities.EmailTemplate.list(),
   });
+
+  const handleSeedTemplates = async () => {
+    setSeeding(true);
+    try {
+      for (const tpl of DEFAULT_TEMPLATES) {
+        const existing = templates.find(t => t.key === tpl.key);
+        if (!existing) {
+          await base44.entities.EmailTemplate.create(tpl);
+        }
+      }
+      queryClient.invalidateQueries({ queryKey: ["emailTemplates"] });
+      toast.success("Templates seeded successfully!");
+    } catch (e) {
+      toast.error("Failed to seed templates: " + e.message);
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   const updateTemplateMutation = useMutation({
     mutationFn: ({ id, data }) => base44.entities.EmailTemplate.update(id, data),
