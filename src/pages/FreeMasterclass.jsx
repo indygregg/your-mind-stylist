@@ -188,10 +188,9 @@ export default function FreeMasterclass() {
                     try {
                       await base44.functions.invoke('sendMasterclassConfirmation', {
                         email,
-                        name,
-                        masterclass_title: "Imposter Syndrome & Other Myths to Ditch"
+                        full_name: name,
                       });
-                      window.location.href = "/app/signup?intent=masterclass&email=" + encodeURIComponent(email);
+                      window.location.href = "https://yourmindstylist.com/login?email=" + encodeURIComponent(email);
                     } catch (error) {
                       alert('Error: ' + error.message);
                     }
