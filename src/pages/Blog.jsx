@@ -157,6 +157,7 @@ export default function Blog() {
       </section>
 
       {/* Featured Post */}
+      {featuredPost && (
       <section id="featured" className="py-20 bg-[#F9F5EF]">
         <div className="max-w-5xl mx-auto px-6">
           <motion.div
@@ -178,14 +179,18 @@ export default function Blog() {
                 <span className="px-3 py-1 bg-[#D8B46B]/20 text-[#2B2725] text-xs tracking-wide uppercase">
                   {featuredPost.category}
                 </span>
-                <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
-                  <Calendar size={14} />
-                  {featuredPost.date}
-                </div>
-                <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
-                  <Clock size={14} />
-                  {featuredPost.readTime} min read
-                </div>
+                {featuredPost.publish_date && (
+                  <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
+                    <Calendar size={14} />
+                    {new Date(featuredPost.publish_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </div>
+                )}
+                {featuredPost.read_time && (
+                  <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
+                    <Clock size={14} />
+                    {featuredPost.read_time} min read
+                  </div>
+                )}
               </div>
               <h3 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4 leading-tight">
                 {featuredPost.title}
@@ -198,15 +203,13 @@ export default function Blog() {
                 className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all"
               >
                 Read Article
-                <ArrowRight
-                  size={16}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </motion.div>
         </div>
       </section>
+      )}
 
       {/* Latest Posts */}
       <section id="latest" className="py-24 bg-white">
