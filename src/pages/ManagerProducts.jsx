@@ -182,6 +182,7 @@ export default function ManagerProducts() {
       short_description: "",
       long_description: "",
       type: "one_time",
+      product_subtype: "",
       category: "foundation",
       price: "",
       currency: "usd",
