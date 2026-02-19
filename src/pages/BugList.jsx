@@ -59,11 +59,6 @@ export default function BugList() {
     queryFn: () => base44.entities.BugComment.list('-created_date'),
   });
 
-  const { data: bugReports = [], isLoading: bugsLoading } = useQuery({
-    queryKey: ['bugReports'],
-    queryFn: () => base44.entities.BugReport.list('-created_date'),
-  });
-
   const addCommentMutation = useMutation({
     mutationFn: (data) => base44.entities.BugComment.create(data),
     onSuccess: () => {
