@@ -17,6 +17,7 @@ const SUBTYPE_LABELS = {
   digital_service: { label: "Digital", icon: "💻", color: "bg-green-50 text-green-700 border-green-200" },
   physical_product: { label: "Physical", icon: "📦", color: "bg-orange-50 text-orange-700 border-orange-200" },
   other: { label: "Other", icon: "✨", color: "bg-gray-50 text-gray-700 border-gray-200" },
+  bundle: { label: "Bundle", icon: "🎁", color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
 };
 
 const FILTERS = [
