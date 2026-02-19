@@ -750,9 +750,9 @@ export default function BugList() {
     }
   ];
 
-  // Combine static bugs with database bugs and apply states
+  // Only use static bugs (database reports are managed separately via BugReport entity)
   const bugs = React.useMemo(() => {
-    const enhanced = staticBugs.map(cat => ({
+    return staticBugs.map(cat => ({
       ...cat,
       tested: categoryStates[cat.categoryId] || false,
       items: cat.items.map(item => ({
@@ -761,8 +761,7 @@ export default function BugList() {
         fromDatabase: false
       }))
     }));
-    return [...enhanced, ...groupedBugs];
-  }, [groupedBugs, staticBugStates, categoryStates]);
+  }, [staticBugStates, categoryStates]);
 
 
 
