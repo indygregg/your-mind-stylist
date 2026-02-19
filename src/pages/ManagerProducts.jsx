@@ -755,7 +755,27 @@ export default function ManagerProducts() {
             {/* Pricing */}
             <div className="grid md:grid-cols-3 gap-4">
               <div>
-                <Label>Type *</Label>
+                <Label>Product Subtype <span className="text-xs font-normal text-[#2B2725]/50">(what kind of product is this?)</span></Label>
+                <Select
+                  value={formData.product_subtype || ""}
+                  onValueChange={(value) => setFormData({ ...formData, product_subtype: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select subtype..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="webinar">📹 Webinar / Live Event</SelectItem>
+                    <SelectItem value="book">📖 Book</SelectItem>
+                    <SelectItem value="course">🎓 Course / Hypnosis Class</SelectItem>
+                    <SelectItem value="digital_service">💻 Digital Service</SelectItem>
+                    <SelectItem value="physical_product">📦 Physical Product</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-[#2B2725]/50 mt-1">Webinars & books auto-appear in correct sections on Programs page</p>
+              </div>
+              <div>
+                <Label>Pricing Type * <span className="text-xs font-normal text-[#2B2725]/50">(how it's charged)</span></Label>
                 <Select
                   value={formData.type}
                   onValueChange={(value) => setFormData({ ...formData, type: value })}
@@ -765,10 +785,10 @@ export default function ManagerProducts() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="one_time">One-Time Purchase</SelectItem>
-                    <SelectItem value="subscription">Subscription</SelectItem>
-                    <SelectItem value="payment_plan">Payment Plan</SelectItem>
-                    <SelectItem value="consultation">Consultation</SelectItem>
-                    <SelectItem value="bundle">Bundle</SelectItem>
+                    <SelectItem value="subscription">Subscription (recurring)</SelectItem>
+                    <SelectItem value="payment_plan">Payment Plan (installments)</SelectItem>
+                    <SelectItem value="consultation">Consultation (free/booking)</SelectItem>
+                    <SelectItem value="bundle">Bundle (multiple products)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
