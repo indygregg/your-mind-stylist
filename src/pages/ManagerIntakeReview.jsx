@@ -166,7 +166,7 @@ export default function ManagerIntakeReview() {
                       )}
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 flex-wrap">
                     <Button
                       variant="outline"
                       onClick={() => setSelectedIntake(intake)}
@@ -178,12 +178,21 @@ export default function ManagerIntakeReview() {
                     {intake.status === 'submitted' && (
                       <Button
                         onClick={() => handleDownloadPDF(intake.id)}
+                        disabled={downloading}
                         className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
                       >
                         <Download size={16} className="mr-2" />
                         Download PDF
                       </Button>
                     )}
+                    <Button
+                      variant="outline"
+                      onClick={() => setDeleteTarget(intake)}
+                      className="border-red-300 text-red-600 hover:bg-red-50"
+                      title="Delete this submission"
+                    >
+                      <Trash2 size={16} />
+                    </Button>
                   </div>
                 </div>
               </CardContent>
