@@ -570,23 +570,13 @@ export default function FreeMasterclass() {
           </div>
 
           <div className="text-center">
-            <Link
-              to="/app/signup?intent=masterclass"
+            <a
+              href="https://yourmindstylist.com/login"
               className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
             >
-              <CmsText 
-                contentKey="freemasterclass.howto.button" 
-                page="FreeMasterclass"
-                blockTitle="How to Watch - Button Text"
-                fallback="Watch the Free Masterclass" 
-                contentType="short_text"
-                as="span"
-              />
-              <ArrowRight
-                size={16}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </Link>
+              Watch the Free Masterclass
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+            </a>
           </div>
         </div>
       </section>
