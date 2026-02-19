@@ -10,8 +10,65 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, Edit, Save, X, Send } from "lucide-react";
+import { Mail, Edit, Save, X, Send, PlusCircle } from "lucide-react";
 import { toast } from "react-hot-toast";
+
+const DEFAULT_TEMPLATES = [
+  {
+    key: "booking_confirmation_client",
+    name: "Booking Confirmation (Client)",
+    category: "user_notification",
+    subject: "Your session is confirmed — {{appointment_type}}",
+    body: `Hi {{user_name}},\n\nYour session has been confirmed!\n\n📅 Date & Time: {{scheduled_date}}\n🎯 Service: {{appointment_type}}\n\n{{zoom_details}}\n\nIf you need to reschedule or have any questions, please reply to this email.\n\nLooking forward to our time together,\nRoberta`,
+    variables: ["user_name", "appointment_type", "scheduled_date", "zoom_details"],
+    active: true,
+  },
+  {
+    key: "booking_confirmation_manager",
+    name: "Booking Confirmation (Manager)",
+    category: "manager_notification",
+    subject: "New booking: {{user_name}} — {{appointment_type}}",
+    body: `New booking received!\n\nClient: {{user_name}} ({{user_email}})\nService: {{appointment_type}}\nDate: {{scheduled_date}}\nPhone: {{client_phone}}\n\nView booking in dashboard: {{admin_link}}`,
+    variables: ["user_name", "user_email", "appointment_type", "scheduled_date", "client_phone", "admin_link"],
+    active: true,
+  },
+  {
+    key: "reminder_24h",
+    name: "24-Hour Reminder",
+    category: "user_notification",
+    subject: "Reminder: Your session tomorrow — {{appointment_type}}",
+    body: `Hi {{user_name}},\n\nJust a friendly reminder that your session is tomorrow!\n\n📅 Date & Time: {{scheduled_date}}\n🎯 Service: {{appointment_type}}\n\n{{zoom_details}}\n\nSee you soon,\nRoberta`,
+    variables: ["user_name", "appointment_type", "scheduled_date", "zoom_details"],
+    active: true,
+  },
+  {
+    key: "pocket_mindset_purchase",
+    name: "Pocket Mindset™ Purchase Confirmation",
+    category: "user_notification",
+    subject: "Welcome to Pocket Mindset™ — Your Access Details Inside",
+    body: `Hi {{user_name}},\n\nHere is the information you need to set up your Pocket Mindset™ account.\n\n📱 Download the app from the App Store or Google Play.\n\n1. Select "New Account"\n2. Go to the Browse tab and enroll in courses\n3. Enter access code: 935384\n\nTwo content types available:\n• 5 Core Courses (7–55 days)\n• 3 Wellbeing Programs (anytime, any order)\n\nEnjoy!\n\nRoberta`,
+    variables: ["user_name"],
+    active: true,
+  },
+  {
+    key: "purchase_confirmation",
+    name: "Purchase Confirmation",
+    category: "user_notification",
+    subject: "Your purchase is confirmed — {{product_name}}",
+    body: `Hi {{user_name}},\n\nThank you for your purchase!\n\nProduct: {{product_name}}\nAmount: {{amount}}\n\nYou can access your purchase from your dashboard: {{dashboard_link}}\n\nIf you have any questions, reply to this email.\n\nRoberta`,
+    variables: ["user_name", "product_name", "amount", "dashboard_link"],
+    active: true,
+  },
+  {
+    key: "intake_form_reminder",
+    name: "Intake Form Reminder",
+    category: "user_notification",
+    subject: "Please complete your intake form before our session",
+    body: `Hi {{user_name}},\n\nYour upcoming session is on {{scheduled_date}}. Before we meet, please take a few minutes to complete your intake form:\n\n{{intake_form_link}}\n\nThis helps me prepare the best experience for you.\n\nSee you soon,\nRoberta`,
+    variables: ["user_name", "scheduled_date", "intake_form_link"],
+    active: true,
+  },
+];
 
 export default function ManagerEmailTemplates() {
   const queryClient = useQueryClient();
