@@ -581,57 +581,6 @@ export default function FreeMasterclass() {
         </div>
       </section>
 
-      {/* Connected Offerings */}
-      <section className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
-              <CmsText 
-                contentKey="freemasterclass.deeper.title" 
-                page="FreeMasterclass"
-                blockTitle="Go Deeper - Title"
-                fallback="Want to Go Deeper After the Masterclass?" 
-                contentType="short_text"
-              />
-            </h2>
-            <p className="text-[#2B2725]/70 text-lg">
-              <CmsText 
-                contentKey="freemasterclass.deeper.intro" 
-                page="FreeMasterclass"
-                blockTitle="Go Deeper - Intro"
-                fallback="If this class resonates, there are several ways to continue your work:" 
-                contentType="rich_text"
-              />
-            </p>
-          </motion.div>
-
-          <div className="text-center">
-            <Link
-              to={createPageUrl("Bookings")}
-              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-lg tracking-wide hover:bg-[#2B2725] transition-all duration-300"
-            >
-              <CmsText 
-                contentKey="freemasterclass.deeper.schedule_button" 
-                page="FreeMasterclass"
-                blockTitle="Go Deeper - Schedule Button"
-                fallback="Schedule a Consultation" 
-                contentType="short_text"
-                as="span"
-              />
-              <ArrowRight
-                size={20}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Final CTA */}
       <section className="py-24 bg-[#1E3A32]">
         <div className="max-w-4xl mx-auto px-6 text-center">
