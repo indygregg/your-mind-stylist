@@ -261,20 +261,36 @@ export default function ManagerIntakeReview() {
                   </div>
                 </div>
 
-                <div className="flex justify-end gap-3 pt-4 border-t">
+                <div className="flex justify-between items-center gap-3 pt-4 border-t flex-wrap">
                   <Button
                     variant="outline"
-                    onClick={() => setSelectedIntake(null)}
+                    onClick={() => setDeleteTarget(selectedIntake)}
+                    className="border-red-300 text-red-600 hover:bg-red-50"
                   >
-                    Close
+                    <Trash2 size={16} className="mr-2" />
+                    Delete Submission
                   </Button>
-                  <Button
-                    onClick={() => handleDownloadPDF(selectedIntake.id)}
-                    className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
-                  >
-                    <Download size={16} className="mr-2" />
-                    Download PDF
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="outline" onClick={() => setSelectedIntake(null)}>
+                      Close
+                    </Button>
+                    <Button
+                      onClick={() => handleDownloadThenDelete(selectedIntake)}
+                      disabled={downloading}
+                      className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
+                    >
+                      <Download size={16} className="mr-2" />
+                      Download & Delete
+                    </Button>
+                    <Button
+                      onClick={() => handleDownloadPDF(selectedIntake.id)}
+                      disabled={downloading}
+                      className="bg-[#D8B46B] hover:bg-[#c9a45a] text-[#1E3A32]"
+                    >
+                      <Download size={16} className="mr-2" />
+                      Download Only
+                    </Button>
+                  </div>
                 </div>
               </div>
             </DialogContent>
