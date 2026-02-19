@@ -21,6 +21,7 @@ const SUBTYPE_LABELS = {
 
 const FILTERS = [
   { value: "all", label: "All Products" },
+  { value: "bundle", label: "🎁 Bundles" },
   { value: "webinar", label: "📹 Webinars" },
   { value: "book", label: "📖 Books" },
   { value: "course", label: "🎓 Courses" },
