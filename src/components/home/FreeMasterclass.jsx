@@ -96,13 +96,13 @@ export default function FreeMasterclass() {
               />
             </div>
 
-            <button
-              onClick={handleVideoClick}
+            <Link
+              to={createPageUrl("FreeMasterclass")}
               className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide font-medium hover:bg-[#F9F5EF] transition-all duration-300"
             >
               <Play size={16} />
               Watch the Free Webinar
-            </button>
+            </Link>
           </motion.div>
         </div>
       </div>
