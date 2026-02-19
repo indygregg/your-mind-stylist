@@ -365,6 +365,26 @@ export default function ManagerProducts() {
     advanced: "Advanced",
   };
 
+  // Group by subtype for the new view, then fall back to category
+  const SUBTYPE_GROUPS = [
+    { key: "webinar", label: "📹 Webinars", description: "Live & recorded webinars" },
+    { key: "book", label: "📖 Books", description: "Books & written resources" },
+    { key: "course", label: "🎓 Courses & Classes", description: "Online learning programs" },
+    { key: "digital_service", label: "💻 Digital Services", description: "Digital tools & services" },
+    { key: "physical_product", label: "📦 Physical Products", description: "Shipped goods" },
+    { key: "other", label: "✨ Other", description: "Other products" },
+    { key: null, label: "🏷️ Programs & Coaching", description: "Coaching, sessions & programs (no subtype set)" },
+  ];
+
+  const groupedProducts = SUBTYPE_GROUPS.map(group => ({
+    ...group,
+    items: products.filter(p =>
+      group.key === null
+        ? !p.product_subtype || p.product_subtype === ""
+        : p.product_subtype === group.key
+    )
+  })).filter(g => g.items.length > 0);
+
   if (isLoading) {
     return <div className="p-8">Loading products...</div>;
   }
