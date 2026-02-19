@@ -595,6 +595,31 @@ export default function ManagerCRM() {
                   </div>
                 )}
 
+                <div className="flex gap-2 pt-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setEmailSubject("");
+                      setEmailBody("");
+                      setEmailDialogOpen(true);
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    <Mail size={14} />
+                    Send Email
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSmsDialogOpen(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <MessageSquare size={14} />
+                    Send SMS
+                  </Button>
+                </div>
+
                 <div>
                   <h3 className="font-medium mb-4">Recent Activity</h3>
                   <div className="space-y-2">
