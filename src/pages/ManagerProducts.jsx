@@ -795,16 +795,16 @@ export default function ManagerProducts() {
               </div>
 
               <div>
-                <Label>Default Price (USD)</Label>
+                <Label>Price (USD) <span className="text-xs font-normal text-[#2B2725]/50">(enter the full dollar amount)</span></Label>
                 <Input
                   type="number"
                   value={formData.price}
                   onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  placeholder="1995.00"
+                  placeholder="9.00"
                   step="0.01"
                 />
                 <p className="text-xs text-[#2B2725]/60 mt-1">
-                  Primary price. Add multiple options below.
+                  e.g. enter 9 for $9.00, or 997 for $997.00
                 </p>
               </div>
 
