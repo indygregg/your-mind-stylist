@@ -681,22 +681,25 @@ export default function BugList() {
                 id: "feb19-mc-1",
                 title: "Form returns 500 error on submission",
                 description: "The Free Masterclass signup form is returning a 500 server error when submitted.",
-                status: "open",
-                priority: "critical"
+                status: "completed",
+                priority: "critical",
+                notes: "Fixed: removed the auth requirement (base44.auth.me()) from sendMasterclassConfirmation function — public visitors aren't logged in so it was always returning 401/500."
               },
               {
                 id: "feb19-mc-2",
                 title: "All button links on this page go to a 404 page",
                 description: "Every button/link on the Free Masterclass page routes to a non-existent page (404).",
-                status: "open",
-                priority: "critical"
+                status: "completed",
+                priority: "critical",
+                notes: "Fixed: replaced all /app/signup?intent=masterclass links with https://yourmindstylist.com/login which is the real login/signup page."
               },
               {
                 id: "feb19-mc-3",
                 title: "Remove one of the two redundant bottom rows",
                 description: "The bottom two rows ('Want to go deeper' and 'Ready to stop feeling') are redundant — one should be removed.",
-                status: "open",
-                priority: "low"
+                status: "completed",
+                priority: "low",
+                notes: "Removed the 'Want to Go Deeper' section. The 'Ready to Stop Feeling Like You're Faking It' Final CTA remains."
               }
             ]
           },
