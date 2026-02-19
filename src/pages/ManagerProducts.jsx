@@ -467,9 +467,10 @@ export default function ManagerProducts() {
               onClick={handleSyncAll}
               disabled={syncing}
               className="border-[#D8B46B]"
+              title="Sync all products to Stripe (prices, names, descriptions)"
             >
               <RefreshCw size={16} className={`mr-2 ${syncing ? "animate-spin" : ""}`} />
-              Sync All
+              {syncing ? "Syncing…" : "Sync All to Stripe"}
             </Button>
             <Button
               onClick={() => {
