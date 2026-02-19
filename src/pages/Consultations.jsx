@@ -335,49 +335,8 @@ export default function Consultations() {
                         />
                       </div>
                       <div className="flex flex-col gap-2">
-                        <CmsText 
-                          contentKey="consultations.step1.doc3.adult_url" 
-                          page="Consultations"
-                          blockTitle="Document 3 Adult URL (paste full https:// URL)"
-                          fallback=""
-                          contentType="short_text"
-                        >
-                          {(url) => url && url.startsWith('http') ? (
-                            <a 
-                              href={url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
-                            >
-                              <Download size={14} />
-                              <span>Download Adult Bill of Rights PDF</span>
-                            </a>
-                          ) : (
-                            <span className="text-xs text-[#2B2725]/40">Upload Adult PDF and paste URL via CMS Edit Mode</span>
-                          )}
-                        </CmsText>
-                        
-                        <CmsText 
-                          contentKey="consultations.step1.doc3.minor_url" 
-                          page="Consultations"
-                          blockTitle="Document 3 Minor URL (paste full https:// URL)"
-                          fallback=""
-                          contentType="short_text"
-                        >
-                          {(url) => url && url.startsWith('http') ? (
-                            <a 
-                              href={url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
-                            >
-                              <Download size={14} />
-                              <span>Download Minor Bill of Rights PDF</span>
-                            </a>
-                          ) : (
-                            <span className="text-xs text-[#2B2725]/40">Upload Minor PDF and paste URL via CMS Edit Mode</span>
-                          )}
-                        </CmsText>
+                        <DocDownloadLink contentKey="consultations.step1.doc3.adult_url" label="Download Adult Bill of Rights PDF" />
+                        <DocDownloadLink contentKey="consultations.step1.doc3.minor_url" label="Download Minor Bill of Rights PDF" />
                       </div>
                     </div>
 
