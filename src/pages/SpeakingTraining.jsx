@@ -469,7 +469,13 @@ export default function SpeakingTraining() {
             className="text-center mb-16"
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4">
-              What Organizations Are Saying
+              <CmsText
+                contentKey="speaking.testimonials.title"
+                page="SpeakingTraining"
+                blockTitle="Testimonials Title"
+                fallback="What Organizations Are Saying"
+                contentType="short_text"
+              />
             </h2>
           </motion.div>
 
@@ -484,13 +490,32 @@ export default function SpeakingTraining() {
                 className="bg-[#F9F5EF] p-8"
               >
                 <Quote size={32} className="text-[#D8B46B] mb-4" />
-                <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6 italic">
-                  "{testimonial.quote}"
-                </p>
+                <CmsText
+                  contentKey={`speaking.testimonial${index + 1}.quote`}
+                  page="SpeakingTraining"
+                  blockTitle={`Testimonial ${index + 1} Quote`}
+                  fallback={`"${testimonial.quote}"`}
+                  contentType="rich_text"
+                  className="text-[#2B2725]/80 text-lg leading-relaxed mb-6 italic"
+                />
                 <div className="border-t border-[#D8B46B]/30 pt-4">
-                  <p className="text-[#1E3A32] font-medium">{testimonial.author}</p>
+                  <CmsText
+                    contentKey={`speaking.testimonial${index + 1}.author`}
+                    page="SpeakingTraining"
+                    blockTitle={`Testimonial ${index + 1} Author`}
+                    fallback={testimonial.author}
+                    contentType="short_text"
+                    className="text-[#1E3A32] font-medium"
+                  />
                   {testimonial.role && (
-                    <p className="text-[#2B2725]/60 text-sm">{testimonial.role}</p>
+                    <CmsText
+                      contentKey={`speaking.testimonial${index + 1}.role`}
+                      page="SpeakingTraining"
+                      blockTitle={`Testimonial ${index + 1} Role`}
+                      fallback={testimonial.role}
+                      contentType="short_text"
+                      className="text-[#2B2725]/60 text-sm"
+                    />
                   )}
                 </div>
               </motion.div>
