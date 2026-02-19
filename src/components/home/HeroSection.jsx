@@ -5,11 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
 import CmsText from "../cms/CmsText";
 import VideoModal from "./VideoModal";
-import MasterclassEmailCapture from "./MasterclassEmailCapture";
 
 export default function HeroSection() {
   const [showVideoModal, setShowVideoModal] = useState(false);
-  const [showEmailCapture, setShowEmailCapture] = useState(false);
 
   return (
     <section className="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden">
