@@ -69,7 +69,7 @@ export default function About() {
       icon: Users,
       title: "Private Mind Styling (1:1)",
       description: "Deep, customized work for personal transformation.",
-      link: "PrivateSessions",
+      link: "Bookings",
     },
     {
       icon: Award,
