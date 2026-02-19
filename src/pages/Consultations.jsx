@@ -309,27 +309,7 @@ export default function Consultations() {
                           contentType="rich_text"
                         />
                       </div>
-                      <CmsText 
-                        contentKey="consultations.step1.doc2.link_url" 
-                        page="Consultations"
-                        blockTitle="Document 2 Link URL (paste full https:// URL here)"
-                        fallback=""
-                        contentType="short_text"
-                      >
-                        {(url) => url && url.startsWith('http') ? (
-                          <a 
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
-                          >
-                            <Download size={14} />
-                            <span>Download Online Instructions PDF</span>
-                          </a>
-                        ) : (
-                          <span className="text-xs text-[#2B2725]/40">Upload PDF and paste URL via CMS Edit Mode</span>
-                        )}
-                      </CmsText>
+                      <DocDownloadLink contentKey="consultations.step1.doc2.link_url" label="Download Online Instructions PDF" />
                     </div>
 
                     <div>
