@@ -13,9 +13,19 @@ export default function Blog() {
   const queryClient = useQueryClient();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const { pullY, isRefreshing, handlers: pullToRefreshHandlers } = usePullToRefresh(async () => {
-    // No query invalidation needed for static blog content
-    // but can refresh other data like comments or analytics
+    queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
   });
+
+  const { data: allPosts = [] } = useQuery({
+    queryKey: ['blog-posts'],
+    queryFn: () => base44.entities.BlogPost.filter({ status: 'published' }, '-publish_date'),
+  });
+
+  const featuredPost = allPosts.find(p => p.featured_image) || allPosts[0] || null;
+  const latestPosts = allPosts.filter(p => p.id !== featuredPost?.id);
+  const filteredPosts = selectedCategory === "All"
+    ? latestPosts
+    : latestPosts.filter(p => p.category === selectedCategory);
 
   const categories = [
     "All",
