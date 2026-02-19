@@ -1,20 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion } from "framer-motion";
 import { Play, Sparkles } from "lucide-react";
 import CmsText from "../cms/CmsText";
 
 export default function FreeMasterclass() {
-  const navigate = useNavigate();
-
-  const handleVideoClick = () => {
-    navigate(createPageUrl("FreeMasterclass"));
-  };
-
-  const handleEmailSuccess = () => {
-    setShowEmailCapture(false);
-  };
 
   return (
     <section className="py-24 md:py-32 bg-[#1E3A32] relative overflow-hidden">
