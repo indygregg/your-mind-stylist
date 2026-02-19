@@ -501,6 +501,14 @@ export default function ManagerProducts() {
                     </div>
 
                     <div className="flex flex-wrap gap-2 mb-4">
+                      {product.product_subtype && (
+                        <span className="text-xs px-2 py-1 bg-[#D8B46B]/20 text-[#1E3A32] rounded font-medium">
+                          {product.product_subtype === 'webinar' ? '📹 Webinar' :
+                           product.product_subtype === 'book' ? '📖 Book' :
+                           product.product_subtype === 'course' ? '🎓 Course' :
+                           product.product_subtype}
+                        </span>
+                      )}
                       <span className="text-xs px-2 py-1 bg-[#F9F5EF] text-[#2B2725]/70 rounded">
                         {product.type}
                       </span>
