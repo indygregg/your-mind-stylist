@@ -6,7 +6,6 @@ import { Play, Sparkles } from "lucide-react";
 import CmsText from "../cms/CmsText";
 
 export default function FreeMasterclass() {
-
   return (
     <section className="py-24 md:py-32 bg-[#1E3A32] relative overflow-hidden">
       {/* Decorative Elements */}
@@ -106,8 +105,6 @@ export default function FreeMasterclass() {
           </motion.div>
         </div>
       </div>
-
-
     </section>
   );
 }
