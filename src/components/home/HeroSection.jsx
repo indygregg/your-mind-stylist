@@ -187,7 +187,6 @@ export default function HeroSection() {
       </div>
 
       <VideoModal isOpen={showVideoModal} onClose={() => setShowVideoModal(false)} />
-      <MasterclassEmailCapture isOpen={showEmailCapture} onClose={() => setShowEmailCapture(false)} />
     </section>
   );
 }
