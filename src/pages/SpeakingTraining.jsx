@@ -362,15 +362,14 @@ export default function SpeakingTraining() {
                     as="span"
                   />
                 </h3>
-                <p className="text-[#2B2725]/70 text-sm leading-relaxed">
-                  <CmsText 
-                    contentKey={`speaking.topic${index + 1}.description`}
-                    page="SpeakingTraining"
-                    blockTitle={`Topic ${index + 1} Description`}
-                    fallback={topic.description}
-                    contentType="rich_text"
-                  />
-                </p>
+                <CmsText 
+                  contentKey={`speaking.topic${index + 1}.description`}
+                  page="SpeakingTraining"
+                  blockTitle={`Topic ${index + 1} Description`}
+                  fallback={topic.description}
+                  contentType="rich_text"
+                  className="text-[#2B2725]/70 text-sm leading-relaxed"
+                />
               </motion.div>
             ))}
           </div>
