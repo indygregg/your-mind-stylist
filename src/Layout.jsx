@@ -159,6 +159,7 @@ export default function Layout({ children, currentPageName }) {
   }
 
   return (
+    <CartProvider>
     <EditModeProvider>
       <Helmet>
         <title>Your Mind Stylist</title>
