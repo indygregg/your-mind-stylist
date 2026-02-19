@@ -3,10 +3,11 @@ import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Clock, Tag } from "lucide-react";
+import { ArrowRight, Calendar, Clock } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
 
 export default function Blog() {
   const queryClient = useQueryClient();
