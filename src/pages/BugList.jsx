@@ -76,44 +76,7 @@ export default function BugList() {
     }
   };
 
-  const handleToggleTested = (itemId, currentTested) => {
-    toggleTestedMutation.mutate({ id: itemId, tested: !currentTested });
-  };
 
-  // Group bug reports by page
-  const groupedBugs = React.useMemo(() => {
-    const grouped = {};
-    bugReports.forEach(bug => {
-      const page = bug.page_url || 'Other';
-      if (!grouped[page]) {
-        grouped[page] = {
-          category: page,
-          categoryId: page.toLowerCase().replace(/\s+/g, '-'),
-          priority: bug.priority?.toLowerCase() || 'medium',
-          items: [],
-          tested: false
-        };
-      }
-      grouped[page].items.push({
-        id: bug.id,
-        title: bug.title,
-        description: bug.description,
-        status: bug.status === 'Resolved' ? 'completed' : 'open',
-        priority: bug.priority?.toLowerCase() || 'medium',
-        notes: bug.admin_notes,
-        reporter: bug.reporter_name,
-        tested: bug.tested || false,
-        fromDatabase: true
-      });
-    });
-    
-    // Calculate category tested status
-    Object.values(grouped).forEach(cat => {
-      cat.tested = cat.items.every(item => item.tested);
-    });
-    
-    return Object.values(grouped);
-  }, [bugReports]);
 
   const [staticBugStates, setStaticBugStates] = useState(() => {
     const saved = localStorage.getItem('staticBugStates');
