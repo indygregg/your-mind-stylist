@@ -114,7 +114,6 @@ export default function WhatIDo() {
           </motion.div>
         </div>
       </div>
-      <MasterclassEmailCapture isOpen={showEmailCapture} onClose={() => setShowEmailCapture(false)} />
     </section>
   );
 }
