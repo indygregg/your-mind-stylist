@@ -368,6 +368,7 @@ export default function ManagerProducts() {
 
   // Group by subtype for the new view, then fall back to category
   const SUBTYPE_GROUPS = [
+    { key: "bundle", label: "🎁 Bundles & Packages", description: "Product bundles at special prices" },
     { key: "webinar", label: "📹 Webinars", description: "Live & recorded webinars" },
     { key: "book", label: "📖 Books", description: "Books & written resources" },
     { key: "course", label: "🎓 Courses & Classes", description: "Online learning programs" },
@@ -379,11 +380,11 @@ export default function ManagerProducts() {
 
   const groupedProducts = SUBTYPE_GROUPS.map(group => ({
     ...group,
-    items: products.filter(p =>
-      group.key === null
-        ? !p.product_subtype || p.product_subtype === ""
-        : p.product_subtype === group.key
-    )
+    items: products.filter(p => {
+      if (group.key === "bundle") return p.is_bundle || p.type === "bundle";
+      if (group.key === null) return !p.product_subtype || p.product_subtype === "" && !p.is_bundle && p.type !== "bundle";
+      return p.product_subtype === group.key && !p.is_bundle && p.type !== "bundle";
+    })
   })).filter(g => g.items.length > 0);
 
   if (isLoading) {
