@@ -462,6 +462,28 @@ export default function ManagerProducts() {
           </div>
         </div>
 
+        {/* Quick-find panels for webinars, books, courses */}
+        {['webinar', 'book', 'course'].map(subtype => {
+          const subtypeProducts = products.filter(p => p.product_subtype === subtype);
+          if (subtypeProducts.length === 0) return null;
+          const label = subtype === 'webinar' ? '📹 Webinars' : subtype === 'book' ? '📖 Books' : '🎓 Hypnosis Classes / Courses';
+          return (
+            <div key={subtype} className="mb-8 p-4 bg-[#D8B46B]/10 border border-[#D8B46B]/30 rounded-lg">
+              <h2 className="font-serif text-xl text-[#1E3A32] mb-3">{label} <span className="text-sm font-sans font-normal text-[#2B2725]/60">— {subtypeProducts.length} product{subtypeProducts.length !== 1 ? 's' : ''}</span></h2>
+              <div className="flex flex-wrap gap-3">
+                {subtypeProducts.map(p => (
+                  <div key={p.id} className="bg-white rounded px-4 py-3 border border-[#E4D9C4] flex items-center gap-3 text-sm">
+                    <span className={`w-2 h-2 rounded-full ${p.status === 'published' ? 'bg-green-500' : 'bg-gray-300'}`} />
+                    <span className="font-medium text-[#1E3A32]">{p.name}</span>
+                    <span className="text-[#2B2725]/50">{p.price ? `$${(p.price/100).toFixed(2)}` : 'Free'}</span>
+                    <Button size="sm" variant="outline" onClick={() => handleEdit(p)} className="h-7 px-2"><Edit size={12}/></Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+
         {/* Products by Category */}
         {Object.entries(categoryLabels).map(([category, label]) => {
           const categoryProducts = products.filter((p) => p.category === category);
