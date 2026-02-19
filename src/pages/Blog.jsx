@@ -223,6 +223,9 @@ export default function Blog() {
               {selectedCategory === "All" ? "Latest Posts" : selectedCategory}
             </h2>
 
+            {filteredPosts.length === 0 ? (
+              <p className="text-[#2B2725]/60 text-center py-12">No posts yet. Check back soon.</p>
+            ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPosts.map((post, index) => (
                 <motion.div
@@ -243,28 +246,30 @@ export default function Blog() {
                   </h3>
                   <p className="text-[#2B2725]/70 leading-relaxed mb-4">{post.excerpt}</p>
                   <div className="flex items-center gap-4 text-[#2B2725]/60 text-sm mb-4">
-                    <div className="flex items-center gap-1">
-                      <Calendar size={14} />
-                      {post.date}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock size={14} />
-                      {post.readTime} min
-                    </div>
+                    {post.publish_date && (
+                      <div className="flex items-center gap-1">
+                        <Calendar size={14} />
+                        {new Date(post.publish_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </div>
+                    )}
+                    {post.read_time && (
+                      <div className="flex items-center gap-1">
+                        <Clock size={14} />
+                        {post.read_time} min
+                      </div>
+                    )}
                   </div>
                   <Link
                     to={createPageUrl(`BlogPost?slug=${post.slug}`)}
                     className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all"
                   >
                     Read
-                    <ArrowRight
-                      size={16}
-                      className="group-hover:translate-x-1 transition-transform"
-                    />
+                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </motion.div>
               ))}
             </div>
+            )}
           </motion.div>
         </div>
       </section>
