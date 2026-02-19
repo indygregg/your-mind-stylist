@@ -38,9 +38,16 @@ export default function Shop() {
       base44.entities.Product.filter({ status: "published", active: true }, "display_order"),
   });
 
+  const isBundle = (p) => p.is_bundle || p.type === "bundle";
+
   const filtered = activeFilter === "all"
     ? products
-    : products.filter((p) => p.product_subtype === activeFilter);
+    : activeFilter === "bundle"
+      ? products.filter(isBundle)
+      : products.filter((p) => p.product_subtype === activeFilter && !isBundle(p));
+
+  // Separate bundles for featured section (only shown on "all" tab)
+  const bundles = products.filter(isBundle);
 
   const formatPrice = (price, interval) => {
     if (!price) return "Free";
