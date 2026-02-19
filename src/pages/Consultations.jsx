@@ -8,6 +8,26 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle2, Phone, Calendar, FileText, Video, Download, AlertCircle } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 import VideoEmbed from "../components/cms/VideoEmbed";
+import { useCmsText } from "../components/cms/useCmsText";
+
+// Helper component to show a document download link from a CMS URL field
+function DocDownloadLink({ contentKey, label }) {
+  const { content: url } = useCmsText(contentKey, "");
+  if (!url || !url.startsWith("http")) {
+    return <span className="text-xs text-[#2B2725]/40">No link set — add URL via CMS Edit Mode</span>;
+  }
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+    >
+      <Download size={14} />
+      <span>{label}</span>
+    </a>
+  );
+}
 
 export default function Consultations() {
 
