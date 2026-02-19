@@ -389,24 +389,33 @@ export default function SpeakingTraining() {
             viewport={{ once: true }}
           >
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              Who I Work With
+              <CmsText
+                contentKey="speaking.audience.title"
+                page="SpeakingTraining"
+                blockTitle="Audience Title"
+                fallback="Who I Work With"
+                contentType="short_text"
+              />
             </h2>
 
             <p className="text-[#2B2725]/80 text-lg mb-6">I partner with:</p>
 
-            <div className="grid md:grid-cols-2 gap-4 mb-10">
-              {audiences.map((audience) => (
-                <div key={audience} className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-[#1E3A32]" />
-                  <span className="text-[#2B2725]/80 text-lg">{audience}</span>
-                </div>
-              ))}
-            </div>
+            <CmsText
+              contentKey="speaking.audience.list"
+              page="SpeakingTraining"
+              blockTitle="Audience List"
+              fallback={`<div class='grid md:grid-cols-2 gap-4 mb-10'>${audiences.map(a => `<div class='flex items-center gap-3'><div class='w-2 h-2 rounded-full bg-[#1E3A32]'></div><span class='text-[#2B2725]/80 text-lg'>${a}</span></div>`).join('')}</div>`}
+              contentType="rich_text"
+            />
 
-            <p className="text-[#2B2725]/80 text-lg leading-relaxed">
-              Whether your team is navigating growth, conflict, burnout, or change, Mind Styling
-              supports clear thinking and healthy communication.
-            </p>
+            <CmsText
+              contentKey="speaking.audience.closing"
+              page="SpeakingTraining"
+              blockTitle="Audience Closing"
+              fallback="Whether your team is navigating growth, conflict, burnout, or change, Mind Styling supports clear thinking and healthy communication."
+              contentType="rich_text"
+              className="text-[#2B2725]/80 text-lg leading-relaxed"
+            />
           </motion.div>
         </div>
       </section>
