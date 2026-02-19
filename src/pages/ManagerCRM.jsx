@@ -28,6 +28,10 @@ export default function ManagerCRM() {
   const [stageNotes, setStageNotes] = useState("");
   const [smsDialogOpen, setSmsDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [emailSubject, setEmailSubject] = useState("");
+  const [emailBody, setEmailBody] = useState("");
+  const [sendingEmail, setSendingEmail] = useState(false);
 
   // Fetch leads
   const { data: leads = [], isLoading } = useQuery({
