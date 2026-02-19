@@ -482,8 +482,29 @@ export default function ManagerProducts() {
           </div>
         </div>
 
-        {/* Quick-find panels for webinars, books, courses */}
-        {['webinar', 'book', 'course'].map(subtype => {
+        {/* Products grouped by subtype */}
+        {groupedProducts.map(group => (
+          <div key={group.key || "no-subtype"} className="mb-10">
+            <div className="flex items-baseline gap-3 mb-4">
+              <h2 className="font-serif text-2xl text-[#1E3A32]">{group.label}</h2>
+              <span className="text-sm text-[#2B2725]/50">{group.items.length} product{group.items.length !== 1 ? "s" : ""}</span>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {group.items.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onEdit={handleEdit}
+                  onToggleStatus={(p) => toggleStatusMutation.mutate({ id: p.id, status: p.status === "published" ? "draft" : "published" })}
+                  onDelete={(p) => { if (confirm("Delete this product?")) deleteMutation.mutate(p.id); }}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {/* Legacy category-based display — hidden now, replaced above */}
+        {false && ['webinar', 'book', 'course'].map(subtype => {
           const subtypeProducts = products.filter(p => p.product_subtype === subtype);
           if (subtypeProducts.length === 0) return null;
           const label = subtype === 'webinar' ? '📹 Webinars' : subtype === 'book' ? '📖 Books' : '🎓 Hypnosis Classes / Courses';
