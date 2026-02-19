@@ -778,7 +778,7 @@ export default function BugList() {
     low: bugs.reduce((acc, cat) => acc + cat.items.filter(i => i.priority === "low").length, 0),
   };
 
-  if (!user || bugsLoading) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
         <div className="animate-pulse text-[#1E3A32]">Loading...</div>
