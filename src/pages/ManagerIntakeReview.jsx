@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,13 +11,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { FileText, Download, Search, Filter, Calendar } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { FileText, Download, Search, Calendar, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 
 export default function ManagerIntakeReview() {
   const [selectedIntake, setSelectedIntake] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [deleteTarget, setDeleteTarget] = useState(null); // intake to delete
+  const [downloading, setDownloading] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: intakes = [], isLoading } = useQuery({
     queryKey: ['consultation-intakes'],
@@ -32,6 +45,7 @@ export default function ManagerIntakeReview() {
   });
 
   const handleDownloadPDF = async (intakeId) => {
+    setDownloading(true);
     try {
       const { data } = await base44.functions.invoke('generateIntakePDF', { intake_id: intakeId });
       const blob = new Blob([data], { type: 'application/pdf' });
@@ -45,7 +59,22 @@ export default function ManagerIntakeReview() {
       a.remove();
     } catch (error) {
       console.error("Download failed:", error);
+    } finally {
+      setDownloading(false);
     }
+  };
+
+  const handleDownloadThenDelete = async (intake) => {
+    await handleDownloadPDF(intake.id);
+    setDeleteTarget(intake);
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    await base44.entities.ConsultationIntake.delete(deleteTarget.id);
+    queryClient.invalidateQueries({ queryKey: ['consultation-intakes'] });
+    setDeleteTarget(null);
+    setSelectedIntake(null);
   };
 
   const getStatusColor = (status) => {
