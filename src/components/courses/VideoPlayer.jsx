@@ -35,7 +35,7 @@ export default function VideoPlayer({ src, embedUrl, onProgressUpdate, lastPosit
       return url;
     }
 
-    // Vimeo: https://vimeo.com/123456789 -> https://player.vimeo.com/video/123456789
+    // Vimeo: https://vimeo.com/123456789 or https://vimeo.com/123456789?fl=ip&fe=ec
     const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
     if (vimeoMatch) {
       return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
