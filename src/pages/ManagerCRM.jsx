@@ -119,6 +119,7 @@ export default function ManagerCRM() {
   const stageLabels = {
     new: "New",
     contacted: "Contacted",
+    booked: "Booked",
     qualified: "Qualified",
     proposal: "Proposal",
     negotiation: "Negotiation",
