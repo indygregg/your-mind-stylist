@@ -61,53 +61,31 @@ Deno.serve(async (req) => {
             });
         }
 
-        // Check if selected price is recurring (payment plan)
+        // Check if any product is recurring/subscription
         let mode = 'payment';
-        let subscriptionData = null;
-        
-        if (selected_price_id) {
-            const priceDetails = await stripe.prices.retrieve(selected_price_id);
-            if (priceDetails.recurring) {
-                mode = 'subscription';
-                
-                // If payment plan, set billing cycle count to auto-cancel after X months
-                if (priceDetails.metadata.payment_plan === 'true' && priceDetails.metadata.total_months) {
-                    const totalMonths = parseInt(priceDetails.metadata.total_months);
-                    subscriptionData = {
-                        metadata: {
-                            payment_plan: 'true',
-                            plan_name: priceDetails.metadata.plan_name,
-                            total_months: totalMonths.toString(),
-                            product_id: product.id,
-                        },
-                        // Auto-cancel after total_months
-                        cancel_at: Math.floor(Date.now() / 1000) + (totalMonths * 30 * 24 * 60 * 60), // Approximate
-                    };
-                }
-            }
-        } else if (product.type === 'subscription') {
+        const hasRecurring = products.some(p => p.type === 'subscription');
+        if (hasRecurring) {
             mode = 'subscription';
         }
+
+        // Build line items for all products
+        const line_items = products.map(product => ({
+            price: product.stripe_price_id,
+            quantity: 1,
+        }));
 
         // Create checkout session
         const sessionConfig = {
             customer: customer.id,
             mode: mode,
-            line_items: [
-                {
-                    price: stripePriceId,
-                    quantity: 1,
-                },
-            ],
+            line_items: line_items,
             success_url: `${req.headers.get('origin')}/PurchaseSuccess?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${req.headers.get('origin')}/ProgramsCourses`,
+            cancel_url: `${req.headers.get('origin')}/Cart`,
             metadata: {
                 user_id: user.id,
-                product_id: product.id,
-                product_key: product.key,
-                product_name: product.name,
-                selected_price_id: stripePriceId,
-                is_payment_plan: selected_price_id ? 'true' : 'false',
+                product_ids: products.map(p => p.id).join(','),
+                product_keys: products.map(p => p.key).join(','),
+                product_names: products.map(p => p.name).join('; '),
                 affiliate_code: affiliateCodeValue || '',
             },
         };
@@ -115,11 +93,6 @@ Deno.serve(async (req) => {
         // Only set client_reference_id if affiliate_code is provided and non-empty
         if (affiliateCodeValue) {
             sessionConfig.client_reference_id = affiliateCodeValue;
-        }
-        
-        // Add subscription_data if payment plan
-        if (subscriptionData) {
-            sessionConfig.subscription_data = subscriptionData;
         }
         
         const session = await stripe.checkout.sessions.create(sessionConfig);
