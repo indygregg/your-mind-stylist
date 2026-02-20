@@ -978,34 +978,56 @@ export default function BugList() {
               <div>
                 <h1 className="font-serif text-2xl md:text-4xl text-[#1E3A32] mb-2">Bug & Issue Tracker</h1>
                 <p className="text-sm md:text-base text-[#2B2725]/70">
-                  Roberta's reported issues and change requests
+                  {viewMode === 'static' ? "Roberta's reported issues and change requests" : "User-submitted bug reports"}
                 </p>
               </div>
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => setFilterMode('open')}
-                  variant={filterMode === 'open' ? 'default' : 'outline'}
-                  size="sm"
-                  className={filterMode === 'open' ? 'bg-[#1E3A32] hover:bg-[#2B2725]' : ''}
-                >
-                  Open Issues
-                </Button>
-                <Button
-                  onClick={() => setFilterMode('all')}
-                  variant={filterMode === 'all' ? 'default' : 'outline'}
-                  size="sm"
-                  className={filterMode === 'all' ? 'bg-[#1E3A32] hover:bg-[#2B2725]' : ''}
-                >
-                  All
-                </Button>
-                <Button
-                  onClick={() => setFilterMode('completed')}
-                  variant={filterMode === 'completed' ? 'default' : 'outline'}
-                  size="sm"
-                  className={filterMode === 'completed' ? 'bg-green-600 hover:bg-green-700' : ''}
-                >
-                  Completed
-                </Button>
+              <div className="flex flex-col gap-2">
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => setViewMode('static')}
+                    variant={viewMode === 'static' ? 'default' : 'outline'}
+                    size="sm"
+                    className={viewMode === 'static' ? 'bg-[#1E3A32] hover:bg-[#2B2725]' : ''}
+                  >
+                    Static Issues
+                  </Button>
+                  <Button
+                    onClick={() => setViewMode('database')}
+                    variant={viewMode === 'database' ? 'default' : 'outline'}
+                    size="sm"
+                    className={viewMode === 'database' ? 'bg-[#1E3A32] hover:bg-[#2B2725]' : ''}
+                  >
+                    Database Reports
+                  </Button>
+                </div>
+                {viewMode === 'static' && (
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => setFilterMode('open')}
+                      variant={filterMode === 'open' ? 'default' : 'outline'}
+                      size="sm"
+                      className={filterMode === 'open' ? 'bg-[#1E3A32] hover:bg-[#2B2725]' : ''}
+                    >
+                      Open Issues
+                    </Button>
+                    <Button
+                      onClick={() => setFilterMode('all')}
+                      variant={filterMode === 'all' ? 'default' : 'outline'}
+                      size="sm"
+                      className={filterMode === 'all' ? 'bg-[#1E3A32] hover:bg-[#2B2725]' : ''}
+                    >
+                      All
+                    </Button>
+                    <Button
+                      onClick={() => setFilterMode('completed')}
+                      variant={filterMode === 'completed' ? 'default' : 'outline'}
+                      size="sm"
+                      className={filterMode === 'completed' ? 'bg-green-600 hover:bg-green-700' : ''}
+                    >
+                      Completed
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
