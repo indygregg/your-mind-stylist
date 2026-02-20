@@ -266,7 +266,7 @@ export default function ClientPortal() {
               </Card>
             </div>
 
-            {paidBookings.length === 0 && purchases.length === 0 ? (
+            {paidBookings.length === 0 ? (
               <Card className="p-12 text-center">
                 <CreditCard size={48} className="mx-auto mb-4 text-[#2B2725]/30" />
                 <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">
