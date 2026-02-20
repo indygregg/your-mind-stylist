@@ -27,7 +27,7 @@ import AIClientAssistant from "@/components/ai/AIClientAssistant";
 import { PersonalizedGreeting } from "../components/ui/PersonalizedGreeting";
 import { SmartSuggestion } from "../components/ui/SmartSuggestion";
 import { useSmartSuggestions } from "../components/ui/useSmartSuggestions";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import haptics from "@/components/utils/haptics";
 import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
 
