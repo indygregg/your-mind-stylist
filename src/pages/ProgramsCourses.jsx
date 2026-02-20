@@ -104,59 +104,68 @@ export default function ProgramsCourses() {
                   viewport={{ once: true }}
                   className="group"
                 >
-                  <Link to={createPageUrl(`ProductPage?slug=${product.slug}`)}>
-                    <div className="bg-white shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
-                      {product.thumbnail && (
-                        <div className="h-48 overflow-hidden">
-                          <img
-                            src={product.thumbnail}
-                            alt={product.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
+                  <div className="bg-white shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
+                    {product.thumbnail && (
+                      <div className="h-48 overflow-hidden">
+                        <img
+                          src={product.thumbnail}
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <h3 className="font-serif text-xl text-[#1E3A32] mb-2">
+                        {product.name}
+                      </h3>
+                      {product.tagline && (
+                        <p className="text-sm text-[#6E4F7D] mb-3 font-medium">{product.tagline}</p>
+                      )}
+                      {product.short_description && (
+                        <p className="text-sm text-[#2B2725]/70 mb-4 line-clamp-3 flex-1">
+                          {product.short_description}
+                        </p>
+                      )}
+                      
+                      {product.features && product.features.length > 0 && (
+                        <div className="mb-4 space-y-1">
+                          {product.features.slice(0, 3).map((feature, idx) => (
+                            <div key={idx} className="flex items-start gap-2">
+                              <CheckCircle size={14} className="text-[#6E4F7D] mt-0.5 flex-shrink-0" />
+                              <span className="text-xs text-[#2B2725]/70">{feature}</span>
+                            </div>
+                          ))}
                         </div>
                       )}
-                      <div className="p-6 flex-1 flex flex-col">
-                        <h3 className="font-serif text-xl text-[#1E3A32] mb-2 group-hover:text-[#6E4F7D] transition-colors">
-                          {product.name}
-                        </h3>
-                        {product.tagline && (
-                          <p className="text-sm text-[#6E4F7D] mb-3 font-medium">{product.tagline}</p>
-                        )}
-                        {product.short_description && (
-                          <p className="text-sm text-[#2B2725]/70 mb-4 line-clamp-3 flex-1">
-                            {product.short_description}
-                          </p>
-                        )}
-                        
-                        {product.features && product.features.length > 0 && (
-                          <div className="mb-4 space-y-1">
-                            {product.features.slice(0, 3).map((feature, idx) => (
-                              <div key={idx} className="flex items-start gap-2">
-                                <CheckCircle size={14} className="text-[#6E4F7D] mt-0.5 flex-shrink-0" />
-                                <span className="text-xs text-[#2B2725]/70">{feature}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
 
-                        <div className="flex items-center justify-between pt-4 border-t border-[#E4D9C4] mt-auto">
-                          <div>
-                            <span className="text-2xl font-bold text-[#1E3A32]">
-                              {formatPrice(product.price, product.billing_interval)}
-                            </span>
-                            {product.billing_interval && (
-                              <span className="text-xs text-[#2B2725]/60 ml-1">
-                                {product.billing_interval === 'monthly' ? '/month' : product.billing_interval === 'yearly' ? '/year' : ''}
-                              </span>
+                      <div className="pt-4 border-t border-[#E4D9C4] mt-auto">
+                        <div className="text-2xl font-bold text-[#1E3A32] mb-3">
+                          {formatPrice(product.price, product.billing_interval)}
+                        </div>
+                        <div className="flex gap-2">
+                          {product.slug && (
+                            <Link
+                              to={createPageUrl(`ProductPage?slug=${product.slug}`)}
+                              className="flex-1 text-center text-sm py-2.5 border border-[#6E4F7D] text-[#6E4F7D] hover:bg-[#6E4F7D] hover:text-white transition-colors"
+                            >
+                              Details
+                            </Link>
+                          )}
+                          <button
+                            onClick={() => handlePurchase(product.id)}
+                            disabled={checkoutLoading === product.id}
+                            className="flex-1 flex items-center justify-center gap-2 text-sm py-2.5 bg-[#6E4F7D] text-white hover:bg-[#5D4169] transition-colors disabled:opacity-50"
+                          >
+                            {checkoutLoading === product.id ? (
+                              <Loader2 size={16} className="animate-spin" />
+                            ) : (
+                              <><ShoppingCart size={14} /> Enroll Now</>
                             )}
-                          </div>
-                          <span className="text-[#6E4F7D] text-sm font-medium group-hover:translate-x-1 transition-transform">
-                            Learn More →
-                          </span>
+                          </button>
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </motion.div>
               ))}
             </div>
