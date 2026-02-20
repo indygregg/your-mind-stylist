@@ -473,26 +473,36 @@ export default function ManagerCRM() {
                   <CardTitle>Lead Sources</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {["website", "masterclass", "referral", "social_media", "paid_ad"].map((source) => {
-                    const count = leads.filter((l) => l.source === source).length;
-                    const percentage = totalLeads > 0 ? ((count / totalLeads) * 100).toFixed(1) : 0;
-                    return (
-                      <div key={source} className="mb-4">
-                        <div className="flex justify-between mb-1">
-                          <span className="text-sm capitalize">{source.replace("_", " ")}</span>
-                          <span className="text-sm font-medium">
-                            {count} ({percentage}%)
-                          </span>
+                  {(() => {
+                    // Dynamically compute all sources present in real data
+                    const allSources = [...new Set(leads.map(l => l.source || "unknown"))].sort();
+                    const sourceDisplayNames = {
+                      website: "Website",
+                      masterclass: "Masterclass",
+                      referral: "Referral",
+                      social_media: "Social Media",
+                      paid_ad: "Paid Ad",
+                      organic_search: "Organic Search",
+                      booking_system: "Booking / Website",
+                      product_purchase: "Product Purchase",
+                      unknown: "Unknown",
+                    };
+                    return allSources.map((source) => {
+                      const count = leads.filter((l) => (l.source || "unknown") === source).length;
+                      const percentage = totalLeads > 0 ? ((count / totalLeads) * 100).toFixed(1) : 0;
+                      return (
+                        <div key={source} className="mb-4">
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm">{sourceDisplayNames[source] || source.replace(/_/g, " ")}</span>
+                            <span className="text-sm font-medium">{count} ({percentage}%)</span>
+                          </div>
+                          <div className="h-2 bg-[#E4D9C4] rounded-full overflow-hidden">
+                            <div className="h-full bg-[#D8B46B]" style={{ width: `${percentage}%` }} />
+                          </div>
                         </div>
-                        <div className="h-2 bg-[#E4D9C4] rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-[#D8B46B]"
-                            style={{ width: `${percentage}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    });
+                  })()}
                 </CardContent>
               </Card>
 
