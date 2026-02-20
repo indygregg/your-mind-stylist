@@ -103,13 +103,13 @@ Deno.serve(async (req) => {
                 product_name: product.name,
                 selected_price_id: stripePriceId,
                 is_payment_plan: selected_price_id ? 'true' : 'false',
-                affiliate_code: affiliate_code || '',
+                affiliate_code: affiliateCodeValue || '',
             },
         };
         
-        // Only set client_reference_id if affiliate_code is provided
-        if (affiliate_code) {
-            sessionConfig.client_reference_id = affiliate_code;
+        // Only set client_reference_id if affiliate_code is provided and non-empty
+        if (affiliateCodeValue) {
+            sessionConfig.client_reference_id = affiliateCodeValue;
         }
         
         // Add subscription_data if payment plan
