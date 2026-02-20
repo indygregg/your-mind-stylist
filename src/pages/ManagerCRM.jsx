@@ -165,13 +165,23 @@ export default function ManagerCRM() {
             <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">CRM & Lead Management</h1>
             <p className="text-[#2B2725]/70">Track leads, manage pipeline, and convert prospects</p>
           </div>
-          <Button
-            onClick={() => setImportDialogOpen(true)}
-            className="bg-[#D8B46B] hover:bg-[#D8B46B]/90 text-[#1E3A32]"
-          >
-            <Upload size={16} className="mr-2" />
-            Import Leads
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              onClick={() => setAddLeadDialogOpen(true)}
+              className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
+            >
+              <Plus size={16} className="mr-2" />
+              Add Lead
+            </Button>
+            <Button
+              onClick={() => setImportDialogOpen(true)}
+              variant="outline"
+              className="border-[#D8B46B] text-[#1E3A32]"
+            >
+              <Upload size={16} className="mr-2" />
+              Import Leads
+            </Button>
+          </div>
         </div>
 
         {/* Stats */}
