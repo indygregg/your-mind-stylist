@@ -969,10 +969,40 @@ export default function BugList() {
         >
           {/* Header */}
           <div className="mb-8">
-            <h1 className="font-serif text-2xl md:text-4xl text-[#1E3A32] mb-4">Bug & Issue Tracker</h1>
-            <p className="text-sm md:text-base text-[#2B2725]/70">
-              Roberta's reported issues and change requests
-            </p>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+              <div>
+                <h1 className="font-serif text-2xl md:text-4xl text-[#1E3A32] mb-2">Bug & Issue Tracker</h1>
+                <p className="text-sm md:text-base text-[#2B2725]/70">
+                  Roberta's reported issues and change requests
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => setFilterMode('open')}
+                  variant={filterMode === 'open' ? 'default' : 'outline'}
+                  size="sm"
+                  className={filterMode === 'open' ? 'bg-[#1E3A32] hover:bg-[#2B2725]' : ''}
+                >
+                  Open Issues
+                </Button>
+                <Button
+                  onClick={() => setFilterMode('all')}
+                  variant={filterMode === 'all' ? 'default' : 'outline'}
+                  size="sm"
+                  className={filterMode === 'all' ? 'bg-[#1E3A32] hover:bg-[#2B2725]' : ''}
+                >
+                  All
+                </Button>
+                <Button
+                  onClick={() => setFilterMode('completed')}
+                  variant={filterMode === 'completed' ? 'default' : 'outline'}
+                  size="sm"
+                  className={filterMode === 'completed' ? 'bg-green-600 hover:bg-green-700' : ''}
+                >
+                  Completed
+                </Button>
+              </div>
+            </div>
           </div>
 
           {/* Stats */}
