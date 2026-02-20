@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
@@ -12,7 +12,9 @@ import {
   BookOpen,
   Zap,
   Heart,
-  CheckCircle
+  CheckCircle,
+  ShoppingCart,
+  Loader2
 } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 import { base44 } from "@/api/base44Client";
