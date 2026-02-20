@@ -924,25 +924,50 @@ export default function ManagerProducts() {
                   ))}
                 </SelectContent>
               </Select>
+              {formData.related_course_id && (
+                <div className="mt-2 p-2 bg-[#1E3A32]/5 border border-[#1E3A32]/20 rounded text-xs">
+                  <p className="font-mono text-[#1E3A32]">ID: {formData.related_course_id}</p>
+                </div>
+              )}
               <p className="text-xs text-[#2B2725]/60 mt-1">
                 Link this product to a single course (for simple products)
               </p>
             </div>
 
             <div>
-              <Label>Access Grants (Course IDs)</Label>
+              <Label>Add Multiple Courses (for bundles)</Label>
               <Textarea
-                value={formData.access_grants.join("\n")}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
-                  access_grants: e.target.value.split("\n").filter(id => id.trim()) 
-                })}
-                placeholder="693a6b978867f6e147e25e8d&#10;693a6b978867f6e147e25e8e"
+                value={formData.access_grants.map(id => {
+                  const course = courses.find(c => c.id === id);
+                  return course ? `${course.title} (${id})` : id;
+                }).join("\n")}
+                onChange={(e) => {
+                  // Extract IDs from either "Title (ID)" format or raw IDs
+                  const grants = e.target.value.split("\n").filter(line => line.trim()).map(line => {
+                    const match = line.match(/\(([^)]+)\)$/);
+                    return match ? match[1] : line.trim();
+                  });
+                  setFormData({ ...formData, access_grants: grants });
+                }}
+                placeholder="Type course title or paste ID..."
                 rows={4}
               />
               <p className="text-xs text-[#2B2725]/60 mt-1">
-                Course IDs this product unlocks (one per line). Used for bundles or multi-course products.
+                Add course IDs this product unlocks (one per line). Used for bundles or multi-course products. You can type the course title and it will auto-populate the ID.
               </p>
+              {formData.access_grants.length > 0 && (
+                <div className="mt-2 p-2 bg-[#F9F5EF] rounded space-y-1">
+                  {formData.access_grants.map((id, idx) => {
+                    const course = courses.find(c => c.id === id);
+                    return (
+                      <div key={idx} className="flex items-center justify-between text-xs">
+                        <span className="text-[#1E3A32]">{course?.title || 'Unknown Course'}</span>
+                        <code className="font-mono text-[#2B2725]/60">{id}</code>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Display Settings */}
