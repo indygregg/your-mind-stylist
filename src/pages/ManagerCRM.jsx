@@ -525,12 +525,15 @@ export default function ManagerCRM() {
         </Tabs>
 
         {/* Lead Details Dialog */}
-        <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+        <Dialog open={detailsDialogOpen} onOpenChange={(open) => {
+          setDetailsDialogOpen(open);
+          if (!open) setEditingLead(null);
+        }}>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Lead Details</DialogTitle>
             </DialogHeader>
-            {selectedLead && (
+            {selectedLead && editingLead && (
               <div className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -538,18 +541,24 @@ export default function ManagerCRM() {
                     <div className="space-y-3">
                       <div>
                         <Label>Name</Label>
-                        <Input value={selectedLead.full_name || ""} readOnly />
+                        <Input
+                          value={editingLead.full_name || ""}
+                          onChange={(e) => setEditingLead({ ...editingLead, full_name: e.target.value })}
+                          placeholder="Enter name..."
+                        />
                       </div>
                       <div>
                         <Label>Email</Label>
-                        <Input value={selectedLead.email} readOnly />
+                        <Input value={editingLead.email} readOnly className="bg-gray-50" />
                       </div>
-                      {selectedLead.phone && (
-                        <div>
-                          <Label>Phone</Label>
-                          <Input value={selectedLead.phone} readOnly />
-                        </div>
-                      )}
+                      <div>
+                        <Label>Phone</Label>
+                        <Input
+                          value={editingLead.phone || ""}
+                          onChange={(e) => setEditingLead({ ...editingLead, phone: e.target.value })}
+                          placeholder="Enter phone..."
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -558,29 +567,25 @@ export default function ManagerCRM() {
                     <div className="space-y-3">
                       <div>
                         <Label>Stage</Label>
-                        <div className="flex gap-2">
-                          <Input value={stageLabels[selectedLead.stage]} readOnly />
-                          <Button
-                            size="sm"
-                            onClick={() => {
-                              setNewStage(selectedLead.stage);
-                              setStageUpdateDialogOpen(true);
-                            }}
-                          >
-                            Change
-                          </Button>
-                        </div>
+                        <Select
+                          value={editingLead.stage || "new"}
+                          onValueChange={(value) => setEditingLead({ ...editingLead, stage: value })}
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {stages.map((stage) => (
+                              <SelectItem key={stage} value={stage}>{stageLabels[stage]}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div>
                         <Label>Interest Level</Label>
                         <Select
-                          value={selectedLead.interest_level}
-                          onValueChange={(value) =>
-                            updateLeadMutation.mutate({
-                              id: selectedLead.id,
-                              data: { interest_level: value },
-                            })
-                          }
+                          value={editingLead.interest_level || "warm"}
+                          onValueChange={(value) => setEditingLead({ ...editingLead, interest_level: value })}
                         >
                           <SelectTrigger>
                             <SelectValue />
@@ -594,45 +599,78 @@ export default function ManagerCRM() {
                       </div>
                       <div>
                         <Label>Lead Score</Label>
-                        <Input value={selectedLead.lead_score} readOnly />
+                        <Input
+                          type="number"
+                          value={editingLead.lead_score || 0}
+                          onChange={(e) => setEditingLead({ ...editingLead, lead_score: parseInt(e.target.value) || 0 })}
+                        />
                       </div>
                       <div>
                         <Label>Source</Label>
-                        <Input value={selectedLead.source} readOnly />
+                        <Input value={editingLead.source || ""} readOnly className="bg-gray-50" />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {selectedLead.notes && (
-                  <div>
-                    <Label>Notes</Label>
-                    <Textarea value={selectedLead.notes} readOnly className="min-h-[100px]" />
-                  </div>
-                )}
+                <div>
+                  <Label>Notes</Label>
+                  <Textarea
+                    value={editingLead.notes || ""}
+                    onChange={(e) => setEditingLead({ ...editingLead, notes: e.target.value })}
+                    className="min-h-[100px]"
+                    placeholder="Add notes..."
+                  />
+                </div>
 
-                <div className="flex gap-2 pt-2">
+                <div className="flex justify-between items-center pt-2">
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setEmailSubject("");
+                        setEmailBody("");
+                        setEmailDialogOpen(true);
+                      }}
+                      className="flex items-center gap-2"
+                    >
+                      <Mail size={14} />
+                      Send Email
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSmsDialogOpen(true)}
+                      className="flex items-center gap-2"
+                    >
+                      <MessageSquare size={14} />
+                      Send SMS
+                    </Button>
+                  </div>
                   <Button
-                    variant="outline"
-                    size="sm"
                     onClick={() => {
-                      setEmailSubject("");
-                      setEmailBody("");
-                      setEmailDialogOpen(true);
+                      updateLeadMutation.mutate({
+                        id: editingLead.id,
+                        data: {
+                          full_name: editingLead.full_name,
+                          phone: editingLead.phone,
+                          stage: editingLead.stage,
+                          interest_level: editingLead.interest_level,
+                          lead_score: editingLead.lead_score,
+                          notes: editingLead.notes,
+                        },
+                      }, {
+                        onSuccess: () => {
+                          setSelectedLead(editingLead);
+                          setDetailsDialogOpen(false);
+                        }
+                      });
                     }}
-                    className="flex items-center gap-2"
+                    disabled={updateLeadMutation.isPending}
+                    className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
                   >
-                    <Mail size={14} />
-                    Send Email
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSmsDialogOpen(true)}
-                    className="flex items-center gap-2"
-                  >
-                    <MessageSquare size={14} />
-                    Send SMS
+                    {updateLeadMutation.isPending ? "Saving..." : "Save Changes"}
                   </Button>
                 </div>
 
