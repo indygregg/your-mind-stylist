@@ -181,6 +181,7 @@ import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
+import ManagerSubscriptions from './pages/ManagerSubscriptions';
 import __Layout from './Layout.jsx';
 
 
@@ -319,6 +320,7 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
+    "ManagerSubscriptions": ManagerSubscriptions,
 }
 
 export const pagesConfig = {
