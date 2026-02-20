@@ -321,21 +321,7 @@ export default function ManagerCRM() {
                             </div>
                           )}
 
-                          {lead.phone && (
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="w-full mt-2"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedLead(lead);
-                                setSmsDialogOpen(true);
-                              }}
-                            >
-                              <MessageSquare size={12} className="mr-1" />
-                              SMS
-                            </Button>
-                          )}
+
                         </motion.div>
                       ))}
                     </div>
