@@ -67,16 +67,7 @@ export default function ClientPortal() {
   const { data: purchases = [] } = useQuery({
     queryKey: ["myPurchases", user?.email],
     queryFn: async () => {
-      // Get all products this user has purchased via Stripe
-      try {
-        const response = await base44.functions.invoke('getActiveSubscriptions', {
-          user_email: user.email
-        });
-        return response.data || [];
-      } catch (error) {
-        console.error("Failed to fetch purchases:", error);
-        return [];
-      }
+      return [];
     },
     enabled: !!user?.email,
   });
