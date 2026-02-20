@@ -18,6 +18,9 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'product_id is required' }, { status: 400 });
         }
 
+        // Ensure affiliate_code is either a non-empty string or null
+        const affiliateCodeValue = affiliate_code && affiliate_code.trim() ? affiliate_code.trim() : null;
+
         // Get product details
         const products = await base44.asServiceRole.entities.Product.filter({ id: product_id });
         const product = products[0];
