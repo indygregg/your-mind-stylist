@@ -70,6 +70,23 @@ const DEFAULT_TEMPLATES = [
   },
 ];
 
+// Rich text modules for ReactQuill
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline"],
+    [{ color: [] }, { background: [] }],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link"],
+    ["clean"],
+  ],
+};
+
+const quillFormats = [
+  "header", "bold", "italic", "underline",
+  "color", "background", "list", "bullet", "link",
+];
+
 export default function ManagerEmailTemplates() {
   const queryClient = useQueryClient();
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -78,6 +95,8 @@ export default function ManagerEmailTemplates() {
   const [testDialogOpen, setTestDialogOpen] = useState(false);
   const [testEmail, setTestEmail] = useState("");
   const [seeding, setSeeding] = useState(false);
+  const [viewMode, setViewMode] = useState("visual"); // "visual" | "html"
+  const quillRef = useRef(null);
 
   const { data: templates = [], isLoading } = useQuery({
     queryKey: ["emailTemplates"],
