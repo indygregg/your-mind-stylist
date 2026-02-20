@@ -914,7 +914,23 @@ export default function BugList() {
         fromDatabase: false
       }))
     }));
-  }, [staticBugStates, categoryStates]);
+    
+    // Apply filter
+    let filtered = bugsData;
+    if (filterMode === 'open') {
+      filtered = bugsData.map(cat => ({
+        ...cat,
+        items: cat.items.filter(item => item.status !== 'completed' && !item.tested)
+      })).filter(cat => cat.items.length > 0);
+    } else if (filterMode === 'completed') {
+      filtered = bugsData.map(cat => ({
+        ...cat,
+        items: cat.items.filter(item => item.status === 'completed' || item.tested)
+      })).filter(cat => cat.items.length > 0);
+    }
+    
+    return filtered;
+  }, [staticBugStates, categoryStates, filterMode]);
 
 
 
