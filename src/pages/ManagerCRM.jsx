@@ -266,6 +266,7 @@ export default function ManagerCRM() {
                           className="bg-[#F9F5EF] p-3 rounded-lg cursor-pointer hover:shadow-md transition-shadow"
                           onClick={() => {
                             setSelectedLead(lead);
+                            setEditingLead({ ...lead });
                             setDetailsDialogOpen(true);
                           }}
                         >
