@@ -15,6 +15,7 @@ export default function BugList() {
   const [expandedBugs, setExpandedBugs] = useState(new Set());
   const [newComment, setNewComment] = useState({});
   const [filterMode, setFilterMode] = useState('open'); // 'all', 'open', 'completed'
+  const [viewMode, setViewMode] = useState('static'); // 'static' or 'database'
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
