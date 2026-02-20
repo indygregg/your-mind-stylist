@@ -1032,32 +1032,34 @@ export default function BugList() {
             </div>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 mb-8">
-            <div className="bg-white p-3 md:p-4 border-l-4 border-[#1E3A32]">
-              <div className="text-xl md:text-2xl font-bold text-[#1E3A32]">{stats.total}</div>
-              <div className="text-xs md:text-sm text-[#2B2725]/60">Total Issues</div>
+          {/* Stats - only show for static view */}
+          {viewMode === 'static' && (
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-4 mb-8">
+              <div className="bg-white p-3 md:p-4 border-l-4 border-[#1E3A32]">
+                <div className="text-xl md:text-2xl font-bold text-[#1E3A32]">{stats.total}</div>
+                <div className="text-xs md:text-sm text-[#2B2725]/60">Total Issues</div>
+              </div>
+              <div className="bg-white p-3 md:p-4 border-l-4 border-red-500">
+                <div className="text-xl md:text-2xl font-bold text-red-700">{stats.critical}</div>
+                <div className="text-xs md:text-sm text-[#2B2725]/60">Critical</div>
+              </div>
+              <div className="bg-white p-3 md:p-4 border-l-4 border-orange-500">
+                <div className="text-xl md:text-2xl font-bold text-orange-700">{stats.high}</div>
+                <div className="text-xs md:text-sm text-[#2B2725]/60">High Priority</div>
+              </div>
+              <div className="bg-white p-3 md:p-4 border-l-4 border-yellow-500">
+                <div className="text-xl md:text-2xl font-bold text-yellow-700">{stats.medium}</div>
+                <div className="text-xs md:text-sm text-[#2B2725]/60">Medium Priority</div>
+              </div>
+              <div className="bg-white p-3 md:p-4 border-l-4 border-blue-500">
+                <div className="text-xl md:text-2xl font-bold text-blue-700">{stats.low}</div>
+                <div className="text-xs md:text-sm text-[#2B2725]/60">Low Priority</div>
+              </div>
             </div>
-            <div className="bg-white p-3 md:p-4 border-l-4 border-red-500">
-              <div className="text-xl md:text-2xl font-bold text-red-700">{stats.critical}</div>
-              <div className="text-xs md:text-sm text-[#2B2725]/60">Critical</div>
-            </div>
-            <div className="bg-white p-3 md:p-4 border-l-4 border-orange-500">
-              <div className="text-xl md:text-2xl font-bold text-orange-700">{stats.high}</div>
-              <div className="text-xs md:text-sm text-[#2B2725]/60">High Priority</div>
-            </div>
-            <div className="bg-white p-3 md:p-4 border-l-4 border-yellow-500">
-              <div className="text-xl md:text-2xl font-bold text-yellow-700">{stats.medium}</div>
-              <div className="text-xs md:text-sm text-[#2B2725]/60">Medium Priority</div>
-            </div>
-            <div className="bg-white p-3 md:p-4 border-l-4 border-blue-500">
-              <div className="text-xl md:text-2xl font-bold text-blue-700">{stats.low}</div>
-              <div className="text-xs md:text-sm text-[#2B2725]/60">Low Priority</div>
-            </div>
-          </div>
+          )}
 
-          {/* Submitted Bug Reports (from database) */}
-          {databaseBugs.length > 0 && (
+          {/* View: Database Reports */}
+          {viewMode === 'database' && databaseBugs.length > 0 && (
             <div className="mb-8">
               <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">Submitted Bug Reports</h2>
               <div className="space-y-4">
