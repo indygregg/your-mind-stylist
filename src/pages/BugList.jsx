@@ -1059,11 +1059,14 @@ export default function BugList() {
           )}
 
           {/* View: Database Reports */}
-          {viewMode === 'database' && databaseBugs.length > 0 && (
-            <div className="mb-8">
-              <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">Submitted Bug Reports</h2>
-              <div className="space-y-4">
-                {databaseBugs.map((bug) => (
+          {viewMode === 'database' && (
+            <div className="space-y-4">
+              {databaseBugs.length === 0 ? (
+                <div className="bg-white p-12 text-center text-[#2B2725]/60 rounded-lg">
+                  No bug reports submitted yet.
+                </div>
+              ) : (
+                databaseBugs.map((bug) => (
                   <div key={bug.id} className="bg-white p-6 border border-[#E4D9C4] rounded-lg">
                     <div className="flex items-start justify-between gap-4 mb-2">
                       <h3 className="font-serif text-lg text-[#1E3A32] flex-1">{bug.title}</h3>
@@ -1084,13 +1087,14 @@ export default function BugList() {
                       </div>
                     )}
                   </div>
-                ))}
-              </div>
+                ))
+              )}
             </div>
           )}
 
-          {/* Bug List */}
-          <div className="space-y-6">
+          {/* View: Static Issues */}
+          {viewMode === 'static' && (
+            <div className="space-y-6">
             {bugs.map((category) => {
               const isExpanded = expandedCategories.has(category.categoryId);
               const categoryPriority = category.priority;
