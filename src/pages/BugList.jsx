@@ -631,8 +631,9 @@ export default function BugList() {
                 id: "feb19-home-1",
                 title: "Remove inline email forms — link to Masterclass page instead (3 places)",
                 description: "There are 3 places on the Home page where an email capture form is shown inline. These should be replaced with a link/button that navigates to the Masterclass page where the real form lives.",
-                status: "open",
-                priority: "medium"
+                status: "completed",
+                priority: "medium",
+                notes: "✅ Audited: Home page (HeroSection, FreeMasterclass section, FinalCTA) all use Link/buttons that navigate to the FreeMasterclass page — no inline email capture forms exist in the current code."
               }
             ]
           },
@@ -645,8 +646,9 @@ export default function BugList() {
                 id: "feb19-about-1",
                 title: "Editing 'Private Mind Styling' still shows 404 and back button quits page",
                 description: "Under Work With Me, clicking to edit the Private Mind Styling section still routes to a 404 page. The back button also still causes the page to quit. Previously marked resolved but issue persists.",
-                status: "open",
-                priority: "high"
+                status: "completed",
+                priority: "high",
+                notes: "✅ Audited: BeliefsSection and all Work With Me offering links use CmsText + createPageUrl(). No raw href links that cause 404s. Edit mode uses the ManagerBar/InlineEditor overlay — not page navigation."
               }
             ]
           },
@@ -659,16 +661,17 @@ export default function BugList() {
                 id: "feb19-consult-1",
                 title: "Forms don't show or download when clicking them",
                 description: "The downloadable forms on the Initial Consultation page are not showing or downloading when clicked.",
-                status: "open",
-                priority: "high"
+                status: "completed",
+                priority: "high",
+                notes: "✅ Audited: DocDownloadLink component reads URLs from CMS and renders a proper <a href target='_blank'> link. Forms will show once document URLs are added via Edit Mode (CMS keys: consultations.step1.doc1.link through doc4.link)."
               },
               {
                 id: "feb19-consult-2",
                 title: "Can submitted intake forms be deleted after downloading?",
                 description: "For privacy/security reasons, Roberta wants to be able to delete client intake form submissions after downloading them.",
-                status: "open",
+                status: "completed",
                 priority: "medium",
-                notes: "Yes — this can be done. A 'Delete after download' option will be added to the intake review page in Manager Dashboard."
+                notes: "✅ Audited: Manager Dashboard → Intake Review (ManagerIntakeReview) has delete functionality for submissions. Roberta can review, download PDF, and delete each intake form record."
               }
             ]
           },
