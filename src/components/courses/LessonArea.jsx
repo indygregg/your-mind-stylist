@@ -70,7 +70,7 @@ export default function LessonArea({
             </div>
 
         {/* Video Player */}
-        {(lesson.type === "video" || lesson.type === "hybrid") && (
+        {(lesson.type === "video" || lesson.type === "hybrid") && (lesson.embed_url || lesson.media_url) && (
           <div className="mb-8 bg-black rounded-lg overflow-hidden">
             <VideoPlayer
               src={lesson.media_url}
