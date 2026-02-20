@@ -123,14 +123,20 @@ Deno.serve(async (req) => {
                     } else {
                         // Create new lead
                         await base44.asServiceRole.entities.Lead.create({
-                            name: user_name,
+                            full_name: user_name,
                             email: user_email,
-                            phone: intake_data?.phone,
-                            stage: 'booked',
+                            phone: intake_data?.phone || '',
+                            stage: 'qualified',
                             source: 'booking_system',
+                            interest_level: 'hot',
+                            lead_score: 75,
                             last_activity_date: new Date().toISOString(),
                             notes: `Initial booking: ${service_type} - ${scheduled_date ? new Date(scheduled_date).toLocaleString() : 'Date TBD'}`
                         });
+                    }
+                    // Update name on existing lead if missing
+                    if (existingLeads.length > 0 && !existingLeads[0].full_name && user_name) {
+                        await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, { full_name: user_name });
                     }
                     console.log('Lead created/updated in CRM for:', user_email);
                 } catch (crmError) {
