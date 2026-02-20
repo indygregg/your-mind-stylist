@@ -227,70 +227,55 @@ export default function CourseManager() {
           </TabsList>
 
           <TabsContent value="courses">
-            <div>
-
-        {/* Stats Overview */}
-        <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg border border-[#E4D9C4]">
-            <p className="text-sm text-[#2B2725]/70 mb-1">Total Courses</p>
-            <p className="text-3xl font-serif text-[#1E3A32]">{courses.length}</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg border border-[#E4D9C4]">
-            <p className="text-sm text-[#2B2725]/70 mb-1">Published</p>
-            <p className="text-3xl font-serif text-[#1E3A32]">
-              {courses.filter(c => c.status === "published").length}
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg border border-[#E4D9C4]">
-            <p className="text-sm text-[#2B2725]/70 mb-1">Drafts</p>
-            <p className="text-3xl font-serif text-[#1E3A32]">
-              {courses.filter(c => c.status === "draft").length}
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg border border-[#E4D9C4]">
-            <p className="text-sm text-[#2B2725]/70 mb-1">Total Enrollments</p>
-            <p className="text-3xl font-serif text-[#1E3A32]">{allProgress.length}</p>
-          </div>
-        </div>
-
-        {/* Filters */}
-        <div className="bg-white p-6 rounded-lg border border-[#E4D9C4] mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" size={18} />
-              <Input
-                placeholder="Search courses..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
+            {/* Stats Overview */}
+            <div className="grid md:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white p-6 rounded-lg border border-[#E4D9C4]">
+                <p className="text-sm text-[#2B2725]/70 mb-1">Total Courses</p>
+                <p className="text-3xl font-serif text-[#1E3A32]">{courses.length}</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg border border-[#E4D9C4]">
+                <p className="text-sm text-[#2B2725]/70 mb-1">Published</p>
+                <p className="text-3xl font-serif text-[#1E3A32]">{courses.filter(c => c.status === "published").length}</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg border border-[#E4D9C4]">
+                <p className="text-sm text-[#2B2725]/70 mb-1">Drafts</p>
+                <p className="text-3xl font-serif text-[#1E3A32]">{courses.filter(c => c.status === "draft").length}</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg border border-[#E4D9C4]">
+                <p className="text-sm text-[#2B2725]/70 mb-1">Total Enrollments</p>
+                <p className="text-3xl font-serif text-[#1E3A32]">{allProgress.length}</p>
+              </div>
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full md:w-40">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="draft">Draft</SelectItem>
-                <SelectItem value="published">Published</SelectItem>
-                <SelectItem value="archived">Archived</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="Toolkit Module">Toolkit Module</SelectItem>
-                <SelectItem value="Webinar">Webinar</SelectItem>
-                <SelectItem value="Audio-Based Program">Audio-Based Program</SelectItem>
-                <SelectItem value="Training Program">Training Program</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+
+            {/* Filters */}
+            <div className="bg-white p-6 rounded-lg border border-[#E4D9C4] mb-6">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" size={18} />
+                  <Input placeholder="Search courses..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="pl-10" />
+                </div>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full md:w-40"><SelectValue placeholder="Status" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Status</SelectItem>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
+                    <SelectItem value="archived">Archived</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Select value={typeFilter} onValueChange={setTypeFilter}>
+                  <SelectTrigger className="w-full md:w-48"><SelectValue placeholder="Type" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Types</SelectItem>
+                    <SelectItem value="Toolkit Module">Toolkit Module</SelectItem>
+                    <SelectItem value="Webinar">Webinar</SelectItem>
+                    <SelectItem value="Audio-Based Program">Audio-Based Program</SelectItem>
+                    <SelectItem value="Training Program">Training Program</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
 
             {/* Course List */}
             {isLoading ? (
@@ -298,12 +283,8 @@ export default function CourseManager() {
             ) : filteredCourses.length === 0 ? (
               <div className="bg-white p-12 rounded-lg border border-[#E4D9C4] text-center">
                 <p className="text-[#2B2725]/70 mb-4">No courses found</p>
-                <Button
-                  onClick={() => window.location.href = createPageUrl("CourseBuilder")}
-                  variant="outline"
-                >
-                  <Plus size={16} className="mr-2" />
-                  Create Your First Course
+                <Button onClick={() => window.location.href = createPageUrl("CourseBuilder")} variant="outline">
+                  <Plus size={16} className="mr-2" />Create Your First Course
                 </Button>
               </div>
             ) : (
@@ -399,7 +380,6 @@ export default function CourseManager() {
                 </Droppable>
               </DragDropContext>
             )}
-            </div>
           </TabsContent>
 
           <TabsContent value="analytics">
