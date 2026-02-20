@@ -905,7 +905,7 @@ export default function BugList() {
 
   // Only use static bugs (database reports are managed separately via BugReport entity)
   const bugs = React.useMemo(() => {
-    return staticBugs.map(cat => ({
+    const bugsData = staticBugs.map(cat => ({
       ...cat,
       tested: categoryStates[cat.categoryId] || false,
       items: cat.items.map(item => ({
@@ -916,20 +916,19 @@ export default function BugList() {
     }));
     
     // Apply filter
-    let filtered = bugsData;
     if (filterMode === 'open') {
-      filtered = bugsData.map(cat => ({
+      return bugsData.map(cat => ({
         ...cat,
         items: cat.items.filter(item => item.status !== 'completed' && !item.tested)
       })).filter(cat => cat.items.length > 0);
     } else if (filterMode === 'completed') {
-      filtered = bugsData.map(cat => ({
+      return bugsData.map(cat => ({
         ...cat,
         items: cat.items.filter(item => item.status === 'completed' || item.tested)
       })).filter(cat => cat.items.length > 0);
     }
     
-    return filtered;
+    return bugsData;
   }, [staticBugStates, categoryStates, filterMode]);
 
 
