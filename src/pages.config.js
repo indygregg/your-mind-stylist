@@ -135,6 +135,7 @@ import ManagerResourceEditor from './pages/ManagerResourceEditor';
 import ManagerResources from './pages/ManagerResources';
 import ManagerSettings from './pages/ManagerSettings';
 import ManagerSubscriptionAnalytics from './pages/ManagerSubscriptionAnalytics';
+import ManagerSubscriptions from './pages/ManagerSubscriptions';
 import ManagerTransformationAnalytics from './pages/ManagerTransformationAnalytics';
 import ManagerVoiceProfiles from './pages/ManagerVoiceProfiles';
 import ManagerWaitingList from './pages/ManagerWaitingList';
@@ -181,7 +182,6 @@ import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import ManagerSubscriptions from './pages/ManagerSubscriptions';
 import __Layout from './Layout.jsx';
 
 
@@ -274,6 +274,7 @@ export const PAGES = {
     "ManagerResources": ManagerResources,
     "ManagerSettings": ManagerSettings,
     "ManagerSubscriptionAnalytics": ManagerSubscriptionAnalytics,
+    "ManagerSubscriptions": ManagerSubscriptions,
     "ManagerTransformationAnalytics": ManagerTransformationAnalytics,
     "ManagerVoiceProfiles": ManagerVoiceProfiles,
     "ManagerWaitingList": ManagerWaitingList,
@@ -320,7 +321,6 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "ManagerSubscriptions": ManagerSubscriptions,
 }
 
 export const pagesConfig = {
