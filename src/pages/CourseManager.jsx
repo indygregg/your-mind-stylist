@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Search, MoreVertical, Edit, Copy, Archive, Trash2, Eye, BarChart3, Monitor, Merge } from "lucide-react";
+import { Plus, Search, MoreVertical, Edit, Copy, Archive, Trash2, Eye, BarChart3, Monitor, Merge, GripVertical } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import CourseAnalytics from "@/components/courses/CourseAnalytics";
 import CourseMerger from "@/components/courses/CourseMerger";
 import { createPageUrl } from "../utils";
@@ -20,6 +21,7 @@ export default function CourseManager() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [showMerger, setShowMerger] = useState(false);
+  const [orderedCourses, setOrderedCourses] = useState([]);
 
   // Fetch all courses
   const { data: courses = [], isLoading } = useQuery({
