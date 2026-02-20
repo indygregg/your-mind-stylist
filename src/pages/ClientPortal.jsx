@@ -268,14 +268,14 @@ export default function ClientPortal() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-white/80 text-sm mb-1">Total Invested</p>
-                    <p className="text-3xl font-serif">{formatAmount(totalSpent)}</p>
+                    <p className="text-3xl font-serif">{formatAmount(totalSpent + (purchases.reduce((sum, p) => sum + (p.amount || 0), 0)))}</p>
                   </div>
                   <DollarSign size={40} className="text-white/30" />
                 </div>
               </Card>
             </div>
 
-            {paidBookings.length === 0 ? (
+            {paidBookings.length === 0 && purchases.length === 0 ? (
               <Card className="p-12 text-center">
                 <CreditCard size={48} className="mx-auto mb-4 text-[#2B2725]/30" />
                 <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">
@@ -287,6 +287,36 @@ export default function ClientPortal() {
               </Card>
             ) : (
               <div className="space-y-3">
+                {/* Product Purchases */}
+                {purchases.map((purchase) => (
+                  <Card key={purchase.id} className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                          <CheckCircle size={20} className="text-green-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-[#1E3A32]">
+                            {purchase.name}
+                          </p>
+                          <p className="text-sm text-[#2B2725]/70">
+                            {purchase.created_date ? format(new Date(purchase.created_date), "MMM d, yyyy") : 'Recently purchased'}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-serif text-xl text-[#1E3A32]">
+                          {formatAmount(purchase.amount || 0)}
+                        </p>
+                        <Badge className="bg-green-100 text-green-800">
+                          Purchased
+                        </Badge>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+                
+                {/* Session Payments */}
                 {paidBookings.map((booking) => (
                   <Card key={booking.id} className="p-4">
                     <div className="flex items-center justify-between">
