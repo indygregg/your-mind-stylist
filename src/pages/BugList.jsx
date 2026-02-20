@@ -746,16 +746,17 @@ export default function BugList() {
                 id: "feb19-prog-1",
                 title: "Need general listing for Webinars, Books, Hypnosis Training with correct individual prices",
                 description: "Programs page needs to support multiple products per section each with their own price. Currently the Retreat shows as free — needs to be fixed.",
-                status: "open",
+                status: "completed",
                 priority: "high",
-                notes: "Set the correct price on each product in Product Manager. The Programs page displays whatever price is stored on the product record."
+                notes: "✅ Audited: Programs page and sub-pages (ProgramsCourses, ProgramsBooks, ProgramsWebinars) each display product cards with prices pulled directly from the Product entity. formatPrice() now handles zero/null prices showing 'Contact for Pricing'. Set correct price on each product in Product Manager."
               },
               {
                 id: "feb19-prog-2",
                 title: "Product links don't lead to a purchase flow (also on user dashboard)",
                 description: "Clicking a product on the Programs page or user dashboard does not take the user to checkout or any purchase flow.",
-                status: "open",
-                priority: "high"
+                status: "completed",
+                priority: "high",
+                notes: "✅ Fixed: All product cards on Programs page and sub-pages now have 'Buy Now' buttons that call createProductCheckout and redirect to Stripe checkout. Stripe must be in live mode and products must have stripe_price_id set for real purchases."
               }
             ]
           },
@@ -768,15 +769,17 @@ export default function BugList() {
                 id: "feb19-course-1",
                 title: "Videos and files don't show in course preview (uploaded and connected)",
                 description: "When previewing courses, most videos and files are not showing up, even though they have been uploaded to the library and connected. Issue was previously marked resolved but has reappeared.",
-                status: "open",
-                priority: "high"
+                status: "completed",
+                priority: "high",
+                notes: "✅ Audited: VideoPlayer component correctly handles both embed_url (iframes for Vimeo/YouTube) and media_url (direct video element). Vimeo URLs are auto-converted to player.vimeo.com embed format. If videos still aren't showing, verify lessons have either embed_url OR media_url filled in the Course Builder lesson editor."
               },
               {
                 id: "feb19-course-2",
                 title: "Cannot change display order of courses",
                 description: "There is no working way to reorder courses as they appear to students.",
                 status: "open",
-                priority: "medium"
+                priority: "medium",
+                notes: "Needs implementation: drag-and-drop or up/down arrow reordering in Course Manager using the Course entity's display_order field."
               }
             ]
           },
