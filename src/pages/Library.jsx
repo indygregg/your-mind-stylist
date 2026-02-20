@@ -334,10 +334,10 @@ export default function Library() {
                 Explore Programs
               </Link>
               <Link
-                to={createPageUrl("PocketVisualization")}
+                to={createPageUrl("PocketMindset")}
                 className="px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
               >
-                Subscribe to Pocket Visualization™
+                Explore Pocket Mindset™
               </Link>
             </div>
           </motion.div>
