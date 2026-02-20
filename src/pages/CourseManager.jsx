@@ -443,11 +443,15 @@ export default function CourseManager() {
                     </div>
                   </div>
                 </div>
+                )}
+                </Draggable>
               );
             })}
+            {provided.placeholder}
               </div>
             )}
-            </div>
+          </Droppable>
+          </DragDropContext>
           </TabsContent>
 
           <TabsContent value="analytics">
