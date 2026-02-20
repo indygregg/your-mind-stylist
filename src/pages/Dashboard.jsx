@@ -49,12 +49,22 @@ export default function Dashboard() {
     queryFn: () => base44.entities.Product.filter({ status: "published", active: true }, "display_order"),
   });
 
-  const handleDashboardPurchase = async (productId) => {
-    setCheckoutLoading(productId);
-    const response = await base44.functions.invoke('createProductCheckout', { product_id: productId });
-    if (response.data?.url) {
-      window.location.href = response.data.url;
-    } else {
+  const handleDashboardPurchase = async (product) => {
+    if (!product.stripe_price_id) {
+      window.location.href = createPageUrl(`ProductPage?slug=${product.slug || ''}`);
+      return;
+    }
+    setCheckoutLoading(product.id);
+    try {
+      const response = await base44.functions.invoke('createProductCheckout', { product_id: product.id });
+      if (response.data?.url) {
+        window.location.href = response.data.url;
+      } else {
+        alert(response.data?.error || 'Unable to start checkout. Please try again.');
+        setCheckoutLoading(null);
+      }
+    } catch (e) {
+      alert('Unable to start checkout. Please try again.');
       setCheckoutLoading(null);
     }
   };
