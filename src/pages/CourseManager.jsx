@@ -296,164 +296,109 @@ export default function CourseManager() {
             {isLoading ? (
               <div className="text-center py-12 text-[#2B2725]/70">Loading courses...</div>
             ) : filteredCourses.length === 0 ? (
-          <div className="bg-white p-12 rounded-lg border border-[#E4D9C4] text-center">
-            <p className="text-[#2B2725]/70 mb-4">No courses found</p>
-            <Button
-              onClick={() => window.location.href = createPageUrl("CourseBuilder")}
-              variant="outline"
-            >
-              <Plus size={16} className="mr-2" />
-              Create Your First Course
-            </Button>
-          </div>
-        ) : (
-          <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="courses" isDropDisabled={!isDragEnabled}>
-            {(provided) => (
-            <div className="space-y-4" {...provided.droppableProps} ref={provided.innerRef}>
-            {!isDragEnabled && (
-              <p className="text-xs text-[#2B2725]/50 text-center py-1">Clear filters to enable drag-and-drop reordering</p>
-            )}
-            {filteredCourses.map((course, index) => {
-              const stats = getCourseStats(course.id);
-              const statusBadge = getStatusBadge(course.status);
-              
-              return (
-                <Draggable key={course.id} draggableId={course.id} index={index} isDragDisabled={!isDragEnabled}>
-                  {(dragProvided, dragSnapshot) => (
-                <div
-                  ref={dragProvided.innerRef}
-                  {...dragProvided.draggableProps}
-                  className={`bg-white border border-[#E4D9C4] rounded-lg p-6 transition-shadow ${dragSnapshot.isDragging ? 'shadow-xl ring-2 ring-[#D8B46B]' : 'hover:shadow-md'}`}
+              <div className="bg-white p-12 rounded-lg border border-[#E4D9C4] text-center">
+                <p className="text-[#2B2725]/70 mb-4">No courses found</p>
+                <Button
+                  onClick={() => window.location.href = createPageUrl("CourseBuilder")}
+                  variant="outline"
                 >
-                  <div className="flex gap-4">
-                    {/* Drag Handle */}
-                    {isDragEnabled && (
-                      <div {...dragProvided.dragHandleProps} className="flex items-center text-[#2B2725]/30 hover:text-[#D8B46B] cursor-grab active:cursor-grabbing flex-shrink-0 mt-1">
-                        <GripVertical size={20} />
-                      </div>
-                    )}
-
-                    {/* Thumbnail */}
-                    {course.thumbnail && (
-                      <img
-                        src={course.thumbnail}
-                        alt={course.title}
-                        className="w-48 h-32 object-cover rounded-lg flex-shrink-0"
-                      />
-                    )}
-
-                    {/* Content */}
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">
-                            {course.title}
-                          </h3>
-                          <div className="flex gap-2 flex-wrap">
-                            <Badge className={statusBadge.className}>
-                              {statusBadge.label}
-                            </Badge>
-                            <Badge variant="outline">{course.type}</Badge>
-                            {course.difficulty && (
-                              <Badge variant="outline">{course.difficulty}</Badge>
-                            )}
-                            {course.visibility === "clients_only" && (
-                              <Badge className="bg-purple-100 text-purple-800">
-                                Clients Only
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Actions */}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreVertical size={16} />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => navigate(createPageUrl(`CoursePreview?id=${course.id}`))}
-                            >
-                              <Monitor size={14} className="mr-2" />
-                              Preview
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => navigate(createPageUrl(`CourseBuilder?id=${course.id}`))}
-                            >
-                              <Edit size={14} className="mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => navigate(createPageUrl(`CoursePage?slug=${course.slug}`))}
-                            >
-                              <Eye size={14} className="mr-2" />
-                              View as Student
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => duplicateMutation.mutate(course.id)}>
-                              <Copy size={14} className="mr-2" />
-                              Duplicate
-                            </DropdownMenuItem>
-                            {course.status !== "archived" && (
-                              <DropdownMenuItem onClick={() => archiveMutation.mutate(course.id)}>
-                                <Archive size={14} className="mr-2" />
-                                Archive
-                              </DropdownMenuItem>
-                            )}
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(course.id)}
-                              className="text-red-600"
-                            >
-                              <Trash2 size={14} className="mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-
-                      {course.short_description && (
-                        <p className="text-[#2B2725]/70 mb-4 line-clamp-2">
-                          {course.short_description}
-                        </p>
+                  <Plus size={16} className="mr-2" />
+                  Create Your First Course
+                </Button>
+              </div>
+            ) : (
+              <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="courses" isDropDisabled={!isDragEnabled}>
+                  {(provided) => (
+                    <div className="space-y-4" {...provided.droppableProps} ref={provided.innerRef}>
+                      {!isDragEnabled && (
+                        <p className="text-xs text-[#2B2725]/50 text-center py-1">Clear filters to enable drag-and-drop reordering</p>
                       )}
-
-                      {/* Stats */}
-                      <div className="flex gap-6 text-sm">
-                        <div>
-                          <span className="text-[#2B2725]/60">Enrolled: </span>
-                          <span className="font-medium text-[#1E3A32]">{stats.enrolled}</span>
-                        </div>
-                        <div>
-                          <span className="text-[#2B2725]/60">In Progress: </span>
-                          <span className="font-medium text-[#1E3A32]">{stats.inProgress}</span>
-                        </div>
-                        <div>
-                          <span className="text-[#2B2725]/60">Completed: </span>
-                          <span className="font-medium text-[#1E3A32]">{stats.completed}</span>
-                        </div>
-                        {course.duration && (
-                          <div>
-                            <span className="text-[#2B2725]/60">Duration: </span>
-                            <span className="font-medium text-[#1E3A32]">{course.duration}</span>
-                          </div>
-                        )}
-                      </div>
+                      {filteredCourses.map((course, index) => {
+                        const stats = getCourseStats(course.id);
+                        const statusBadge = getStatusBadge(course.status);
+                        return (
+                          <Draggable key={course.id} draggableId={course.id} index={index} isDragDisabled={!isDragEnabled}>
+                            {(dragProvided, dragSnapshot) => (
+                              <div
+                                ref={dragProvided.innerRef}
+                                {...dragProvided.draggableProps}
+                                className={`bg-white border border-[#E4D9C4] rounded-lg p-6 transition-shadow ${dragSnapshot.isDragging ? 'shadow-xl ring-2 ring-[#D8B46B]' : 'hover:shadow-md'}`}
+                              >
+                                <div className="flex gap-4">
+                                  {isDragEnabled && (
+                                    <div {...dragProvided.dragHandleProps} className="flex items-center text-[#2B2725]/30 hover:text-[#D8B46B] cursor-grab active:cursor-grabbing flex-shrink-0 mt-1">
+                                      <GripVertical size={20} />
+                                    </div>
+                                  )}
+                                  {course.thumbnail && (
+                                    <img src={course.thumbnail} alt={course.title} className="w-48 h-32 object-cover rounded-lg flex-shrink-0" />
+                                  )}
+                                  <div className="flex-1">
+                                    <div className="flex justify-between items-start mb-3">
+                                      <div>
+                                        <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">{course.title}</h3>
+                                        <div className="flex gap-2 flex-wrap">
+                                          <Badge className={statusBadge.className}>{statusBadge.label}</Badge>
+                                          <Badge variant="outline">{course.type}</Badge>
+                                          {course.difficulty && <Badge variant="outline">{course.difficulty}</Badge>}
+                                          {course.visibility === "clients_only" && (
+                                            <Badge className="bg-purple-100 text-purple-800">Clients Only</Badge>
+                                          )}
+                                        </div>
+                                      </div>
+                                      <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                          <Button variant="ghost" size="sm"><MoreVertical size={16} /></Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                          <DropdownMenuItem onClick={() => navigate(createPageUrl(`CoursePreview?id=${course.id}`))}>
+                                            <Monitor size={14} className="mr-2" />Preview
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem onClick={() => navigate(createPageUrl(`CourseBuilder?id=${course.id}`))}>
+                                            <Edit size={14} className="mr-2" />Edit
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem onClick={() => navigate(createPageUrl(`CoursePage?slug=${course.slug}`))}>
+                                            <Eye size={14} className="mr-2" />View as Student
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem onClick={() => duplicateMutation.mutate(course.id)}>
+                                            <Copy size={14} className="mr-2" />Duplicate
+                                          </DropdownMenuItem>
+                                          {course.status !== "archived" && (
+                                            <DropdownMenuItem onClick={() => archiveMutation.mutate(course.id)}>
+                                              <Archive size={14} className="mr-2" />Archive
+                                            </DropdownMenuItem>
+                                          )}
+                                          <DropdownMenuItem onClick={() => handleDelete(course.id)} className="text-red-600">
+                                            <Trash2 size={14} className="mr-2" />Delete
+                                          </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                      </DropdownMenu>
+                                    </div>
+                                    {course.short_description && (
+                                      <p className="text-[#2B2725]/70 mb-4 line-clamp-2">{course.short_description}</p>
+                                    )}
+                                    <div className="flex gap-6 text-sm">
+                                      <div><span className="text-[#2B2725]/60">Enrolled: </span><span className="font-medium text-[#1E3A32]">{stats.enrolled}</span></div>
+                                      <div><span className="text-[#2B2725]/60">In Progress: </span><span className="font-medium text-[#1E3A32]">{stats.inProgress}</span></div>
+                                      <div><span className="text-[#2B2725]/60">Completed: </span><span className="font-medium text-[#1E3A32]">{stats.completed}</span></div>
+                                      {course.duration && (
+                                        <div><span className="text-[#2B2725]/60">Duration: </span><span className="font-medium text-[#1E3A32]">{course.duration}</span></div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </Draggable>
+                        );
+                      })}
+                      {provided.placeholder}
                     </div>
-                  </div>
-                </div>
                   )}
-                </Draggable>
-              );
-            })}
-            {provided.placeholder}
-            </div>
+                </Droppable>
+              </DragDropContext>
             )}
-          </Droppable>
-          </DragDropContext>
-          )}
-            </div>
           </TabsContent>
 
           <TabsContent value="analytics">
