@@ -141,13 +141,16 @@ export default function CourseManager() {
     }
   };
 
-  // Filter courses
-  const filteredCourses = courses.filter((course) => {
+  // Filter courses (from ordered list to preserve drag-and-drop order)
+  const filteredCourses = orderedCourses.filter((course) => {
     const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "all" || course.status === statusFilter;
     const matchesType = typeFilter === "all" || course.type === typeFilter;
     return matchesSearch && matchesStatus && matchesType;
   });
+  
+  // Only allow drag when no filters are active
+  const isDragEnabled = searchQuery === "" && statusFilter === "all" && typeFilter === "all";
 
   // Calculate analytics
   const getCourseStats = (courseId) => {
