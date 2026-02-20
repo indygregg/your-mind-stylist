@@ -49,9 +49,16 @@ export default function Cart() {
     if (items.length === 0) return;
     setCheckoutLoading(true);
 
-    // If single item, use existing createProductCheckout
-    if (items.length === 1) {
-      try {
+    try {
+      // Check if user is authenticated
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) {
+        base44.auth.redirectToLogin(window.location.pathname);
+        return;
+      }
+
+      // If single item, use existing createProductCheckout
+      if (items.length === 1) {
         const affiliateCode = localStorage.getItem("affiliate_code");
         const timestamp = localStorage.getItem("affiliate_code_timestamp");
         const isValid = timestamp && Date.now() - parseInt(timestamp) < 30 * 24 * 60 * 60 * 1000;
@@ -71,15 +78,9 @@ export default function Cart() {
           toast.error("Failed to create checkout");
           setCheckoutLoading(false);
         }
-      } catch {
-        toast.error("Something went wrong. Please try again.");
-        setCheckoutLoading(false);
-      }
-    } else {
-      // Multi-item: check out items one by one (Stripe limitation)
-      // For now, checkout the first item and let user know
-      toast("Checking out items one at a time — first item first.", { icon: "ℹ️" });
-      try {
+      } else {
+        // Multi-item: check out items one by one (Stripe limitation)
+        toast("Checking out items one at a time — first item first.", { icon: "ℹ️" });
         const { data } = await base44.functions.invoke("createProductCheckout", {
           product_id: items[0].id,
           success_url: window.location.origin + "/PurchaseSuccess",
@@ -90,10 +91,10 @@ export default function Cart() {
           toast.error("Failed to create checkout");
           setCheckoutLoading(false);
         }
-      } catch {
-        toast.error("Something went wrong.");
-        setCheckoutLoading(false);
       }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again.");
+      setCheckoutLoading(false);
     }
   };
 
