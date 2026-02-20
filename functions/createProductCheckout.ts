@@ -12,28 +12,33 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { product_id, selected_price_id, affiliate_code } = await req.json();
+        const { product_id, product_ids, selected_price_id, affiliate_code } = await req.json();
 
-        if (!product_id) {
-            return Response.json({ error: 'product_id is required' }, { status: 400 });
+        // Support both single and multiple products
+        const ids = product_ids || (product_id ? [product_id] : []);
+        
+        if (ids.length === 0) {
+            return Response.json({ error: 'product_id or product_ids is required' }, { status: 400 });
         }
 
         // Ensure affiliate_code is either a non-empty string or null
         const affiliateCodeValue = affiliate_code && affiliate_code.trim() ? affiliate_code.trim() : null;
 
-        // Get product details
-        const products = await base44.asServiceRole.entities.Product.filter({ id: product_id });
-        const product = products[0];
+        // Get all product details
+        const allProducts = await base44.asServiceRole.entities.Product.filter({});
+        const products = allProducts.filter(p => ids.includes(p.id));
 
-        if (!product) {
-            return Response.json({ error: 'Product not found' }, { status: 404 });
+        if (products.length === 0) {
+            return Response.json({ error: 'No products found' }, { status: 404 });
         }
 
-        // Determine which price to use
-        let stripePriceId = selected_price_id || product.stripe_price_id;
-        
-        if (!stripePriceId) {
-            return Response.json({ error: 'No Stripe price configured for this product' }, { status: 400 });
+        // Validate all products have stripe prices
+        for (const product of products) {
+            if (!product.stripe_price_id) {
+                return Response.json({ 
+                    error: `No Stripe price configured for product: ${product.name}` 
+                }, { status: 400 });
+            }
         }
 
         // Get or create Stripe customer
