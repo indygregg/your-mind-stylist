@@ -82,8 +82,8 @@ export default function ManagerCRM() {
     return matchesSearch && matchesStage && matchesSource;
   });
 
-  // Group by stage for pipeline view
-  const stages = ["new", "contacted", "qualified", "proposal", "negotiation", "won", "lost"];
+  // Group by stage for pipeline view — includes all stages that leads can be in
+  const stages = ["new", "contacted", "booked", "qualified", "proposal", "negotiation", "won", "lost"];
   const pipelineData = stages.map((stage) => ({
     stage,
     leads: filteredLeads.filter((l) => l.stage === stage),
