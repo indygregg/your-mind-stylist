@@ -67,6 +67,35 @@ Deno.serve(async (req) => {
                         stripe_payment_intent_id: session.payment_intent
                     });
 
+                    // Upsert CRM lead with name from booking
+                    try {
+                        const bookings = await base44.asServiceRole.entities.Booking.filter({ id: session.metadata.booking_id });
+                        if (bookings.length > 0) {
+                            const booking = bookings[0];
+                            const existingLeads = await base44.asServiceRole.entities.Lead.filter({ email: booking.user_email });
+                            if (existingLeads.length > 0) {
+                                const updates = { last_activity_date: new Date().toISOString() };
+                                if (!existingLeads[0].full_name && booking.user_name) updates.full_name = booking.user_name;
+                                if (!existingLeads[0].phone && booking.client_phone) updates.phone = booking.client_phone;
+                                updates.notes = `${existingLeads[0].notes || ''}\n[${new Date().toLocaleDateString()}] Booked: ${booking.service_type}`.trim();
+                                await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, updates);
+                            } else {
+                                await base44.asServiceRole.entities.Lead.create({
+                                    full_name: booking.user_name || '',
+                                    email: booking.user_email,
+                                    phone: booking.client_phone || '',
+                                    stage: 'qualified',
+                                    source: 'booking_system',
+                                    interest_level: 'hot',
+                                    lead_score: 75,
+                                    notes: `Initial booking: ${booking.service_type} - ${booking.scheduled_date ? new Date(booking.scheduled_date).toLocaleString() : 'date TBD'}`
+                                });
+                            }
+                        }
+                    } catch (crmError) {
+                        console.error('CRM update failed (non-critical):', crmError.message);
+                    }
+
                     // Auto-tag user for booking completion
                     if (session.metadata.user_id) {
                         try {
