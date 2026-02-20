@@ -94,8 +94,8 @@ Deno.serve(async (req) => {
                     quantity: 1,
                 },
             ],
-            success_url: `${req.headers.get('origin')}/app/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${req.headers.get('origin')}/app/purchase-center`,
+            success_url: `${req.headers.get('origin')}/PurchaseSuccess?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${req.headers.get('origin')}/ProgramsCourses`,
             metadata: {
                 user_id: user.id,
                 product_id: product.id,
