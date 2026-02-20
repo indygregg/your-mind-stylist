@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 Deno.serve(async (req) => {
   try {
@@ -77,21 +77,30 @@ Provide your response in the following JSON format:
       ai_analysis = "AI analysis unavailable";
     }
 
-    // Create bug report
-    const bugReport = await base44.asServiceRole.entities.BugReport.create({
-      title,
-      description,
-      status: "New",
-      priority,
-      reporter_email,
-      reporter_name,
-      page_url,
-      screenshot_url,
-      additional_screenshots: additional_screenshots || [],
-      browser_info,
-      reproduction_steps,
-      ai_analysis
-    });
+    // Create bug report in database
+    let bugReport;
+    try {
+      bugReport = await base44.asServiceRole.entities.BugReport.create({
+        title,
+        description,
+        status: "New",
+        priority,
+        reporter_email,
+        reporter_name,
+        page_url,
+        screenshot_url,
+        additional_screenshots: additional_screenshots || [],
+        browser_info,
+        reproduction_steps,
+        ai_analysis
+      });
+    } catch (dbError) {
+      console.error("Failed to create bug report in database:", dbError);
+      return Response.json(
+        { error: "Failed to save bug report: " + dbError.message },
+        { status: 500 }
+      );
+    }
 
     // Send notification email to admin
     try {
@@ -112,7 +121,7 @@ ${description}
 AI Analysis:
 ${ai_analysis}
 
-View details: https://yourmindstylist.com${page_url.includes('AdminBugTracker') ? '/AdminBugTracker' : '/AdminBugTracker'}
+View details: https://yourmindstylist.com/BugList
         `
       });
     } catch (emailError) {
