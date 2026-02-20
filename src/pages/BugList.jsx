@@ -1033,6 +1033,37 @@ export default function BugList() {
             </div>
           </div>
 
+          {/* Submitted Bug Reports (from database) */}
+          {databaseBugs.length > 0 && (
+            <div className="mb-8">
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">Submitted Bug Reports</h2>
+              <div className="space-y-4">
+                {databaseBugs.map((bug) => (
+                  <div key={bug.id} className="bg-white p-6 border border-[#E4D9C4] rounded-lg">
+                    <div className="flex items-start justify-between gap-4 mb-2">
+                      <h3 className="font-serif text-lg text-[#1E3A32] flex-1">{bug.title}</h3>
+                      <Badge className={getPriorityColor(bug.priority.toLowerCase())}>{bug.priority}</Badge>
+                    </div>
+                    <p className="text-sm text-[#2B2725]/70 mb-3">{bug.description}</p>
+                    <div className="flex flex-wrap gap-3 text-xs text-[#2B2725]/60 mb-3">
+                      <span>Reported by: {bug.reporter_name}</span>
+                      <span>•</span>
+                      <span>{new Date(bug.created_date).toLocaleDateString()}</span>
+                      <span>•</span>
+                      <Badge variant="outline" className="text-xs">{bug.status}</Badge>
+                    </div>
+                    {bug.ai_analysis && (
+                      <div className="bg-[#F9F5EF] p-3 rounded text-xs text-[#2B2725]/70 mb-3">
+                        <p className="font-medium mb-1">AI Analysis:</p>
+                        <p>{bug.ai_analysis}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Bug List */}
           <div className="space-y-6">
             {bugs.map((category) => {
