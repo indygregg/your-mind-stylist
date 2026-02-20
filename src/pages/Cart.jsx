@@ -57,40 +57,22 @@ export default function Cart() {
         return;
       }
 
-      // If single item, use existing createProductCheckout
-      if (items.length === 1) {
-        const affiliateCode = localStorage.getItem("affiliate_code");
-        const timestamp = localStorage.getItem("affiliate_code_timestamp");
-        const isValid = timestamp && Date.now() - parseInt(timestamp) < 30 * 24 * 60 * 60 * 1000;
+      const affiliateCode = localStorage.getItem("affiliate_code");
+      const timestamp = localStorage.getItem("affiliate_code_timestamp");
+      const isValid = timestamp && Date.now() - parseInt(timestamp) < 30 * 24 * 60 * 60 * 1000;
 
-        const payload = {
-          product_id: items[0].id,
-          success_url: window.location.origin + "/PurchaseSuccess",
-          cancel_url: window.location.origin + "/Cart",
-        };
-        if (isValid && affiliateCode) payload.affiliate_code = affiliateCode;
-        if (appliedCode) payload.gift_code = giftCode.trim().toUpperCase();
+      const payload = {
+        product_ids: items.map(item => item.id),
+      };
+      if (isValid && affiliateCode) payload.affiliate_code = affiliateCode;
+      if (appliedCode) payload.gift_code = giftCode.trim().toUpperCase();
 
-        const { data } = await base44.functions.invoke("createProductCheckout", payload);
-        if (data?.url) {
-          window.location.href = data.url;
-        } else {
-          toast.error("Failed to create checkout");
-          setCheckoutLoading(false);
-        }
+      const { data } = await base44.functions.invoke("createProductCheckout", payload);
+      if (data?.url) {
+        window.location.href = data.url;
       } else {
-        // Multi-item: check out items one by one (Stripe limitation)
-        toast("Checking out items one at a time — first item first.", { icon: "ℹ️" });
-        const { data } = await base44.functions.invoke("createProductCheckout", {
-          product_id: items[0].id,
-          success_url: window.location.origin + "/PurchaseSuccess",
-          cancel_url: window.location.origin + "/Cart",
-        });
-        if (data?.url) window.location.href = data.url;
-        else {
-          toast.error("Failed to create checkout");
-          setCheckoutLoading(false);
-        }
+        toast.error("Failed to create checkout");
+        setCheckoutLoading(false);
       }
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
