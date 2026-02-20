@@ -921,6 +921,85 @@ export default function ManagerCRM() {
           </DialogContent>
         </Dialog>
 
+        {/* Add Lead Dialog */}
+        <Dialog open={addLeadDialogOpen} onOpenChange={setAddLeadDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Add New Lead</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label>Full Name</Label>
+                <Input
+                  value={newLead.full_name}
+                  onChange={(e) => setNewLead(prev => ({ ...prev, full_name: e.target.value }))}
+                  placeholder="Jane Smith"
+                />
+              </div>
+              <div>
+                <Label>Email *</Label>
+                <Input
+                  type="email"
+                  value={newLead.email}
+                  onChange={(e) => setNewLead(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="jane@example.com"
+                />
+              </div>
+              <div>
+                <Label>Phone</Label>
+                <Input
+                  value={newLead.phone}
+                  onChange={(e) => setNewLead(prev => ({ ...prev, phone: e.target.value }))}
+                  placeholder="(555) 000-0000"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>Stage</Label>
+                  <Select value={newLead.stage} onValueChange={(v) => setNewLead(prev => ({ ...prev, stage: v }))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {["new","contacted","qualified","proposal","negotiation","won","lost"].map(s => (
+                        <SelectItem key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label>Source</Label>
+                  <Select value={newLead.source} onValueChange={(v) => setNewLead(prev => ({ ...prev, source: v }))}>
+                    <SelectTrigger><SelectValue placeholder="Source" /></SelectTrigger>
+                    <SelectContent>
+                      {["website","masterclass","referral","social_media","paid_ad","organic_search","email_campaign","event","other"].map(s => (
+                        <SelectItem key={s} value={s}>{s.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase())}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div>
+                <Label>Notes</Label>
+                <Textarea
+                  value={newLead.notes}
+                  onChange={(e) => setNewLead(prev => ({ ...prev, notes: e.target.value }))}
+                  placeholder="Any notes about this lead..."
+                  className="min-h-[80px]"
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setAddLeadDialogOpen(false)}>Cancel</Button>
+                <Button
+                  disabled={!newLead.email.trim() || createLeadMutation.isPending}
+                  onClick={() => createLeadMutation.mutate(newLead)}
+                  className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
+                >
+                  {createLeadMutation.isPending ? "Adding..." : "Add Lead"}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         {/* SMS Dialog */}
         <SendSMSDialog
           open={smsDialogOpen}
