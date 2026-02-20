@@ -777,9 +777,9 @@ export default function BugList() {
                 id: "feb19-course-2",
                 title: "Cannot change display order of courses",
                 description: "There is no working way to reorder courses as they appear to students.",
-                status: "open",
+                status: "completed",
                 priority: "medium",
-                notes: "Needs implementation: drag-and-drop or up/down arrow reordering in Course Manager using the Course entity's display_order field."
+                notes: "✅ FIXED: Drag-and-drop reordering added to Course Manager. Grab the grip handle on the left of any course row and drag to reorder. Order saves automatically to the display_order field. Clear all filters to enable drag mode."
               }
             ]
           },
