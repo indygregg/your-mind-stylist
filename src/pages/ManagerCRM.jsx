@@ -916,6 +916,27 @@ export default function ManagerCRM() {
           }}
         />
 
+        {/* Delete Confirmation */}
+        <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Contact</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete <strong>{leadToDelete?.full_name || leadToDelete?.email}</strong>? This cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => deleteLeadMutation.mutate(leadToDelete?.id)}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                {deleteLeadMutation.isPending ? "Deleting..." : "Delete Contact"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
         {/* Import Dialog */}
         <LeadImport
           open={importDialogOpen}
