@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useCallback } from "react";
+import ReactQuill from "react-quill";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, Edit, Save, X, Send, PlusCircle } from "lucide-react";
+import { Mail, Edit, Save, X, Send, PlusCircle, Tag, Eye, Code } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 const DEFAULT_TEMPLATES = [
