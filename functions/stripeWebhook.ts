@@ -207,10 +207,12 @@ Deno.serve(async (req) => {
                                 });
                             } else {
                                 await base44.asServiceRole.entities.Lead.create({
-                                    name: session.customer_details?.name || 'Unknown',
+                                    full_name: session.customer_details?.name || '',
                                     email: session.customer_email,
-                                    stage: 'customer',
+                                    stage: 'won',
                                     source: 'product_purchase',
+                                    interest_level: 'hot',
+                                    lead_score: 80,
                                     last_activity_date: new Date().toISOString(),
                                     notes: `Purchased: ${product.name}`
                                 });
