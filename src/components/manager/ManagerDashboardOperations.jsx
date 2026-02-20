@@ -26,6 +26,7 @@ const operationsGroups = [
       { icon: Package, label: "Product Manager", link: "ManagerProducts" },
       { icon: ShoppingCart, label: "Funnels", link: "ManagerMasterclass" },
       { icon: TrendingUp, label: "Payment Plans", link: "ManagerPaymentPlans" },
+      { icon: CreditCard, label: "Subscriptions & Refunds", link: "ManagerSubscriptions" },
     ]
   },
   {
