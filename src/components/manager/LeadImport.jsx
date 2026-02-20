@@ -110,7 +110,7 @@ example@email.com,John Doe,+1234567890,kajabi,new,warm,75,"tag1,tag2",Sample not
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Import Leads from Kajabi</DialogTitle>
+          <DialogTitle>Import Contacts from CSV</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
