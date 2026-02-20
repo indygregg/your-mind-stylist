@@ -814,7 +814,7 @@ export default function BugList() {
                 id: "feb19-misc-1",
                 title: "Can a single user be added without a CSV import?",
                 description: "Roberta wants to add individual users manually without using a CSV spreadsheet.",
-                status: "open",
+                status: "completed",
                 priority: "low",
                 notes: "Yes! In Manager Dashboard → CRM → Leads, click 'Add Lead' to create a single contact manually. You can also invite users via the Users section using just their email address."
               }
