@@ -307,15 +307,24 @@ export default function CourseManager() {
             </Button>
           </div>
         ) : (
-          <div className="space-y-4">
-            {filteredCourses.map((course) => {
+          <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="courses" isDropDisabled={!isDragEnabled}>
+            {(provided) => (
+            <div className="space-y-4" {...provided.droppableProps} ref={provided.innerRef}>
+            {!isDragEnabled && (
+              <p className="text-xs text-[#2B2725]/50 text-center py-1">Clear filters to enable drag-and-drop reordering</p>
+            )}
+            {filteredCourses.map((course, index) => {
               const stats = getCourseStats(course.id);
               const statusBadge = getStatusBadge(course.status);
               
               return (
+                <Draggable key={course.id} draggableId={course.id} index={index} isDragDisabled={!isDragEnabled}>
+                {(dragProvided, dragSnapshot) => (
                 <div
-                  key={course.id}
-                  className="bg-white border border-[#E4D9C4] rounded-lg p-6 hover:shadow-md transition-shadow"
+                  ref={dragProvided.innerRef}
+                  {...dragProvided.draggableProps}
+                  className={`bg-white border border-[#E4D9C4] rounded-lg p-6 transition-shadow ${dragSnapshot.isDragging ? 'shadow-xl ring-2 ring-[#D8B46B]' : 'hover:shadow-md'}`}
                 >
                   <div className="flex gap-6">
                     {/* Thumbnail */}
