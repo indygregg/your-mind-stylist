@@ -326,7 +326,14 @@ export default function CourseManager() {
                   {...dragProvided.draggableProps}
                   className={`bg-white border border-[#E4D9C4] rounded-lg p-6 transition-shadow ${dragSnapshot.isDragging ? 'shadow-xl ring-2 ring-[#D8B46B]' : 'hover:shadow-md'}`}
                 >
-                  <div className="flex gap-6">
+                  <div className="flex gap-4">
+                    {/* Drag Handle */}
+                    {isDragEnabled && (
+                      <div {...dragProvided.dragHandleProps} className="flex items-center text-[#2B2725]/30 hover:text-[#D8B46B] cursor-grab active:cursor-grabbing flex-shrink-0 mt-1">
+                        <GripVertical size={20} />
+                      </div>
+                    )}
+
                     {/* Thumbnail */}
                     {course.thumbnail && (
                       <img
