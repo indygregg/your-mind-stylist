@@ -208,7 +208,7 @@ export default function ManagerCRM() {
           </Card>
         </div>
 
-        <Tabs defaultValue="pipeline" className="space-y-6">
+        <Tabs defaultValue="list" className="space-y-6">
           <TabsList>
             <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
             <TabsTrigger value="list">List View</TabsTrigger>
