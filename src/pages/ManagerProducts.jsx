@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye, EyeOff, DollarSign, Sparkles, RefreshCw, ExternalLink, Download, Upload, Package, BookOpen, Video, GraduationCap, Info } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, DollarSign, Sparkles, RefreshCw, ExternalLink, Download, Upload, Package, BookOpen, Video, GraduationCap, Info, GripVertical } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ReactQuill from "react-quill";
 import BundleCreator from "../components/manager/BundleCreator";
