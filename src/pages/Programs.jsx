@@ -206,20 +206,27 @@ export default function Programs() {
                         <p className="text-[#2B2725]/60 text-sm mb-4">{product.tagline}</p>
                       )}
                       <p className="text-[#2B2725]/70 text-sm mb-4">{product.short_description}</p>
-                      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
+                      <p className="text-2xl font-bold text-[#1E3A32] mb-4">
                         {formatPrice(product.price, product.billing_interval)}
                       </p>
-                      <Link to={product.slug ? createPageUrl(`ProductPage?slug=${product.slug}`) : createPageUrl("PurchaseCenter")}>
-                        <Button
-                          className={`w-full ${
+                      <div className="flex gap-2">
+                        {product.slug && (
+                          <Link to={createPageUrl(`ProductPage?slug=${product.slug}`)} className="flex-1">
+                            <Button variant="outline" className="w-full border-[#1E3A32] text-[#1E3A32]">Details</Button>
+                          </Link>
+                        )}
+                        <button
+                          onClick={() => handlePurchase(product.id)}
+                          disabled={checkoutLoading === product.id}
+                          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium transition-colors disabled:opacity-50 ${
                             product.ui_group === "hero"
-                              ? "bg-[#D8B46B] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-[#F9F5EF]"
-                              : "bg-[#1E3A32] hover:bg-[#2B2725]"
+                              ? "bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B]"
+                              : "bg-[#1E3A32] text-white hover:bg-[#2B2725]"
                           }`}
                         >
-                          Get Started
-                        </Button>
-                      </Link>
+                          {checkoutLoading === product.id ? <Loader2 size={16} className="animate-spin" /> : <><ShoppingCart size={14} /> Buy Now</>}
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
