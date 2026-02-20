@@ -9,6 +9,18 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 
 export default function ProgramsBooks() {
+  const [checkoutLoading, setCheckoutLoading] = useState(null);
+
+  const handlePurchase = async (bookId) => {
+    setCheckoutLoading(bookId);
+    const response = await base44.functions.invoke('createProductCheckout', { product_id: bookId });
+    if (response.data?.url) {
+      window.location.href = response.data.url;
+    } else {
+      setCheckoutLoading(null);
+    }
+  };
+
   const { data: books = [], isLoading } = useQuery({
     queryKey: ["book-products"],
     queryFn: async () => {
