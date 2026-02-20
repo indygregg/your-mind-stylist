@@ -278,36 +278,6 @@ export default function ClientPortal() {
               </Card>
             ) : (
               <div className="space-y-3">
-                {/* Product Purchases */}
-                {purchases.map((purchase) => (
-                  <Card key={purchase.id} className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-                          <CheckCircle size={20} className="text-green-600" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-[#1E3A32]">
-                            {purchase.name}
-                          </p>
-                          <p className="text-sm text-[#2B2725]/70">
-                            {purchase.created_date ? format(new Date(purchase.created_date), "MMM d, yyyy") : 'Recently purchased'}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-serif text-xl text-[#1E3A32]">
-                          {formatAmount(purchase.amount || 0)}
-                        </p>
-                        <Badge className="bg-green-100 text-green-800">
-                          Purchased
-                        </Badge>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-                
-                {/* Session Payments */}
                 {paidBookings.map((booking) => (
                   <Card key={booking.id} className="p-4">
                     <div className="flex items-center justify-between">
