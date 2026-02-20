@@ -385,7 +385,7 @@ export default function Dashboard() {
                           </Link>
                         )}
                         <button
-                          onClick={() => handleDashboardPurchase(product.id)}
+                          onClick={() => handleDashboardPurchase(product)}
                           disabled={checkoutLoading === product.id}
                           className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors disabled:opacity-50"
                         >
