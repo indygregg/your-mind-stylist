@@ -22,6 +22,7 @@ export default function ManagerCRM() {
   const [stageFilter, setStageFilter] = useState("all");
   const [sourceFilter, setSourceFilter] = useState("all");
   const [selectedLead, setSelectedLead] = useState(null);
+  const [editingLead, setEditingLead] = useState(null);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [stageUpdateDialogOpen, setStageUpdateDialogOpen] = useState(false);
   const [newStage, setNewStage] = useState("");
