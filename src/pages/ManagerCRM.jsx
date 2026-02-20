@@ -427,8 +427,8 @@ export default function ManagerCRM() {
                             </div>
                           </div>
 
-                          <div className="text-right">
-                            <p className="text-xs text-[#2B2725]/60 mb-1">
+                          <div className="text-right flex flex-col items-end gap-2">
+                            <p className="text-xs text-[#2B2725]/60">
                               Created: {new Date(lead.created_date).toLocaleDateString()}
                             </p>
                             {lead.next_follow_up_date && (
@@ -436,6 +436,21 @@ export default function ManagerCRM() {
                                 Follow up: {new Date(lead.next_follow_up_date).toLocaleDateString()}
                               </p>
                             )}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-xs h-7 px-2"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedLead(lead);
+                                setEmailSubject("");
+                                setEmailBody("");
+                                setEmailDialogOpen(true);
+                              }}
+                            >
+                              <Mail size={12} className="mr-1" />
+                              Email
+                            </Button>
                           </div>
                         </div>
                       </motion.div>
