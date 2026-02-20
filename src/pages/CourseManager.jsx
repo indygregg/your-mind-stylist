@@ -399,6 +399,7 @@ export default function CourseManager() {
                 </Droppable>
               </DragDropContext>
             )}
+            </div>
           </TabsContent>
 
           <TabsContent value="analytics">
