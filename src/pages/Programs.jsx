@@ -363,23 +363,30 @@ export default function Programs() {
                         {product.short_description}
                       </p>
                       <p
-                        className={`text-3xl font-bold mb-6 ${
+                        className={`text-3xl font-bold mb-4 ${
                           product.ui_group === "featured" ? "text-white" : "text-[#1E3A32]"
                         }`}
                       >
                         {formatPrice(product.price, product.billing_interval)}
                       </p>
-                      <Link to={product.slug ? createPageUrl(`ProductPage?slug=${product.slug}`) : createPageUrl("PurchaseCenter")}>
-                        <Button
-                          className={`w-full ${
+                      <div className="flex gap-2">
+                        {product.slug && (
+                          <Link to={createPageUrl(`ProductPage?slug=${product.slug}`)} className="flex-1">
+                            <Button variant="outline" className={`w-full ${product.ui_group === "featured" ? "border-white text-white hover:bg-white/10" : "border-[#1E3A32] text-[#1E3A32]"}`}>Details</Button>
+                          </Link>
+                        )}
+                        <button
+                          onClick={() => handlePurchase(product.id)}
+                          disabled={checkoutLoading === product.id}
+                          className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium transition-colors disabled:opacity-50 ${
                             product.ui_group === "featured"
                               ? "bg-[#D8B46B] text-[#1E3A32] hover:bg-white"
-                              : "bg-[#1E3A32] hover:bg-[#2B2725]"
+                              : "bg-[#1E3A32] text-white hover:bg-[#2B2725]"
                           }`}
                         >
-                          Get Started
-                        </Button>
-                      </Link>
+                          {checkoutLoading === product.id ? <Loader2 size={16} className="animate-spin" /> : <><ShoppingCart size={14} /> Buy Now</>}
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
