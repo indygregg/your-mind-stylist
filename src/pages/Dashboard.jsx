@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Layers, Sparkles, BookOpen, Calendar, Play, User, Edit3 } from "lucide-react";
+import { Layers, Sparkles, BookOpen, Calendar, Play, User, Edit3, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import { useQuery } from "@tanstack/react-query";
 import CmsText from "../components/cms/CmsText";
 import OnboardingModal from "../components/onboarding/OnboardingModal";
 import OnboardingQuickCards from "../components/onboarding/OnboardingQuickCards";
