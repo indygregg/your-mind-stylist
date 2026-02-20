@@ -74,6 +74,17 @@ export default function ManagerCRM() {
     },
   });
 
+  // Create lead mutation
+  const createLeadMutation = useMutation({
+    mutationFn: (data) => base44.entities.Lead.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+      setAddLeadDialogOpen(false);
+      setNewLead({ full_name: "", email: "", phone: "", source: "", stage: "new", notes: "" });
+      toast.success("Lead added!");
+    },
+  });
+
   // Delete lead mutation
   const deleteLeadMutation = useMutation({
     mutationFn: (id) => base44.entities.Lead.delete(id),
