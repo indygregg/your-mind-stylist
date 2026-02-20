@@ -89,7 +89,7 @@ export default function PurchaseSuccess() {
                 <div>
                   <h3 className="font-medium text-[#1E3A32] mb-1">Access Your Content</h3>
                   <p className="text-[#2B2725]/70 text-sm">
-                    Head to your library to start exploring your new program.
+                    Head to your Client Portal to start exploring your new program.
                   </p>
                 </div>
               </div>
@@ -110,9 +110,9 @@ export default function PurchaseSuccess() {
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to={createPageUrl("Library")}>
+            <Link to={createPageUrl("ClientPortal")}>
               <Button className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] px-8 py-6 text-lg">
-                Go to Library
+                Go to Client Portal
                 <ArrowRight size={20} className="ml-2" />
               </Button>
             </Link>
