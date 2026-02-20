@@ -360,26 +360,74 @@ export default function ManagerEmailTemplates() {
                 />
               </div>
 
-              <div>
-                <Label>Body</Label>
-                <Textarea
-                  value={editedTemplate.body}
-                  onChange={(e) =>
-                    setEditedTemplate({ ...editedTemplate, body: e.target.value })
-                  }
-                  className="mt-2 min-h-[300px] font-mono text-sm"
-                />
-              </div>
+              {/* Variable Inserter */}
+              {editedTemplate.variables?.length > 0 && (
+                <div className="bg-[#F9F5EF] border border-[#E4D9C4] rounded-lg p-3">
+                  <p className="text-xs font-medium text-[#1E3A32] mb-2 flex items-center gap-1">
+                    <Tag size={12} />
+                    Insert a variable — click to add it to your email:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {editedTemplate.variables?.map((v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        onClick={() => insertVariable(v)}
+                        className="text-xs bg-white border border-[#D8B46B] text-[#1E3A32] px-2 py-1 rounded hover:bg-[#D8B46B]/10 transition-colors font-mono"
+                        title={`Click to insert {{${v}}} into your email`}
+                      >
+                        {`{{${v}}}`}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="text-[11px] text-[#2B2725]/50 mt-2">
+                    These will be replaced with real values when the email is sent (e.g. <code className="bg-white px-1 rounded">{"{{user_name}}"}</code> becomes "Jane Smith").
+                  </p>
+                </div>
+              )}
 
               <div>
-                <p className="text-xs text-[#2B2725]/60 mb-2">Available variables:</p>
-                <div className="flex flex-wrap gap-2">
-                  {editedTemplate.variables?.map((v) => (
-                    <Badge key={v} variant="outline" className="text-xs">
-                      {`{{${v}}}`}
-                    </Badge>
-                  ))}
+                <div className="flex items-center justify-between mb-2">
+                  <Label>Email Body</Label>
+                  <div className="flex gap-1 border border-[#E4D9C4] rounded-md overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setViewMode("visual")}
+                      className={`text-xs px-3 py-1 flex items-center gap-1 transition-colors ${viewMode === "visual" ? "bg-[#1E3A32] text-white" : "bg-white text-[#2B2725]/60 hover:bg-[#F9F5EF]"}`}
+                    >
+                      <Eye size={12} /> Visual
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setViewMode("html")}
+                      className={`text-xs px-3 py-1 flex items-center gap-1 transition-colors ${viewMode === "html" ? "bg-[#1E3A32] text-white" : "bg-white text-[#2B2725]/60 hover:bg-[#F9F5EF]"}`}
+                    >
+                      <Code size={12} /> HTML
+                    </button>
+                  </div>
                 </div>
+
+                {viewMode === "visual" ? (
+                  <div className="border border-[#E4D9C4] rounded-md overflow-hidden">
+                    <ReactQuill
+                      ref={quillRef}
+                      theme="snow"
+                      value={editedTemplate.body}
+                      onChange={(value) => setEditedTemplate({ ...editedTemplate, body: value })}
+                      modules={quillModules}
+                      formats={quillFormats}
+                      style={{ minHeight: "280px" }}
+                    />
+                  </div>
+                ) : (
+                  <textarea
+                    value={editedTemplate.body}
+                    onChange={(e) => setEditedTemplate({ ...editedTemplate, body: e.target.value })}
+                    className="w-full min-h-[320px] font-mono text-xs border border-[#E4D9C4] rounded-md p-3 bg-[#F9F5EF] focus:outline-none focus:ring-1 focus:ring-[#1E3A32]"
+                    spellCheck={false}
+                  />
+                )}
+                <p className="text-[11px] text-[#2B2725]/40 mt-1">Use the Visual editor for easy formatting. Switch to HTML if you need to paste in a custom email template.</p>
               </div>
 
               <div className="flex gap-2 pt-4">
