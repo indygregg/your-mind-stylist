@@ -93,7 +93,6 @@ Deno.serve(async (req) => {
             ],
             success_url: `${req.headers.get('origin')}/app/purchase-success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${req.headers.get('origin')}/app/purchase-center`,
-            client_reference_id: affiliate_code || null,
             metadata: {
                 user_id: user.id,
                 product_id: product.id,
@@ -101,9 +100,14 @@ Deno.serve(async (req) => {
                 product_name: product.name,
                 selected_price_id: stripePriceId,
                 is_payment_plan: selected_price_id ? 'true' : 'false',
-                affiliate_code: affiliate_code || null,
+                affiliate_code: affiliate_code || '',
             },
         };
+        
+        // Only set client_reference_id if affiliate_code is provided
+        if (affiliate_code) {
+            sessionConfig.client_reference_id = affiliate_code;
+        }
         
         // Add subscription_data if payment plan
         if (subscriptionData) {
