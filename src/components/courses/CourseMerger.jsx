@@ -156,7 +156,7 @@ export default function CourseMerger({ open, onClose }) {
           {/* Select Courses */}
           <div>
             <Label className="mb-3 block">Select Courses to Merge (minimum 2)</Label>
-            <p className="text-xs text-[#2B2725]/60 mb-3">Click on a course or its checkbox to select it. Selected courses will be merged in the order you choose.</p>
+            <p className="text-xs text-[#2B2725]/60 mb-3">Click courses in the order you want to merge them. Selected courses will appear in numbered order below.</p>
             <div className="border border-[#E4D9C4] rounded-lg max-h-[300px] overflow-y-auto">
               {courses.filter(c => c.status !== "archived").map((course, index) => (
                 <div
