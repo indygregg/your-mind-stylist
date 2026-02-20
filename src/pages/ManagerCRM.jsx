@@ -414,7 +414,7 @@ export default function ManagerCRM() {
                               </Badge>
                             </div>
 
-                            <div className="flex gap-6 text-sm text-[#2B2725]/70">
+                            <div className="flex gap-6 text-sm text-[#2B2725]/70 flex-wrap">
                               <span className="flex items-center gap-1">
                                 <Mail size={14} />
                                 {lead.email}
@@ -431,6 +431,13 @@ export default function ManagerCRM() {
                                 Score: {lead.lead_score}
                               </span>
                             </div>
+                            {lead.tags && lead.tags.length > 0 && (
+                              <div className="flex gap-1 flex-wrap mt-1">
+                                {lead.tags.map(tag => (
+                                  <span key={tag} className="bg-[#D8B46B]/20 text-[#1E3A32] text-xs px-2 py-0.5 rounded-full">{tag}</span>
+                                ))}
+                              </div>
+                            )}
                           </div>
 
                           <div className="text-right flex flex-col items-end gap-2">
