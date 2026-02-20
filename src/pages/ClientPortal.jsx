@@ -268,7 +268,7 @@ export default function ClientPortal() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-white/80 text-sm mb-1">Total Invested</p>
-                    <p className="text-3xl font-serif">{formatAmount(totalSpent + (purchases.reduce((sum, p) => sum + (p.amount || 0), 0)))}</p>
+                    <p className="text-3xl font-serif">{formatAmount(totalSpent + ((Array.isArray(purchases) ? purchases : []).reduce((sum, p) => sum + (p.amount || 0), 0)))}</p>
                   </div>
                   <DollarSign size={40} className="text-white/30" />
                 </div>
