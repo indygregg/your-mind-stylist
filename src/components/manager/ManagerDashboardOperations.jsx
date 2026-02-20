@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
-import { Users, Clock, Settings, Zap, Package, TrendingUp, AlertCircle, FileText, Calendar, ShoppingCart } from "lucide-react";
+import { Users, Clock, Settings, Zap, Package, TrendingUp, AlertCircle, FileText, Calendar, ShoppingCart, CreditCard } from "lucide-react";
 
 const operationsGroups = [
   {
