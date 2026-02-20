@@ -383,6 +383,7 @@ export default function ManagerCRM() {
                         className="border border-[#E4D9C4] rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
                         onClick={() => {
                           setSelectedLead(lead);
+                          setEditingLead({ ...lead });
                           setDetailsDialogOpen(true);
                         }}
                       >
