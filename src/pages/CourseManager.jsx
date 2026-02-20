@@ -23,11 +23,41 @@ export default function CourseManager() {
   const [showMerger, setShowMerger] = useState(false);
   const [orderedCourses, setOrderedCourses] = useState([]);
 
-  // Fetch all courses
+  // Fetch all courses sorted by display_order
   const { data: courses = [], isLoading } = useQuery({
     queryKey: ["courses"],
-    queryFn: () => base44.entities.Course.list("-created_date"),
+    queryFn: () => base44.entities.Course.list("display_order"),
   });
+
+  // Keep local ordered list in sync
+  useEffect(() => {
+    if (courses.length > 0) {
+      setOrderedCourses(courses);
+    }
+  }, [courses]);
+
+  // Update display order mutation
+  const reorderMutation = useMutation({
+    mutationFn: async (reorderedList) => {
+      await Promise.all(
+        reorderedList.map((course, index) =>
+          base44.entities.Course.update(course.id, { display_order: index + 1 })
+        )
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["courses"] });
+    },
+  });
+
+  const handleDragEnd = (result) => {
+    if (!result.destination) return;
+    const items = Array.from(orderedCourses);
+    const [moved] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, moved);
+    setOrderedCourses(items);
+    reorderMutation.mutate(items);
+  };
 
   // Fetch course progress data for analytics
   const { data: allProgress = [] } = useQuery({
