@@ -34,6 +34,9 @@ export default function ManagerCRM() {
   const [emailSubject, setEmailSubject] = useState("");
   const [emailBody, setEmailBody] = useState("");
   const [sendingEmail, setSendingEmail] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [leadToDelete, setLeadToDelete] = useState(null);
+  const [newTagInput, setNewTagInput] = useState("");
 
   // Fetch leads
   const { data: leads = [], isLoading } = useQuery({
