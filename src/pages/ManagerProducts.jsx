@@ -492,15 +492,28 @@ export default function ManagerProducts() {
               <h2 className="font-serif text-2xl text-[#1E3A32]">{group.label}</h2>
               <span className="text-sm text-[#2B2725]/50">{group.items.length} product{group.items.length !== 1 ? "s" : ""}</span>
             </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {group.items.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onEdit={handleEdit}
-                  onToggleStatus={(p) => toggleStatusMutation.mutate({ id: p.id, status: p.status === "published" ? "draft" : "published" })}
-                  onDelete={(p) => { if (confirm("Delete this product?")) deleteMutation.mutate(p.id); }}
-                />
+            <div className="space-y-2">
+              {group.items.map((product, idx) => (
+                <div key={product.id} className="flex items-center gap-3 bg-white p-4 rounded-lg border border-[#E4D9C4] hover:border-[#D8B46B]/50 transition-all">
+                  <GripVertical size={18} className="text-[#D8B46B]/50 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-medium text-[#1E3A32] truncate">{product.name}</h3>
+                    <p className="text-xs text-[#2B2725]/60">{product.status === 'published' ? '✓ Published' : 'Draft'}</p>
+                  </div>
+                  <span className="text-sm font-medium text-[#1E3A32] flex-shrink-0">
+                    {product.price ? `$${(product.price/100).toFixed(2)}` : 'Free'}
+                  </span>
+                  <div className="flex gap-2 flex-shrink-0">
+                    <Button size="sm" variant="outline" onClick={() => handleEdit(product)}><Edit size={14}/></Button>
+                    <Button 
+                      size="sm" 
+                      variant={product.status === 'published' ? 'default' : 'outline'}
+                      onClick={() => toggleStatusMutation.mutate({ id: product.id, status: product.status === "published" ? "draft" : "published" })}
+                      className={product.status === 'published' ? 'bg-green-600 hover:bg-green-700' : ''}
+                    ><Eye size={14}/></Button>
+                    <Button size="sm" variant="outline" onClick={() => { if (confirm("Delete this product?")) deleteMutation.mutate(product.id); }}><Trash2 size={14}/></Button>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
