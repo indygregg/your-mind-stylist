@@ -1095,7 +1095,7 @@ export default function BugList() {
           {/* View: Static Issues */}
           {viewMode === 'static' && (
             <div className="space-y-6">
-            {bugs.map((category) => {
+              {bugs.map((category) => {
               const isExpanded = expandedCategories.has(category.categoryId);
               const categoryPriority = category.priority;
               
