@@ -799,8 +799,9 @@ export default function BugList() {
                 id: "feb19-dash-2",
                 title: "Duplication of 'Want More' section after Masterclass",
                 description: "Two 'Want More' sections appear after the Masterclass section at the bottom of the dashboard. Editing one changes both because they share the same CMS block.",
-                status: "open",
-                priority: "medium"
+                status: "completed",
+                priority: "medium",
+                notes: "✅ FIXED: Renamed the 'What's Next' section on Masterclass page to 'Want More' with unique CMS keys (masterclass.want_more.*) instead of duplicating the Library section. Each section now has its own independent CMS content block."
               }
             ]
           },
