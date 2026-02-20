@@ -41,8 +41,24 @@ export default function Dashboard() {
   const [recommendations, setRecommendations] = useState([]);
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const [pastBookings, setPastBookings] = useState([]);
+  const [checkoutLoading, setCheckoutLoading] = useState(null);
   const suggestions = useSmartSuggestions();
   const queryClient = useQueryClient();
+
+  const { data: publishedProducts = [] } = useQuery({
+    queryKey: ["dashboard-published-products"],
+    queryFn: () => base44.entities.Product.filter({ status: "published", active: true }, "display_order"),
+  });
+
+  const handleDashboardPurchase = async (productId) => {
+    setCheckoutLoading(productId);
+    const response = await base44.functions.invoke('createProductCheckout', { product_id: productId });
+    if (response.data?.url) {
+      window.location.href = response.data.url;
+    } else {
+      setCheckoutLoading(null);
+    }
+  };
   const { pullY, isRefreshing, handlers: pullToRefreshHandlers } = usePullToRefresh(async () => {
     await handleRefresh();
   });
