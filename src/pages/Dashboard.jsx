@@ -341,7 +341,7 @@ export default function Dashboard() {
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-serif text-xl text-[#1E3A32]">
-                <CmsText cmsKey="dashboard.programs.title" defaultText="Programs & Products" />
+                <CmsText cmsKey="dashboard.want_more.title" defaultText="Want More After the Masterclass?" />
               </h2>
               <Link to={createPageUrl("Programs")} className="text-sm text-[#D8B46B] hover:underline">
                 View all →
