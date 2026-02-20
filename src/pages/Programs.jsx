@@ -51,6 +51,7 @@ export default function Programs() {
   };
 
   const formatPrice = (price, billing_interval) => {
+    if (!price) return "Contact for Pricing";
     const dollars = (price / 100).toFixed(2);
     if (billing_interval === "monthly") return `$${dollars}/mo`;
     if (billing_interval === "yearly") return `$${dollars}/yr`;
