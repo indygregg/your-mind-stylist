@@ -249,7 +249,7 @@ export default function ManagerCRM() {
             </Card>
 
             {/* Pipeline Board */}
-            <div className="grid grid-cols-7 gap-4">
+            <div className="grid grid-cols-4 lg:grid-cols-8 gap-3">
               {pipelineData.map((column) => (
                 <div key={column.stage}>
                   <div className="bg-white rounded-lg border border-[#E4D9C4] p-4 min-h-[600px]">
