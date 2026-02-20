@@ -180,10 +180,23 @@ export default function ManagerEmailTemplates() {
     return testVars;
   };
 
+  const insertVariable = useCallback((varName) => {
+    const tag = `{{${varName}}}`;
+    if (viewMode === "visual" && quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      const range = editor.getSelection(true);
+      editor.insertText(range ? range.index : editor.getLength(), tag);
+    } else {
+      // For HTML mode, append to body
+      setEditedTemplate(prev => ({ ...prev, body: (prev.body || "") + tag }));
+    }
+  }, [viewMode]);
+
   const handleEditClick = (template) => {
     setSelectedTemplate(template);
     setEditedTemplate({ ...template });
     setEditMode(true);
+    setViewMode("visual");
   };
 
   const handleSave = () => {
