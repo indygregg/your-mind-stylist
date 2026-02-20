@@ -321,9 +321,9 @@ export default function Masterclass() {
           </h2>
           <p className="text-[#2B2725]/70 mb-6">
             <CmsText
-              contentKey="masterclass.next.description"
+              contentKey="masterclass.want_more.description"
               page="Masterclass"
-              blockTitle="What's Next Description"
+              blockTitle="Want More Description"
               fallback="If this masterclass resonates with you, there are several ways to continue your work with The Mind Stylist:"
               contentType="rich_text"
             />
