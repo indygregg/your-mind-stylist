@@ -14,6 +14,7 @@ export default function BugList() {
   const [expandedCategories, setExpandedCategories] = useState(new Set());
   const [expandedBugs, setExpandedBugs] = useState(new Set());
   const [newComment, setNewComment] = useState({});
+  const [filterMode, setFilterMode] = useState('open'); // 'all', 'open', 'completed'
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
