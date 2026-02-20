@@ -652,6 +652,58 @@ export default function ManagerCRM() {
                   />
                 </div>
 
+                {/* Tags */}
+                <div>
+                  <Label className="flex items-center gap-1 mb-2"><Tag size={14} /> Tags</Label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {(editingLead.tags || []).map((tag) => (
+                      <span key={tag} className="flex items-center gap-1 bg-[#D8B46B]/20 text-[#1E3A32] text-xs px-2 py-1 rounded-full">
+                        {tag}
+                        <button
+                          onClick={() => setEditingLead({ ...editingLead, tags: editingLead.tags.filter(t => t !== tag) })}
+                          className="hover:text-red-600 transition-colors"
+                        >
+                          <X size={10} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <Input
+                      value={newTagInput}
+                      onChange={(e) => setNewTagInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && newTagInput.trim()) {
+                          const tag = newTagInput.trim().toLowerCase();
+                          const existing = editingLead.tags || [];
+                          if (!existing.includes(tag)) {
+                            setEditingLead({ ...editingLead, tags: [...existing, tag] });
+                          }
+                          setNewTagInput("");
+                        }
+                      }}
+                      placeholder="Add tag, press Enter..."
+                      className="flex-1 h-8 text-sm"
+                    />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        const tag = newTagInput.trim().toLowerCase();
+                        if (tag) {
+                          const existing = editingLead.tags || [];
+                          if (!existing.includes(tag)) {
+                            setEditingLead({ ...editingLead, tags: [...existing, tag] });
+                          }
+                          setNewTagInput("");
+                        }
+                      }}
+                    >
+                      <Plus size={14} />
+                    </Button>
+                  </div>
+                </div>
+
                 <div className="flex justify-between items-center pt-2">
                   <div className="flex gap-2">
                     <Button
@@ -670,11 +722,14 @@ export default function ManagerCRM() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setSmsDialogOpen(true)}
-                      className="flex items-center gap-2"
+                      onClick={() => {
+                        setLeadToDelete(selectedLead);
+                        setDeleteConfirmOpen(true);
+                      }}
+                      className="flex items-center gap-2 border-red-300 text-red-600 hover:bg-red-50"
                     >
-                      <MessageSquare size={14} />
-                      Send SMS
+                      <Trash2 size={14} />
+                      Delete
                     </Button>
                   </div>
                   <Button
@@ -688,6 +743,7 @@ export default function ManagerCRM() {
                           interest_level: editingLead.interest_level,
                           lead_score: editingLead.lead_score,
                           notes: editingLead.notes,
+                          tags: editingLead.tags || [],
                         },
                       }, {
                         onSuccess: () => {
