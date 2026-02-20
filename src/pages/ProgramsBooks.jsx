@@ -102,41 +102,57 @@ export default function ProgramsBooks() {
                   viewport={{ once: true }}
                   className="group"
                 >
-                  <Link to={createPageUrl(`ProductPage?slug=${book.slug}`)}>
-                    <div className="bg-white shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
-                      {book.thumbnail && (
-                        <div className="h-64 overflow-hidden bg-[#F9F5EF]">
-                          <img
-                            src={book.thumbnail}
-                            alt={book.name}
-                            className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
+                  <div className="bg-white shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
+                    {book.thumbnail && (
+                      <div className="h-64 overflow-hidden bg-[#F9F5EF]">
+                        <img
+                          src={book.thumbnail}
+                          alt={book.name}
+                          className="w-full h-full object-contain p-4 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <h3 className="font-serif text-xl text-[#1E3A32] mb-2">
+                        {book.name}
+                      </h3>
+                      {book.tagline && (
+                        <p className="text-sm text-[#D8B46B] mb-3 font-medium">{book.tagline}</p>
                       )}
-                      <div className="p-6 flex-1 flex flex-col">
-                        <h3 className="font-serif text-xl text-[#1E3A32] mb-2 group-hover:text-[#D8B46B] transition-colors">
-                          {book.name}
-                        </h3>
-                        {book.tagline && (
-                          <p className="text-sm text-[#D8B46B] mb-3 font-medium">{book.tagline}</p>
-                        )}
-                        {book.short_description && (
-                          <p className="text-sm text-[#2B2725]/70 mb-4 flex-1">
-                            {book.short_description}
-                          </p>
-                        )}
-                        
-                        <div className="flex items-center justify-between pt-4 border-t border-[#E4D9C4] mt-auto">
-                          <span className="text-2xl font-bold text-[#1E3A32]">
-                            {formatPrice(book.price)}
-                          </span>
-                          <span className="text-[#D8B46B] text-sm font-medium group-hover:translate-x-1 transition-transform">
-                            View Details →
-                          </span>
+                      {book.short_description && (
+                        <p className="text-sm text-[#2B2725]/70 mb-4 flex-1">
+                          {book.short_description}
+                        </p>
+                      )}
+                      
+                      <div className="pt-4 border-t border-[#E4D9C4] mt-auto">
+                        <div className="text-2xl font-bold text-[#1E3A32] mb-3">
+                          {formatPrice(book.price)}
+                        </div>
+                        <div className="flex gap-2">
+                          {book.slug && (
+                            <Link
+                              to={createPageUrl(`ProductPage?slug=${book.slug}`)}
+                              className="flex-1 text-center text-sm py-2.5 border border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32] transition-colors"
+                            >
+                              Details
+                            </Link>
+                          )}
+                          <button
+                            onClick={() => handlePurchase(book.id)}
+                            disabled={checkoutLoading === book.id}
+                            className="flex-1 flex items-center justify-center gap-2 text-sm py-2.5 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors disabled:opacity-50"
+                          >
+                            {checkoutLoading === book.id ? (
+                              <Loader2 size={16} className="animate-spin" />
+                            ) : (
+                              <><ShoppingCart size={14} /> Buy Now</>
+                            )}
+                          </button>
                         </div>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 </motion.div>
               ))}
             </div>
