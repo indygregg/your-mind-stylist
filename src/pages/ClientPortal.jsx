@@ -64,6 +64,23 @@ export default function ClientPortal() {
     enabled: !!user,
   });
 
+  const { data: purchases = [] } = useQuery({
+    queryKey: ["myPurchases", user?.email],
+    queryFn: async () => {
+      // Get all products this user has purchased via Stripe
+      try {
+        const response = await base44.functions.invoke('getActiveSubscriptions', {
+          user_email: user.email
+        });
+        return response.data || [];
+      } catch (error) {
+        console.error("Failed to fetch purchases:", error);
+        return [];
+      }
+    },
+    enabled: !!user?.email,
+  });
+
   const completedBookings = bookings.filter(b => 
     b.booking_status === 'completed' && b.session_notes
   );
