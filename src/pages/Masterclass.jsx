@@ -308,14 +308,14 @@ export default function Masterclass() {
           </div>
         </div>
 
-        {/* What's Next */}
+        {/* Want More */}
         <div className="bg-white p-8 rounded-lg">
           <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">
             <CmsText
-              contentKey="masterclass.next.title"
+              contentKey="masterclass.want_more.title"
               page="Masterclass"
-              blockTitle="What's Next Title"
-              fallback="What's Next?"
+              blockTitle="Want More Title"
+              fallback="Want More?"
               contentType="short_text"
             />
           </h2>
