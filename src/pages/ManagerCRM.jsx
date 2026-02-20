@@ -72,6 +72,18 @@ export default function ManagerCRM() {
     },
   });
 
+  // Delete lead mutation
+  const deleteLeadMutation = useMutation({
+    mutationFn: (id) => base44.entities.Lead.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+      setDeleteConfirmOpen(false);
+      setDetailsDialogOpen(false);
+      setLeadToDelete(null);
+      toast.success("Contact deleted.");
+    },
+  });
+
   // Filter leads
   const filteredLeads = leads.filter((lead) => {
     const query = searchQuery.toLowerCase();
