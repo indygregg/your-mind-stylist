@@ -320,7 +320,7 @@ export default function CourseManager() {
               
               return (
                 <Draggable key={course.id} draggableId={course.id} index={index} isDragDisabled={!isDragEnabled}>
-                {(dragProvided, dragSnapshot) => (
+                  {(dragProvided, dragSnapshot) => (
                 <div
                   ref={dragProvided.innerRef}
                   {...dragProvided.draggableProps}
