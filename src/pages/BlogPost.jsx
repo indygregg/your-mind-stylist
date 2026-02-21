@@ -279,19 +279,27 @@ export default function BlogPost() {
           color: rgba(43, 39, 37, 0.8);
           font-size: 1.125rem;
           line-height: 1.75;
-          margin-bottom: 1.5rem;
+          margin-bottom: 0.4rem;
+        }
+
+        .blog-content p + p {
+          margin-top: 0;
+        }
+
+        .blog-content p:empty {
+          display: none;
         }
         
         .blog-content ul, .blog-content ol {
           margin-left: 1.5rem;
-          margin-bottom: 1.5rem;
+          margin-bottom: 0.75rem;
         }
         
         .blog-content li {
           color: rgba(43, 39, 37, 0.8);
           font-size: 1.125rem;
           line-height: 1.75;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.2rem;
         }
         
         .blog-content img {
