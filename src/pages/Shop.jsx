@@ -4,7 +4,7 @@ import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
-import { ShoppingCart, Check, BookOpen, Video, GraduationCap, Package, Filter } from "lucide-react";
+import { ShoppingCart, Check, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
 import { useCart } from "../components/shop/CartContext";
