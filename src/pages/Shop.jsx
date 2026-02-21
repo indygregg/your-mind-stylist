@@ -8,6 +8,7 @@ import { ShoppingCart, Check, Package } from "lucide-react";
 import SEO from "../components/SEO";
 import { useCart } from "../components/shop/CartContext";
 import { toast } from "react-hot-toast";
+import CmsText from "../components/cms/CmsText";
 
 const SUBTYPE_LABELS = {
   webinar: { label: "Webinar", icon: "📹", color: "bg-blue-50 text-blue-700 border-blue-200" },
