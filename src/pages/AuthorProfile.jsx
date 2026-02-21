@@ -11,6 +11,7 @@ import ImageManager from "../components/blog/ImageManager";
 export default function AuthorProfile() {
   const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
+  const [saved, setSaved] = useState(false);
   const [formData, setFormData] = useState({
     display_name: "",
     bio: "",
@@ -31,19 +32,25 @@ export default function AuthorProfile() {
     fetchUser();
   }, []);
 
-  const { data: authorProfile } = useQuery({
+  const { data: authorProfile, isLoading } = useQuery({
     queryKey: ["authorProfile", user?.id],
     queryFn: async () => {
       if (!user) return null;
       const authors = await base44.entities.Author.filter({ user_id: user.id });
-      return authors[0];
+      return authors[0] || null;
     },
     enabled: !!user,
   });
 
   useEffect(() => {
     if (authorProfile) {
-      setFormData(authorProfile);
+      setFormData({
+        display_name: authorProfile.display_name || "",
+        bio: authorProfile.bio || "",
+        profile_image: authorProfile.profile_image || "",
+        website: authorProfile.website || "",
+        social_links: authorProfile.social_links || { twitter: "", linkedin: "", instagram: "" },
+      });
     } else if (user) {
       setFormData(prev => ({
         ...prev,
@@ -56,6 +63,8 @@ export default function AuthorProfile() {
     mutationFn: (data) => base44.entities.Author.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authorProfile"] });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
     },
   });
 
@@ -63,21 +72,30 @@ export default function AuthorProfile() {
     mutationFn: ({ id, data }) => base44.entities.Author.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["authorProfile"] });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
     },
   });
 
   const handleSave = () => {
+    if (!user) return;
     const dataToSave = {
-      ...formData,
+      display_name: formData.display_name,
+      bio: formData.bio || "",
+      profile_image: formData.profile_image || "",
+      website: formData.website || "",
+      social_links: formData.social_links || {},
       user_id: user.id,
     };
 
-    if (authorProfile) {
+    if (authorProfile?.id) {
       updateMutation.mutate({ id: authorProfile.id, data: dataToSave });
     } else {
       createMutation.mutate(dataToSave);
     }
   };
+
+  const isSaving = createMutation.isPending || updateMutation.isPending;
 
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
