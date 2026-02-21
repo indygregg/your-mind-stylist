@@ -20,63 +20,71 @@ export default function CourseMerger({ open, onClose }) {
     queryFn: () => base44.entities.Course.list("-created_date"),
   });
 
+  const [mergeProgress, setMergeProgress] = useState("");
+
   const mergeMutation = useMutation({
     mutationFn: async ({ courseIds, newName, newSlug }) => {
-      // Create new merged course
       const firstCourse = courses.find(c => c.id === courseIds[0]);
+
+      setMergeProgress("Creating merged course...");
       const newCourse = await base44.entities.Course.create({
         title: newName,
         slug: newSlug,
-        subtitle: firstCourse.subtitle,
-        type: firstCourse.type,
-        difficulty: firstCourse.difficulty,
+        subtitle: firstCourse?.subtitle || "",
+        type: firstCourse?.type || "Other",
+        difficulty: firstCourse?.difficulty || null,
         status: "draft",
-        visibility: firstCourse.visibility,
+        visibility: firstCourse?.visibility || "clients_only",
         short_description: `Merged course containing: ${courseIds.length} programs`,
-        long_description: firstCourse.long_description,
+        long_description: firstCourse?.long_description || "",
       });
 
-      // Merge all modules from selected courses in order
-      let moduleOrder = 0;
+      let moduleOrder = 1;
       for (const courseId of courseIds) {
-        const modules = await base44.entities.Module.filter({ course_id: courseId }, "order");
-        
+        const courseName = courses.find(c => c.id === courseId)?.title || courseId;
+        setMergeProgress(`Copying modules from "${courseName}"...`);
+
+        const modules = await base44.entities.Module.filter({ course_id: courseId });
+        // Sort by order client-side
+        modules.sort((a, b) => (a.order || 0) - (b.order || 0));
+
         for (const module of modules) {
-          // Create module in new course
           const newModule = await base44.entities.Module.create({
             course_id: newCourse.id,
             title: module.title,
-            description: module.description,
+            description: module.description || "",
             order: moduleOrder++,
-            required: module.required,
-            prerequisites: module.prerequisites,
-            estimated_time: module.estimated_time,
+            required: module.required !== false,
+            prerequisites: [],
+            estimated_time: module.estimated_time || null,
           });
 
-          // Copy all lessons from this module
-          const lessons = await base44.entities.Lesson.filter({ module_id: module.id }, "order");
+          const lessons = await base44.entities.Lesson.filter({ module_id: module.id });
+          lessons.sort((a, b) => (a.order || 0) - (b.order || 0));
+
           for (const lesson of lessons) {
             await base44.entities.Lesson.create({
               module_id: newModule.id,
               title: lesson.title,
               type: lesson.type,
-              content: lesson.content,
-              media_url: lesson.media_url,
-              embed_url: lesson.embed_url,
-              transcription_url: lesson.transcription_url,
-              duration: lesson.duration,
-              key_takeaways: lesson.key_takeaways,
-              resources: lesson.resources,
-              attached_resource_ids: lesson.attached_resource_ids,
+              content: lesson.content || null,
+              media_url: lesson.media_url || null,
+              embed_url: lesson.embed_url || null,
+              transcription_url: lesson.transcription_url || null,
+              duration: lesson.duration || null,
+              key_takeaways: lesson.key_takeaways || [],
+              resources: lesson.resources || [],
+              attached_resource_ids: lesson.attached_resource_ids || [],
               order: lesson.order,
-              required: lesson.required,
-              prerequisites: lesson.prerequisites,
-              estimated_time: lesson.estimated_time,
+              required: lesson.required !== false,
+              prerequisites: [],
+              estimated_time: lesson.estimated_time || null,
             });
           }
         }
       }
 
+      setMergeProgress("");
       return newCourse;
     },
     onSuccess: () => {
