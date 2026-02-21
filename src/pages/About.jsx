@@ -152,7 +152,7 @@ export default function About() {
                 <div className="absolute -top-6 -left-6 w-24 h-24 border-l-2 border-t-2 border-[#D8B46B]" />
                 <div className="absolute -bottom-6 -right-6 w-24 h-24 border-r-2 border-b-2 border-[#D8B46B]" />
                 <img
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9bff2cefb_Roberta-Fernandez-The-Mind-Stylist.jpg"
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/8a50d24ca_Roberta-Fernandez-IG-shoot90.png"
                   alt="Roberta Fernandez"
                   className="relative w-full aspect-[4/5] object-cover"
                 />
