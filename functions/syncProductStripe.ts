@@ -40,12 +40,25 @@ Deno.serve(async (req) => {
             existingProduct = products[0];
 
             if (existingProduct?.stripe_product_id) {
-                // Update existing Stripe product
-                stripeProduct = await stripe.products.update(existingProduct.stripe_product_id, {
-                    name: name,
-                    description: description || '',
-                    active: true,
-                });
+                // Try to update existing Stripe product, fall back to create if not found (e.g. switching test→live)
+                try {
+                    stripeProduct = await stripe.products.update(existingProduct.stripe_product_id, {
+                        name: name,
+                        description: description || '',
+                        active: true,
+                    });
+                } catch (err) {
+                    // Product doesn't exist in this Stripe mode (e.g. test ID in live mode) — create fresh
+                    stripeProduct = await stripe.products.create({
+                        name: name,
+                        description: description || '',
+                        active: true,
+                        metadata: {
+                            product_id: product_id,
+                            product_key: key
+                        }
+                    });
+                }
             } else {
                 // No existing product, create new
                 stripeProduct = await stripe.products.create({
