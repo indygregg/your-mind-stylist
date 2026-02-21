@@ -73,10 +73,24 @@ export default function Shop() {
               Products & Shop
             </span>
             <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-4">
-              Everything You Need to<br />Style Your Mind
+              <CmsText
+                contentKey="shop.hero.title"
+                page="Shop"
+                blockTitle="Shop Hero Title"
+                fallback="Everything You Need to Style Your Mind"
+                contentType="short_text"
+                as="span"
+              />
             </h1>
             <p className="text-[#2B2725]/70 text-lg max-w-2xl mx-auto">
-              Books, live webinars, hypnosis programs, and digital tools — all crafted by Roberta to support your transformation.
+              <CmsText
+                contentKey="shop.hero.subtitle"
+                page="Shop"
+                blockTitle="Shop Hero Subtitle"
+                fallback="Books, live webinars, hypnosis programs, and digital tools — all crafted by Roberta to support your transformation."
+                contentType="short_text"
+                as="span"
+              />
             </p>
           </motion.div>
         </div>
