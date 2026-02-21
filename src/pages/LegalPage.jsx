@@ -90,17 +90,10 @@ export default function LegalPage() {
             transition={{ delay: 0.2 }}
             className="bg-white p-8 md:p-12"
           >
-            <CmsText 
-              contentKey={`legal.${slug}.content`}
-              page="LegalPage"
-              blockTitle={`${slug} Content`}
-              fallback={page.content}
-              contentType="rich_text"
+            <div
               className="prose prose-lg max-w-none"
-              style={{
-                color: "#2B2725",
-                lineHeight: "1.8",
-              }}
+              style={{ color: "#2B2725", lineHeight: "1.8" }}
+              dangerouslySetInnerHTML={{ __html: page.content }}
             />
           </motion.div>
         </div>
