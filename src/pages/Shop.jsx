@@ -111,59 +111,73 @@ export default function Shop() {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: i * 0.05 }}
-                          className="bg-white border border-[#E4D9C4] hover:border-[#D8B46B] hover:shadow-md transition-all flex flex-col group"
-                        >
-                          <div className="relative h-48 bg-[#1E3A32]/5 overflow-hidden">
-                            {product.thumbnail ? (
-                              <img
-                                src={product.thumbnail}
-                                alt={product.name}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center">
-                                <span className="text-5xl opacity-30">{subtype?.icon || "✨"}</span>
-                              </div>
-                            )}
-                            {subtype && (
-                              <span className={`absolute top-3 left-3 text-xs px-2 py-1 rounded border font-medium ${subtype.color}`}>
-                                {subtype.icon} {subtype.label}
-                              </span>
-                            )}
-                            {product.ui_group === "hero" && (
-                              <span className="absolute top-3 right-3 text-xs px-2 py-1 bg-[#D8B46B] text-[#1E3A32] font-semibold rounded">
-                                Popular
-                              </span>
-                            )}
-                          </div>
-                          <div className="p-6 flex flex-col flex-1">
-                            <h3 className="font-serif text-xl text-[#1E3A32] mb-2 leading-snug">{product.name}</h3>
-                            {product.tagline && <p className="text-[#D8B46B] text-sm mb-2">{product.tagline}</p>}
-                            <p className="text-[#2B2725]/60 text-sm mb-4 flex-1 line-clamp-2">{product.short_description}</p>
-                            <div className="flex items-center justify-between mt-auto">
-                              <span className="font-serif text-2xl text-[#1E3A32]">
-                                {formatPrice(product.price, product.billing_interval)}
-                              </span>
-                              <div className="flex gap-2">
-                                {product.slug && (
-                                  <Link
-                                    to={createPageUrl(`ProductPage?slug=${product.slug}`)}
-                                    className="px-3 py-2 border border-[#E4D9C4] text-[#2B2725]/70 text-xs hover:border-[#D8B46B] transition-colors"
-                                  >
-                                    Details
-                                  </Link>
-                                )}
-                                <button
-                                  onClick={() => inCart ? null : handleAdd(product)}
-                                  className={`flex items-center gap-1.5 px-4 py-2 text-sm transition-all ${
-                                    inCart ? "bg-green-600 text-white cursor-default" : "bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725]"
+                          className={`bg-white border hover:shadow-md transition-all flex flex-col group ${
+                                    product.ui_group === "hero" ? "border-[#D8B46B]" : "border-[#E4D9C4] hover:border-[#D8B46B]"
                                   }`}
-                                >
-                                  {inCart ? <><Check size={14} /> Added</> : <><ShoppingCart size={14} /> Add</>}
-                                </button>
-                              </div>
-                            </div>
-                          </div>
+                              >
+                                {product.thumbnail && (
+                                  <div className="relative h-48 overflow-hidden">
+                                    <img
+                                      src={product.thumbnail}
+                                      alt={product.name}
+                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                    {subtype && (
+                                      <span className={`absolute top-3 left-3 text-xs px-2 py-1 rounded border font-medium ${subtype.color}`}>
+                                        {subtype.icon} {subtype.label}
+                                      </span>
+                                    )}
+                                    {product.ui_group === "hero" && (
+                                      <span className="absolute top-3 right-3 text-xs px-2 py-1 bg-[#D8B46B] text-[#1E3A32] font-semibold rounded">
+                                        Popular
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
+                                <div className="p-6 flex flex-col flex-1">
+                                  {!product.thumbnail && (
+                                    <div className="flex items-center justify-between mb-3">
+                                      <div className="flex items-center gap-2">
+                                        {subtype && (
+                                          <span className={`text-xs px-2 py-1 rounded border font-medium ${subtype.color}`}>
+                                            {subtype.icon} {subtype.label}
+                                          </span>
+                                        )}
+                                      </div>
+                                      {product.ui_group === "hero" && (
+                                        <span className="text-xs px-2 py-1 bg-[#D8B46B] text-[#1E3A32] font-semibold rounded">
+                                          Popular
+                                        </span>
+                                      )}
+                                    </div>
+                                  )}
+                                  <h3 className="font-serif text-xl text-[#1E3A32] mb-2 leading-snug">{product.name}</h3>
+                                  {product.tagline && <p className="text-[#2B2725]/60 text-sm mb-2">{product.tagline}</p>}
+                                  <p className="text-[#2B2725]/60 text-sm mb-4 flex-1">{product.short_description}</p>
+                                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-[#E4D9C4]">
+                                    <span className="font-serif text-2xl text-[#1E3A32]">
+                                      {formatPrice(product.price, product.billing_interval)}
+                                    </span>
+                                    <div className="flex gap-2">
+                                      {product.slug && (
+                                        <Link
+                                          to={createPageUrl(`ProductPage?slug=${product.slug}`)}
+                                          className="px-3 py-2 border border-[#E4D9C4] text-[#2B2725]/70 text-xs hover:border-[#D8B46B] transition-colors"
+                                        >
+                                          Details
+                                        </Link>
+                                      )}
+                                      <button
+                                        onClick={() => inCart ? null : handleAdd(product)}
+                                        className={`flex items-center gap-1.5 px-4 py-2 text-sm transition-all ${
+                                          inCart ? "bg-green-600 text-white cursor-default" : "bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725]"
+                                        }`}
+                                      >
+                                        {inCart ? <><Check size={14} /> Added</> : <><ShoppingCart size={14} /> Buy Now</>}
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
                         </motion.div>
                       );
                     })}
