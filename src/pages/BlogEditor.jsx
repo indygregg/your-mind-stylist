@@ -229,7 +229,7 @@ export default function BlogEditor() {
               </SelectContent>
             </Select>
             <p className="text-xs text-[#2B2725]/60 mt-1">
-              Don't see your name? <Link to={createPageUrl("AuthorProfile")} className="text-[#1E3A32] underline">Set up your author profile</Link>
+              Don't see your name? <Link to="/app/StudioSettings" className="text-[#1E3A32] underline">Set up your author profile</Link>
             </p>
           </div>
 
