@@ -20,18 +20,16 @@ const SUBTYPE_LABELS = {
   bundle: { label: "Bundle", icon: "🎁", color: "bg-yellow-50 text-yellow-700 border-yellow-200" },
 };
 
-const FILTERS = [
-  { value: "all", label: "All Products" },
-  { value: "bundle", label: "🎁 Bundles" },
-  { value: "webinar", label: "📹 Webinars" },
-  { value: "book", label: "📖 Books" },
-  { value: "course", label: "🎓 Courses" },
-  { value: "digital_service", label: "💻 Digital" },
+const SECTIONS = [
+  { key: "signature", label: "Signature Products", icon: "✨", match: (p) => p.is_bundle || p.type === "bundle" || (!p.product_subtype && p.type !== "bundle") || p.ui_group === "hero" || p.ui_group === "featured" },
+  { key: "webinar", label: "Webinars", icon: "📹", match: (p) => p.product_subtype === "webinar" },
+  { key: "book", label: "Books", icon: "📖", match: (p) => p.product_subtype === "book" },
+  { key: "course", label: "Hypnotist's Training", icon: "🎓", match: (p) => p.product_subtype === "course" },
+  { key: "other", label: "Other", icon: "✨", match: (p) => ["digital_service", "physical_product", "other"].includes(p.product_subtype) },
 ];
 
 export default function Shop() {
   const { addItem, items } = useCart();
-  const [activeFilter, setActiveFilter] = useState("all");
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["shop-products"],
