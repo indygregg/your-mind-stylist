@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Save, User } from "lucide-react";
+import { Save, User, CheckCircle } from "lucide-react";
 import ImageManager from "../components/blog/ImageManager";
 
 export default function AuthorProfile() {
