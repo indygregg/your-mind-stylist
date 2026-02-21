@@ -174,37 +174,48 @@ export default function Blog() {
                 contentType="short_text"
               />
             </h2>
-            <div className="bg-white p-10 md:p-12 hover:shadow-lg transition-shadow">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="px-3 py-1 bg-[#D8B46B]/20 text-[#2B2725] text-xs tracking-wide uppercase">
-                  {featuredPost.category}
-                </span>
-                {featuredPost.publish_date && (
-                  <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
-                    <Calendar size={14} />
-                    {new Date(featuredPost.publish_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </div>
-                )}
-                {featuredPost.read_time && (
-                  <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
-                    <Clock size={14} />
-                    {featuredPost.read_time} min read
-                  </div>
-                )}
+            <div className="bg-white hover:shadow-lg transition-shadow overflow-hidden md:flex">
+              {featuredPost.featured_image && (
+                <div className="md:w-2/5 flex-shrink-0">
+                  <img
+                    src={featuredPost.featured_image}
+                    alt={featuredPost.title}
+                    className="w-full h-64 md:h-full object-cover"
+                  />
+                </div>
+              )}
+              <div className="p-10 md:p-12 flex flex-col justify-center">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="px-3 py-1 bg-[#D8B46B]/20 text-[#2B2725] text-xs tracking-wide uppercase">
+                    {featuredPost.category}
+                  </span>
+                  {featuredPost.publish_date && (
+                    <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
+                      <Calendar size={14} />
+                      {new Date(featuredPost.publish_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </div>
+                  )}
+                  {featuredPost.read_time && (
+                    <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
+                      <Clock size={14} />
+                      {featuredPost.read_time} min read
+                    </div>
+                  )}
+                </div>
+                <h3 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4 leading-tight">
+                  {featuredPost.title}
+                </h3>
+                <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">
+                  {featuredPost.excerpt}
+                </p>
+                <Link
+                  to={createPageUrl(`BlogPost?slug=${featuredPost.slug}`)}
+                  className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all"
+                >
+                  Read Article
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
-              <h3 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4 leading-tight">
-                {featuredPost.title}
-              </h3>
-              <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">
-                {featuredPost.excerpt}
-              </p>
-              <Link
-                to={createPageUrl(`BlogPost?slug=${featuredPost.slug}`)}
-                className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all"
-              >
-                Read Article
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
             </div>
           </motion.div>
         </div>
