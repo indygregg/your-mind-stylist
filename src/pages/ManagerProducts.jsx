@@ -152,23 +152,43 @@ export default function ManagerProducts() {
 
   const handleSyncAll = async () => {
     setSyncing(true);
+    let synced = 0;
+    let failed = 0;
     try {
       for (const product of products) {
-        await base44.functions.invoke('syncProductStripe', {
-          product_id: product.id,
-          key: product.key,
-          name: product.name,
-          description: product.short_description,
-          price: product.price || 0,
-          currency: product.currency,
-          billing_interval: product.billing_interval,
-          type: product.type,
-        });
+        try {
+          const syncResult = await base44.functions.invoke('syncProductStripe', {
+            product_id: product.id,
+            key: product.key,
+            name: product.name,
+            description: product.short_description,
+            price: product.price || 0,
+            currency: product.currency,
+            billing_interval: product.billing_interval,
+            type: product.type,
+            payment_plan_options: product.payment_plan_options,
+          });
+          if (syncResult.data?.success) {
+            await base44.entities.Product.update(product.id, {
+              stripe_product_id: syncResult.data.stripe_product_id,
+              stripe_price_id: syncResult.data.stripe_price_id,
+              stripe_price_ids: syncResult.data.stripe_price_ids,
+            });
+            synced++;
+          } else {
+            failed++;
+          }
+        } catch (err) {
+          console.error(`Failed to sync ${product.name}:`, err);
+          failed++;
+        }
       }
-      toast.success("All products synced with Stripe!");
+      if (failed > 0) {
+        toast.error(`Synced ${synced}, failed ${failed}. Check console for details.`);
+      } else {
+        toast.success(`All ${synced} products synced with Stripe!`);
+      }
       queryClient.invalidateQueries({ queryKey: ["products"] });
-    } catch (error) {
-      toast.error("Failed to sync some products");
     } finally {
       setSyncing(false);
     }
