@@ -265,7 +265,7 @@ export default function CourseMerger({ open, onClose }) {
               className="bg-[#1E3A32] hover:bg-[#2B2725]"
             >
               <Merge size={18} className="mr-2" />
-              {mergeMutation.isPending ? "Merging..." : "Merge Courses"}
+              {mergeMutation.isPending ? (mergeProgress || "Merging...") : "Merge Courses"}
             </Button>
           </div>
         </div>
