@@ -197,9 +197,12 @@ export default function AuthorProfile() {
           </div>
 
           <div className="flex justify-end border-t pt-6">
-            <Button onClick={handleSave} className="bg-[#1E3A32]">
-              <Save size={18} className="mr-2" />
-              Save Profile
+            <Button onClick={handleSave} disabled={isSaving || !user} className="bg-[#1E3A32]">
+              {saved ? (
+                <><CheckCircle size={18} className="mr-2" />Saved!</>
+              ) : (
+                <><Save size={18} className="mr-2" />{isSaving ? "Saving..." : "Save Profile"}</>
+              )}
             </Button>
           </div>
         </div>
