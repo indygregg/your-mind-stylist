@@ -91,194 +91,96 @@ export default function Shop() {
         </div>
       </section>
 
-      {/* Filters */}
-      <section className="pb-6 sticky top-[72px] z-30 bg-[#F9F5EF]/95 backdrop-blur-sm border-b border-[#E4D9C4]">
-        <div className="max-w-6xl mx-auto px-6 flex items-center gap-2 overflow-x-auto py-3">
-          <Filter size={15} className="text-[#2B2725]/40 flex-shrink-0" />
-          {FILTERS.map((f) => (
-            <button
-              key={f.value}
-              onClick={() => setActiveFilter(f.value)}
-              className={`px-4 py-2 text-sm rounded-full whitespace-nowrap transition-all border ${
-                activeFilter === f.value
-                  ? "bg-[#1E3A32] text-[#F9F5EF] border-[#1E3A32]"
-                  : "bg-white text-[#2B2725]/70 border-[#E4D9C4] hover:border-[#D8B46B]"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* Bundles Section — shown only on "all" tab when bundles exist */}
-      {activeFilter === "all" && bundles.length > 0 && (
-        <section className="py-10 bg-[#1E3A32]/5 border-y border-[#D8B46B]/20">
-          <div className="max-w-6xl mx-auto px-6">
-            <div className="mb-6 text-center">
-              <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase">Best Value</span>
-              <h2 className="font-serif text-2xl text-[#1E3A32] mt-1">Bundles & Packages</h2>
-            </div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {bundles.map((product, i) => {
-                const inCart = isInCart(product.id);
-                return (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="bg-white border-2 border-[#D8B46B] hover:shadow-lg transition-all flex flex-col group relative"
-                  >
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <span className="bg-[#D8B46B] text-[#1E3A32] text-xs font-semibold px-3 py-1 rounded-full">
-                        🎁 Bundle
-                      </span>
-                    </div>
-                    <div className="relative h-44 bg-[#1E3A32]/5 overflow-hidden">
-                      {product.thumbnail ? (
-                        <img src={product.thumbnail} alt={product.name} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-5xl opacity-20">🎁</div>
-                      )}
-                    </div>
-                    <div className="p-6 flex flex-col flex-1">
-                      <h3 className="font-serif text-xl text-[#1E3A32] mb-1">{product.name}</h3>
-                      {product.tagline && <p className="text-[#D8B46B] text-sm mb-2">{product.tagline}</p>}
-                      <p className="text-[#2B2725]/60 text-sm mb-4 flex-1 line-clamp-2">{product.short_description}</p>
-                      {product.bundled_product_ids?.length > 0 && (
-                        <p className="text-xs text-[#2B2725]/50 mb-3">
-                          Includes {product.bundled_product_ids.length} products
-                        </p>
-                      )}
-                      <div className="flex items-center justify-between mt-auto">
-                        <span className="font-serif text-2xl text-[#1E3A32]">
-                          {formatPrice(product.price, product.billing_interval)}
-                        </span>
-                        <div className="flex gap-2">
-                          {product.slug && (
-                            <Link to={createPageUrl(`ProductPage?slug=${product.slug}`)} className="px-3 py-2 border border-[#E4D9C4] text-[#2B2725]/70 text-xs hover:border-[#D8B46B] transition-colors">
-                              Details
-                            </Link>
-                          )}
-                          <button
-                            onClick={() => inCart ? null : handleAdd(product)}
-                            className={`flex items-center gap-1.5 px-4 py-2 text-sm transition-all ${inCart ? "bg-green-600 text-white cursor-default" : "bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] font-semibold"}`}
-                          >
-                            {inCart ? <><Check size={14} /> Added</> : <><ShoppingCart size={14} /> Add</>}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Products Grid */}
+      {/* Sectioned Products */}
       <section className="py-12">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-6xl mx-auto px-6 space-y-16">
           {isLoading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className="bg-white rounded-lg h-64 animate-pulse border border-[#E4D9C4]" />
               ))}
             </div>
-          ) : filtered.length === 0 ? (
-            <div className="text-center py-24 text-[#2B2725]/50">
-              <Package size={40} className="mx-auto mb-4 opacity-30" />
-              <p className="text-lg">No products in this category yet.</p>
-            </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.map((product, i) => {
-                const subtype = SUBTYPE_LABELS[product.product_subtype] || null;
-                const inCart = isInCart(product.id);
-
-                return (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.05 }}
-                    className="bg-white border border-[#E4D9C4] hover:border-[#D8B46B] hover:shadow-md transition-all flex flex-col group"
-                  >
-                    {/* Thumbnail */}
-                    <div className="relative h-48 bg-[#1E3A32]/5 overflow-hidden">
-                      {product.thumbnail ? (
-                        <img
-                          src={product.thumbnail}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="text-5xl opacity-30">
-                            {subtype?.icon || "✨"}
-                          </span>
-                        </div>
-                      )}
-                      {subtype && (
-                        <span className={`absolute top-3 left-3 text-xs px-2 py-1 rounded border font-medium ${subtype.color}`}>
-                          {subtype.icon} {subtype.label}
-                        </span>
-                      )}
-                      {product.ui_group === "hero" && (
-                        <span className="absolute top-3 right-3 text-xs px-2 py-1 bg-[#D8B46B] text-[#1E3A32] font-semibold rounded">
-                          Popular
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-6 flex flex-col flex-1">
-                      <h3 className="font-serif text-xl text-[#1E3A32] mb-2 leading-snug">
-                        {product.name}
-                      </h3>
-                      {product.tagline && (
-                        <p className="text-[#D8B46B] text-sm mb-2">{product.tagline}</p>
-                      )}
-                      <p className="text-[#2B2725]/60 text-sm mb-4 flex-1 line-clamp-2">
-                        {product.short_description}
-                      </p>
-
-                      <div className="flex items-center justify-between mt-auto">
-                        <span className="font-serif text-2xl text-[#1E3A32]">
-                          {formatPrice(product.price, product.billing_interval)}
-                        </span>
-                        <div className="flex gap-2">
-                          {product.slug && (
-                            <Link
-                              to={createPageUrl(`ProductPage?slug=${product.slug}`)}
-                              className="px-3 py-2 border border-[#E4D9C4] text-[#2B2725]/70 text-xs hover:border-[#D8B46B] transition-colors"
-                            >
-                              Details
-                            </Link>
-                          )}
-                          <button
-                            onClick={() => inCart ? null : handleAdd(product)}
-                            className={`flex items-center gap-1.5 px-4 py-2 text-sm transition-all ${
-                              inCart
-                                ? "bg-green-600 text-white cursor-default"
-                                : "bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725]"
-                            }`}
-                          >
-                            {inCart ? (
-                              <><Check size={14} /> Added</>
+            SECTIONS.map((section) => {
+              const sectionProducts = products.filter(section.match);
+              if (sectionProducts.length === 0) return null;
+              return (
+                <div key={section.key}>
+                  <div className="mb-6 pb-3 border-b border-[#E4D9C4]">
+                    <h2 className="font-serif text-2xl text-[#1E3A32]">
+                      {section.icon} {section.label}
+                    </h2>
+                  </div>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {sectionProducts.map((product, i) => {
+                      const subtype = SUBTYPE_LABELS[product.product_subtype] || null;
+                      const inCart = isInCart(product.id);
+                      return (
+                        <motion.div
+                          key={product.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: i * 0.05 }}
+                          className="bg-white border border-[#E4D9C4] hover:border-[#D8B46B] hover:shadow-md transition-all flex flex-col group"
+                        >
+                          <div className="relative h-48 bg-[#1E3A32]/5 overflow-hidden">
+                            {product.thumbnail ? (
+                              <img
+                                src={product.thumbnail}
+                                alt={product.name}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              />
                             ) : (
-                              <><ShoppingCart size={14} /> Add</>
+                              <div className="w-full h-full flex items-center justify-center">
+                                <span className="text-5xl opacity-30">{subtype?.icon || "✨"}</span>
+                              </div>
                             )}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
+                            {subtype && (
+                              <span className={`absolute top-3 left-3 text-xs px-2 py-1 rounded border font-medium ${subtype.color}`}>
+                                {subtype.icon} {subtype.label}
+                              </span>
+                            )}
+                            {product.ui_group === "hero" && (
+                              <span className="absolute top-3 right-3 text-xs px-2 py-1 bg-[#D8B46B] text-[#1E3A32] font-semibold rounded">
+                                Popular
+                              </span>
+                            )}
+                          </div>
+                          <div className="p-6 flex flex-col flex-1">
+                            <h3 className="font-serif text-xl text-[#1E3A32] mb-2 leading-snug">{product.name}</h3>
+                            {product.tagline && <p className="text-[#D8B46B] text-sm mb-2">{product.tagline}</p>}
+                            <p className="text-[#2B2725]/60 text-sm mb-4 flex-1 line-clamp-2">{product.short_description}</p>
+                            <div className="flex items-center justify-between mt-auto">
+                              <span className="font-serif text-2xl text-[#1E3A32]">
+                                {formatPrice(product.price, product.billing_interval)}
+                              </span>
+                              <div className="flex gap-2">
+                                {product.slug && (
+                                  <Link
+                                    to={createPageUrl(`ProductPage?slug=${product.slug}`)}
+                                    className="px-3 py-2 border border-[#E4D9C4] text-[#2B2725]/70 text-xs hover:border-[#D8B46B] transition-colors"
+                                  >
+                                    Details
+                                  </Link>
+                                )}
+                                <button
+                                  onClick={() => inCart ? null : handleAdd(product)}
+                                  className={`flex items-center gap-1.5 px-4 py-2 text-sm transition-all ${
+                                    inCart ? "bg-green-600 text-white cursor-default" : "bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725]"
+                                  }`}
+                                >
+                                  {inCart ? <><Check size={14} /> Added</> : <><ShoppingCart size={14} /> Add</>}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
       </section>
