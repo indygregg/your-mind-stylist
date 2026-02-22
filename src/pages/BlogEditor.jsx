@@ -55,7 +55,7 @@ export default function BlogEditor() {
       const allAuthors = await base44.entities.Author.list();
       setAuthors(allAuthors);
       
-      // Set default author if creating new post
+      // Set default author only if creating a NEW post (no id)
       if (!id && allAuthors.length > 0) {
         const userAuthor = allAuthors.find(a => a.user_id === currentUser.id);
         if (userAuthor) {
@@ -64,7 +64,7 @@ export default function BlogEditor() {
       }
     };
     fetchUser();
-  }, [id]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const { data: existingPost, isLoading } = useQuery({
     queryKey: ["blogPost", id],
