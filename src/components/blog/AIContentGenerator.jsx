@@ -102,7 +102,9 @@ Include:
         prompt: fullPrompt,
       });
 
-      setGeneratedContent(response);
+      // Strip markdown code fences if the LLM wraps content in ```html ... ```
+      const cleaned = response.replace(/^```html\s*/i, "").replace(/^```\s*/i, "").replace(/```\s*$/i, "").trim();
+      setGeneratedContent(cleaned);
     } catch (error) {
       console.error("Error generating content:", error);
     } finally {
