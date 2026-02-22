@@ -281,13 +281,13 @@ export default function Blog() {
                       </div>
                     )}
                   </div>
-                  <Link
-                    to={createPageUrl(`BlogPost?slug=${post.slug}`)}
+                  <button
+                    onClick={() => goToPost(post.slug)}
                     className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all"
                   >
                     Read
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                  </button>
                 </motion.div>
               ))}
             </div>
