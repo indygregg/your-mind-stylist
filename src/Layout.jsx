@@ -134,7 +134,7 @@ export default function Layout({ children, currentPageName }) {
     {
       category: "Transformational Programs",
       items: [
-        { name: "All Programs & Pricing", page: "Programs", description: "Explore all offerings" },
+        { name: "Tools and Programs", page: "Programs", description: "Explore all offerings" },
         { name: "Products & Shop", page: "Shop", description: "Books, webinars, courses & more" },
         { name: "Initial Consultation", page: "Consultations", description: "Schedule a free consult to see what's right for you" },
         { name: "LENS™", page: "LENS", description: "Flagship Mind Styling framework" },
