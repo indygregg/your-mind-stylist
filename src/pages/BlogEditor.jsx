@@ -76,11 +76,22 @@ export default function BlogEditor() {
     enabled: !!id,
   });
 
+  const [formInitialized, setFormInitialized] = useState(false);
+
   useEffect(() => {
-    if (existingPost) {
-      setFormData(existingPost);
+    if (existingPost && !formInitialized) {
+      setFormData({
+        ...existingPost,
+        tags: existingPost.tags || [],
+        seo_keywords: existingPost.seo_keywords || [],
+        featured_image: existingPost.featured_image || "",
+        publish_date: existingPost.publish_date
+          ? existingPost.publish_date.slice(0, 16)
+          : "",
+      });
+      setFormInitialized(true);
     }
-  }, [existingPost]);
+  }, [existingPost, formInitialized]);
 
   useEffect(() => {
     if (formData.title && !id) {
