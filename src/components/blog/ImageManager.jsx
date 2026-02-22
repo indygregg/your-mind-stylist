@@ -128,7 +128,13 @@ export default function ImageManager({ onInsert, onSetFeaturedImage, mode = "ins
         </Button>
         {imageUrl && (
           <div className="border border-[#D8B46B]/30 rounded p-3">
-            <img src={imageUrl} alt="Preview" className="w-full rounded" />
+            <img src={imageUrl} alt="Preview" className="w-full rounded mb-2" />
+            <button
+              onClick={() => setImageUrl("")}
+              className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700"
+            >
+              <Trash2 size={12} /> Clear URL
+            </button>
           </div>
         )}
       </TabsContent>
