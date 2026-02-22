@@ -8,6 +8,7 @@ import CmsText from "../components/cms/CmsText";
 import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import { useNavigate } from "react-router-dom";
 
 export default function Blog() {
   const queryClient = useQueryClient();
