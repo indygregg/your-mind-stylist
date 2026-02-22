@@ -404,7 +404,7 @@ export default function ManagerProducts() {
       if (group.key === "signature_services") return (!p.product_subtype || p.product_subtype === "" || p.product_subtype === "digital_service" || p.product_subtype === "physical_product") && !p.is_bundle && p.type !== "bundle";
       return p.product_subtype === group.key && !p.is_bundle && p.type !== "bundle";
     })
-  })).filter(g => g.items.length > 0);
+  }));
 
   if (isLoading) {
     return <div className="p-8">Loading products...</div>;
