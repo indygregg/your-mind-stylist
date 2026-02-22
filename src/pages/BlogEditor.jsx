@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,8 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { Save, Eye, Trash2, ArrowLeft, Calendar, Sparkles, Image as ImageIcon, TrendingUp, User as UserIcon, BarChart3, FileText } from "lucide-react";
-import AIHelper from "../components/ai/AIHelper";
+import { Save, Trash2, ArrowLeft, Calendar, Sparkles, Image as ImageIcon, TrendingUp, BarChart3, FileText } from "lucide-react";
 import ContentStudio from "../components/blog/ContentStudio";
 import AIContentGenerator from "../components/blog/AIContentGenerator";
 import ImageManager from "../components/blog/ImageManager";
@@ -20,94 +19,89 @@ import SEOAnalyzer from "../components/blog/SEOAnalyzer";
 import BlogAnalyticsDashboard from "../components/blog/BlogAnalyticsDashboard";
 import BlogSummarizer from "../components/blog/BlogSummarizer";
 
+const EMPTY_FORM = {
+  title: "",
+  slug: "",
+  author_id: "",
+  category: "Emotional Intelligence",
+  excerpt: "",
+  content: "",
+  featured_image: "",
+  tags: [],
+  status: "draft",
+  publish_date: "",
+  meta_title: "",
+  meta_description: "",
+  seo_keywords: [],
+};
+
 export default function BlogEditor() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
-  const mode = urlParams.get("mode");
   const id = urlParams.get("id");
 
-  const [formData, setFormData] = useState({
-    title: "",
-    slug: "",
-    author_id: "",
-    category: "Emotional Intelligence",
-    excerpt: "",
-    content: "",
-    featured_image: "",
-    tags: [],
-    status: "draft",
-    publish_date: "",
-    meta_title: "",
-    meta_description: "",
-    seo_keywords: [],
-  });
-
+  const [formData, setFormData] = useState(EMPTY_FORM);
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [authors, setAuthors] = useState([]);
+  const initialized = useRef(false);
 
+  // Load everything on mount
   useEffect(() => {
-    const fetchUser = async () => {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
-      
-      // Fetch all authors
-      const allAuthors = await base44.entities.Author.list();
-      setAuthors(allAuthors);
-      
-      // Set default author only if creating a NEW post (no id)
-      if (!id && allAuthors.length > 0) {
-        const userAuthor = allAuthors.find(a => a.user_id === currentUser.id);
-        if (userAuthor) {
-          setFormData(prev => ({ ...prev, author_id: userAuthor.id }));
+    const init = async () => {
+      try {
+        const [currentUser, allAuthors] = await Promise.all([
+          base44.auth.me(),
+          base44.entities.Author.list(),
+        ]);
+        setUser(currentUser);
+        setAuthors(allAuthors);
+
+        if (id) {
+          // Editing existing post — fetch it and populate form
+          const posts = await base44.entities.BlogPost.filter({ id });
+          const post = posts[0];
+          if (post) {
+            setFormData({
+              title: post.title || "",
+              slug: post.slug || "",
+              author_id: post.author_id || "",
+              category: post.category || "Emotional Intelligence",
+              excerpt: post.excerpt || "",
+              content: post.content || "",
+              featured_image: post.featured_image || "",
+              tags: post.tags || [],
+              status: post.status || "draft",
+              publish_date: post.publish_date ? post.publish_date.slice(0, 16) : "",
+              meta_title: post.meta_title || "",
+              meta_description: post.meta_description || "",
+              seo_keywords: post.seo_keywords || [],
+            });
+          }
+        } else {
+          // New post — pre-fill author
+          const userAuthor = allAuthors.find(a => a.user_id === currentUser.id);
+          if (userAuthor) {
+            setFormData(prev => ({ ...prev, author_id: userAuthor.id }));
+          }
         }
+      } catch (e) {
+        console.error("BlogEditor init error", e);
+      } finally {
+        setIsLoading(false);
+        initialized.current = true;
       }
     };
-    fetchUser();
+    init();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const { data: existingPost, isLoading } = useQuery({
-    queryKey: ["blogPost", id],
-    queryFn: async () => {
-      if (!id) return null;
-      const posts = await base44.entities.BlogPost.filter({ id });
-      return posts[0];
-    },
-    enabled: !!id,
-  });
-
-  const [formInitialized, setFormInitialized] = useState(false);
-
+  // Auto-generate slug from title for NEW posts only
   useEffect(() => {
-    if (existingPost && !formInitialized) {
-      setFormData({
-        title: existingPost.title || "",
-        slug: existingPost.slug || "",
-        author_id: existingPost.author_id || "",
-        category: existingPost.category || "Emotional Intelligence",
-        excerpt: existingPost.excerpt || "",
-        content: existingPost.content || "",
-        featured_image: existingPost.featured_image || "",
-        tags: existingPost.tags || [],
-        status: existingPost.status || "draft",
-        publish_date: existingPost.publish_date
-          ? existingPost.publish_date.slice(0, 16)
-          : "",
-        meta_title: existingPost.meta_title || "",
-        meta_description: existingPost.meta_description || "",
-        seo_keywords: existingPost.seo_keywords || [],
-      });
-      setFormInitialized(true);
-    }
-  }, [existingPost, formInitialized]);
-
-  useEffect(() => {
-    // Only auto-generate slug for new posts
-    if (formData.title && !id) {
-      setFormData(prev => ({
-        ...prev,
-        slug: prev.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
-      }));
+    if (!initialized.current || id) return;
+    if (formData.title) {
+      const slug = formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      setFormData(prev => ({ ...prev, slug }));
     }
   }, [formData.title]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -136,14 +130,12 @@ export default function BlogEditor() {
   });
 
   const handleSave = (status) => {
-    // Guest authors can only submit for review
     if (user && authors.length > 0) {
       const userAuthor = authors.find(a => a.user_id === user.id);
       if (userAuthor?.is_guest && status === "published") {
         status = "pending_review";
       }
     }
-    
     const dataToSave = { ...formData, status };
     if (id) {
       updateMutation.mutate({ id, data: dataToSave });
@@ -186,10 +178,8 @@ export default function BlogEditor() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
-        <div className="max-w-5xl mx-auto text-center">
-          <p className="text-[#2B2725]/60">Loading...</p>
-        </div>
+      <div className="min-h-screen bg-[#F9F5EF] py-12 px-6 flex items-center justify-center">
+        <p className="text-[#2B2725]/60">Loading post...</p>
       </div>
     );
   }
@@ -198,11 +188,7 @@ export default function BlogEditor() {
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6 pr-[26rem]">
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(createPageUrl("BlogManager"))}
-            className="mb-4"
-          >
+          <Button variant="ghost" onClick={() => navigate(createPageUrl("BlogManager"))} className="mb-4">
             <ArrowLeft size={18} className="mr-2" />
             Back to Blog Manager
           </Button>
@@ -218,7 +204,7 @@ export default function BlogEditor() {
             <Label>Title *</Label>
             <Input
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
               placeholder="Enter your post title…"
             />
           </div>
@@ -228,7 +214,7 @@ export default function BlogEditor() {
             <Label>Slug (URL)</Label>
             <Input
               value={formData.slug}
-              onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+              onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
             />
             <p className="text-xs text-[#2B2725]/60 mt-1">This becomes the URL of your post</p>
           </div>
@@ -236,7 +222,7 @@ export default function BlogEditor() {
           {/* Author */}
           <div>
             <Label>Author</Label>
-            <Select value={formData.author_id} onValueChange={(v) => setFormData({ ...formData, author_id: v })}>
+            <Select value={formData.author_id} onValueChange={(v) => setFormData(prev => ({ ...prev, author_id: v }))}>
               <SelectTrigger>
                 <SelectValue placeholder="Select author" />
               </SelectTrigger>
@@ -256,7 +242,7 @@ export default function BlogEditor() {
           {/* Category */}
           <div>
             <Label>Category</Label>
-            <Select value={formData.category} onValueChange={(v) => setFormData({ ...formData, category: v })}>
+            <Select value={formData.category} onValueChange={(v) => setFormData(prev => ({ ...prev, category: v }))}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -279,7 +265,7 @@ export default function BlogEditor() {
             <Label>Excerpt</Label>
             <Textarea
               value={formData.excerpt}
-              onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
+              onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
               placeholder="Write a short summary to show on the blog list"
               rows={3}
             />
@@ -291,9 +277,7 @@ export default function BlogEditor() {
               <FileText size={20} className="text-[#6E4F7D]" />
               <h3 className="font-serif text-lg text-[#1E3A32]">AI Blog Summarizer</h3>
             </div>
-            <BlogSummarizer
-              onApplySummary={(summary) => setFormData({ ...formData, excerpt: summary })}
-            />
+            <BlogSummarizer onApplySummary={(summary) => setFormData(prev => ({ ...prev, excerpt: summary }))} />
           </div>
 
           {/* AI Content Generator */}
@@ -310,7 +294,7 @@ export default function BlogEditor() {
             <Label className="mb-2 block">Main Content</Label>
             <ReactQuill
               value={formData.content}
-              onChange={(content) => setFormData({ ...formData, content })}
+              onChange={(content) => setFormData(prev => ({ ...prev, content }))}
               theme="snow"
               modules={quillModules}
               style={{ minHeight: "400px" }}
@@ -334,17 +318,20 @@ export default function BlogEditor() {
             </div>
             {formData.featured_image && (
               <div className="mb-4">
-                <img 
-                  src={formData.featured_image} 
-                  alt="Featured" 
+                <img
+                  src={formData.featured_image}
+                  alt="Featured"
                   className="w-full max-h-64 object-cover rounded border border-[#E4D9C4]"
                 />
+                <button
+                  onClick={() => setFormData(prev => ({ ...prev, featured_image: "" }))}
+                  className="mt-2 text-xs text-red-500 hover:text-red-700"
+                >
+                  Remove featured image
+                </button>
               </div>
             )}
-            <ImageManager 
-              onSetFeaturedImage={handleFeaturedImageSet} 
-              mode="featured" 
-            />
+            <ImageManager onSetFeaturedImage={handleFeaturedImageSet} mode="featured" />
           </div>
 
           {/* SEO */}
@@ -359,26 +346,21 @@ export default function BlogEditor() {
                   title={formData.title}
                   content={formData.content}
                   excerpt={formData.excerpt}
-                  onApplySEO={(seoData) => {
-                    setFormData({
-                      ...formData,
-                      ...seoData
-                    });
-                  }}
+                  onApplySEO={(seoData) => setFormData(prev => ({ ...prev, ...seoData }))}
                 />
               </div>
               <div>
                 <Label>Meta Title</Label>
                 <Input
                   value={formData.meta_title}
-                  onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
+                  onChange={(e) => setFormData(prev => ({ ...prev, meta_title: e.target.value }))}
                 />
               </div>
               <div>
                 <Label>Meta Description</Label>
                 <Textarea
                   value={formData.meta_description}
-                  onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
+                  onChange={(e) => setFormData(prev => ({ ...prev, meta_description: e.target.value }))}
                   rows={2}
                 />
               </div>
@@ -387,9 +369,7 @@ export default function BlogEditor() {
                   <Label>SEO Keywords</Label>
                   <div className="flex flex-wrap gap-2 mt-2">
                     {formData.seo_keywords.map((keyword, idx) => (
-                      <Badge key={idx} className="bg-[#A6B7A3]/20 text-[#1E3A32]">
-                        {keyword}
-                      </Badge>
+                      <Badge key={idx} className="bg-[#A6B7A3]/20 text-[#1E3A32]">{keyword}</Badge>
                     ))}
                   </div>
                 </div>
@@ -403,10 +383,8 @@ export default function BlogEditor() {
             <div className="space-y-4">
               <div>
                 <Label>Status</Label>
-                <Select value={formData.status} onValueChange={(v) => setFormData({ ...formData, status: v })}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
+                <Select value={formData.status} onValueChange={(v) => setFormData(prev => ({ ...prev, status: v }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="draft">Draft</SelectItem>
                     <SelectItem value="scheduled">Scheduled</SelectItem>
@@ -419,14 +397,14 @@ export default function BlogEditor() {
                 <Input
                   type="datetime-local"
                   value={formData.publish_date}
-                  onChange={(e) => setFormData({ ...formData, publish_date: e.target.value })}
+                  onChange={(e) => setFormData(prev => ({ ...prev, publish_date: e.target.value }))}
                 />
                 <p className="text-xs text-[#2B2725]/60 mt-1">Schedule this post to go live automatically</p>
               </div>
             </div>
           </div>
 
-          {/* Analytics (for published posts) */}
+          {/* Analytics */}
           {id && formData.status === "published" && (
             <div className="border-t pt-6">
               <h3 className="font-medium text-[#1E3A32] mb-4 flex items-center gap-2">
@@ -468,15 +446,13 @@ export default function BlogEditor() {
         </div>
       </div>
 
-      <ContentStudio 
+      <ContentStudio
         blogContent={formData}
-        onApplySEO={(seoData) => {
-          setFormData({
-            ...formData,
-            meta_title: seoData.meta_title,
-            meta_description: seoData.meta_description
-          });
-        }}
+        onApplySEO={(seoData) => setFormData(prev => ({
+          ...prev,
+          meta_title: seoData.meta_title,
+          meta_description: seoData.meta_description
+        }))}
       />
     </div>
   );
