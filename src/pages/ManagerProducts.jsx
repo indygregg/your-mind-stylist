@@ -387,22 +387,21 @@ export default function ManagerProducts() {
   };
 
   // Group by subtype for the new view, then fall back to category
+  // 5 segment groups matching the Programs page bands
   const SUBTYPE_GROUPS = [
+    { key: "signature_services", label: "✨ Signature Services", description: "One-on-one sessions, coaching & private programs" },
+    { key: "webinar", label: "📹 Webinars & Live Events", description: "Live & recorded webinars" },
+    { key: "book", label: "📖 Books & Resources", description: "Books & written resources" },
+    { key: "course", label: "🎓 Hypnosis Training", description: "Certification & professional training programs" },
+    { key: "other", label: "🌟 Other Programs & Tools", description: "Additional resources and offerings" },
     { key: "bundle", label: "🎁 Bundles & Packages", description: "Product bundles at special prices" },
-    { key: "webinar", label: "📹 Webinars", description: "Live & recorded webinars" },
-    { key: "book", label: "📖 Books", description: "Books & written resources" },
-    { key: "course", label: "🎓 Courses & Classes", description: "Online learning programs" },
-    { key: "digital_service", label: "💻 Digital Services", description: "Digital tools & services" },
-    { key: "physical_product", label: "📦 Physical Products", description: "Shipped goods" },
-    { key: "other", label: "✨ Other", description: "Other products" },
-    { key: null, label: "🏷️ Programs & Coaching", description: "Coaching, sessions & programs (no subtype set)" },
   ];
 
   const groupedProducts = SUBTYPE_GROUPS.map(group => ({
     ...group,
     items: products.filter(p => {
       if (group.key === "bundle") return p.is_bundle || p.type === "bundle";
-      if (group.key === null) return !p.product_subtype || p.product_subtype === "" && !p.is_bundle && p.type !== "bundle";
+      if (group.key === "signature_services") return (!p.product_subtype || p.product_subtype === "" || p.product_subtype === "digital_service" || p.product_subtype === "physical_product") && !p.is_bundle && p.type !== "bundle";
       return p.product_subtype === group.key && !p.is_bundle && p.type !== "bundle";
     })
   })).filter(g => g.items.length > 0);
