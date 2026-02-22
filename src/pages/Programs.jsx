@@ -61,7 +61,7 @@ const DEFAULT_BANDS = [
     textColor: "text-[#1E3A32]",
     subtitleColor: "text-[#1E3A32]/80",
     arrowColor: "text-[#1E3A32]/60",
-    linkPage: "LearnHypnosis",
+    linkPage: "ProgramsCourses",
   },
   {
     key: "other",
@@ -71,7 +71,7 @@ const DEFAULT_BANDS = [
     textColor: "text-white",
     subtitleColor: "text-white/80",
     arrowColor: "text-white/60",
-    linkPage: "PurchaseCenter",
+    linkPage: "ProgramsOther",
   },
 ];
 
