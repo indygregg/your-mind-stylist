@@ -4,12 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, Loader2, Copy, ArrowRight, Mic } from "lucide-react";
+import { Sparkles, Loader2, Copy, ArrowRight, Mic, ListOrdered } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+
+const LENGTH_OPTIONS = [
+  { value: "short", label: "Short (800–1,200 words)", words: "800-1200" },
+  { value: "medium", label: "Medium (1,500–2,000 words)", words: "1500-2000" },
+  { value: "long", label: "Long (2,500–3,500 words) — SEO", words: "2500-3500" },
+];
 
 export default function AIContentGenerator({ onInsert }) {
   const [prompt, setPrompt] = useState("");
+  const [outline, setOutline] = useState("");
+  const [showOutline, setShowOutline] = useState(false);
   const [contentType, setContentType] = useState("paragraph");
+  const [length, setLength] = useState("long");
   const [generating, setGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState("");
 
@@ -33,16 +42,18 @@ export default function AIContentGenerator({ onInsert }) {
     { value: "quote", label: "Pull Quote", prompt: "Create a memorable, quotable statement about: " },
   ];
 
+  const isFullPost = contentType === "full";
+
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
 
     setGenerating(true);
     try {
       const selectedType = contentTypes.find(t => t.value === contentType);
-      
+      const selectedLength = LENGTH_OPTIONS.find(l => l.value === length);
+
       let styleInstructions = "Style: Mind Styling voice - calm, intelligent, introspective, identity-focused. Write for emotional intelligence and personal transformation. Keep it grounded, not fluffy.";
-      
-      // Use custom voice profile if available
+
       if (defaultVoice) {
         styleInstructions = `Style Guidelines:
 ${defaultVoice.writing_rules}
@@ -55,9 +66,9 @@ ${defaultVoice.use_contractions ? "Use contractions (I'm, you're, etc.)" : "Avoi
 ${defaultVoice.vocabulary_preferences ? `\nVocabulary: ${defaultVoice.vocabulary_preferences}` : ""}
 ${defaultVoice.example_text ? `\n\nExample of the desired writing style:\n${defaultVoice.example_text.substring(0, 500)}` : ""}`;
       }
-      
-      let fullPrompt = `${selectedType.prompt}${prompt}
 
+      let fullPrompt = `${selectedType.prompt}${prompt}
+${outline.trim() ? `\n\nFollow this outline provided by the author:\n${outline.trim()}\n` : ""}
 ${styleInstructions}
 
 CRITICAL: Output HTML formatted content using these tags:
@@ -80,10 +91,11 @@ Apply these inline styles:
 
 Include:
 - Engaging opening hook
-- Clear sections with subheadings
-- Practical insights and examples
-- Strong conclusion
-- Length: 800-1200 words`;
+- Clear sections with subheadings (at least 5-6 sections for long posts)
+- Practical insights, examples, and actionable advice
+- Strong conclusion with a clear call to action
+- Target word count: ${selectedLength.words} words — aim for the higher end
+- SEO: naturally weave the topic keywords throughout`;
       }
 
       const response = await base44.integrations.Core.InvokeLLM({
@@ -103,6 +115,7 @@ Include:
       onInsert(generatedContent);
       setGeneratedContent("");
       setPrompt("");
+      setOutline("");
     }
   };
 
@@ -116,6 +129,7 @@ Include:
           </span>
         </div>
       )}
+
       <div>
         <Label className="mb-2 block">What do you want to write about?</Label>
         <Textarea
@@ -142,6 +156,48 @@ Include:
         </Select>
       </div>
 
+      {isFullPost && (
+        <div>
+          <Label className="mb-2 block">Post Length</Label>
+          <Select value={length} onValueChange={setLength}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {LENGTH_OPTIONS.map(opt => (
+                <SelectItem key={opt.value} value={opt.value}>
+                  {opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+
+      {/* Outline Section */}
+      <div>
+        <button
+          type="button"
+          onClick={() => setShowOutline(!showOutline)}
+          className="flex items-center gap-2 text-sm text-[#6E4F7D] hover:text-[#5A3F67] font-medium"
+        >
+          <ListOrdered size={16} />
+          {showOutline ? "Hide outline" : "Provide an outline (optional)"}
+        </button>
+        {showOutline && (
+          <div className="mt-2">
+            <Textarea
+              value={outline}
+              onChange={(e) => setOutline(e.target.value)}
+              placeholder={`Paste your outline here. E.g.:\n1. Introduction — hook about self-doubt\n2. What is imposter syndrome?\n3. The 5 hidden ways it shows up\n4. Mind Styling technique: Identity Anchoring\n5. Conclusion`}
+              rows={7}
+              className="font-mono text-sm"
+            />
+            <p className="text-xs text-[#2B2725]/50 mt-1">The AI will follow this structure when generating the post.</p>
+          </div>
+        )}
+      </div>
+
       <Button
         onClick={handleGenerate}
         disabled={!prompt.trim() || generating}
@@ -150,7 +206,7 @@ Include:
         {generating ? (
           <>
             <Loader2 size={16} className="mr-2 animate-spin" />
-            Generating...
+            Generating... (longer posts may take a moment)
           </>
         ) : (
           <>
@@ -173,8 +229,8 @@ Include:
               Copy
             </Button>
           </div>
-          <div 
-            className="prose prose-sm max-w-none mb-4 text-[#2B2725] bg-white p-4 rounded border border-[#E4D9C4]"
+          <div
+            className="prose prose-sm max-w-none mb-4 text-[#2B2725] bg-white p-4 rounded border border-[#E4D9C4] max-h-96 overflow-y-auto"
             dangerouslySetInnerHTML={{ __html: generatedContent }}
           />
           <Button onClick={handleInsert} className="w-full bg-[#1E3A32]">
