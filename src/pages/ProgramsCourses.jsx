@@ -21,14 +21,14 @@ export default function ProgramsCourses() {
     }
   };
 
+  // Products with product_subtype = "course" (Hypnosis Training) from Product Manager
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["course-products"],
     queryFn: async () => {
-      const all = await base44.entities.Product.filter({ 
+      return await base44.entities.Product.filter({ 
         status: "published",
-        active: true
+        product_subtype: "course"
       });
-      return all.filter(p => p.related_course_id);
     },
   });
 
