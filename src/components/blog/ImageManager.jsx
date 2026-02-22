@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Upload, Link as LinkIcon, Sparkles, Loader2, Image as ImageIcon } from "lucide-react";
+import { Upload, Link as LinkIcon, Sparkles, Loader2, Image as ImageIcon, Trash2, RefreshCw } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 export default function ImageManager({ onInsert, onSetFeaturedImage, mode = "insert" }) {
