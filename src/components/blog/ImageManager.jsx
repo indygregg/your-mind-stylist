@@ -102,7 +102,13 @@ export default function ImageManager({ onInsert, onSetFeaturedImage, mode = "ins
         {imageUrl && !uploading && (
           <div className="border border-[#D8B46B]/30 rounded p-3">
             <img src={imageUrl} alt="Uploaded" className="w-full rounded mb-2" />
-            <p className="text-xs text-[#2B2725]/60 break-all">{imageUrl}</p>
+            <p className="text-xs text-[#2B2725]/60 break-all mb-2">{imageUrl}</p>
+            <button
+              onClick={() => setImageUrl("")}
+              className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700"
+            >
+              <Trash2 size={12} /> Remove & upload a different image
+            </button>
           </div>
         )}
       </TabsContent>
