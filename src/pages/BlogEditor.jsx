@@ -81,26 +81,35 @@ export default function BlogEditor() {
   useEffect(() => {
     if (existingPost && !formInitialized) {
       setFormData({
-        ...existingPost,
-        tags: existingPost.tags || [],
-        seo_keywords: existingPost.seo_keywords || [],
+        title: existingPost.title || "",
+        slug: existingPost.slug || "",
+        author_id: existingPost.author_id || "",
+        category: existingPost.category || "Emotional Intelligence",
+        excerpt: existingPost.excerpt || "",
+        content: existingPost.content || "",
         featured_image: existingPost.featured_image || "",
+        tags: existingPost.tags || [],
+        status: existingPost.status || "draft",
         publish_date: existingPost.publish_date
           ? existingPost.publish_date.slice(0, 16)
           : "",
+        meta_title: existingPost.meta_title || "",
+        meta_description: existingPost.meta_description || "",
+        seo_keywords: existingPost.seo_keywords || [],
       });
       setFormInitialized(true);
     }
   }, [existingPost, formInitialized]);
 
   useEffect(() => {
-    if (formData.title && !id && !formInitialized) {
+    // Only auto-generate slug for new posts
+    if (formData.title && !id) {
       setFormData(prev => ({
         ...prev,
         slug: prev.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
       }));
     }
-  }, [formData.title, id, formInitialized]);
+  }, [formData.title]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.BlogPost.create(data),
