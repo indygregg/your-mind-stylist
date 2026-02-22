@@ -172,11 +172,29 @@ export default function ImageManager({ onInsert, onSetFeaturedImage, mode = "ins
         {generatedImageUrl && (
           <div className="border border-[#D8B46B]/30 rounded p-3">
             <img src={generatedImageUrl} alt="Generated" className="w-full rounded mb-2" />
-            {mode !== "featured" && (
-              <Button onClick={() => onInsert(generatedImageUrl)} className="w-full mt-2">
-                Insert into Post
+            <div className="flex gap-2 mt-2">
+              {mode !== "featured" && (
+                <Button onClick={() => onInsert(generatedImageUrl)} className="flex-1 bg-[#1E3A32]">
+                  <ImageIcon size={14} className="mr-1" /> Insert into Post
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                onClick={() => { setGeneratedImageUrl(""); }}
+                className="flex items-center gap-1 text-red-500 border-red-200 hover:bg-red-50"
+              >
+                <Trash2 size={14} /> Discard
               </Button>
-            )}
+              <Button
+                variant="outline"
+                onClick={handleGenerateImage}
+                disabled={generating}
+                className="flex items-center gap-1"
+              >
+                {generating ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+                Regenerate
+              </Button>
+            </div>
           </div>
         )}
       </TabsContent>
