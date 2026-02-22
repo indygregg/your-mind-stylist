@@ -94,13 +94,13 @@ export default function BlogEditor() {
   }, [existingPost, formInitialized]);
 
   useEffect(() => {
-    if (formData.title && !id) {
+    if (formData.title && !id && !formInitialized) {
       setFormData(prev => ({
         ...prev,
         slug: prev.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
       }));
     }
-  }, [formData.title, id]);
+  }, [formData.title, id, formInitialized]);
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.BlogPost.create(data),
