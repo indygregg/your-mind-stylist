@@ -25,10 +25,8 @@ export default function ProgramsOther() {
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["other-products"],
     queryFn: async () => {
-      return await base44.entities.Product.filter({ 
-        status: "published",
-        product_subtype: "other"
-      });
+      const all = await base44.entities.Product.list();
+      return all.filter(p => p.product_subtype === "other" && p.status === "published");
     },
   });
 
