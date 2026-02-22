@@ -750,12 +750,11 @@ export default function ManagerProducts() {
                     <SelectValue placeholder="Select subtype..." />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value={null}>✨ Signature Service / Coaching</SelectItem>
                     <SelectItem value="webinar">📹 Webinar / Live Event</SelectItem>
-                    <SelectItem value="book">📖 Book</SelectItem>
-                    <SelectItem value="course">🎓 Course / Hypnosis Class</SelectItem>
-                    <SelectItem value="digital_service">💻 Digital Service</SelectItem>
-                    <SelectItem value="physical_product">📦 Physical Product</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="book">📖 Book or Resource</SelectItem>
+                    <SelectItem value="course">🎓 Hypnosis Training</SelectItem>
+                    <SelectItem value="other">🌟 Other Programs & Tools</SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-xs text-[#2B2725]/50 mt-1">Webinars & books auto-appear in correct sections on Programs page</p>
