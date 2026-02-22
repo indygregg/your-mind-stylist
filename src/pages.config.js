@@ -151,6 +151,7 @@ import ProfileSettings from './pages/ProfileSettings';
 import Programs from './pages/Programs';
 import ProgramsBooks from './pages/ProgramsBooks';
 import ProgramsCourses from './pages/ProgramsCourses';
+import ProgramsOther from './pages/ProgramsOther';
 import ProgramsWebinars from './pages/ProgramsWebinars';
 import PublicPagesList from './pages/PublicPagesList';
 import PurchaseCenter from './pages/PurchaseCenter';
@@ -182,7 +183,6 @@ import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import ProgramsOther from './pages/ProgramsOther';
 import __Layout from './Layout.jsx';
 
 
@@ -291,6 +291,7 @@ export const PAGES = {
     "Programs": Programs,
     "ProgramsBooks": ProgramsBooks,
     "ProgramsCourses": ProgramsCourses,
+    "ProgramsOther": ProgramsOther,
     "ProgramsWebinars": ProgramsWebinars,
     "PublicPagesList": PublicPagesList,
     "PurchaseCenter": PurchaseCenter,
@@ -322,7 +323,6 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "ProgramsOther": ProgramsOther,
 }
 
 export const pagesConfig = {
