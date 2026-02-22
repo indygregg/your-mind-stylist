@@ -18,7 +18,11 @@ export default function Blog() {
 
   const { data: allPosts = [] } = useQuery({
     queryKey: ['blog-posts'],
-    queryFn: () => base44.entities.BlogPost.filter({ status: 'published' }, '-publish_date'),
+    queryFn: async () => {
+      const posts = await base44.entities.BlogPost.filter({ status: 'published' }, '-publish_date');
+      const now = new Date();
+      return posts.filter(p => !p.publish_date || new Date(p.publish_date) <= now);
+    },
   });
 
   const featuredPost = allPosts.find(p => p.featured_image) || allPosts[0] || null;
