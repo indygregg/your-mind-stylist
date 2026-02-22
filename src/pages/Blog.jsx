@@ -219,13 +219,13 @@ export default function Blog() {
                 <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">
                   {featuredPost.excerpt}
                 </p>
-                <Link
-                  to={createPageUrl(`BlogPost?slug=${featuredPost.slug}`)}
+                <button
+                  onClick={() => goToPost(featuredPost.slug)}
                   className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all"
                 >
                   Read Article
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
+                </button>
               </div>
             </div>
           </motion.div>
