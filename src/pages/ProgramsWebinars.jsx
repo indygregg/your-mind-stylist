@@ -21,22 +21,23 @@ export default function ProgramsWebinars() {
     }
   };
 
-  const { data: webinarProducts = [] } = useQuery({
+  // Products with product_subtype = "webinar" from Product Manager
+  const { data: webinarProducts = [], isLoading } = useQuery({
     queryKey: ["webinar-products"],
     queryFn: async () => {
       const all = await base44.entities.Product.filter({ 
         status: "published",
-        active: true
+        product_subtype: "webinar"
       });
-      return all.filter(p => p.related_webinar_id);
+      return all;
     },
   });
 
-  const { data: webinars = [], isLoading } = useQuery({
+  // Also pull from the Webinar entity for any linked webinars
+  const { data: webinars = [] } = useQuery({
     queryKey: ["published-webinars"],
     queryFn: async () => {
-      const all = await base44.entities.Webinar.filter({ status: "published" }, "-created_date");
-      return all;
+      return await base44.entities.Webinar.filter({ status: "published" }, "-created_date");
     },
   });
 
@@ -56,7 +57,8 @@ export default function ProgramsWebinars() {
       thumbnail: p.thumbnail,
       slug: p.slug
     })),
-    ...webinars.map(w => ({
+    // Include Webinar-entity items not already covered by a product
+    ...webinars.filter(w => !webinarProducts.find(p => p.related_webinar_id === w.id)).map(w => ({
       id: w.id,
       type: 'webinar',
       name: w.title,
