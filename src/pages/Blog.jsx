@@ -12,7 +12,13 @@ import { useNavigate } from "react-router-dom";
 
 export default function Blog() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const goToPost = (slug) => {
+    window.scrollTo(0, 0);
+    navigate(createPageUrl(`BlogPost?slug=${slug}`));
+  };
   const { pullY, isRefreshing, handlers: pullToRefreshHandlers } = usePullToRefresh(async () => {
     queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
   });
