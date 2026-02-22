@@ -363,7 +363,7 @@ export default function Blog() {
               />
             </p>
             <button
-              onClick={() => setSelectedCategory("Thursday Thoughts")}
+              onClick={() => { setSelectedCategory("Thursday Thoughts"); document.getElementById('latest')?.scrollIntoView({ behavior: 'smooth' }); }}
               className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F9F5EF] text-[#1E3A32] text-sm tracking-wide hover:bg-white transition-all duration-300"
             >
               See Thursday Thoughts
