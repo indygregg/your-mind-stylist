@@ -3,12 +3,43 @@ import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Clock, Play, Mic } from "lucide-react";
+import { ArrowRight, Calendar, Clock, Play, Mic, ExternalLink } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { useNavigate } from "react-router-dom";
+
+function PodcastGrid() {
+  const { data: podcasts = [] } = useQuery({
+    queryKey: ["podcastAppearances-public"],
+    queryFn: () => base44.entities.PodcastAppearance.filter({ status: "published" }, "-air_date"),
+  });
+
+  if (podcasts.length === 0) {
+    return <p className="text-[#F9F5EF]/50 text-sm">Podcast appearances coming soon. Check back for links to episodes.</p>;
+  }
+
+  return (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 text-left">
+      {podcasts.map(p => (
+        <div key={p.id} className="bg-white/10 border border-white/20 p-6 hover:bg-white/15 transition-colors">
+          {p.thumbnail && <img src={p.thumbnail} alt={p.show_name} className="w-full h-32 object-cover mb-4 rounded" />}
+          <p className="text-[#D8B46B] text-xs uppercase tracking-wide mb-1">{p.show_name}</p>
+          <h3 className="font-serif text-lg text-[#F9F5EF] mb-2 leading-tight">{p.episode_title}</h3>
+          {p.description && <p className="text-[#F9F5EF]/60 text-sm mb-3 line-clamp-2">{p.description}</p>}
+          {p.air_date && <p className="text-[#F9F5EF]/40 text-xs mb-3">{new Date(p.air_date).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>}
+          {p.episode_url && (
+            <a href={p.episode_url} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-[#D8B46B] hover:text-white text-sm transition-colors">
+              <ExternalLink size={14} /> Listen to Episode
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 const CATEGORIES = [
   "All",
