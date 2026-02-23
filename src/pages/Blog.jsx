@@ -345,9 +345,8 @@ export default function Blog() {
               <p className="text-[#F9F5EF]/80 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
                 <CmsText contentKey="blog.podcasts.description" page="Blog" blockTitle="Podcasts Section Description" fallback="Listen to Roberta's conversations on podcasts across the web — on emotional intelligence, hypnosis, identity, and change." contentType="rich_text" />
               </p>
-              <p className="text-[#F9F5EF]/50 text-sm">
-                <CmsText contentKey="blog.podcasts.comingsoon" page="Blog" blockTitle="Podcasts Coming Soon Note" fallback="Podcast appearances coming soon. Check back for links to episodes." contentType="short_text" />
-              </p>
+                      {/* Podcast appearances loaded from database */}
+              <PodcastGrid />
             </div>
           </motion.div>
         </div>
