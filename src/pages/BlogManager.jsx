@@ -83,25 +83,55 @@ export default function BlogManager() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">
-              Blog Manager
+              Blog & Podcast Manager
             </h1>
             <p className="text-[#2B2725]/70">The Mind Styling Journal</p>
           </div>
-          <div className="flex gap-3">
-            <Link to={createPageUrl("GuestAuthorInvite")}>
-              <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32]">
-                <UserPlus size={20} className="mr-2" />
-                Invite Guest Author
-              </Button>
-            </Link>
-            <Link to={createPageUrl("BlogEditor?mode=new")}>
-              <Button className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]">
-                <Plus size={20} className="mr-2" />
-                Create New Blog Post
-              </Button>
-            </Link>
-          </div>
+          {activeTab === "posts" && (
+            <div className="flex gap-3">
+              <Link to={createPageUrl("GuestAuthorInvite")}>
+                <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32]">
+                  <UserPlus size={20} className="mr-2" />
+                  Invite Guest Author
+                </Button>
+              </Link>
+              <Link to={createPageUrl("BlogEditor?mode=new")}>
+                <Button className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]">
+                  <Plus size={20} className="mr-2" />
+                  Create New Blog Post
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
+
+        {/* Tabs */}
+        <div className="flex gap-1 mb-6 bg-white border border-[#E4D9C4] p-1 w-fit rounded-lg">
+          <button
+            onClick={() => setActiveTab("posts")}
+            className={`px-6 py-2 text-sm font-medium rounded transition-colors flex items-center gap-2 ${
+              activeTab === "posts" ? "bg-[#1E3A32] text-white" : "text-[#2B2725]/70 hover:text-[#1E3A32]"
+            }`}
+          >
+            <PenSquare size={16} /> Blog Posts
+          </button>
+          <button
+            onClick={() => setActiveTab("podcasts")}
+            className={`px-6 py-2 text-sm font-medium rounded transition-colors flex items-center gap-2 ${
+              activeTab === "podcasts" ? "bg-[#1E3A32] text-white" : "text-[#2B2725]/70 hover:text-[#1E3A32]"
+            }`}
+          >
+            <Headphones size={16} /> Podcast
+          </button>
+        </div>
+
+        {/* Podcast Tab */}
+        {activeTab === "podcasts" && (
+          <PodcastManager />
+        )}
+
+        {/* Blog Posts Tab */}
+        {activeTab === "posts" && <>
 
         {/* Filters */}
         <div className="bg-white p-6 mb-6">
