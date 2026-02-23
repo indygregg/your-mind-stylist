@@ -131,7 +131,7 @@ export default function BlogManager() {
         )}
 
         {/* Blog Posts Tab */}
-        {activeTab === "posts" && <>
+        {activeTab === "posts" && (<>
 
         {/* Filters */}
         <div className="bg-white p-6 mb-6">
