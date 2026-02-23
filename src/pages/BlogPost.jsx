@@ -135,8 +135,30 @@ export default function BlogPost() {
         </div>
       </section>
 
-      {/* Featured Image */}
-      {post.featured_image && (
+      {/* Video Embed (for video posts) */}
+      {post.post_type === "video" && post.video_embed_url && (
+        <section className="pb-16">
+          <div className="max-w-5xl mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="aspect-video w-full rounded-lg shadow-lg overflow-hidden"
+            >
+              <iframe
+                src={post.video_embed_url}
+                title={post.title}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* Featured Image (for written posts) */}
+      {post.post_type !== "video" && post.featured_image && (
         <section className="pb-16">
           <div className="max-w-5xl mx-auto px-6">
             <motion.div
