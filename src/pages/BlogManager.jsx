@@ -12,6 +12,7 @@ import PodcastManager from "@/components/blog/PodcastManager";
 
 export default function BlogManager() {
   const queryClient = useQueryClient();
+  const [activeTab, setActiveTab] = useState("posts"); // "posts" | "podcasts"
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
 
