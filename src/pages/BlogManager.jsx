@@ -130,12 +130,18 @@ export default function BlogManager() {
                 placeholder="All Categories"
                 options={[
                   { value: "all", label: "All Categories" },
-                  { value: "Monday Mentions", label: "Monday Mentions" },
-                  { value: "Thursday Thoughts", label: "Thursday Thoughts" },
+                  { value: "Restyle Monday", label: "Restyle Monday" },
+                  { value: "Thursday Tailoring", label: "Thursday Tailoring" },
                   { value: "Emotional Intelligence", label: "Emotional Intelligence" },
-                  { value: "Communication", label: "Communication" },
+                  { value: "Culture", label: "Culture" },
                   { value: "Leadership & Teams", label: "Leadership & Teams" },
-                  { value: "Identity & Confidence", label: "Identity & Confidence" }
+                  { value: "Communication", label: "Communication" },
+                  { value: "Identity & Confidence", label: "Identity & Confidence" },
+                  { value: "Stress & Regulation", label: "Stress & Regulation" },
+                  { value: "Relationships", label: "Relationships" },
+                  { value: "Inner Rehearsal", label: "Inner Rehearsal" },
+                  { value: "Hypnosis & the Brain", label: "Hypnosis & the Brain" },
+                  { value: "Personal & Professional Development", label: "Personal & Professional Development" }
                 ]}
               />
             </div>

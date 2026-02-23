@@ -70,6 +70,8 @@ export default function BlogEditor() {
               slug: post.slug || "",
               author_id: post.author_id || "",
               category: post.category || "Emotional Intelligence",
+              post_type: post.post_type || "written",
+              video_embed_url: post.video_embed_url || "",
               excerpt: post.excerpt || "",
               content: post.content || "",
               featured_image: post.featured_image || "",
@@ -240,6 +242,31 @@ export default function BlogEditor() {
               Don't see your name? <Link to={createPageUrl("AuthorProfile")} className="text-[#1E3A32] underline">Set up your author profile</Link>
             </p>
           </div>
+
+          {/* Post Type */}
+          <div>
+            <Label>Post Type</Label>
+            <Select value={formData.post_type || "written"} onValueChange={(v) => setFormData(prev => ({ ...prev, post_type: v }))}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="written">Written Article</SelectItem>
+                <SelectItem value="video">Video Post</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Video Embed URL (only for video posts) */}
+          {formData.post_type === "video" && (
+            <div>
+              <Label>Video Embed URL</Label>
+              <Input
+                value={formData.video_embed_url || ""}
+                onChange={(e) => setFormData(prev => ({ ...prev, video_embed_url: e.target.value }))}
+                placeholder="https://www.youtube.com/embed/... or https://player.vimeo.com/video/..."
+              />
+              <p className="text-xs text-[#2B2725]/60 mt-1">Paste the embed URL from YouTube or Vimeo</p>
+            </div>
+          )}
 
           {/* Category */}
           <div>
