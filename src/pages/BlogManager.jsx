@@ -310,7 +310,7 @@ export default function BlogManager() {
             </div>
           )}
         </div>
-        </>}
+        </>)}
       </div>
     </div>
   );
