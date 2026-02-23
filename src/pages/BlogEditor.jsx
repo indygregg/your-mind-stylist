@@ -24,6 +24,8 @@ const EMPTY_FORM = {
   slug: "",
   author_id: "",
   category: "Emotional Intelligence",
+  post_type: "written",
+  video_embed_url: "",
   excerpt: "",
   content: "",
   featured_image: "",
@@ -247,15 +249,18 @@ export default function BlogEditor() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Monday Mentions">Monday Mentions</SelectItem>
-                <SelectItem value="Thursday Thoughts">Thursday Thoughts</SelectItem>
+                <SelectItem value="Restyle Monday">Restyle Monday</SelectItem>
+                <SelectItem value="Thursday Tailoring">Thursday Tailoring</SelectItem>
                 <SelectItem value="Emotional Intelligence">Emotional Intelligence</SelectItem>
-                <SelectItem value="Communication">Communication</SelectItem>
+                <SelectItem value="Culture">Culture</SelectItem>
                 <SelectItem value="Leadership & Teams">Leadership & Teams</SelectItem>
+                <SelectItem value="Communication">Communication</SelectItem>
                 <SelectItem value="Identity & Confidence">Identity & Confidence</SelectItem>
                 <SelectItem value="Stress & Regulation">Stress & Regulation</SelectItem>
                 <SelectItem value="Relationships">Relationships</SelectItem>
                 <SelectItem value="Inner Rehearsal">Inner Rehearsal</SelectItem>
+                <SelectItem value="Hypnosis & the Brain">Hypnosis & the Brain</SelectItem>
+                <SelectItem value="Personal & Professional Development">Personal & Professional Development</SelectItem>
               </SelectContent>
             </Select>
           </div>

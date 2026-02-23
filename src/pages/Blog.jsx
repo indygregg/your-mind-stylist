@@ -3,12 +3,88 @@ import SEO from "../components/SEO";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, Clock } from "lucide-react";
+import { ArrowRight, Calendar, Clock, Play, Mic } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { useNavigate } from "react-router-dom";
+
+const CATEGORIES = [
+  "All",
+  "Restyle Monday",
+  "Thursday Tailoring",
+  "Emotional Intelligence",
+  "Culture",
+  "Leadership & Teams",
+  "Communication",
+  "Identity & Confidence",
+  "Stress & Regulation",
+  "Relationships",
+  "Inner Rehearsal",
+  "Hypnosis & the Brain",
+  "Personal & Professional Development",
+];
+
+function PostCard({ post, onClick }) {
+  const isVideo = post.post_type === "video";
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="bg-[#F9F5EF] hover:shadow-lg transition-shadow overflow-hidden flex flex-col"
+    >
+      {post.featured_image && (
+        <div className="relative">
+          <img src={post.featured_image} alt={post.title} className="w-full h-48 object-cover" />
+          {isVideo && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+              <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
+                <Play size={18} className="text-[#1E3A32] ml-1" />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      <div className="p-6 flex flex-col flex-1">
+        <div className="flex items-center gap-2 mb-3 flex-wrap">
+          <span className="px-2 py-1 bg-white text-[#2B2725] text-xs tracking-wide uppercase">
+            {post.category}
+          </span>
+          {isVideo && (
+            <span className="px-2 py-1 bg-[#6E4F7D]/10 text-[#6E4F7D] text-xs tracking-wide uppercase flex items-center gap-1">
+              <Play size={10} /> Video
+            </span>
+          )}
+        </div>
+        <h3 className="font-serif text-xl text-[#1E3A32] mb-3 leading-tight flex-1">{post.title}</h3>
+        {post.excerpt && <p className="text-[#2B2725]/70 leading-relaxed mb-4 text-sm">{post.excerpt}</p>}
+        <div className="flex items-center gap-4 text-[#2B2725]/60 text-xs mb-4">
+          {post.publish_date && (
+            <div className="flex items-center gap-1">
+              <Calendar size={12} />
+              {new Date(post.publish_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </div>
+          )}
+          {post.read_time && !isVideo && (
+            <div className="flex items-center gap-1">
+              <Clock size={12} />
+              {post.read_time} min
+            </div>
+          )}
+        </div>
+        <button
+          onClick={() => onClick(post.slug)}
+          className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium text-sm hover:gap-3 transition-all"
+        >
+          {isVideo ? "Watch" : "Read"}
+          <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+        </button>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function Blog() {
   const queryClient = useQueryClient();
@@ -19,6 +95,7 @@ export default function Blog() {
     window.scrollTo(0, 0);
     navigate(createPageUrl(`BlogPost?slug=${slug}`));
   };
+
   const { pullY, isRefreshing, handlers: pullToRefreshHandlers } = usePullToRefresh(async () => {
     queryClient.invalidateQueries({ queryKey: ['blog-posts'] });
   });
@@ -34,33 +111,22 @@ export default function Blog() {
 
   const featuredPost = allPosts.find(p => p.featured_image) || allPosts[0] || null;
   const latestPosts = allPosts.filter(p => p.id !== featuredPost?.id);
+
+  const restylePosts = allPosts.filter(p => p.category === "Restyle Monday").slice(0, 3);
+  const thursdayPosts = allPosts.filter(p => p.category === "Thursday Tailoring").slice(0, 3);
+
   const filteredPosts = selectedCategory === "All"
     ? latestPosts
     : latestPosts.filter(p => p.category === selectedCategory);
-
-  const categories = [
-    "All",
-    "Monday Mentions",
-    "Thursday Thoughts",
-    "Emotional Intelligence",
-    "Communication",
-    "Leadership & Teams",
-    "Identity & Confidence",
-    "Stress & Regulation",
-    "Relationships",
-    "Inner Rehearsal",
-  ];
-
-
 
   return (
     <div className="bg-[#F9F5EF]" {...pullToRefreshHandlers}>
       <SEO
         title="Your Mind Styling Journal | Articles & Reflections"
-        description="Your Mind Styling Journal offers weekly articles, Monday Mentions, and Thursday Thoughts on mindset, emotional intelligence, and inner pattern shifts."
+        description="Weekly articles, Restyle Monday, Thursday Tailoring, and Mind-Styling Podcasts on mindset, emotional intelligence, and inner pattern shifts."
         canonical="/blog"
       />
-      {/* Pull to Refresh Indicator */}
+
       {pullY > 0 && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -72,369 +138,241 @@ export default function Blog() {
           </div>
         </motion.div>
       )}
-      {/* Hero Section */}
+
+      {/* Hero */}
       <section className="pt-32 pb-20">
         <div className="max-w-5xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-center">
             <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
-              <CmsText 
-                contentKey="blog.hero.subtitle" 
-                page="Blog"
-                blockTitle="Hero Subtitle"
-                fallback="Your Mind Styling Journal" 
-                contentType="short_text"
-              />
+              <CmsText contentKey="blog.hero.subtitle" page="Blog" blockTitle="Hero Subtitle" fallback="Your Mind Styling Journal" contentType="short_text" />
             </span>
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
-              <CmsText 
-                contentKey="blog.hero.title" 
-                page="Blog"
-                blockTitle="Hero Title"
-                fallback='Articles, Thoughts & Tools<br /><span class="italic text-[#6E4F7D]">for a Calmer, Clearer Mind</span>' 
-                contentType="rich_text"
-              />
+              <CmsText contentKey="blog.hero.title" page="Blog" blockTitle="Hero Title" fallback='Articles, Thoughts & Tools<br /><span class="italic text-[#6E4F7D]">for a Calmer, Clearer Mind</span>' contentType="rich_text" />
             </h1>
-            <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8 max-w-3xl mx-auto">
-              <CmsText 
-                contentKey="blog.hero.description" 
-                page="Blog"
-                blockTitle="Hero Description"
-                fallback="Weekly reflections, tools, and perspectives to help you understand your patterns, soften your internal dialogue, and think from where you want to be." 
-                contentType="rich_text"
-              />
+            <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10 max-w-3xl mx-auto">
+              <CmsText contentKey="blog.hero.description" page="Blog" blockTitle="Hero Description" fallback="Weekly reflections, tools, and perspectives to help you understand your patterns, soften your internal dialogue, and think from where you want to be." contentType="rich_text" />
             </p>
-            <p className="text-[#2B2725]/70 text-lg mb-10">
-              <CmsText 
-                contentKey="blog.hero.tagline" 
-                page="Blog"
-                blockTitle="Hero Tagline"
-                fallback="This is where I share short ideas, deeper essays, and practical tools about emotional intelligence, mindset, communication, and identity.<br />Come here when you want to think differently — gently." 
-                contentType="rich_text"
-              />
-            </p>
-            <a
-              href="#latest"
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
-            >
+            <a href="#latest" className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300">
               Read the Latest
-              <ArrowRight
-                size={16}
-                className="group-hover:translate-x-1 transition-transform"
-              />
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </a>
           </motion.div>
         </div>
       </section>
 
       {/* Category Filters */}
-      <section id="filters" className="py-12 bg-white">
+      <section className="py-10 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-serif text-2xl text-[#1E3A32] mb-6 text-center">
-              <CmsText 
-                contentKey="blog.filters.title" 
-                page="Blog"
-                blockTitle="Filter Section Title"
-                fallback="Explore by Theme" 
-                contentType="short_text"
-              />
-            </h2>
-            <div className="flex flex-wrap justify-center gap-3">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-5 py-2 text-sm tracking-wide transition-all duration-300 ${
-                    selectedCategory === category
-                      ? "bg-[#1E3A32] text-[#F9F5EF]"
-                      : "bg-[#F9F5EF] text-[#2B2725] hover:bg-[#E4D9C4]"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </motion.div>
+          <h2 className="font-serif text-2xl text-[#1E3A32] mb-6 text-center">
+            <CmsText contentKey="blog.filters.title" page="Blog" blockTitle="Filter Section Title" fallback="Explore by Theme" contentType="short_text" />
+          </h2>
+          <div className="flex flex-wrap justify-center gap-2">
+            {CATEGORIES.map((category) => (
+              <button
+                key={category}
+                onClick={() => { setSelectedCategory(category); document.getElementById('latest')?.scrollIntoView({ behavior: 'smooth' }); }}
+                className={`px-4 py-2 text-xs tracking-wide transition-all duration-300 ${
+                  selectedCategory === category
+                    ? "bg-[#1E3A32] text-[#F9F5EF]"
+                    : "bg-[#F9F5EF] text-[#2B2725] hover:bg-[#E4D9C4]"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Featured Post */}
+      {/* 1. Featured */}
       {featuredPost && (
-      <section id="featured" className="py-20 bg-[#F9F5EF]">
-        <div className="max-w-5xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-serif text-3xl text-[#1E3A32] mb-10">
-              <CmsText 
-                contentKey="blog.featured.title" 
-                page="Blog"
-                blockTitle="Featured Section Title"
-                fallback="Featured" 
-                contentType="short_text"
-              />
-            </h2>
-            <div className="bg-white hover:shadow-lg transition-shadow overflow-hidden md:flex">
-              {featuredPost.featured_image && (
-                <div className="md:w-2/5 flex-shrink-0">
-                  <img
-                    src={featuredPost.featured_image}
-                    alt={featuredPost.title}
-                    className="w-full h-64 md:h-full object-cover"
-                  />
+        <section id="featured" className="py-20 bg-[#F9F5EF]">
+          <div className="max-w-5xl mx-auto px-6">
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <h2 className="font-serif text-3xl text-[#1E3A32] mb-10">
+                <CmsText contentKey="blog.featured.title" page="Blog" blockTitle="Featured Section Title" fallback="Featured" contentType="short_text" />
+              </h2>
+              <div className="bg-white hover:shadow-lg transition-shadow overflow-hidden md:flex">
+                {featuredPost.featured_image && (
+                  <div className="md:w-2/5 flex-shrink-0 relative">
+                    <img src={featuredPost.featured_image} alt={featuredPost.title} className="w-full h-64 md:h-full object-cover" />
+                    {featuredPost.post_type === "video" && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                        <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
+                          <Play size={24} className="text-[#1E3A32] ml-1" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <div className="p-10 md:p-12 flex flex-col justify-center">
+                  <div className="flex items-center gap-3 mb-4 flex-wrap">
+                    <span className="px-3 py-1 bg-[#D8B46B]/20 text-[#2B2725] text-xs tracking-wide uppercase">{featuredPost.category}</span>
+                    {featuredPost.post_type === "video" && (
+                      <span className="px-3 py-1 bg-[#6E4F7D]/10 text-[#6E4F7D] text-xs tracking-wide uppercase flex items-center gap-1"><Play size={10} /> Video</span>
+                    )}
+                    {featuredPost.publish_date && (
+                      <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
+                        <Calendar size={14} />
+                        {new Date(featuredPost.publish_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </div>
+                    )}
+                    {featuredPost.read_time && featuredPost.post_type !== "video" && (
+                      <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
+                        <Clock size={14} />
+                        {featuredPost.read_time} min read
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4 leading-tight">{featuredPost.title}</h3>
+                  <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">{featuredPost.excerpt}</p>
+                  <button onClick={() => goToPost(featuredPost.slug)} className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all">
+                    {featuredPost.post_type === "video" ? "Watch" : "Read Article"}
+                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                  </button>
                 </div>
-              )}
-              <div className="p-10 md:p-12 flex flex-col justify-center">
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="px-3 py-1 bg-[#D8B46B]/20 text-[#2B2725] text-xs tracking-wide uppercase">
-                    {featuredPost.category}
-                  </span>
-                  {featuredPost.publish_date && (
-                    <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
-                      <Calendar size={14} />
-                      {new Date(featuredPost.publish_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                    </div>
-                  )}
-                  {featuredPost.read_time && (
-                    <div className="flex items-center gap-2 text-[#2B2725]/60 text-sm">
-                      <Clock size={14} />
-                      {featuredPost.read_time} min read
-                    </div>
-                  )}
-                </div>
-                <h3 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4 leading-tight">
-                  {featuredPost.title}
-                </h3>
-                <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-6">
-                  {featuredPost.excerpt}
-                </p>
-                <button
-                  onClick={() => goToPost(featuredPost.slug)}
-                  className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all"
-                >
-                  Read Article
-                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                </button>
               </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+            </motion.div>
+          </div>
+        </section>
       )}
 
-      {/* Latest Posts */}
+      {/* 2. All Posts */}
       <section id="latest" className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-12">
               {selectedCategory === "All" ? "Latest Posts" : selectedCategory}
             </h2>
-
             {filteredPosts.length === 0 ? (
-              <p className="text-[#2B2725]/60 text-center py-12">No posts yet. Check back soon.</p>
+              <p className="text-[#2B2725]/60 text-center py-12">No posts in this category yet. Check back soon.</p>
             ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredPosts.map((post, index) => (
-                <motion.div
-                  key={post.slug}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-[#F9F5EF] p-8 hover:shadow-lg transition-shadow"
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="px-3 py-1 bg-white text-[#2B2725] text-xs tracking-wide uppercase">
-                      {post.category}
-                    </span>
-                  </div>
-                  <h3 className="font-serif text-xl text-[#1E3A32] mb-3 leading-tight">
-                    {post.title}
-                  </h3>
-                  <p className="text-[#2B2725]/70 leading-relaxed mb-4">{post.excerpt}</p>
-                  <div className="flex items-center gap-4 text-[#2B2725]/60 text-sm mb-4">
-                    {post.publish_date && (
-                      <div className="flex items-center gap-1">
-                        <Calendar size={14} />
-                        {new Date(post.publish_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                      </div>
-                    )}
-                    {post.read_time && (
-                      <div className="flex items-center gap-1">
-                        <Clock size={14} />
-                        {post.read_time} min
-                      </div>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => goToPost(post.slug)}
-                    className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:gap-3 transition-all"
-                  >
-                    Read
-                    <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </motion.div>
-              ))}
-            </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredPosts.map((post) => (
+                  <PostCard key={post.id} post={post} onClick={goToPost} />
+                ))}
+              </div>
             )}
           </motion.div>
         </div>
       </section>
 
-      {/* Monday Mentions */}
+      {/* 3. Restyle Monday */}
       <section className="py-20 bg-[#A6B7A3]">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-6">
-              <CmsText 
-                contentKey="blog.monday.title" 
-                page="Blog"
-                blockTitle="Monday Mentions Title"
-                fallback="Monday Mentions" 
-                contentType="short_text"
-              />
-            </h2>
-            <p className="text-[#F9F5EF]/90 text-lg leading-relaxed mb-8">
-              <CmsText 
-                contentKey="blog.monday.description" 
-                page="Blog"
-                blockTitle="Monday Mentions Description"
-                fallback="Short, focused pieces to help you begin your week with one clear thought, question, or tool." 
-                contentType="rich_text"
-              />
-            </p>
-            <button
-              onClick={() => { setSelectedCategory("Monday Mentions"); document.getElementById('latest')?.scrollIntoView({ behavior: 'smooth' }); }}
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F9F5EF] text-[#1E3A32] text-sm tracking-wide hover:bg-white transition-all duration-300"
-            >
-              See Monday Mentions
-              <ArrowRight
-                size={16}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </button>
+        <div className="max-w-5xl mx-auto px-6">
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <div className="text-center mb-10">
+              <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-4">
+                <CmsText contentKey="blog.restyle.title" page="Blog" blockTitle="Restyle Monday Title" fallback="Restyle Monday" contentType="short_text" />
+              </h2>
+              <p className="text-[#F9F5EF]/90 text-lg leading-relaxed max-w-2xl mx-auto">
+                <CmsText contentKey="blog.restyle.description" page="Blog" blockTitle="Restyle Monday Description" fallback="Short, focused pieces to help you begin your week with one clear thought, question, or tool." contentType="rich_text" />
+              </p>
+            </div>
+            {restylePosts.length > 0 ? (
+              <div className="grid md:grid-cols-3 gap-6 mb-8">
+                {restylePosts.map(post => (
+                  <div key={post.id} className="bg-white/90 p-6 hover:shadow-lg transition-shadow cursor-pointer" onClick={() => goToPost(post.slug)}>
+                    <p className="text-[#2B2725]/60 text-xs mb-2">
+                      {post.publish_date && new Date(post.publish_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </p>
+                    <h3 className="font-serif text-lg text-[#1E3A32] mb-2 leading-tight">{post.title}</h3>
+                    <p className="text-[#2B2725]/70 text-sm leading-relaxed line-clamp-2">{post.excerpt}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            <div className="text-center">
+              <button
+                onClick={() => { setSelectedCategory("Restyle Monday"); document.getElementById('latest')?.scrollIntoView({ behavior: 'smooth' }); }}
+                className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F9F5EF] text-[#1E3A32] text-sm tracking-wide hover:bg-white transition-all duration-300"
+              >
+                See All Restyle Monday Posts
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Thursday Thoughts */}
+      {/* 4. Thursday Tailoring */}
       <section className="py-20 bg-[#6E4F7D]">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-6">
-              <CmsText 
-                contentKey="blog.thursday.title" 
-                page="Blog"
-                blockTitle="Thursday Thoughts Title"
-                fallback="Thursday Thoughts" 
-                contentType="short_text"
-              />
-            </h2>
-            <p className="text-[#F9F5EF]/90 text-lg leading-relaxed mb-8">
-              <CmsText 
-                contentKey="blog.thursday.description" 
-                page="Blog"
-                blockTitle="Thursday Thoughts Description"
-                fallback="A reflective note to carry into the weekend — something to notice, try on, or gently shift in your internal world." 
-                contentType="rich_text"
-              />
-            </p>
-            <button
-              onClick={() => { setSelectedCategory("Thursday Thoughts"); document.getElementById('latest')?.scrollIntoView({ behavior: 'smooth' }); }}
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F9F5EF] text-[#1E3A32] text-sm tracking-wide hover:bg-white transition-all duration-300"
-            >
-              See Thursday Thoughts
-              <ArrowRight
-                size={16}
-                className="group-hover:translate-x-1 transition-transform"
-              />
-            </button>
+        <div className="max-w-5xl mx-auto px-6">
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <div className="text-center mb-10">
+              <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-4">
+                <CmsText contentKey="blog.thursday.title" page="Blog" blockTitle="Thursday Tailoring Title" fallback="Thursday Tailoring" contentType="short_text" />
+              </h2>
+              <p className="text-[#F9F5EF]/90 text-lg leading-relaxed max-w-2xl mx-auto">
+                <CmsText contentKey="blog.thursday.description" page="Blog" blockTitle="Thursday Tailoring Description" fallback="A quote and commentary to carry into the weekend — something to notice, try on, or gently shift in your internal world." contentType="rich_text" />
+              </p>
+            </div>
+            {thursdayPosts.length > 0 ? (
+              <div className="grid md:grid-cols-3 gap-6 mb-8">
+                {thursdayPosts.map(post => (
+                  <div key={post.id} className="bg-white/10 border border-white/20 p-6 hover:bg-white/20 transition-colors cursor-pointer" onClick={() => goToPost(post.slug)}>
+                    <p className="text-[#F9F5EF]/60 text-xs mb-2">
+                      {post.publish_date && new Date(post.publish_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                    </p>
+                    <h3 className="font-serif text-lg text-[#F9F5EF] mb-2 leading-tight">{post.title}</h3>
+                    <p className="text-[#F9F5EF]/70 text-sm leading-relaxed line-clamp-2">{post.excerpt}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
+            <div className="text-center">
+              <button
+                onClick={() => { setSelectedCategory("Thursday Tailoring"); document.getElementById('latest')?.scrollIntoView({ behavior: 'smooth' }); }}
+                className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F9F5EF] text-[#1E3A32] text-sm tracking-wide hover:bg-white transition-all duration-300"
+              >
+                See All Thursday Tailoring Posts
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Work With Me */}
+      {/* 5. Mind-Styling Podcasts */}
+      <section className="py-20 bg-[#1E3A32]">
+        <div className="max-w-5xl mx-auto px-6">
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <div className="text-center mb-10">
+              <Mic size={36} className="text-[#D8B46B] mx-auto mb-4" />
+              <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-4">
+                <CmsText contentKey="blog.podcasts.title" page="Blog" blockTitle="Podcasts Section Title" fallback="Mind-Styling Podcasts" contentType="short_text" />
+              </h2>
+              <p className="text-[#F9F5EF]/80 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
+                <CmsText contentKey="blog.podcasts.description" page="Blog" blockTitle="Podcasts Section Description" fallback="Listen to Roberta's conversations on podcasts across the web — on emotional intelligence, hypnosis, identity, and change." contentType="rich_text" />
+              </p>
+              <p className="text-[#F9F5EF]/50 text-sm">
+                <CmsText contentKey="blog.podcasts.comingsoon" page="Blog" blockTitle="Podcasts Coming Soon Note" fallback="Podcast appearances coming soon. Check back for links to episodes." contentType="short_text" />
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Work With Me CTA */}
       <section className="py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
-              <CmsText 
-                contentKey="blog.cta.title" 
-                page="Blog"
-                blockTitle="CTA Title"
-                fallback="Want to Take This Work Deeper?" 
-                contentType="short_text"
-              />
+              <CmsText contentKey="blog.cta.title" page="Blog" blockTitle="CTA Title" fallback="Want to Take This Work Deeper?" contentType="short_text" />
             </h2>
             <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10">
-              <CmsText 
-                contentKey="blog.cta.description" 
-                page="Blog"
-                blockTitle="CTA Description"
-                fallback="If something you read here resonates, there are several ways we can work together:" 
-                contentType="rich_text"
-              />
+              <CmsText contentKey="blog.cta.description" page="Blog" blockTitle="CTA Description" fallback="If something you read here resonates, there are several ways we can work together:" contentType="rich_text" />
             </p>
-
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-10">
-              <Link
-                to={createPageUrl("LearnHypnosis")}
-                className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
-              >
-                Hypnosis Training
-              </Link>
+              <Link to={createPageUrl("LearnHypnosis")} className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors">Hypnosis Training</Link>
               <span className="hidden sm:block text-[#2B2725]/30">•</span>
-              <Link
-                to={createPageUrl("CleaningOutYourCloset")}
-                className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
-              >
-                Private Mind Styling (1:1)
-              </Link>
+              <Link to={createPageUrl("CleaningOutYourCloset")} className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors">Private Mind Styling (1:1)</Link>
               <span className="hidden sm:block text-[#2B2725]/30">•</span>
-              <Link
-                to={createPageUrl("Programs")}
-                className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
-              >
-                All Programs & Pricing
-              </Link>
+              <Link to={createPageUrl("Programs")} className="text-[#1E3A32] hover:text-[#D8B46B] transition-colors">All Programs & Pricing</Link>
             </div>
-
-            <Link
-              to={createPageUrl("Contact")}
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
-            >
+            <Link to={createPageUrl("Contact")} className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300">
               Explore Ways to Work With Me
-              <ArrowRight
-                size={16}
-                className="group-hover:translate-x-1 transition-transform"
-              />
+              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
         </div>
