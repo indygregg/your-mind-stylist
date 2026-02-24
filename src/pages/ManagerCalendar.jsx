@@ -431,6 +431,56 @@ export default function ManagerCalendar() {
           </div>
         </div>
 
+        {/* Day View Modal */}
+        <Dialog open={!!selectedDay} onOpenChange={() => setSelectedDay(null)}>
+          <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {selectedDay && format(selectedDay.day, "EEEE, MMMM d, yyyy")}
+              </DialogTitle>
+            </DialogHeader>
+            {selectedDay && (
+              <div className="space-y-2 mt-2">
+                {selectedDay.items
+                  .sort((a, b) => {
+                    const timeA = a.type === 'booking' ? (a.scheduled_date || '') : `${a.specific_date}T${a.start_time}`;
+                    const timeB = b.type === 'booking' ? (b.scheduled_date || '') : `${b.specific_date}T${b.start_time}`;
+                    return timeA.localeCompare(timeB);
+                  })
+                  .map((item) => {
+                    if (item.type === 'blocked') {
+                      return (
+                        <div key={item.id} className="flex items-start gap-3 p-3 bg-gray-50 border border-gray-200 rounded">
+                          <Clock size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
+                          <div>
+                            <div className="text-sm font-medium text-gray-700">{item.start_time} – {item.end_time}</div>
+                            <div className="text-xs text-gray-500 mt-0.5">🚫 {item.reason || 'Blocked'}</div>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => { setSelectedDay(null); setSelectedBooking(item); }}
+                        className="w-full text-left flex items-start gap-3 p-3 bg-green-50 border border-green-200 rounded hover:bg-green-100 transition-colors"
+                      >
+                        <Clock size={14} className="text-green-600 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <div className="text-sm font-medium text-[#1E3A32]">
+                            {item.scheduled_date && format(new Date(item.scheduled_date), "h:mm a")} — {item.user_name}
+                          </div>
+                          <div className="text-xs text-[#2B2725]/60 mt-0.5">{item.service_type?.replace(/_/g, " ")}</div>
+                        </div>
+                        {item.zoom_status === 'created' && <Video size={12} className="text-blue-500 ml-auto mt-1" />}
+                      </button>
+                    );
+                  })}
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
         {/* Booking Details Modal */}
         <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
