@@ -312,7 +312,7 @@ export default function ManagerAvailability() {
                       <Calendar size={16} className="text-blue-600" />
                       <div>
                         <p className="text-sm font-medium text-[#1E3A32]">
-                          {block.specific_date} • {block.start_time} - {block.end_time}
+                          {block.specific_date} • {formatTime24to12(block.start_time)} - {formatTime24to12(block.end_time)}
                         </p>
                         <p className="text-xs text-[#2B2725]/60">{block.reason}</p>
                       </div>
