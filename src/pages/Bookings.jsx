@@ -65,6 +65,12 @@ export default function Bookings() {
     loadUser();
   }, []);
 
+  useEffect(() => {
+    // Let the layout know which step we're on so it can adjust nav colors
+    document.body.setAttribute('data-booking-step', step);
+    return () => document.body.removeAttribute('data-booking-step');
+  }, [step]);
+
   const handleSelectAppointment = (apt) => {
     setSelectedAppointment(apt);
     setStep(2);
