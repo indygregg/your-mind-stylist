@@ -461,7 +461,7 @@ export default function ManagerCalendar() {
                         <div key={item.id} className="flex items-start gap-3 p-3 bg-gray-50 border border-gray-200 rounded">
                           <Clock size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
                           <div>
-                            <div className="text-sm font-medium text-gray-700">{item.start_time} – {item.end_time}</div>
+                            <div className="text-sm font-medium text-gray-700">{formatTime24to12(item.start_time)} – {formatTime24to12(item.end_time)}</div>
                             <div className="text-xs text-gray-500 mt-0.5">🚫 {item.reason || 'Blocked'}</div>
                           </div>
                         </div>
