@@ -126,7 +126,6 @@ Deno.serve(async (req) => {
       r.specific_date >= todayStr &&
       r.specific_date <= in30DaysStr &&
       r.external_event_id &&
-      !r.external_event_id.startsWith('acuity_') &&
       !newRuleKeys.has(`${r.external_event_id}::${r.specific_date}::${r.start_time}`)
     );
 
