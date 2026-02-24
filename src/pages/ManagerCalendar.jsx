@@ -177,6 +177,7 @@ function BookingDetailContent({ selectedBooking, appointmentTypes, getStatusColo
 export default function ManagerCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(null);
   const queryClient = useQueryClient();
 
   const { data: appointmentTypes = [] } = useQuery({
