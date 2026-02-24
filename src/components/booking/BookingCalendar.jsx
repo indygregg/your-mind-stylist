@@ -128,19 +128,25 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
             const isSelected = selectedDate && isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentMonth);
 
+            let dayClass = 'aspect-square p-2 text-sm rounded transition-all relative ';
+            if (!isCurrentMonth) {
+              dayClass += 'text-[#2B2725]/20 cursor-not-allowed ';
+            } else if (isSelected) {
+              dayClass += 'bg-[#1E3A32] text-[#F9F5EF] cursor-pointer ';
+            } else if (isAvailable) {
+              dayClass += 'bg-[#D8B46B]/20 text-[#1E3A32] hover:bg-[#D8B46B]/40 cursor-pointer font-medium ';
+            } else if (isBlocked) {
+              dayClass += 'bg-gray-100 border border-gray-300 text-[#2B2725]/50 cursor-not-allowed ';
+            } else {
+              dayClass += 'text-[#2B2725]/40 cursor-not-allowed ';
+            }
+
             return (
               <button
                 key={idx}
                 onClick={() => handleDateClick(day)}
                 disabled={!isAvailable || !isCurrentMonth}
-                className={`
-                  aspect-square p-2 text-sm rounded transition-all relative
-                  ${isCurrentMonth ? 'text-[#1E3A32]' : 'text-[#2B2725]/30'}
-                  ${isBlocked && isCurrentMonth ? 'bg-gray-100 border border-gray-300' : ''}
-                  ${isAvailable ? 'bg-[#D8B46B]/10 hover:bg-[#D8B46B]/20 cursor-pointer' : 'cursor-not-allowed'}
-                  ${isSelected ? 'bg-[#1E3A32] text-[#F9F5EF]' : ''}
-                  ${!isAvailable && !isBlocked && isCurrentMonth ? 'opacity-40' : ''}
-                `}
+                className={dayClass}
               >
                 {format(day, 'd')}
                 {isBlocked && isCurrentMonth && (
