@@ -66,9 +66,13 @@ export default function Bookings() {
   }, []);
 
   useEffect(() => {
-    // Let the layout know which step we're on so it can adjust nav colors
-    document.body.setAttribute('data-booking-step', step);
-    return () => document.body.removeAttribute('data-booking-step');
+    // Signal to the layout whether we are on the dark hero (step 1) or a light background
+    if (step === 1) {
+      document.body.setAttribute('data-dark-hero', 'true');
+    } else {
+      document.body.removeAttribute('data-dark-hero');
+    }
+    return () => document.body.removeAttribute('data-dark-hero');
   }, [step]);
 
   const handleSelectAppointment = (apt) => {
