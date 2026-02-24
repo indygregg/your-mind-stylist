@@ -32,10 +32,7 @@ export default function Bookings() {
   // Hardcode Roberta's manager ID for public booking page
   const primaryManagerId = '693b6b4124b276d4067b6d8e';
 
-  // Signal to Layout whether we're on the dark hero (step 1 only)
-  useEffect(() => {
-    document.documentElement.setAttribute('data-booking-step', step);
-  }, [step]);
+
 
   const { data: appointmentTypes = [], isLoading } = useQuery({
     queryKey: ["appointmentTypes", primaryManagerId],
