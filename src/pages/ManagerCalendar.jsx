@@ -360,7 +360,10 @@ export default function ManagerCalendar() {
                       {format(day, "d")}
                     </div>
                     {dayBookings.length > 0 && (
-                      <span className="text-xs bg-[#1E3A32] text-white px-2 py-0.5 rounded-full">
+                      <span
+                        className="text-xs bg-[#1E3A32] text-white px-2 py-0.5 rounded-full cursor-pointer hover:bg-[#D8B46B] transition-colors"
+                        onClick={() => setSelectedDay({ day, items: dayBookings })}
+                      >
                         {dayBookings.length}
                       </span>
                     )}
