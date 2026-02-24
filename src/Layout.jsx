@@ -222,11 +222,8 @@ export default function Layout({ children, currentPageName }) {
       >
         {/* Determine if page has dark hero */}
         {(() => {
-          const darkHeroPages = ['LearnHypnosis', 'Consultations'];
-          // Bookings only has a dark hero on step 1 (when the dark section is visible at the very top)
-          // We detect this by checking if the page has scrolled past the hero (the hero is ~300px tall)
-          const isBookingsOnDarkHero = currentPageName === 'Bookings' && !isScrolled && window.scrollY < 50;
-          const hasDarkHero = (darkHeroPages.includes(currentPageName) || isBookingsOnDarkHero) && !isScrolled;
+          const darkHeroPages = ['Bookings', 'LearnHypnosis', 'Consultations'];
+          const hasDarkHero = darkHeroPages.includes(currentPageName) && !isScrolled;
           const textColorClass = hasDarkHero ? 'text-white' : 'text-[#2B2725]';
           const textColorOpacity = hasDarkHero ? 'text-white/80' : 'text-[#2B2725]/60';
           const logoSrc = hasDarkHero 
