@@ -46,7 +46,7 @@ export default function ManagerAvailability() {
     setUser(currentUser);
   };
 
-  // Fetch availability rules
+  // Fetch availability rules (filtered by appointment type for editing)
   const { data: rules = [], isLoading: rulesLoading } = useQuery({
     queryKey: ['availability-rules', user?.id, selectedAppointmentType],
     queryFn: () => {
@@ -58,6 +58,17 @@ export default function ManagerAvailability() {
       }
       return base44.entities.AvailabilityRule.filter(filter);
     },
+    enabled: !!user,
+  });
+
+  // Fetch ALL rules (for the heatmap overview - across all appointment types)
+  const { data: allRules = [] } = useQuery({
+    queryKey: ['all-availability-rules', user?.id],
+    queryFn: () => base44.entities.AvailabilityRule.filter({ 
+      manager_id: user.id,
+      rule_type: 'available',
+      source: 'manual'
+    }),
     enabled: !!user,
   });
 
