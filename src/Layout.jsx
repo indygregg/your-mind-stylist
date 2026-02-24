@@ -222,7 +222,7 @@ export default function Layout({ children, currentPageName }) {
       >
         {/* Determine if page has dark hero */}
         {(() => {
-          const darkHeroPages = ['Bookings', 'LearnHypnosis', 'Consultations'];
+          const darkHeroPages = ['LearnHypnosis', 'Consultations'];
           const hasDarkHero = darkHeroPages.includes(currentPageName) && !isScrolled;
           const textColorClass = hasDarkHero ? 'text-white' : 'text-[#2B2725]';
           const textColorOpacity = hasDarkHero ? 'text-white/80' : 'text-[#2B2725]/60';
