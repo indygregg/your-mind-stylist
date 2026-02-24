@@ -36,10 +36,10 @@ export default function Bookings() {
     queryKey: ["appointmentTypes", primaryManagerId],
     queryFn: async () => {
       const results = await base44.entities.AppointmentType.filter({ 
-        active: true,
         manager_id: primaryManagerId
       });
-      return results;
+      // Filter active ones client-side to avoid multi-field filter issues
+      return results.filter(r => r.active !== false);
     },
   });
 
