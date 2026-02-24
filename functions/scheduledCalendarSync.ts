@@ -4,7 +4,7 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    // Get access token via service role connector (this is authorized at app level)
+    // Get access token via service role connector
     let accessToken;
     try {
       accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
@@ -23,7 +23,9 @@ Deno.serve(async (req) => {
     const managerId = settings.manager_id;
     const userTimezone = settings.timezone || 'America/Los_Angeles';
 
-    // Fetch events from Google Calendar (next 60 days only to avoid rate limits)
+    console.log(`Syncing for manager ${managerId} in timezone ${userTimezone}`);
+
+    // Fetch events from Google Calendar (next 60 days)
     const now = new Date();
     const in60Days = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000);
 
@@ -35,65 +37,62 @@ Deno.serve(async (req) => {
       `maxResults=100&` +
       `orderBy=startTime`,
       {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Authorization': `Bearer ${accessToken}` }
       }
     );
 
     if (!calendarRes.ok) {
       const errText = await calendarRes.text();
       console.error('Google Calendar API error:', errText);
-      throw new Error(`Google Calendar API error: ${calendarRes.status} ${calendarRes.statusText}`);
+      throw new Error(`Google Calendar API error: ${calendarRes.status}`);
     }
 
     const calendarData = await calendarRes.json();
-    const events = calendarData.items || [];
-    console.log(`Fetched ${events.length} events from Google Calendar`);
+    const events = (calendarData.items || []).filter(e => e.status !== 'cancelled');
+    console.log(`Fetched ${events.length} active events from Google Calendar`);
 
     // Helper: format time in timezone as HH:MM
-    const formatTimeInTimezone = (dateStr, timezone) => {
-      return new Intl.DateTimeFormat('en-US', {
-        timeZone: timezone,
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      }).format(new Date(dateStr));
+    const formatTimeInTimezone = (isoStr, timezone) => {
+      const fmt = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone, hour: '2-digit', minute: '2-digit', hour12: false
+      });
+      const parts = fmt.formatToParts(new Date(isoStr));
+      const h = parts.find(p => p.type === 'hour')?.value || '00';
+      const m = parts.find(p => p.type === 'minute')?.value || '00';
+      // Intl can return '24' for midnight in some locales, normalize to '00'
+      return `${h === '24' ? '00' : h}:${m}`;
     };
 
     // Helper: get YYYY-MM-DD date in timezone
-    const getDateInTimezone = (dateStr, timezone) => {
+    const getDateInTimezone = (isoStr, timezone) => {
       return new Intl.DateTimeFormat('en-CA', {
-        timeZone: timezone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
-      }).format(new Date(dateStr));
+        timeZone: timezone, year: 'numeric', month: '2-digit', day: '2-digit'
+      }).format(new Date(isoStr));
     };
 
-    // Build the set of rules we want to create
+    const todayStr = getDateInTimezone(now.toISOString(), userTimezone);
+
+    // Build set of new rules to create from Google Calendar events
     const rulesToCreate = [];
     for (const event of events) {
-      if (event.status === 'cancelled') continue;
-      // Skip events the user has declined
+      // Skip events the user declined
       if (event.attendees) {
-        const selfAttendee = event.attendees.find(a => a.self);
-        if (selfAttendee && selfAttendee.responseStatus === 'declined') continue;
+        const self = event.attendees.find(a => a.self);
+        if (self && self.responseStatus === 'declined') continue;
       }
 
       if (event.start?.dateTime) {
-        // Timed event
+        // Timed event — convert to local timezone properly
         const localDate = getDateInTimezone(event.start.dateTime, userTimezone);
-        const localStartTime = formatTimeInTimezone(event.start.dateTime, userTimezone);
-        const localEndTime = formatTimeInTimezone(event.end.dateTime, userTimezone);
+        const localStart = formatTimeInTimezone(event.start.dateTime, userTimezone);
+        const localEnd = formatTimeInTimezone(event.end.dateTime, userTimezone);
 
         rulesToCreate.push({
           manager_id: managerId,
           rule_type: 'blocked',
           specific_date: localDate,
-          start_time: localStartTime,
-          end_time: localEndTime,
+          start_time: localStart,
+          end_time: localEnd,
           is_available: false,
           reason: `Calendar: ${event.summary || 'Busy'}`,
           source: 'calendar_sync',
@@ -101,12 +100,10 @@ Deno.serve(async (req) => {
           active: true
         });
       } else if (event.start?.date) {
-        // All-day event — block entire day
-        const dateStr = event.start.date;
-        const endDateStr = event.end?.date || dateStr;
-
-        let d = new Date(dateStr + 'T12:00:00Z'); // use noon to avoid DST edge cases
-        const endD = new Date(endDateStr + 'T12:00:00Z');
+        // All-day event — block entire day(s)
+        // Use noon UTC to avoid DST issues when iterating days
+        let d = new Date(event.start.date + 'T12:00:00Z');
+        const endD = new Date((event.end?.date || event.start.date) + 'T12:00:00Z');
         while (d < endD) {
           const dayStr = getDateInTimezone(d.toISOString(), userTimezone);
           rulesToCreate.push({
@@ -126,54 +123,53 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Build a map of external_event_id -> rule for deduplication
+    // Get existing Google-Calendar-sourced rules for future dates (not Acuity imports)
+    // We only delete rules whose external_event_id starts with Google-style IDs (not 'acuity_')
     const existingRules = await base44.asServiceRole.entities.AvailabilityRule.filter({
       manager_id: managerId,
       source: 'calendar_sync'
     });
 
-    const todayStr = getDateInTimezone(now.toISOString(), userTimezone);
-    const existingByEventId = {};
-    const staleFutureIds = [];
+    const staleIds = existingRules
+      .filter(r =>
+        r.specific_date &&
+        r.specific_date >= todayStr &&
+        r.external_event_id &&
+        !r.external_event_id.startsWith('acuity_')  // preserve Acuity imports
+      )
+      .map(r => r.id);
 
-    for (const rule of existingRules) {
-      if (rule.specific_date && rule.specific_date >= todayStr) {
-        if (rule.external_event_id) {
-          existingByEventId[rule.external_event_id] = rule;
-        }
-        staleFutureIds.push(rule.id);
-      }
-    }
+    console.log(`Deleting ${staleIds.length} stale Google Calendar rules...`);
 
-    // Delete stale future rules in small batches to avoid rate limits
-    const BATCH_SIZE = 20;
-    for (let i = 0; i < staleFutureIds.length; i += BATCH_SIZE) {
-      const batch = staleFutureIds.slice(i, i + BATCH_SIZE);
+    // Delete in batches of 10 with pauses to avoid rate limiting
+    const BATCH = 10;
+    for (let i = 0; i < staleIds.length; i += BATCH) {
+      const batch = staleIds.slice(i, i + BATCH);
       await Promise.all(batch.map(id => base44.asServiceRole.entities.AvailabilityRule.delete(id)));
-      if (i + BATCH_SIZE < staleFutureIds.length) {
-        await new Promise(r => setTimeout(r, 200)); // small pause between batches
-      }
+      if (i + BATCH < staleIds.length) await new Promise(r => setTimeout(r, 300));
     }
 
-    // Create new rules in batches
-    let createdCount = 0;
-    for (let i = 0; i < rulesToCreate.length; i += BATCH_SIZE) {
-      const batch = rulesToCreate.slice(i, i + BATCH_SIZE);
+    console.log(`Creating ${rulesToCreate.length} new blocked slots...`);
+
+    // Create new rules in batches of 20
+    const CREATE_BATCH = 20;
+    let created = 0;
+    for (let i = 0; i < rulesToCreate.length; i += CREATE_BATCH) {
+      const batch = rulesToCreate.slice(i, i + CREATE_BATCH);
       await base44.asServiceRole.entities.AvailabilityRule.bulkCreate(batch);
-      createdCount += batch.length;
-      if (i + BATCH_SIZE < rulesToCreate.length) {
-        await new Promise(r => setTimeout(r, 200));
-      }
+      created += batch.length;
+      if (i + CREATE_BATCH < rulesToCreate.length) await new Promise(r => setTimeout(r, 300));
     }
 
-    console.log(`Calendar sync complete: deleted ${staleFutureIds.length} old rules, created ${createdCount} new rules`);
+    console.log(`Sync complete: deleted ${staleIds.length}, created ${created} rules`);
 
     return Response.json({
       success: true,
       calendar_events_fetched: events.length,
-      rules_deleted: staleFutureIds.length,
-      rules_created: createdCount,
-      message: `Synced ${createdCount} blocked slots from Google Calendar`
+      rules_deleted: staleIds.length,
+      rules_created: created,
+      timezone_used: userTimezone,
+      message: `Synced ${created} blocked slots from Google Calendar (${userTimezone})`
     });
   } catch (error) {
     console.error('Scheduled calendar sync error:', error.message);
