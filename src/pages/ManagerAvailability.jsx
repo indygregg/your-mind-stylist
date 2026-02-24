@@ -9,6 +9,14 @@ import { Switch } from "@/components/ui/switch";
 import { motion } from "framer-motion";
 import { Calendar, Clock, Save, Plus, Trash2 } from "lucide-react";
 
+const formatTime24to12 = (time24) => {
+  if (!time24) return '';
+  const [h, m] = time24.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const h12 = h % 12 || 12;
+  return `${h12}:${String(m).padStart(2, '0')} ${period}`;
+};
+
 export default function ManagerAvailability() {
   // Set auth layout
   if (typeof window !== 'undefined') {
