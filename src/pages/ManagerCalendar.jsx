@@ -416,9 +416,12 @@ export default function ManagerCalendar() {
                       );
                     })}
                     {dayBookings.length > 3 && (
-                      <div className="text-xs text-[#2B2725]/60 text-center py-1">
+                      <button
+                        onClick={() => setSelectedDay({ day, items: dayBookings })}
+                        className="text-xs text-[#1E3A32] hover:text-[#D8B46B] text-center py-1 w-full font-medium transition-colors"
+                      >
                         +{dayBookings.length - 3} more
-                      </div>
+                      </button>
                     )}
                   </div>
                 </div>
