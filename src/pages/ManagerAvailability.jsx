@@ -374,7 +374,7 @@ export default function ManagerAvailability() {
 
                     {/* Rows per day */}
                     {daysOfWeek.map((day) => {
-                      const dayRules = rules.filter(r => r.day_of_week === day.value && r.active !== false);
+                      const dayRules = allRules.filter(r => r.day_of_week === day.value && r.active !== false);
                       
                       return (
                         <div key={day.value} className="flex items-center mb-1.5">
