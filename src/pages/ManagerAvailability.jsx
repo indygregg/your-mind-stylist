@@ -336,6 +336,84 @@ export default function ManagerAvailability() {
           </motion.div>
         )}
 
+        {/* Visual Availability Overview */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
+          <Card className="p-6 mb-8">
+            <h2 className="font-serif text-2xl text-[#1E3A32] mb-2">Availability Overview</h2>
+            <p className="text-sm text-[#2B2725]/60 mb-6">Visual summary of your weekly availability</p>
+            {(() => {
+              const hours = Array.from({ length: 24 }, (_, i) => i); // 0–23
+              const activeHours = Array.from({ length: 14 }, (_, i) => i + 7); // show 7am–9pm
+
+              return (
+                <div className="overflow-x-auto">
+                  <div className="min-w-[600px]">
+                    {/* Hour labels */}
+                    <div className="flex mb-1 ml-24">
+                      {activeHours.map((h) => (
+                        <div key={h} className="flex-1 text-center text-[10px] text-[#2B2725]/40 font-mono">
+                          {h === 12 ? '12p' : h > 12 ? `${h - 12}p` : `${h}a`}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Rows per day */}
+                    {daysOfWeek.map((day) => {
+                      const dayRules = rules.filter(r => r.day_of_week === day.value && r.active !== false);
+                      
+                      return (
+                        <div key={day.value} className="flex items-center mb-1.5">
+                          <div className="w-24 text-sm font-medium text-[#1E3A32] flex-shrink-0">{day.label.slice(0, 3)}</div>
+                          <div className="flex flex-1 rounded overflow-hidden border border-[#E4D9C4]">
+                            {activeHours.map((h) => {
+                              const hStart = h * 60;
+                              const hEnd = hStart + 60;
+                              const isAvail = dayRules.some(rule => {
+                                const [rsh, rsm] = rule.start_time.split(':').map(Number);
+                                const [reh, rem] = rule.end_time.split(':').map(Number);
+                                const rStart = rsh * 60 + rsm;
+                                const rEnd = reh * 60 + rem;
+                                return rStart < hEnd && rEnd > hStart;
+                              });
+                              return (
+                                <div
+                                  key={h}
+                                  title={isAvail ? `Available ${h > 12 ? h-12 : h}${h >= 12 ? 'pm' : 'am'}–${h+1 > 12 ? h+1-12 : h+1}${h+1 >= 12 ? 'pm' : 'am'}` : 'Unavailable'}
+                                  className={`flex-1 h-8 transition-colors ${
+                                    isAvail
+                                      ? 'bg-[#1E3A32] hover:bg-[#2B4A40]'
+                                      : 'bg-[#F9F5EF] hover:bg-[#E4D9C4]'
+                                  }`}
+                                />
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+
+                    {/* Legend */}
+                    <div className="flex items-center gap-6 mt-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-[#1E3A32] rounded-sm" />
+                        <span className="text-xs text-[#2B2725]/70">Available</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 bg-[#F9F5EF] border border-[#E4D9C4] rounded-sm" />
+                        <span className="text-xs text-[#2B2725]/70">Unavailable</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+          </Card>
+        </motion.div>
+
         {/* Weekly Schedule */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
