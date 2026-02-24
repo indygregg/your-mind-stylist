@@ -238,6 +238,14 @@ export default function ManagerCalendar() {
     return colors[status] || "bg-gray-100 text-gray-800";
   };
 
+  const formatTime24to12 = (time24) => {
+    if (!time24) return '';
+    const [h, m] = time24.split(':').map(Number);
+    const period = h >= 12 ? 'PM' : 'AM';
+    const h12 = h % 12 || 12;
+    return `${h12}:${String(m).padStart(2, '0')} ${period}`;
+  };
+
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
