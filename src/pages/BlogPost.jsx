@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import SEO from "../components/SEO";
+import LeadMagnetCTA from "../components/leadmagnet/LeadMagnetCTA";
 
 export default function BlogPost() {
   const urlParams = new URLSearchParams(window.location.search);
