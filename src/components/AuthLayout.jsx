@@ -396,7 +396,9 @@ export default function AuthLayout({ children, currentPageName }) {
       </header>
 
       {/* Main Content */}
-      <main className="pt-20 pb-20 lg:pb-0">{children}</main>
+      <main className="pt-20 pb-20 lg:pb-0">
+        <PageTransition key={currentPageName}>{children}</PageTransition>
+      </main>
 
       {/* Bug Report Button */}
       <BugReportButton />
