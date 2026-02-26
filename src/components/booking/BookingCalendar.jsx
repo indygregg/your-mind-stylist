@@ -148,12 +148,6 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
             <span>Available</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-gray-100 border border-gray-300 rounded relative">
-              <div className="absolute top-0 right-0 w-1 h-1 bg-gray-500 rounded-full"></div>
-            </div>
-            <span>Blocked</span>
-          </div>
-          <div className="flex items-center gap-2">
             <div className="w-4 h-4 bg-[#1E3A32] rounded"></div>
             <span>Selected</span>
           </div>
