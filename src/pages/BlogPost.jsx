@@ -254,6 +254,11 @@ export default function BlogPost() {
         </section>
       )}
 
+      {/* Lead Magnet CTA */}
+      <div className="max-w-4xl mx-auto px-6">
+        <LeadMagnetCTA placement="blog" />
+      </div>
+
       {/* CTA Section */}
       <section className="py-20 bg-[#1E3A32]">
         <div className="max-w-4xl mx-auto px-6 text-center">
