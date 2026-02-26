@@ -18,7 +18,8 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
   const handleNavClick = (pageName) => {
     haptics.light();
     setMenuOpen(false);
-    navigate(createPageUrl(pageName));
+    // Use replace for tab navigation to preserve back-stack correctly
+    navigate(createPageUrl(pageName), { replace: true });
   };
 
   const getIcon = (pageName) => {
