@@ -183,6 +183,8 @@ import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
+import ManagerLeadMagnets from './pages/ManagerLeadMagnets';
+import LeadMagnetPage from './pages/LeadMagnetPage';
 import __Layout from './Layout.jsx';
 
 
@@ -323,6 +325,8 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
+    "ManagerLeadMagnets": ManagerLeadMagnets,
+    "LeadMagnetPage": LeadMagnetPage,
 }
 
 export const pagesConfig = {
