@@ -382,12 +382,17 @@ export default function Dashboard() {
                         >
                           Details
                         </Link>
-                        <Link
-                          to={createPageUrl(product.slug ? `ProductPage?slug=${product.slug}` : `Programs`)}
-                          className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors"
+                        <button
+                          onClick={() => handleDashboardPurchase(product)}
+                          disabled={checkoutLoading === product.id}
+                          className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors disabled:opacity-50"
                         >
-                          <ShoppingCart size={12} /> Buy
-                        </Link>
+                          {checkoutLoading === product.id ? (
+                            <span className="animate-pulse">Loading...</span>
+                          ) : (
+                            <><ShoppingCart size={12} /> Buy</>
+                          )}
+                        </button>
                       </div>
                     </div>
                   );
