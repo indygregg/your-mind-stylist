@@ -480,7 +480,9 @@ export default function Layout({ children, currentPageName }) {
       </header>
 
       {/* Main Content */}
-      <main>{children}</main>
+      <main>
+        <PageTransition key={currentPageName}>{children}</PageTransition>
+      </main>
 
       {/* Footer */}
       <footer className="bg-[#1E3A32] text-[#F9F5EF]">
