@@ -31,6 +31,7 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
       Library: BookOpen,
       PurchaseCenter: ShoppingCart,
       Purchase: ShoppingCart,
+      BuyPrograms: ShoppingCart,
       AdminRoadmap: FileText,
       Roadmap: FileText,
       AdminUsers: Users,
@@ -47,6 +48,10 @@ export default function MobileBottomNav({ user, currentPageName, navLinks, onLog
       Audio: Headphones,
       MessagesManager: MessageSquare,
       Messages: MessageSquare,
+      StylePauses: Sparkles,
+      ClientBookings: Calendar,
+      ClientPortal: UserCircle,
+      ManagerCalendar: Calendar,
     };
     return iconMap[pageName] || Home;
   };
