@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
-import { Home, BookOpen, ShoppingCart, Menu, X, Settings, Users, FileText, MessageSquare, Headphones, LayoutDashboard, UsersRound, Bug, MessageCircle } from "lucide-react";
+import { Home, BookOpen, ShoppingCart, Menu, X, Settings, Users, FileText, MessageSquare, Headphones, LayoutDashboard, UsersRound, Bug, MessageCircle, Sparkles, Calendar, UserCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import haptics from "@/components/utils/haptics";
 import BugReportModal from "./bug-tracker/BugReportModal";
