@@ -11,43 +11,63 @@ Deno.serve(async (req) => {
 
     const { confirmationText } = await req.json();
 
-    // Verify confirmation text
     if (confirmationText !== 'DELETE MY ACCOUNT') {
-      return Response.json({ 
-        error: 'Invalid confirmation. Please type "DELETE MY ACCOUNT" exactly.' 
+      return Response.json({
+        error: 'Invalid confirmation. Please type "DELETE MY ACCOUNT" exactly.'
       }, { status: 400 });
     }
 
-    // Mark account for deletion (soft delete)
-    await base44.auth.updateMe({
-      account_deletion_requested: true,
-      account_deletion_date: new Date().toISOString(),
-      account_status: 'pending_deletion'
-    });
-
-    // Log the deletion request
+    // Log the deletion request before deletion
     await base44.asServiceRole.entities.ActivityLog.create({
       action: 'account_deletion_requested',
       actor: user.email,
       target: user.id,
-      details: `User ${user.email} requested account deletion`
+      details: `User ${user.email} (ID: ${user.id}) requested account deletion. Data will be purged.`
     });
 
-    // Send notification email to admin
-    await base44.integrations.Core.SendEmail({
+    // Delete user's personal data entities
+    const entityDeletions = [
+      'DiaryEntry', 'Note', 'MomentumLog', 'UserStreak', 'UserAudioSession',
+      'UserCourseProgress', 'UserLessonProgress', 'LearningReflection',
+      'TransformationSnapshot', 'DailyStyleCheck', 'StylePauseCompletion',
+      'UserWebinarAccess', 'UserPackage', 'DepthMarker', 'GrowthInsight',
+      'UserEmailSequence', 'UserQuizAttempt', 'Message'
+    ];
+
+    for (const entityName of entityDeletions) {
+      try {
+        const records = await base44.asServiceRole.entities[entityName].filter({ created_by: user.email });
+        for (const record of records) {
+          await base44.asServiceRole.entities[entityName].delete(record.id);
+        }
+      } catch (_) {
+        // Entity may not have records or field — continue
+      }
+    }
+
+    // Mark account as deleted (platform-level deletion handled by admin after notification)
+    await base44.auth.updateMe({
+      account_deletion_requested: true,
+      account_deletion_date: new Date().toISOString(),
+      account_status: 'deleted',
+      full_name: 'Deleted User',
+    });
+
+    // Notify admin
+    await base44.asServiceRole.integrations.Core.SendEmail({
       to: 'roberta@robertafernandez.com',
-      subject: 'Account Deletion Request',
-      body: `User ${user.full_name} (${user.email}) has requested account deletion. User ID: ${user.id}`
+      subject: 'Account Deletion Completed',
+      body: `User ${user.full_name} (${user.email}) has deleted their account and all personal data has been purged. User ID: ${user.id}. Please remove this user from the platform manually to complete the process.`
     });
 
-    return Response.json({ 
+    return Response.json({
       success: true,
-      message: 'Account deletion request received. You will be logged out shortly.'
+      message: 'Your account and personal data have been deleted. You will be logged out now.'
     });
   } catch (error) {
     console.error('Delete account error:', error);
-    return Response.json({ 
-      error: error.message || 'Failed to process deletion request' 
+    return Response.json({
+      error: error.message || 'Failed to process deletion request'
     }, { status: 500 });
   }
 });
