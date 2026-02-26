@@ -155,6 +155,15 @@ Deno.serve(async (req) => {
           case 'seq_rejoin':
             groupName = 'Re-engagement';
             break;
+          case 'seq_winback':
+            groupName = 'Win-back';
+            break;
+          case 'seq_post_consultation':
+            groupName = 'Post-Consultation Nurture';
+            break;
+          case 'seq_post_course':
+            groupName = 'Post-Course Follow-up';
+            break;
         }
 
         if (groupName) {
