@@ -115,21 +115,18 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
           {monthDays.map((day, idx) => {
             const dateStr = format(day, 'yyyy-MM-dd');
             const isAvailable = availableDates.has(dateStr);
-            const isBlocked = blockedDates.has(dateStr);
             const isSelected = selectedDate && isSameDay(day, selectedDate);
             const isCurrentMonth = isSameMonth(day, currentMonth);
 
-            let dayClass = 'aspect-square p-2 text-sm rounded transition-all relative ';
+            let dayClass = 'aspect-square p-2 text-sm rounded transition-all ';
             if (!isCurrentMonth) {
               dayClass += 'text-[#2B2725]/20 cursor-not-allowed ';
             } else if (isSelected) {
               dayClass += 'bg-[#1E3A32] text-[#F9F5EF] cursor-pointer ';
             } else if (isAvailable) {
               dayClass += 'bg-[#D8B46B]/20 text-[#1E3A32] hover:bg-[#D8B46B]/40 cursor-pointer font-medium ';
-            } else if (isBlocked) {
-              dayClass += 'bg-gray-100 border border-gray-300 text-[#2B2725]/50 cursor-not-allowed ';
             } else {
-              dayClass += 'text-[#2B2725]/40 cursor-not-allowed ';
+              dayClass += 'text-[#2B2725]/30 cursor-not-allowed ';
             }
 
             return (
@@ -140,9 +137,6 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
                 className={dayClass}
               >
                 {format(day, 'd')}
-                {isBlocked && isCurrentMonth && (
-                  <div className="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-gray-500 rounded-full" />
-                )}
               </button>
             );
           })}
