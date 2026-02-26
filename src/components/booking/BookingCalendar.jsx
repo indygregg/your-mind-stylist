@@ -35,17 +35,9 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
 
       setAvailableSlots(response.data.slots || []);
       
-      // Extract unique dates that have slots
+      // Only mark a date as available if it actually has slots for this appointment type
       const dates = new Set(response.data.slots.map(slot => slot.date));
       setAvailableDates(dates);
-
-      // Get blocked dates from calendar sync
-      const blockedRules = await base44.entities.AvailabilityRule.filter({
-        source: 'calendar_sync',
-        is_available: false
-      });
-      const blocked = new Set(blockedRules.map(rule => rule.specific_date).filter(Boolean));
-      setBlockedDates(blocked);
     } catch (error) {
       console.error('Error loading slots:', error);
     } finally {
