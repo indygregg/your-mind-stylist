@@ -13,6 +13,7 @@ import { EditModeProvider } from "./components/cms/EditModeProvider";
 import ManagerBar from "./components/cms/ManagerBar";
 import haptics from "./components/utils/haptics";
 import AffiliateTracker from "./components/affiliate/AffiliateTracker";
+import { PageTransition } from "./components/ui/PageTransition";
 import { CartProvider } from "./components/shop/CartContext";
 import CartIcon from "./components/shop/CartIcon";
 import { ArrowLeft, ExternalLink } from "lucide-react";
