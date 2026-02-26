@@ -297,28 +297,49 @@ export default function ManagerMailerLite() {
         {/* Automation Info */}
         <Card className="mt-6 bg-blue-50 border-blue-200">
           <CardHeader>
-            <CardTitle className="text-blue-900">Automated Email Sequences</CardTitle>
+            <CardTitle className="text-blue-900">Automated Tag & Group Sync</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-blue-800 mb-4">
-              The following automations are integrated into your app:
+              App events automatically tag subscribers in MailerLite and add them to groups to trigger automations:
             </p>
-            <ul className="space-y-2 text-blue-800">
-              <li className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                <span><strong>Booking Confirmations:</strong> Automatically added to MailerLite when bookings are made</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                <span><strong>Masterclass Signups:</strong> Synced to MailerLite for follow-up sequences</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                <span><strong>Newsletter:</strong> Manual subscription management via this page</span>
-              </li>
-            </ul>
-            <p className="text-sm text-blue-700 mt-4">
-              Set up email automation workflows in your MailerLite dashboard to trigger based on these groups.
+            <div className="grid md:grid-cols-2 gap-4 text-blue-800">
+              <div>
+                <p className="font-semibold mb-2">Lead Events</p>
+                <ul className="space-y-1 text-sm">
+                  <li>• Masterclass signup → <code>lead_masterclass</code> + <em>Masterclass Follow-up</em> group</li>
+                  <li>• Lead magnet download → <code>lead_magnet</code></li>
+                  <li>• Contact form → <code>lead_contact</code></li>
+                  <li>• Consultation request → <code>lead_consultation</code></li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">Purchase Events</p>
+                <ul className="space-y-1 text-sm">
+                  <li>• Booking completed → <code>purchased_private</code></li>
+                  <li>• Course purchased → <code>purchased_course</code></li>
+                  <li>• Products → product-specific tags</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">Engagement Events</p>
+                <ul className="space-y-1 text-sm">
+                  <li>• Course/lesson completed → <code>active_learner</code></li>
+                  <li>• Certificate earned → <code>certified_student</code></li>
+                  <li>• Audio/style pause → media-specific tags</li>
+                </ul>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">Lifecycle Events</p>
+                <ul className="space-y-1 text-sm">
+                  <li>• User registered → <em>Welcome Sequence</em> group</li>
+                  <li>• Inactive 30/60d → <em>Re-engagement</em> group</li>
+                  <li>• Subscription cancelled → <em>Win-back</em> group</li>
+                </ul>
+              </div>
+            </div>
+            <p className="text-sm text-blue-700 mt-4 border-t border-blue-200 pt-3">
+              <strong>Required:</strong> Create these groups in your MailerLite dashboard and attach automation workflows to them: <em>Masterclass Follow-up, Welcome Sequence, Re-engagement, Win-back, PV Onboarding, Post-Consultation Nurture, Post-Course Follow-up</em>.
             </p>
           </CardContent>
         </Card>
