@@ -127,55 +127,54 @@ Deno.serve(async (req) => {
 
     // Sync tags to MailerLite
     try {
-      // Update subscriber with tags in MailerLite
-      await base44.asServiceRole.functions.invoke('mailerLiteUpdateSubscriber', {
-        email: userData.email,
-        fields: {
-          name: userData.full_name
-        },
-        tags: newTags
+      const apiKey = Deno.env.get('MAILERLITE_API_KEY');
+      if (!apiKey) throw new Error('MAILERLITE_API_KEY not set');
+
+      // Upsert subscriber in MailerLite with updated fields
+      const upsertRes = await fetch('https://connect.mailerlite.com/api/subscribers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+        body: JSON.stringify({
+          email: userData.email,
+          fields: { name: userData.full_name || '' },
+        })
       });
+      const upsertData = await upsertRes.json();
+      const subscriberId = upsertData?.data?.id;
 
-      // Check if any sequence tags were added and trigger automations
-      const sequenceTags = newTags.filter(tag => tag.startsWith('seq_'));
-      for (const seqTag of sequenceTags) {
-        // Map sequence tags to MailerLite groups/automations
-        let groupName = null;
-        
-        switch(seqTag) {
-          case 'seq_masterclass':
-            groupName = 'Masterclass Follow-up';
-            break;
-          case 'seq_pv_onboarding':
-            groupName = 'PV Onboarding';
-            break;
-          case 'seq_welcome':
-            groupName = 'Welcome Sequence';
-            break;
-          case 'seq_rejoin':
-            groupName = 'Re-engagement';
-            break;
-          case 'seq_winback':
-            groupName = 'Win-back';
-            break;
-          case 'seq_post_consultation':
-            groupName = 'Post-Consultation Nurture';
-            break;
-          case 'seq_post_course':
-            groupName = 'Post-Course Follow-up';
-            break;
-        }
+      // Sequence tag → MailerLite group name mapping
+      const SEQ_GROUP_MAP = {
+        'seq_masterclass': 'Masterclass Follow-up',
+        'seq_pv_onboarding': 'PV Onboarding',
+        'seq_welcome': 'Welcome Sequence',
+        'seq_rejoin': 'Re-engagement',
+        'seq_winback': 'Win-back',
+        'seq_post_consultation': 'Post-Consultation Nurture',
+        'seq_post_course': 'Post-Course Follow-up',
+      };
 
-        if (groupName) {
-          // Add to MailerLite group to trigger automation
-          try {
-            await base44.asServiceRole.functions.invoke('mailerLiteAddToGroup', {
-              email: userData.email,
-              group_name: groupName
-            });
-          } catch (groupError) {
-            console.error('Failed to add to MailerLite group:', groupError);
-            // Continue even if group add fails
+      // Only process newly added sequence tags (not ones already on the user)
+      const newlyAddedTags = newTags.filter(tag => !currentTags.includes(tag));
+      const newSeqTags = newlyAddedTags.filter(tag => tag.startsWith('seq_') && SEQ_GROUP_MAP[tag]);
+
+      if (newSeqTags.length > 0 && subscriberId) {
+        // Fetch all MailerLite groups to resolve names → IDs
+        const groupsRes = await fetch('https://connect.mailerlite.com/api/groups?limit=100', {
+          headers: { 'Authorization': `Bearer ${apiKey}` }
+        });
+        const groupsData = await groupsRes.json();
+        const groups = groupsData?.data || [];
+
+        for (const seqTag of newSeqTags) {
+          const targetGroupName = SEQ_GROUP_MAP[seqTag];
+          const group = groups.find(g => g.name === targetGroupName);
+          if (group) {
+            await fetch(`https://connect.mailerlite.com/api/subscribers/${subscriberId}/groups/${group.id}`, {
+              method: 'POST',
+              headers: { 'Authorization': `Bearer ${apiKey}` }
+            }).catch(err => console.error(`Failed to add to group ${targetGroupName}:`, err));
+          } else {
+            console.warn(`MailerLite group not found: "${targetGroupName}" — create it in MailerLite dashboard`);
           }
         }
       }
