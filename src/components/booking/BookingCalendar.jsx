@@ -14,7 +14,6 @@ export default function BookingCalendar({ appointmentType, onSlotSelected }) {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [loading, setLoading] = useState(false);
   const [availableDates, setAvailableDates] = useState(new Set());
-  const [blockedDates, setBlockedDates] = useState(new Set());
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showRecurringModal, setShowRecurringModal] = useState(false);
 
