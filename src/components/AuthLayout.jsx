@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { EditModeProvider } from "./cms/EditModeProvider";
 import ManagerBar from "./cms/ManagerBar";
+import { PageTransition } from "./ui/PageTransition";
 
 export default function AuthLayout({ children, currentPageName }) {
   const [user, setUser] = useState(null);

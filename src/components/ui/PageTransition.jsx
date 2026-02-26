@@ -4,22 +4,22 @@ import { motion } from "framer-motion";
 const pageVariants = {
   initial: {
     opacity: 0,
-    y: 20,
+    x: 12,
   },
   in: {
     opacity: 1,
-    y: 0,
+    x: 0,
   },
   out: {
     opacity: 0,
-    y: -20,
+    x: -12,
   },
 };
 
 const pageTransition = {
   type: "tween",
-  ease: "anticipate",
-  duration: 0.4,
+  ease: [0.25, 0.1, 0.25, 1],
+  duration: 0.22,
 };
 
 export function PageTransition({ children }) {
