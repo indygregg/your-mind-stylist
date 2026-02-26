@@ -65,6 +65,9 @@ export default function DashboardTooltips() {
 
   if (!isVisible) return null;
 
+  // Don't show the tooltip tour on mobile — it overlays the entire screen
+  if (typeof window !== "undefined" && window.innerWidth < 1024) return null;
+
   return (
     <AnimatePresence>
       <motion.div
