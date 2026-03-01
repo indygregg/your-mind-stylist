@@ -67,7 +67,6 @@ import BookingPaymentCancelled from './pages/BookingPaymentCancelled';
 import BookingPaymentFailed from './pages/BookingPaymentFailed';
 import BookingSuccess from './pages/BookingSuccess';
 import Bookings from './pages/Bookings';
-import BugList from './pages/BugList';
 import BuyPrograms from './pages/BuyPrograms';
 import CalendarSettings from './pages/CalendarSettings';
 import Cart from './pages/Cart';
@@ -209,7 +208,6 @@ export const PAGES = {
     "BookingPaymentFailed": BookingPaymentFailed,
     "BookingSuccess": BookingSuccess,
     "Bookings": Bookings,
-    "BugList": BugList,
     "BuyPrograms": BuyPrograms,
     "CalendarSettings": CalendarSettings,
     "Cart": Cart,
