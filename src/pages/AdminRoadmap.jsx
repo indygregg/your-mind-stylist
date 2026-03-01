@@ -345,6 +345,11 @@ export default function AdminRoadmap() {
                     <span className="text-sm px-3 py-1 bg-[#A6B7A3]/20 text-[#1E3A32]">
                       {selectedItem.status}
                     </span>
+                    {selectedItem.source === "BugTracker" && (
+                      <span className="text-sm px-3 py-1 bg-purple-100 text-purple-800">
+                        Bug Tracker
+                      </span>
+                    )}
                   </div>
 
                   {selectedItem.description && (
