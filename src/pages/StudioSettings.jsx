@@ -1,21 +1,72 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { base44 } from "@/api/base44Client";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Settings as SettingsIcon, Save, Download } from "lucide-react";
+import { Settings as SettingsIcon, Save, Download, Loader2 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 export default function StudioSettings() {
+  const queryClient = useQueryClient();
   const [settings, setSettings] = useState({
     siteName: "The Mind Stylist",
     blogEnabled: true,
     podcastEnabled: true,
     portalEnabled: true,
   });
+  const [localChanges, setLocalChanges] = useState(false);
+
+  // Fetch existing settings from CmsContent
+  const { data: cmsContent } = useQuery({
+    queryKey: ["studio-settings"],
+    queryFn: async () => {
+      const items = await base44.entities.CmsContent.filter({ key: "studio_settings" });
+      return items.length > 0 ? items[0] : null;
+    },
+  });
+
+  // Load settings when CMS content is fetched
+  useEffect(() => {
+    if (cmsContent?.data) {
+      setSettings(cmsContent.data);
+    }
+  }, [cmsContent]);
+
+  const saveMutation = useMutation({
+    mutationFn: async (newSettings) => {
+      if (cmsContent?.id) {
+        // Update existing
+        return base44.entities.CmsContent.update(cmsContent.id, {
+          data: newSettings,
+        });
+      } else {
+        // Create new
+        return base44.entities.CmsContent.create({
+          key: "studio_settings",
+          name: "Studio Settings",
+          data: newSettings,
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["studio-settings"] });
+      setLocalChanges(false);
+      toast.success("Settings saved successfully!");
+    },
+    onError: (error) => {
+      toast.error("Failed to save settings: " + error.message);
+    },
+  });
 
   const handleSave = () => {
-    // Save settings logic
-    alert("Settings saved successfully!");
+    saveMutation.mutate(settings);
+  };
+
+  const handleChange = (field, value) => {
+    setSettings({ ...settings, [field]: value });
+    setLocalChanges(true);
   };
 
   return (
