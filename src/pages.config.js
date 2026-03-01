@@ -96,8 +96,6 @@ import Evolution from './pages/Evolution';
 import FreeMasterclass from './pages/FreeMasterclass';
 import GuestAuthorInvite from './pages/GuestAuthorInvite';
 import Home from './pages/Home';
-import InnerRehearsal from './pages/InnerRehearsal';
-import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
 import IntegrationSetup from './pages/IntegrationSetup';
 import LENS from './pages/LENS';
 import LeadMagnetPage from './pages/LeadMagnetPage';
@@ -236,8 +234,6 @@ export const PAGES = {
     "FreeMasterclass": FreeMasterclass,
     "GuestAuthorInvite": GuestAuthorInvite,
     "Home": Home,
-    "InnerRehearsal": InnerRehearsal,
-    "InnerRehearsalPurchase": InnerRehearsalPurchase,
     "IntegrationSetup": IntegrationSetup,
     "LENS": LENS,
     "LeadMagnetPage": LeadMagnetPage,
