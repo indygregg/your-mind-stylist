@@ -290,7 +290,7 @@ export default function AdminRoadmap() {
                         </Button>
                       </div>
                     </div>
-                    <div className="flex gap-2 mb-2">
+                    <div className="flex gap-2 mb-2 flex-wrap">
                       <span className={`text-xs px-2 py-1 ${
                         item.priority === "Critical" ? "bg-red-100 text-red-800" :
                         item.priority === "High" ? "bg-orange-100 text-orange-800" :
@@ -302,6 +302,11 @@ export default function AdminRoadmap() {
                       <span className="text-xs px-2 py-1 bg-[#D8B46B]/20 text-[#2B2725]">
                         {item.category}
                       </span>
+                      {item.source === "BugTracker" && (
+                        <span className="text-xs px-2 py-1 bg-purple-100 text-purple-800">
+                          Bug Tracker
+                        </span>
+                      )}
                     </div>
                     {item.due_date && (
                       <p className="text-xs text-[#2B2725]/60 flex items-center gap-1">
