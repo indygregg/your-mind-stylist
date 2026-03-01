@@ -329,12 +329,8 @@ export default function Masterclass() {
             />
           </p>
           <div className="space-y-3">
-            <Link
-              to={createPageUrl("LearnHypnosis")}
-              onClick={() => trackCTAClick('hypnosis_training')}
-              className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
-            >
-              <h3 className="font-medium text-[#1E3A32] mb-1">
+            <div className="p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors cursor-pointer" onClick={() => { trackCTAClick('hypnosis_training'); window.location.href = createPageUrl("LearnHypnosis"); }}>
+              <h3 className="font-medium text-[#1E3A32] mb-1" onClick={(e) => e.stopPropagation()}>
                 <CmsText
                   contentKey="masterclass.cta1.title"
                   page="Masterclass"
@@ -343,7 +339,7 @@ export default function Masterclass() {
                   contentType="short_text"
                 />
               </h3>
-              <p className="text-[#2B2725]/60 text-sm">
+              <p className="text-[#2B2725]/60 text-sm" onClick={(e) => e.stopPropagation()}>
                 <CmsText
                   contentKey="masterclass.cta1.description"
                   page="Masterclass"
@@ -352,13 +348,9 @@ export default function Masterclass() {
                   contentType="short_text"
                 />
               </p>
-            </Link>
-            <Link
-              to={createPageUrl("LENS")}
-              onClick={() => trackCTAClick('lens')}
-              className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
-            >
-              <h3 className="font-medium text-[#1E3A32] mb-1">
+            </div>
+            <div className="p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors cursor-pointer" onClick={() => { trackCTAClick('lens'); window.location.href = createPageUrl("LENS"); }}>
+              <h3 className="font-medium text-[#1E3A32] mb-1" onClick={(e) => e.stopPropagation()}>
                 <CmsText
                   contentKey="masterclass.cta2.title"
                   page="Masterclass"
@@ -367,7 +359,7 @@ export default function Masterclass() {
                   contentType="short_text"
                 />
               </h3>
-              <p className="text-[#2B2725]/60 text-sm">
+              <p className="text-[#2B2725]/60 text-sm" onClick={(e) => e.stopPropagation()}>
                 <CmsText
                   contentKey="masterclass.cta2.description"
                   page="Masterclass"
@@ -376,13 +368,9 @@ export default function Masterclass() {
                   contentType="short_text"
                 />
               </p>
-            </Link>
-            <Link
-              to={createPageUrl("PocketMindset")}
-              onClick={() => trackCTAClick('pocket_mindset')}
-              className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
-            >
-              <h3 className="font-medium text-[#1E3A32] mb-1">
+            </div>
+            <div className="p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors cursor-pointer" onClick={() => { trackCTAClick('pocket_mindset'); window.location.href = createPageUrl("PocketMindset"); }}>
+              <h3 className="font-medium text-[#1E3A32] mb-1" onClick={(e) => e.stopPropagation()}>
                 <CmsText
                   contentKey="masterclass.cta3.title"
                   page="Masterclass"
@@ -391,7 +379,7 @@ export default function Masterclass() {
                   contentType="short_text"
                 />
               </h3>
-              <p className="text-[#2B2725]/60 text-sm">
+              <p className="text-[#2B2725]/60 text-sm" onClick={(e) => e.stopPropagation()}>
                 <CmsText
                   contentKey="masterclass.cta3.description"
                   page="Masterclass"
@@ -400,7 +388,7 @@ export default function Masterclass() {
                   contentType="short_text"
                 />
               </p>
-            </Link>
+            </div>
           </div>
         </div>
 
