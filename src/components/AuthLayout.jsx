@@ -417,5 +417,6 @@ export default function AuthLayout({ children, currentPageName }) {
       <GlobalSearch isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
     </EditModeProvider>
+    </CartProvider>
   );
 }
