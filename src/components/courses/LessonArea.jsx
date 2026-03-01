@@ -70,16 +70,25 @@ export default function LessonArea({
             </div>
 
         {/* Video Player */}
-        {(lesson.type === "video" || lesson.type === "hybrid") && (lesson.embed_url || lesson.media_url) && (
-          <div className="mb-8 bg-black rounded-lg overflow-hidden">
-            <VideoPlayer
-              src={lesson.media_url}
-              embedUrl={lesson.embed_url || lesson.media_url}
-              onProgressUpdate={onProgressUpdate}
-              lastPosition={lastPosition}
-            />
-          </div>
-        )}
+        {(lesson.type === "video" || lesson.type === "hybrid") && (lesson.embed_url || lesson.media_url) && (() => {
+          // Determine if media_url is actually an embeddable link (YouTube/Vimeo)
+          const isEmbeddable = (url) => url && (
+            url.includes('youtube.com') || url.includes('youtu.be') ||
+            url.includes('vimeo.com') || url.includes('player.vimeo.com')
+          );
+          const embedUrl = lesson.embed_url || (isEmbeddable(lesson.media_url) ? lesson.media_url : null);
+          const src = !embedUrl ? lesson.media_url : null;
+          return (
+            <div className="mb-8 bg-black rounded-lg overflow-hidden">
+              <VideoPlayer
+                src={src}
+                embedUrl={embedUrl}
+                onProgressUpdate={onProgressUpdate}
+                lastPosition={lastPosition}
+              />
+            </div>
+          );
+        })()}
 
         {/* Audio Player */}
         {lesson.type === "audio" && lesson.media_url && (
