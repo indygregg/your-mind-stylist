@@ -90,7 +90,7 @@ export default function StudioSettings() {
               <Label>Site Name</Label>
               <Input
                 value={settings.siteName}
-                onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
+                onChange={(e) => handleChange("siteName", e.target.value)}
                 className="max-w-md"
               />
             </div>
@@ -126,9 +126,9 @@ export default function StudioSettings() {
                 <p className="text-sm text-[#2B2725]/60">Enable/disable the blog section</p>
               </div>
               <Switch
-                checked={settings.blogEnabled}
-                onCheckedChange={(checked) => setSettings({ ...settings, blogEnabled: checked })}
-              />
+                 checked={settings.blogEnabled}
+                 onCheckedChange={(checked) => handleChange("blogEnabled", checked)}
+               />
             </div>
             <div className="flex items-center justify-between">
               <div>
@@ -136,9 +136,9 @@ export default function StudioSettings() {
                 <p className="text-sm text-[#2B2725]/60">Show/hide podcast page</p>
               </div>
               <Switch
-                checked={settings.podcastEnabled}
-                onCheckedChange={(checked) => setSettings({ ...settings, podcastEnabled: checked })}
-              />
+                 checked={settings.podcastEnabled}
+                 onCheckedChange={(checked) => handleChange("podcastEnabled", checked)}
+               />
             </div>
             <div className="flex items-center justify-between">
               <div>
@@ -146,9 +146,9 @@ export default function StudioSettings() {
                 <p className="text-sm text-[#2B2725]/60">Enable/disable user portal login</p>
               </div>
               <Switch
-                checked={settings.portalEnabled}
-                onCheckedChange={(checked) => setSettings({ ...settings, portalEnabled: checked })}
-              />
+                 checked={settings.portalEnabled}
+                 onCheckedChange={(checked) => handleChange("portalEnabled", checked)}
+               />
             </div>
           </div>
         </div>
@@ -198,12 +198,25 @@ export default function StudioSettings() {
         </div>
 
         {/* Save Button */}
-        <div className="flex justify-end">
-          <Button onClick={handleSave} className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]">
-            <Save size={18} className="mr-2" />
-            Save Settings
-          </Button>
-        </div>
+         <div className="flex justify-end">
+           <Button 
+             onClick={handleSave} 
+             disabled={!localChanges || saveMutation.isPending}
+             className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
+           >
+             {saveMutation.isPending ? (
+               <>
+                 <Loader2 size={18} className="mr-2 animate-spin" />
+                 Saving...
+               </>
+             ) : (
+               <>
+                 <Save size={18} className="mr-2" />
+                 Save Settings
+               </>
+             )}
+           </Button>
+         </div>
       </div>
     </div>
   );
