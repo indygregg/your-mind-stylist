@@ -149,7 +149,7 @@ export default function Blog() {
     <div className="bg-[#F9F5EF]" {...pullToRefreshHandlers}>
       <SEO
         title="Your Mind Styling Journal | Articles & Reflections"
-        description="Weekly articles, Restyle Monday, Thursday Tailoring, and Mind-Styling Podcasts on mindset, emotional intelligence, and inner pattern shifts."
+        description="Articles, written reflections, video posts, and Mind-Styling Podcasts on mindset, emotional intelligence, and inner pattern shifts."
         canonical="/blog"
       />
 
