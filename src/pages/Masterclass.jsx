@@ -354,8 +354,8 @@ export default function Masterclass() {
               </p>
             </Link>
             <Link
-              to={createPageUrl("PrivateSessions")}
-              onClick={() => trackCTAClick('private_sessions')}
+              to={createPageUrl("LENS")}
+              onClick={() => trackCTAClick('lens')}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
               <h3 className="font-medium text-[#1E3A32] mb-1">
@@ -363,7 +363,7 @@ export default function Masterclass() {
                   contentKey="masterclass.cta2.title"
                   page="Masterclass"
                   blockTitle="CTA 2 Title"
-                  fallback="Private Mind Styling (1:1)"
+                  fallback="LENS™"
                   contentType="short_text"
                 />
               </h3>
@@ -372,7 +372,7 @@ export default function Masterclass() {
                   contentKey="masterclass.cta2.description"
                   page="Masterclass"
                   blockTitle="CTA 2 Description"
-                  fallback="Personalized support in shifting long-held patterns"
+                  fallback="The flagship Mind Styling framework for deep transformation"
                   contentType="short_text"
                 />
               </p>
