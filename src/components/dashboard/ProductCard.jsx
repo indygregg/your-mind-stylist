@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
-import { base44 } from "@/api/base44Client";
+import { useCart } from "@/components/shop/CartContext";
 import haptics from "@/components/utils/haptics";
 
 export default function ProductCard({ product }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const { addItem } = useCart();
 
   const formatPrice = (price, interval) => {
     if (!price) return "Free";
@@ -16,25 +16,9 @@ export default function ProductCard({ product }) {
     return `$${d}`;
   };
 
-  const handleBuy = async () => {
+  const handleAddToCart = () => {
+    addItem(product);
     haptics.light();
-    setIsLoading(true);
-    try {
-      console.log("Buying product:", product);
-      const response = await base44.functions.invoke("createProductCheckout", {
-        product_ids: [product.id],
-      });
-      console.log("Checkout response:", response);
-      if (response.data?.url) {
-        window.location.href = response.data.url;
-      } else {
-        console.error("No checkout URL in response:", response.data);
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.error("Checkout error:", error);
-      setIsLoading(false);
-    }
   };
 
   return (
