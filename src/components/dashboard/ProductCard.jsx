@@ -25,8 +25,8 @@ export default function ProductCard({ product }) {
         product_ids: [product.id],
       });
       console.log("Checkout response:", response);
-      if (response.data?.checkout_url) {
-        window.location.href = response.data.checkout_url;
+      if (response.data?.url) {
+        window.location.href = response.data.url;
       } else {
         console.error("No checkout URL in response:", response.data);
         setIsLoading(false);
