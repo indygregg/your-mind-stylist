@@ -35,11 +35,10 @@ export default function ProductCard({ product }) {
           Details
         </Link>
         <button
-          onClick={handleBuy}
-          disabled={isLoading}
-          className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] disabled:opacity-60 transition-colors active:scale-95"
+          onClick={handleAddToCart}
+          className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors active:scale-95"
         >
-          <ShoppingCart size={12} /> {isLoading ? "..." : "Buy"}
+          <ShoppingCart size={12} /> Buy
         </button>
       </div>
     </div>
