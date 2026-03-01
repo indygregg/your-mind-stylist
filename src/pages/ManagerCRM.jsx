@@ -584,13 +584,23 @@ export default function ManagerCRM() {
                   <div>
                     <h3 className="font-medium mb-4">Contact Information</h3>
                     <div className="space-y-3">
-                      <div>
-                        <Label>Name</Label>
-                        <Input
-                          value={editingLead.full_name || ""}
-                          onChange={(e) => setEditingLead({ ...editingLead, full_name: e.target.value })}
-                          placeholder="Enter name..."
-                        />
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <Label>First Name</Label>
+                          <Input
+                            value={editingLead.first_name || ""}
+                            onChange={(e) => setEditingLead({ ...editingLead, first_name: e.target.value, full_name: `${e.target.value} ${editingLead.last_name || ""}`.trim() })}
+                            placeholder="First name"
+                          />
+                        </div>
+                        <div>
+                          <Label>Last Name</Label>
+                          <Input
+                            value={editingLead.last_name || ""}
+                            onChange={(e) => setEditingLead({ ...editingLead, last_name: e.target.value, full_name: `${editingLead.first_name || ""} ${e.target.value}`.trim() })}
+                            placeholder="Last name"
+                          />
+                        </div>
                       </div>
                       <div>
                         <Label>Email</Label>
@@ -603,6 +613,15 @@ export default function ManagerCRM() {
                           onChange={(e) => setEditingLead({ ...editingLead, phone: e.target.value })}
                           placeholder="Enter phone..."
                         />
+                      </div>
+                      <div>
+                        <Label>Street Address</Label>
+                        <Input value={editingLead.address_line1 || ""} onChange={(e) => setEditingLead({ ...editingLead, address_line1: e.target.value })} placeholder="123 Main St" />
+                      </div>
+                      <div className="grid grid-cols-3 gap-2">
+                        <Input value={editingLead.city || ""} onChange={(e) => setEditingLead({ ...editingLead, city: e.target.value })} placeholder="City" />
+                        <Input value={editingLead.state || ""} onChange={(e) => setEditingLead({ ...editingLead, state: e.target.value })} placeholder="State" />
+                        <Input value={editingLead.zip || ""} onChange={(e) => setEditingLead({ ...editingLead, zip: e.target.value })} placeholder="ZIP" />
                       </div>
                     </div>
                   </div>
