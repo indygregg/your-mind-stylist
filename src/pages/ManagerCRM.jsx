@@ -472,6 +472,7 @@ export default function ManagerCRM() {
                                 Follow up: {new Date(lead.next_follow_up_date).toLocaleDateString()}
                               </p>
                             )}
+                            <div className="flex gap-1">
                             <Button
                               variant="outline"
                               size="sm"
@@ -487,6 +488,19 @@ export default function ManagerCRM() {
                               <Mail size={12} className="mr-1" />
                               Email
                             </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-xs h-7 px-2 border-red-300 text-red-600 hover:bg-red-50"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setLeadToDelete(lead);
+                                setDeleteConfirmOpen(true);
+                              }}
+                            >
+                              <Trash2 size={12} />
+                            </Button>
+                            </div>
                           </div>
                         </div>
                       </motion.div>
