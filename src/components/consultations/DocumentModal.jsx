@@ -29,13 +29,21 @@ export default function DocumentModal({ isOpen, onClose, title, url }) {
           {!url ? (
             <p className="text-[#2B2725] text-center py-8">Document URL not configured. Please add the document link in the CMS.</p>
           ) : url.toLowerCase().endsWith('.pdf') ? (
-            <iframe
-              src={`https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`}
-              className="w-full h-[70vh] border border-[#E4D9C4] rounded"
-              title={title}
-            />
+            <div className="space-y-4">
+              <iframe
+                src={url}
+                className="w-full h-[70vh] border border-[#E4D9C4] rounded"
+                title={title}
+              />
+              <p className="text-sm text-[#2B2725]/60 text-center">
+                If the PDF doesn't display above,{' '}
+                <a href={url} target="_blank" rel="noopener noreferrer" className="text-[#D8B46B] hover:text-[#1E3A32] underline">
+                  open it in a new tab
+                </a>
+              </p>
+            </div>
           ) : (
-            <p className="text-[#2B2725] text-center">
+            <p className="text-[#2B2725] text-center py-8">
               <a href={url} target="_blank" rel="noopener noreferrer" className="text-[#D8B46B] hover:text-[#1E3A32] underline">
                 Open document in new tab
               </a>
