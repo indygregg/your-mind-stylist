@@ -14,7 +14,7 @@ import { useCmsText } from "../components/cms/useCmsText";
 function DocDownloadLink({ contentKey, label }) {
   const { content: url } = useCmsText(contentKey, "");
   if (!url || !url.startsWith("http")) {
-    return <span className="text-xs text-[#2B2725]/40">No link set — add URL via CMS Edit Mode</span>;
+    return null;
   }
   return (
     <a
