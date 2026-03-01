@@ -82,6 +82,11 @@ export default function WebinarPage() {
       return;
     }
 
+    if (!webinar.stripe_price_id) {
+      alert('This webinar is not yet available for purchase. Please try again later.');
+      return;
+    }
+
     setIsCheckingOut(true);
     try {
       const response = await base44.functions.invoke('createWebinarCheckout', {

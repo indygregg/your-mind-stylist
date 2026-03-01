@@ -265,7 +265,11 @@ export default function Layout({ children, currentPageName }) {
             <button
               onClick={() => {
                 haptics.light();
-                navigate(-1);
+                if (window.history.length > 1) {
+                  navigate(-1);
+                } else {
+                  navigate(createPageUrl('Home'));
+                }
               }}
               className={`lg:hidden p-2 ${hasDarkHero ? 'text-white hover:bg-white/10' : 'text-[#1E3A32] hover:bg-[#1E3A32]/5'} rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center`}
             >
