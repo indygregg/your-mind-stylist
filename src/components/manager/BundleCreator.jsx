@@ -15,6 +15,11 @@ import ReactQuill from "react-quill";
 export default function BundleCreator({ open, onClose, existingBundle = null }) {
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
+
+  // Reset step when dialog opens/closes
+  React.useEffect(() => {
+    if (open) setStep(1);
+  }, [open]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const [bundleData, setBundleData] = useState({

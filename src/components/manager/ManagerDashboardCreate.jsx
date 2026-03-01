@@ -16,7 +16,7 @@ const createGroups = [
     items: [
       { icon: Sparkles, label: "Alchemy Suite", link: "ContentStudio" },
       { icon: Target, label: "Social Transformer", link: "ContentStudio" },
-      { icon: Download, label: "Lead Magnets", link: "ContentStudio" },
+      { icon: Download, label: "Lead Magnets", link: "ManagerLeadMagnets" },
     ]
   },
   {
