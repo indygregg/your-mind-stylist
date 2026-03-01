@@ -12,7 +12,9 @@ import { useCmsText } from "../components/cms/useCmsText";
 
 // Helper component to show a document download link from a CMS URL field
 function DocDownloadLink({ contentKey, label }) {
-  const { content: url } = useCmsText(contentKey, "");
+  const { content: rawUrl } = useCmsText(contentKey, "");
+  // Strip any HTML tags (CMS may wrap in <p> tags)
+  const url = rawUrl ? rawUrl.replace(/<[^>]*>/g, "").trim() : "";
   if (!url || !url.startsWith("http")) {
     return null;
   }
