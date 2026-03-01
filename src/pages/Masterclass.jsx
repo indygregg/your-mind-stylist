@@ -378,8 +378,8 @@ export default function Masterclass() {
               </p>
             </Link>
             <Link
-              to={createPageUrl("InnerRehearsal")}
-              onClick={() => trackCTAClick('inner_rehearsal')}
+              to={createPageUrl("PocketMindset")}
+              onClick={() => trackCTAClick('pocket_mindset')}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
               <h3 className="font-medium text-[#1E3A32] mb-1">
@@ -387,7 +387,7 @@ export default function Masterclass() {
                   contentKey="masterclass.cta3.title"
                   page="Masterclass"
                   blockTitle="CTA 3 Title"
-                  fallback="The Inner Rehearsal Sessions™"
+                  fallback="Pocket Mindset™"
                   contentType="short_text"
                 />
               </h3>
@@ -396,7 +396,7 @@ export default function Masterclass() {
                   contentKey="masterclass.cta3.description"
                   page="Masterclass"
                   blockTitle="CTA 3 Description"
-                  fallback="Ongoing internal resets and future-self rehearsal"
+                  fallback="Daily guided experiences for ongoing transformation"
                   contentType="short_text"
                 />
               </p>
