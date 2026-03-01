@@ -190,7 +190,7 @@ export default function Blog() {
       <section className="py-10 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="font-serif text-2xl text-[#1E3A32] mb-6 text-center">
-            <CmsText contentKey="blog.filters.title" page="Blog" blockTitle="Filter Section Title" fallback="Explore by Theme" contentType="short_text" />
+            <CmsText contentKey="blog.filters.title" page="Blog" blockTitle="Filter Section Title" fallback="Browse by Topic" contentType="short_text" />
           </h2>
           <div className="flex flex-wrap justify-center gap-2">
             {CATEGORIES.map((category) => (
