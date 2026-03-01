@@ -24,7 +24,6 @@ export default function Home() {
       <SocialProofStrip />
       <FreeMasterclass />
       <Testimonials />
-      <ContentHub />
       <FinalCTA />
     </div>
   );
