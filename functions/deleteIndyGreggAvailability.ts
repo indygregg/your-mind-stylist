@@ -10,17 +10,19 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    // Get all availability rules created by indy.gregg@yourmindstylist.com or similar
-    const allRules = await base44.asServiceRole.entities.AvailabilityRule.list();
+    // Get all calendar-synced blocked times
+    const allRules = await base44.asServiceRole.entities.AvailabilityRule.filter({
+      source: 'calendar_sync'
+    });
     
-    // Filter for rules created by Indy Gregg (check created_by email)
+    // Filter for rules with "Indy Gregg" in the reason field
     const indyRules = allRules.filter(rule => 
-      rule.created_by && rule.created_by.toLowerCase().includes('indy')
+      rule.reason && rule.reason.includes('Indy Gregg')
     );
 
-    console.log(`Found ${indyRules.length} rules created by Indy Gregg`);
+    console.log(`Found ${indyRules.length} calendar-synced blocked times from Indy Gregg`);
 
-    // Delete each rule
+    // Delete each rule in batches
     let deletedCount = 0;
     for (const rule of indyRules) {
       try {
@@ -33,7 +35,7 @@ Deno.serve(async (req) => {
 
     return Response.json({ 
       success: true,
-      message: `Deleted ${deletedCount} availability rules created by Indy Gregg`,
+      message: `Deleted ${deletedCount} calendar-synced blocked times from Indy Gregg`,
       total_found: indyRules.length
     });
   } catch (error) {
