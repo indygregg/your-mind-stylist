@@ -33,33 +33,33 @@ export default function MasterclassSignupForm({ source = "landing_page", onSucce
         if (onSuccess) {
           onSuccess(existingSignups[0]);
         } else {
-          window.location.href = '/app/signup?intent=masterclass';
+          window.location.href = createPageUrl('FreeMasterclass');
         }
         return;
       }
 
-      // Create new signup
-      const signup = await base44.entities.MasterclassSignup.create({
-        ...formData,
-        signup_date: new Date().toISOString(),
-        signup_source: source
+      // Send confirmation email (also creates the signup record server-side)
+      await base44.functions.invoke('sendMasterclassConfirmation', {
+        email: formData.email,
+        full_name: formData.full_name
       });
 
-      // Send confirmation email
+      // Also store the extra form fields locally
       try {
-        await base44.functions.invoke('sendMasterclassConfirmation', {
-          email: formData.email,
-          full_name: formData.full_name
-        });
-      } catch (emailError) {
-        console.error('Failed to send confirmation email:', emailError);
-      }
+        const created = await base44.entities.MasterclassSignup.filter({ email: formData.email });
+        if (created.length > 0) {
+          await base44.entities.MasterclassSignup.update(created[0].id, {
+            biggest_challenge: formData.biggest_challenge,
+            role: formData.role,
+          });
+        }
+      } catch (_) {}
 
       // Success - redirect or callback
       if (onSuccess) {
-        onSuccess(signup);
+        onSuccess({ email: formData.email });
       } else {
-        window.location.href = '/app/signup?intent=masterclass';
+        window.location.href = createPageUrl('FreeMasterclass');
       }
     } catch (err) {
       console.error('Signup error:', err);
