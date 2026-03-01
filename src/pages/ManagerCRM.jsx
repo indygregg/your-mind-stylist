@@ -791,13 +791,23 @@ export default function ManagerCRM() {
                       updateLeadMutation.mutate({
                         id: editingLead.id,
                         data: {
+                          first_name: editingLead.first_name,
+                          last_name: editingLead.last_name,
                           full_name: editingLead.full_name,
                           phone: editingLead.phone,
+                          address_line1: editingLead.address_line1,
+                          city: editingLead.city,
+                          state: editingLead.state,
+                          zip: editingLead.zip,
                           stage: editingLead.stage,
                           interest_level: editingLead.interest_level,
                           lead_score: editingLead.lead_score,
                           notes: editingLead.notes,
                           tags: editingLead.tags || [],
+                          what_inquired_about: editingLead.what_inquired_about,
+                          what_they_bought: editingLead.what_they_bought,
+                          date_of_purchase: editingLead.date_of_purchase,
+                          follow_up_actions: editingLead.follow_up_actions,
                         },
                       }, {
                         onSuccess: () => {
