@@ -20,7 +20,7 @@ function DocDownloadLink({ contentKey, label }) {
   }
   return (
     <a
-      href={url}
+      href={rawUrl.replace(/<[^>]*>/g, "").trim()}
       target="_blank"
       rel="noopener noreferrer"
       className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
