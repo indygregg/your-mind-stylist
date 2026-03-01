@@ -330,8 +330,8 @@ export default function Masterclass() {
           </p>
           <div className="space-y-3">
             <Link
-              to={createPageUrl("Evolution")}
-              onClick={() => trackCTAClick('certification')}
+              to={createPageUrl("LearnHypnosis")}
+              onClick={() => trackCTAClick('hypnosis_training')}
               className="block p-4 border border-[#E4D9C4] hover:border-[#D8B46B] transition-colors"
             >
               <h3 className="font-medium text-[#1E3A32] mb-1">
@@ -339,7 +339,7 @@ export default function Masterclass() {
                   contentKey="masterclass.cta1.title"
                   page="Masterclass"
                   blockTitle="CTA 1 Title"
-                  fallback="The Mind Styling Certification™"
+                  fallback="Hypnosis Training"
                   contentType="short_text"
                 />
               </h3>
@@ -348,7 +348,7 @@ export default function Masterclass() {
                   contentKey="masterclass.cta1.description"
                   page="Masterclass"
                   blockTitle="CTA 1 Description"
-                  fallback="For identity-level change and emotional intelligence"
+                  fallback="Become a certified hypnotist with our professional training program"
                   contentType="short_text"
                 />
               </p>
