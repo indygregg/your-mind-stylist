@@ -923,18 +923,28 @@ export default function ManagerCRM() {
 
         {/* Add Lead Dialog */}
         <Dialog open={addLeadDialogOpen} onOpenChange={setAddLeadDialogOpen}>
-          <DialogContent className="max-w-md">
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Add New Lead</DialogTitle>
+              <DialogTitle>Add New Contact</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
-              <div>
-                <Label>Full Name</Label>
-                <Input
-                  value={newLead.full_name}
-                  onChange={(e) => setNewLead(prev => ({ ...prev, full_name: e.target.value }))}
-                  placeholder="Jane Smith"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label>First Name</Label>
+                  <Input
+                    value={newLead.first_name}
+                    onChange={(e) => setNewLead(prev => ({ ...prev, first_name: e.target.value, full_name: `${e.target.value} ${prev.last_name}`.trim() }))}
+                    placeholder="Jane"
+                  />
+                </div>
+                <div>
+                  <Label>Last Name</Label>
+                  <Input
+                    value={newLead.last_name}
+                    onChange={(e) => setNewLead(prev => ({ ...prev, last_name: e.target.value, full_name: `${prev.first_name} ${e.target.value}`.trim() }))}
+                    placeholder="Smith"
+                  />
+                </div>
               </div>
               <div>
                 <Label>Email *</Label>
@@ -953,14 +963,44 @@ export default function ManagerCRM() {
                   placeholder="(555) 000-0000"
                 />
               </div>
+              <div>
+                <Label>Street Address</Label>
+                <Input
+                  value={newLead.address_line1 || ""}
+                  onChange={(e) => setNewLead(prev => ({ ...prev, address_line1: e.target.value }))}
+                  placeholder="123 Main St"
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="col-span-1">
+                  <Label>City</Label>
+                  <Input value={newLead.city || ""} onChange={(e) => setNewLead(prev => ({ ...prev, city: e.target.value }))} placeholder="Las Vegas" />
+                </div>
+                <div>
+                  <Label>State</Label>
+                  <Input value={newLead.state || ""} onChange={(e) => setNewLead(prev => ({ ...prev, state: e.target.value }))} placeholder="NV" />
+                </div>
+                <div>
+                  <Label>ZIP</Label>
+                  <Input value={newLead.zip || ""} onChange={(e) => setNewLead(prev => ({ ...prev, zip: e.target.value }))} placeholder="89101" />
+                </div>
+              </div>
+              <div>
+                <Label>What They Inquired About</Label>
+                <Input
+                  value={newLead.what_inquired_about || ""}
+                  onChange={(e) => setNewLead(prev => ({ ...prev, what_inquired_about: e.target.value }))}
+                  placeholder="e.g. LENS™ program, initial consultation..."
+                />
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label>Stage</Label>
                   <Select value={newLead.stage} onValueChange={(v) => setNewLead(prev => ({ ...prev, stage: v }))}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      {["new","contacted","qualified","proposal","negotiation","won","lost"].map(s => (
-                        <SelectItem key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</SelectItem>
+                      {["new","contacted","booked","qualified","proposal","negotiation","won","lost"].map(s => (
+                        <SelectItem key={s} value={s}>{stageLabels[s]}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -982,7 +1022,7 @@ export default function ManagerCRM() {
                 <Textarea
                   value={newLead.notes}
                   onChange={(e) => setNewLead(prev => ({ ...prev, notes: e.target.value }))}
-                  placeholder="Any notes about this lead..."
+                  placeholder="Any notes about this contact..."
                   className="min-h-[80px]"
                 />
               </div>
@@ -993,7 +1033,7 @@ export default function ManagerCRM() {
                   onClick={() => createLeadMutation.mutate(newLead)}
                   className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
                 >
-                  {createLeadMutation.isPending ? "Adding..." : "Add Lead"}
+                  {createLeadMutation.isPending ? "Adding..." : "Add Contact"}
                 </Button>
               </div>
             </div>
