@@ -25,6 +25,7 @@ export default function AdminRoadmap() {
     category: "Feature",
     priority: "Medium",
     status: "Planned",
+    source: "Roadmap",
     assigned_to: "",
     due_date: "",
     notes: "",
