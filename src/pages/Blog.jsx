@@ -43,8 +43,6 @@ function PodcastGrid() {
 
 const CATEGORIES = [
   "All",
-  "Restyle Monday",
-  "Thursday Tailoring",
   "Emotional Intelligence",
   "Culture",
   "Leadership & Teams",

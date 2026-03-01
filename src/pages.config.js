@@ -102,6 +102,7 @@ import InnerRehearsal from './pages/InnerRehearsal';
 import InnerRehearsalPurchase from './pages/InnerRehearsalPurchase';
 import IntegrationSetup from './pages/IntegrationSetup';
 import LENS from './pages/LENS';
+import LeadMagnetPage from './pages/LeadMagnetPage';
 import LearnHypnosis from './pages/LearnHypnosis';
 import LegalPage from './pages/LegalPage';
 import Library from './pages/Library';
@@ -123,6 +124,7 @@ import ManagerEmailSequences from './pages/ManagerEmailSequences';
 import ManagerEmailTemplates from './pages/ManagerEmailTemplates';
 import ManagerIntakeReview from './pages/ManagerIntakeReview';
 import ManagerLeadImport from './pages/ManagerLeadImport';
+import ManagerLeadMagnets from './pages/ManagerLeadMagnets';
 import ManagerMailerLite from './pages/ManagerMailerLite';
 import ManagerMasterclass from './pages/ManagerMasterclass';
 import ManagerPaymentPlans from './pages/ManagerPaymentPlans';
@@ -183,8 +185,6 @@ import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import ManagerLeadMagnets from './pages/ManagerLeadMagnets';
-import LeadMagnetPage from './pages/LeadMagnetPage';
 import __Layout from './Layout.jsx';
 
 
@@ -244,6 +244,7 @@ export const PAGES = {
     "InnerRehearsalPurchase": InnerRehearsalPurchase,
     "IntegrationSetup": IntegrationSetup,
     "LENS": LENS,
+    "LeadMagnetPage": LeadMagnetPage,
     "LearnHypnosis": LearnHypnosis,
     "LegalPage": LegalPage,
     "Library": Library,
@@ -265,6 +266,7 @@ export const PAGES = {
     "ManagerEmailTemplates": ManagerEmailTemplates,
     "ManagerIntakeReview": ManagerIntakeReview,
     "ManagerLeadImport": ManagerLeadImport,
+    "ManagerLeadMagnets": ManagerLeadMagnets,
     "ManagerMailerLite": ManagerMailerLite,
     "ManagerMasterclass": ManagerMasterclass,
     "ManagerPaymentPlans": ManagerPaymentPlans,
@@ -325,8 +327,6 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "ManagerLeadMagnets": ManagerLeadMagnets,
-    "LeadMagnetPage": LeadMagnetPage,
 }
 
 export const pagesConfig = {

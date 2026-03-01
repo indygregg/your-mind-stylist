@@ -16,7 +16,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    const masterclassUrl = `${Deno.env.get('BASE_URL') || 'https://app.base44.com'}/app/masterclass`;
+    const masterclassUrl = 'https://yourmindstylist.com/masterclass';
 
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: email,
