@@ -230,10 +230,10 @@ export default function AdminRoadmap() {
           </Dialog>
         </div>
 
-        {/* Filter */}
-        <div className="bg-white p-4 mb-6">
+        {/* Filters */}
+        <div className="bg-white p-4 mb-6 flex flex-wrap gap-4 items-center">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-64">
+            <SelectTrigger className="w-48">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -245,6 +245,21 @@ export default function AdminRoadmap() {
               <SelectItem value="On Hold">On Hold</SelectItem>
             </SelectContent>
           </Select>
+          <Select value={sourceFilter} onValueChange={setSourceFilter}>
+            <SelectTrigger className="w-52">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Sources</SelectItem>
+              <SelectItem value="Roadmap">Roadmap Items</SelectItem>
+              <SelectItem value="BugTracker">Bug Tracker Items</SelectItem>
+            </SelectContent>
+          </Select>
+          {sourceFilter !== "all" && (
+            <span className="text-sm text-[#2B2725]/60">
+              Showing: <strong>{sourceFilter === "BugTracker" ? "Bug Tracker" : "Roadmap"}</strong> items only
+            </span>
+          )}
         </div>
 
         {/* Kanban Board */}
