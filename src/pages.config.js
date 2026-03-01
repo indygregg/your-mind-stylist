@@ -166,6 +166,7 @@ import StaffManagement from './pages/StaffManagement';
 import StudioAudio from './pages/StudioAudio';
 import StudioDashboard from './pages/StudioDashboard';
 import StudioDevDocs from './pages/StudioDevDocs';
+import Welcome from './pages/Welcome';
 import StudioLegal from './pages/StudioLegal';
 import StudioLegalEditor from './pages/StudioLegalEditor';
 import StudioLogs from './pages/StudioLogs';
@@ -179,7 +180,6 @@ import TransformationDemo from './pages/TransformationDemo';
 import TransformationStory from './pages/TransformationStory';
 import TransitionGuide from './pages/TransitionGuide';
 import WebinarPage from './pages/WebinarPage';
-import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
@@ -306,6 +306,7 @@ export const PAGES = {
     "StudioAudio": StudioAudio,
     "StudioDashboard": StudioDashboard,
     "StudioDevDocs": StudioDevDocs,
+    "Welcome": Welcome,
     "StudioLegal": StudioLegal,
     "StudioLegalEditor": StudioLegalEditor,
     "StudioLogs": StudioLogs,
@@ -319,7 +320,6 @@ export const PAGES = {
     "TransformationStory": TransformationStory,
     "TransitionGuide": TransitionGuide,
     "WebinarPage": WebinarPage,
-    "Welcome": Welcome,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
