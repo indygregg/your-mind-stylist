@@ -677,6 +677,25 @@ export default function ManagerCRM() {
                   </div>
                 </div>
 
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>What They Inquired About</Label>
+                    <Input value={editingLead.what_inquired_about || ""} onChange={(e) => setEditingLead({ ...editingLead, what_inquired_about: e.target.value })} placeholder="e.g. LENS™, consultation..." />
+                  </div>
+                  <div>
+                    <Label>What They Bought</Label>
+                    <Input value={editingLead.what_they_bought || ""} onChange={(e) => setEditingLead({ ...editingLead, what_they_bought: e.target.value })} placeholder="e.g. Pocket Mindset™..." />
+                  </div>
+                  <div>
+                    <Label>Date of Purchase</Label>
+                    <Input type="date" value={editingLead.date_of_purchase || ""} onChange={(e) => setEditingLead({ ...editingLead, date_of_purchase: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Follow-Up Actions</Label>
+                    <Input value={editingLead.follow_up_actions || ""} onChange={(e) => setEditingLead({ ...editingLead, follow_up_actions: e.target.value })} placeholder="e.g. Send welcome email..." />
+                  </div>
+                </div>
+
                 <div>
                   <Label>Notes</Label>
                   <Textarea
