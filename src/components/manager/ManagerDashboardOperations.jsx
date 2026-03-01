@@ -38,7 +38,7 @@ const operationsGroups = [
   {
     title: "Advanced",
     items: [
-      { icon: AlertCircle, label: "Bug Tracker", link: "BugList" },
+      { icon: AlertCircle, label: "Bug Tracker", link: "AdminRoadmap" },
       { icon: Settings, label: "Settings", link: "ManagerSettings" },
     ]
   },
