@@ -73,13 +73,13 @@ export default function FreeMasterclass() {
       icon: Brain,
       title: "The Mind Styling Certification™",
       description: "For identity-level change and emotional intelligence.",
-      link: "Evolution",
+      link: "LearnHypnosis",
     },
     {
       icon: Users,
-      title: "Private Mind Styling (1:1)",
+      title: "LENS™",
       description: "For personalized support in shifting long-held patterns.",
-      link: "PrivateSessions",
+      link: "CleaningOutYourCloset",
     },
     {
       icon: Star,
