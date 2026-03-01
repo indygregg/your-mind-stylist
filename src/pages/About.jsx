@@ -67,9 +67,9 @@ export default function About() {
     },
     {
       icon: Users,
-      title: "Private Mind Styling (1:1)",
-      description: "Deep, customized work for personal transformation.",
-      link: "Bookings",
+      title: "LENS™",
+      description: "Deep, customized one-on-one work to shift long-held internal patterns.",
+      link: "LENS",
     },
     {
       icon: Award,
