@@ -137,6 +137,7 @@ export default function AuthLayout({ children, currentPageName }) {
   });
 
   return (
+    <CartProvider>
     <EditModeProvider>
     <div className="min-h-screen bg-[#F9F5EF]">
       <ManagerBar />
