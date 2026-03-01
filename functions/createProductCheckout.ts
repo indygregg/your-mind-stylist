@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
                 name: user.full_name,
                 metadata: {
                     user_id: user.id,
-                    product_key: product.key,
+                    product_key: products[0].key,
                 },
             });
         }
