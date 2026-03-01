@@ -16,9 +16,20 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
 
-  // Reset step when dialog opens/closes
+  // Reset step and form when dialog opens
   React.useEffect(() => {
-    if (open) setStep(1);
+    if (open) {
+      setStep(1);
+      if (!existingBundle) {
+        setBundleData({
+          key: "", slug: "", name: "", tagline: "", short_description: "",
+          long_description: "", type: "bundle", category: "foundation", price: "",
+          currency: "usd", billing_interval: "one_time", features: [""], icon: "Package",
+          color: "#1E3A32", status: "draft", ui_group: "standard", display_order: 0,
+          template_choice: "detailed", is_bundle: true, bundled_product_ids: [], access_grants: [],
+        });
+      }
+    }
   }, [open]);
   const [searchTerm, setSearchTerm] = useState("");
 
