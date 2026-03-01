@@ -2,10 +2,12 @@ import React from "react";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
-import { base44 } from "@/api/base44Client";
+import { useCart } from "@/components/shop/CartContext";
 import haptics from "@/components/utils/haptics";
 
 export default function ProductCard({ product }) {
+  const { addItem } = useCart();
+
   const formatPrice = (price, interval) => {
     if (!price) return "Free";
     const d = (price / 100).toFixed(2);
@@ -14,18 +16,9 @@ export default function ProductCard({ product }) {
     return `$${d}`;
   };
 
-  const handleBuy = async () => {
+  const handleAddToCart = () => {
+    addItem(product);
     haptics.light();
-    try {
-      const response = await base44.functions.invoke("createProductCheckout", {
-        product_ids: [product.id],
-      });
-      if (response.data?.checkout_url) {
-        window.location.href = response.data.checkout_url;
-      }
-    } catch (error) {
-      console.error("Checkout error:", error);
-    }
   };
 
   return (
@@ -42,7 +35,7 @@ export default function ProductCard({ product }) {
           Details
         </Link>
         <button
-          onClick={handleBuy}
+          onClick={handleAddToCart}
           className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors active:scale-95"
         >
           <ShoppingCart size={12} /> Buy
