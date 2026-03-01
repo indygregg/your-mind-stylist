@@ -362,8 +362,8 @@ export default function Consultations() {
                         />
                       </div>
                       <div className="flex flex-col gap-2">
-                        <DocDownloadLink contentKey="consultations.step1.doc3.adult_url" label="Download Adult Bill of Rights PDF" />
-                        <DocDownloadLink contentKey="consultations.step1.doc3.minor_url" label="Download Minor Bill of Rights PDF" />
+                        <DocModalLink contentKey="consultations.step1.doc3.adult_url" label="View Adult Bill of Rights" title="Bill of Rights for Adults" />
+                        <DocModalLink contentKey="consultations.step1.doc3.minor_url" label="View Minor Bill of Rights" title="Bill of Rights for Minors" />
                       </div>
                     </div>
 
