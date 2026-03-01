@@ -4,7 +4,17 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    const { email, full_name } = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      return Response.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+    const { email, full_name } = body;
+
+    if (!email) {
+      return Response.json({ error: 'Email is required' }, { status: 400 });
+    }
 
     const masterclassUrl = `${Deno.env.get('BASE_URL') || 'https://app.base44.com'}/app/masterclass`;
 
