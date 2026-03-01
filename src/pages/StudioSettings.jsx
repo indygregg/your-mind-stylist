@@ -40,7 +40,6 @@ export default function StudioSettings() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["studio-settings"] });
       setLocalChanges(false);
       toast.success("Settings saved successfully!");
     },
