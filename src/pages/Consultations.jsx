@@ -9,6 +9,7 @@ import { CheckCircle2, Phone, Calendar, FileText, Video, Download, AlertCircle }
 import CmsText from "../components/cms/CmsText";
 import VideoEmbed from "../components/cms/VideoEmbed";
 import { useCmsText } from "../components/cms/useCmsText";
+import DocumentModal from "../components/consultations/DocumentModal";
 
 // Helper component to show a document download link from a CMS URL field
 function DocDownloadLink({ contentKey, label }) {
@@ -28,6 +29,30 @@ function DocDownloadLink({ contentKey, label }) {
       <Download size={14} />
       <span>{label}</span>
     </a>
+  );
+}
+
+// Helper component for clickable document links that open in modal
+function DocModalLink({ contentKey, label, title }) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const { content: rawUrl } = useCmsText(contentKey, "");
+  const url = rawUrl ? rawUrl.replace(/<[^>]*>/g, "").trim() : "";
+  
+  if (!url || !url.startsWith("http")) {
+    return null;
+  }
+  
+  return (
+    <>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors underline"
+      >
+        <FileText size={14} />
+        <span>{label}</span>
+      </button>
+      <DocumentModal isOpen={isOpen} onClose={() => setIsOpen(false)} title={title} url={url} />
+    </>
   );
 }
 
