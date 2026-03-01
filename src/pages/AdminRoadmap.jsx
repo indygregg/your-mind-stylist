@@ -101,9 +101,11 @@ export default function AdminRoadmap() {
     setIsDetailOpen(true);
   };
 
-  const filteredItems = statusFilter === "all" 
-    ? roadmapItems 
-    : roadmapItems.filter(item => item.status === statusFilter);
+  const filteredItems = roadmapItems.filter(item => {
+    const matchStatus = statusFilter === "all" || item.status === statusFilter;
+    const matchSource = sourceFilter === "all" || item.source === sourceFilter || (!item.source && sourceFilter === "Roadmap");
+    return matchStatus && matchSource;
+  });
 
   const groupedByStatus = {
     "Planned": filteredItems.filter(i => i.status === "Planned"),
