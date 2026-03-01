@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function PocketMindsetPurchaseConfirmation({ customerName }) {
+export default function PocketMindsetPurchaseConfirmation({ customerName, accessCode }) {
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '600px', margin: '0 auto', padding: '20px', backgroundColor: '#F9F5EF' }}>
       {/* Header */}
@@ -49,7 +49,7 @@ export default function PocketMindsetPurchaseConfirmation({ customerName }) {
           <ol style={{ color: '#2B2725', fontSize: '15px', lineHeight: '1.8', margin: '0', paddingLeft: '20px' }}>
             <li>Select <strong>new account</strong></li>
             <li>Under the <strong>Browse tab</strong>, enroll in the Courses and Programs of your choice</li>
-            <li>Enter this code when prompted: <span style={{ backgroundColor: '#1E3A32', color: '#D8B46B', padding: '4px 12px', borderRadius: '4px', fontWeight: 'bold', fontSize: '18px', display: 'inline-block', margin: '5px 0' }}>935384</span></li>
+            <li>Enter this code when prompted: <span style={{ backgroundColor: '#1E3A32', color: '#D8B46B', padding: '4px 12px', borderRadius: '4px', fontWeight: 'bold', fontSize: '18px', display: 'inline-block', margin: '5px 0' }}>{accessCode || '[access_code]'}</span></li>
           </ol>
         </div>
 
