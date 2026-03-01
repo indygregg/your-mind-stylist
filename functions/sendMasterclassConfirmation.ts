@@ -119,16 +119,14 @@ Deno.serve(async (req) => {
 
       if (existingLeads.length > 0) {
         await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, {
-          last_activity_date: new Date().toISOString(),
           notes: `${existingLeads[0].notes || ''}\n[${new Date().toLocaleDateString()}] Signed up for free masterclass`
         });
       } else {
         await base44.asServiceRole.entities.Lead.create({
-          name: full_name || 'Unknown',
+          full_name: full_name || '',
           email,
-          stage: 'masterclass_lead',
-          source: 'free_masterclass',
-          last_activity_date: new Date().toISOString(),
+          stage: 'new',
+          source: 'masterclass',
           notes: 'Signed up for free masterclass'
         });
       }
