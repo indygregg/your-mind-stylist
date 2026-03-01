@@ -38,7 +38,7 @@ export default function ManagerCRM() {
   const [leadToDelete, setLeadToDelete] = useState(null);
   const [newTagInput, setNewTagInput] = useState("");
   const [addLeadDialogOpen, setAddLeadDialogOpen] = useState(false);
-  const [newLead, setNewLead] = useState({ full_name: "", email: "", phone: "", source: "", stage: "new", notes: "" });
+  const [newLead, setNewLead] = useState({ first_name: "", last_name: "", full_name: "", email: "", phone: "", source: "", stage: "new", notes: "" });
 
   // Fetch leads
   const { data: leads = [], isLoading } = useQuery({
