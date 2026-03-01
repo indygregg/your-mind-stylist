@@ -29,7 +29,6 @@ import { SmartSuggestion } from "../components/ui/SmartSuggestion";
 import { useSmartSuggestions } from "../components/ui/useSmartSuggestions";
 import haptics from "@/components/utils/haptics";
 import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
-import { useCart } from "@/components/shop/CartContext";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -50,9 +49,10 @@ export default function Dashboard() {
     queryFn: () => base44.entities.Product.filter({ status: "published", active: true }, "display_order"),
   });
 
-  const { addItem } = useCart();
-
   const handleDashboardPurchase = (product) => {
+    // Import and use cart in the function to avoid context issues
+    const { useCart } = require("@/components/shop/CartContext");
+    const { addItem } = useCart();
     addItem(product);
     haptics.light();
   };
