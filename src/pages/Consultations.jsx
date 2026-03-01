@@ -311,7 +311,7 @@ export default function Consultations() {
                           contentType="rich_text"
                         />
                       </div>
-                      <DocDownloadLink contentKey="consultations.step1.doc1.link_url" label="Download Welcome Letter PDF" />
+                      <DocModalLink contentKey="consultations.step1.doc1.link_url" label="View Welcome Letter" title="Welcome Letter" />
                     </div>
 
                     <div>
