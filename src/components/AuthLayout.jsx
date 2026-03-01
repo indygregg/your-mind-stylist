@@ -19,6 +19,7 @@ import {
 import { EditModeProvider } from "./cms/EditModeProvider";
 import ManagerBar from "./cms/ManagerBar";
 import { PageTransition } from "./ui/PageTransition";
+import { CartProvider } from "./shop/CartContext";
 
 export default function AuthLayout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
