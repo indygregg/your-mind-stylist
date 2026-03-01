@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
-import { useCart } from "@/components/shop/CartContext";
+import { base44 } from "@/api/base44Client";
 import haptics from "@/components/utils/haptics";
 
 export default function ProductCard({ product }) {
-  const { addItem } = useCart();
+  const [isLoading, setIsLoading] = useState(false);
 
   const formatPrice = (price, interval) => {
     if (!price) return "Free";
@@ -16,9 +16,20 @@ export default function ProductCard({ product }) {
     return `$${d}`;
   };
 
-  const handleAddToCart = () => {
-    addItem(product);
+  const handleBuy = async () => {
     haptics.light();
+    setIsLoading(true);
+    try {
+      const response = await base44.functions.invoke("createProductCheckout", {
+        product_ids: [product.id],
+      });
+      if (response.data?.checkout_url) {
+        window.location.href = response.data.checkout_url;
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -35,10 +46,11 @@ export default function ProductCard({ product }) {
           Details
         </Link>
         <button
-          onClick={handleAddToCart}
-          className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors active:scale-95"
+          onClick={handleBuy}
+          disabled={isLoading}
+          className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] disabled:opacity-60 transition-colors active:scale-95"
         >
-          <ShoppingCart size={12} /> Buy
+          <ShoppingCart size={12} /> {isLoading ? "..." : "Buy"}
         </button>
       </div>
     </div>
