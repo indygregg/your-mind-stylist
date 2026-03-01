@@ -6,7 +6,6 @@ import WhatIDo from "../components/home/WhatIDo";
 import MindStylingSuite from "../components/home/MindStylingSuite";
 import FreeMasterclass from "../components/home/FreeMasterclass";
 import Testimonials from "../components/home/Testimonials";
-import ContentHub from "../components/home/ContentHub";
 import FinalCTA from "../components/home/FinalCTA";
 import SmartLoginRedirect from "../components/dashboard/SmartLoginRedirect";
 
