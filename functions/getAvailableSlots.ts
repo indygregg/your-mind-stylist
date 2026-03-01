@@ -82,8 +82,9 @@ Deno.serve(async (req) => {
       timezone: 'America/Los_Angeles'
     };
 
-    // Get existing bookings in the date range
+    // Get existing bookings for this manager and appointment type in the date range
     const existingBookings = await base44.asServiceRole.entities.Booking.filter({
+      staff_id: managerId,
       booking_status: { $in: ['confirmed', 'scheduled', 'pending_payment'] }
     });
 
