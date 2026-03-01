@@ -341,7 +341,7 @@ export default function Dashboard() {
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="font-serif text-xl text-[#1E3A32]">
-                <CmsText contentKey="dashboard.want_more.title" page="Dashboard" blockTitle="Want More Title" fallback="Explore Programs" contentType="short_text" />
+                Explore Programs
               </h2>
               <Link to={createPageUrl("Programs")} className="text-sm text-[#D8B46B] hover:underline">
                 View all →
@@ -350,7 +350,10 @@ export default function Dashboard() {
             {publishedProducts.length === 0 ? (
               <div className="bg-white p-8 text-center">
                 <p className="text-[#2B2725]/70 leading-relaxed">
-                  You're not enrolled in any programs yet. Book a consultation with Roberta to explore programs tailored to your transformation journey.
+                  <CmsText 
+                    cmsKey="dashboard.programs.empty" 
+                    defaultText="You're not enrolled in any programs yet. Book a consultation with Roberta to explore Cleaning Out Your Closet™ or Pocket Mindset™ programs tailored to your transformation journey." 
+                  />
                 </p>
                 <Link to={createPageUrl("Bookings")} className="inline-block mt-4 px-6 py-3 bg-[#1E3A32] text-white text-sm hover:bg-[#2B2725] transition-colors">
                   Book a Consultation
