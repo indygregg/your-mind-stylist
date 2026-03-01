@@ -190,7 +190,7 @@ export default function FreeMasterclass() {
                         email,
                         full_name: name,
                       });
-                      window.location.href = "https://yourmindstylist.com/login?email=" + encodeURIComponent(email);
+                      window.location.href = createPageUrl("Masterclass");
                     } catch (error) {
                       alert('Error: ' + error.message);
                     }
