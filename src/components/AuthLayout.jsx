@@ -235,12 +235,12 @@ export default function AuthLayout({ children, currentPageName }) {
             </button>
 
             {/* Bug Report Notifications (Admin Only) */}
-            {user?.role === "admin" && (
-              <Link
-                to={createPageUrl("AdminBugTracker")}
-                className="relative p-3 hover:bg-[#F9F5EF]/10 rounded-full transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
-                aria-label="Bug Reports"
-              >
+             {user?.role === "admin" && (
+               <Link
+                 to={createPageUrl("AdminRoadmap")}
+                 className="relative p-3 hover:bg-[#F9F5EF]/10 rounded-full transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
+                 aria-label="Bug Reports"
+               >
                 <Bell size={20} className="text-[#F9F5EF]/70" />
                 {newBugsCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
