@@ -20,11 +20,16 @@ export default function ProductCard({ product }) {
     haptics.light();
     setIsLoading(true);
     try {
+      console.log("Buying product:", product);
       const response = await base44.functions.invoke("createProductCheckout", {
         product_ids: [product.id],
       });
+      console.log("Checkout response:", response);
       if (response.data?.checkout_url) {
         window.location.href = response.data.checkout_url;
+      } else {
+        console.error("No checkout URL in response:", response.data);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Checkout error:", error);
