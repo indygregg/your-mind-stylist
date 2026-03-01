@@ -74,7 +74,7 @@ export default function LessonArea({
           <div className="mb-8 bg-black rounded-lg overflow-hidden">
             <VideoPlayer
               src={lesson.media_url}
-              embedUrl={lesson.embed_url}
+              embedUrl={lesson.embed_url || lesson.media_url}
               onProgressUpdate={onProgressUpdate}
               lastPosition={lastPosition}
             />
