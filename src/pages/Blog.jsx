@@ -141,9 +141,6 @@ export default function Blog() {
   const featuredPost = allPosts.find(p => p.featured_image) || allPosts[0] || null;
   const latestPosts = allPosts.filter(p => p.id !== featuredPost?.id);
 
-  const restylePosts = allPosts.filter(p => p.category === "Restyle Monday").slice(0, 3);
-  const thursdayPosts = allPosts.filter(p => p.category === "Thursday Tailoring").slice(0, 3);
-
   const filteredPosts = selectedCategory === "All"
     ? latestPosts
     : latestPosts.filter(p => p.category === selectedCategory);
