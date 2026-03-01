@@ -49,7 +49,6 @@
  */
 import About from './pages/About';
 import Accessibility from './pages/Accessibility';
-import AdminBugTracker from './pages/AdminBugTracker';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProducts from './pages/AdminProducts';
 import AdminRoadmap from './pages/AdminRoadmap';
@@ -190,7 +189,6 @@ import __Layout from './Layout.jsx';
 export const PAGES = {
     "About": About,
     "Accessibility": Accessibility,
-    "AdminBugTracker": AdminBugTracker,
     "AdminDashboard": AdminDashboard,
     "AdminProducts": AdminProducts,
     "AdminRoadmap": AdminRoadmap,
