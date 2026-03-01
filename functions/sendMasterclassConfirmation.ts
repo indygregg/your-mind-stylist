@@ -3,6 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    // This is a public endpoint — no auth required
 
     let body;
     try {
@@ -14,6 +15,21 @@ Deno.serve(async (req) => {
 
     if (!email) {
       return Response.json({ error: 'Email is required' }, { status: 400 });
+    }
+
+    // Create or update MasterclassSignup record
+    try {
+      const existing = await base44.asServiceRole.entities.MasterclassSignup.filter({ email });
+      if (existing.length === 0) {
+        await base44.asServiceRole.entities.MasterclassSignup.create({
+          email,
+          full_name: full_name || '',
+          confirmation_sent: false,
+          source: 'free_masterclass_page'
+        });
+      }
+    } catch (e) {
+      console.log('MasterclassSignup upsert failed (non-critical):', e.message);
     }
 
     const masterclassUrl = 'https://yourmindstylist.com/masterclass';
