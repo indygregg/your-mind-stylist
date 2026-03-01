@@ -122,13 +122,14 @@ export default function AuthLayout({ children, currentPageName }) {
 
   const navLinks = getNavLinks();
 
-  // Fetch new bug reports count for admin
+  // Fetch new bug reports count for admin (only bugs created in last 24 hours)
   const { data: newBugsCount = 0 } = useQuery({
     queryKey: ["newBugsCount"],
     queryFn: async () => {
       if (user?.role !== "admin") return 0;
       const bugs = await base44.entities.BugReport.filter({ status: "New" });
-      return bugs.length;
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      return bugs.filter(b => new Date(b.created_date) > oneDayAgo).length;
     },
     enabled: !!user && user.role === "admin",
     refetchInterval: 30000, // Refetch every 30 seconds
