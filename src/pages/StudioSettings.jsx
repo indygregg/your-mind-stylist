@@ -18,37 +18,26 @@ export default function StudioSettings() {
   });
   const [localChanges, setLocalChanges] = useState(false);
 
-  // Fetch existing settings from CmsContent
-  const { data: cmsContent } = useQuery({
-    queryKey: ["studio-settings"],
-    queryFn: async () => {
-      const items = await base44.entities.CmsContent.filter({ key: "studio_settings" });
-      return items.length > 0 ? items[0] : null;
-    },
-  });
-
-  // Load settings when CMS content is fetched
+  // Load settings from current user
   useEffect(() => {
-    if (cmsContent?.data) {
-      setSettings(cmsContent.data);
-    }
-  }, [cmsContent]);
+    const loadSettings = async () => {
+      try {
+        const user = await base44.auth.me();
+        if (user?.studio_settings) {
+          setSettings(user.studio_settings);
+        }
+      } catch (error) {
+        console.error("Error loading settings:", error);
+      }
+    };
+    loadSettings();
+  }, []);
 
   const saveMutation = useMutation({
     mutationFn: async (newSettings) => {
-      if (cmsContent?.id) {
-        // Update existing
-        return base44.entities.CmsContent.update(cmsContent.id, {
-          data: newSettings,
-        });
-      } else {
-        // Create new
-        return base44.entities.CmsContent.create({
-          key: "studio_settings",
-          name: "Studio Settings",
-          data: newSettings,
-        });
-      }
+      return base44.auth.updateMe({
+        studio_settings: newSettings,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["studio-settings"] });
