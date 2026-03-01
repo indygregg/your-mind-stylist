@@ -121,7 +121,7 @@ ${description}
 AI Analysis:
 ${ai_analysis}
 
-View details: https://yourmindstylist.com/BugList
+View details: https://yourmindstylist.com/AdminRoadmap
         `
       });
     } catch (emailError) {
