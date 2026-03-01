@@ -29,7 +29,7 @@ import { SmartSuggestion } from "../components/ui/SmartSuggestion";
 import { useSmartSuggestions } from "../components/ui/useSmartSuggestions";
 import haptics from "@/components/utils/haptics";
 import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
-import ProductCard from "@/components/dashboard/ProductCard";
+import ProductCard from "@/components/dashboard/ProductCard.jsx";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
