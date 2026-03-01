@@ -30,9 +30,29 @@ export default function DocumentModal({ isOpen, onClose, title, url }) {
         <div className="p-6">
           {url.toLowerCase().endsWith('.pdf') ? (
             <iframe
-              src={url}
+              src={`https://docs.google.com/gviz/query?tqx=out:html&tq=SELECT%20A%20UNION%20SELECT%20%27%27%20WHERE%20A%20IS%20NULL%20LIMIT%200&usp=embed_facebook`}
               className="w-full h-[70vh] border border-[#E4D9C4] rounded"
               title={title}
+              srcDoc={`<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { margin: 0; }
+    iframe { border: none; width: 100%; height: 100vh; }
+  </style>
+</head>
+<body>
+  <iframe src="https://docs.google.com/gviz/query?tqx=out:html&tq=SELECT%20A%20UNION%20SELECT%20%27%27%20WHERE%20A%20IS%20NULL%20LIMIT%200"></iframe>
+  <script>
+    fetch('${url}')
+      .then(r => r.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        document.querySelector('iframe').src = 'https://docs.google.com/gviz/query?tqx=out:html&tq=SELECT%20A%20UNION%20SELECT%20%27%27%20WHERE%20A%20IS%20NULL%20LIMIT%200';
+      });
+  </script>
+</body>
+</html>`}
             />
           ) : (
             <p className="text-[#2B2725] text-center">
