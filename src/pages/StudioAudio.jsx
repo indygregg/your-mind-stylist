@@ -102,9 +102,15 @@ export default function StudioAudio() {
             <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4">
               Pocket Mindset™ Library
             </h1>
-            <p className="text-[#2B2725]/70 text-lg">
+            <p className="text-[#2B2725]/70 text-lg mb-4">
               Quick, powerful sessions to reset your mind and shift your state
             </p>
+            <div className="bg-[#D8B46B]/10 border-l-4 border-[#D8B46B] p-4 rounded-r">
+              <h3 className="font-medium text-[#1E3A32] mb-1">About Audio Sessions</h3>
+              <p className="text-sm text-[#2B2725]/80">
+                This library hosts guided audio experiences for enrolled clients. Sessions are uploaded by Roberta in the <strong>Manager → Audio Sessions</strong> section, then published here for client access. Clients can favorite sessions, track progress, and listen anytime. Sessions are organized by category.
+              </p>
+            </div>
           </div>
 
           {/* Search & Filters */}
