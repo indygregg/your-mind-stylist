@@ -164,9 +164,9 @@ import StaffManagement from './pages/StaffManagement';
 import StudioAudio from './pages/StudioAudio';
 import StudioDashboard from './pages/StudioDashboard';
 import StudioDevDocs from './pages/StudioDevDocs';
-import Welcome from './pages/Welcome';
 import StudioLegal from './pages/StudioLegal';
 import StudioLegalEditor from './pages/StudioLegalEditor';
+import Welcome from './pages/Welcome';
 import StudioLogs from './pages/StudioLogs';
 import StudioNotes from './pages/StudioNotes';
 import StudioPricing from './pages/StudioPricing';
@@ -302,9 +302,9 @@ export const PAGES = {
     "StudioAudio": StudioAudio,
     "StudioDashboard": StudioDashboard,
     "StudioDevDocs": StudioDevDocs,
-    "Welcome": Welcome,
     "StudioLegal": StudioLegal,
     "StudioLegalEditor": StudioLegalEditor,
+    "Welcome": Welcome,
     "StudioLogs": StudioLogs,
     "StudioNotes": StudioNotes,
     "StudioPricing": StudioPricing,
