@@ -4,15 +4,13 @@ import { X, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function DocumentModal({ isOpen, onClose, title, url }) {
-  if (!url) return null;
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
         <DialogHeader className="sticky top-0 bg-white border-b border-[#E4D9C4] p-6 flex items-center justify-between">
           <DialogTitle className="text-[#1E3A32] font-serif text-2xl">{title}</DialogTitle>
           <div className="flex items-center gap-3">
-            {url.toLowerCase().endsWith('.pdf') && (
+            {url && url.toLowerCase().endsWith('.pdf') && (
               <a href={url} download className="inline-flex">
                 <Button variant="outline" size="sm" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10">
                   <Download size={16} className="mr-1" />
@@ -28,7 +26,9 @@ export default function DocumentModal({ isOpen, onClose, title, url }) {
           </div>
         </DialogHeader>
         <div className="p-6">
-          {url.toLowerCase().endsWith('.pdf') ? (
+          {!url ? (
+            <p className="text-[#2B2725] text-center py-8">Document URL not configured. Please add the document link in the CMS.</p>
+          ) : url.toLowerCase().endsWith('.pdf') ? (
             <iframe
               src={`https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`}
               className="w-full h-[70vh] border border-[#E4D9C4] rounded"
