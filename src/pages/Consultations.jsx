@@ -336,7 +336,7 @@ export default function Consultations() {
                           contentType="rich_text"
                         />
                       </div>
-                      <DocDownloadLink contentKey="consultations.step1.doc2.link_url" label="Download Online Instructions PDF" />
+                      <DocModalLink contentKey="consultations.step1.doc2.link_url" label="View Online Instructions" title="Online Instructions" />
                     </div>
 
                     <div>
