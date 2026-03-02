@@ -363,9 +363,7 @@ export default function Consultations() {
                           contentType="rich_text"
                         />
                       </div>
-                      <div className="mb-3 border border-[#E4D9C4] rounded-lg overflow-hidden bg-gray-100 h-64">
-                        <PDFPreviewEmbed contentKey="consultations.step1.doc2.link_url" title="Online Instructions" />
-                      </div>
+                      <PDFPreviewEmbed contentKey="consultations.step1.doc2.link_url" title="Online Instructions" />
                       <DocModalLink contentKey="consultations.step1.doc2.link_url" label="Download PDF" title="Online Instructions" />
                     </div>
 
