@@ -222,9 +222,10 @@ export default function CoursePage() {
   };
 
   const handleMarkComplete = () => {
-    // Show emotional check-in after completion
+    // Show emotional check-in after completion (only if enabled)
+    const currentLesson = allLessons.find(l => l.id === currentLessonId);
     const lessonProgress = userLessonProgress.find(p => p.lesson_id === currentLessonId);
-    if (!lessonProgress?.mood_after) {
+    if (currentLesson?.enable_checkin && !lessonProgress?.mood_after) {
       setCheckInType("after");
       setShowEmotionalCheckIn(true);
     } else {
