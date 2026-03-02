@@ -79,7 +79,8 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 to={createPageUrl("Bookings")}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[var(--brand-gold)] text-[var(--brand-green)] text-sm font-semibold tracking-wide hover:bg-[#C5A35B] transition-all duration-300 shadow-lg"
+                style={{ backgroundColor: "#D8B46B", color: "#1E3A32" }}
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 text-sm font-semibold tracking-wide transition-all duration-300 shadow-lg"
               >
                 <CmsText
                   contentKey="home.hero.cta_experience"
