@@ -6,9 +6,10 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Check, Sparkles, ArrowRight, ShoppingCart, Loader2, Star } from "lucide-react";
+import { Check, Sparkles, ArrowRight, ShoppingCart, Loader2, Star, Plus } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ProductOwnershipCheck from "../components/purchase/ProductOwnershipCheck";
+import { useCart } from "../components/shop/CartContext";
 
 export default function ProductPage() {
   const [isPreview, setIsPreview] = useState(false);
