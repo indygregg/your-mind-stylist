@@ -289,30 +289,32 @@ export default function Consultations() {
                   </p>
 
                   <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <FileText size={16} className="text-[#D8B46B]" />
-                        <h4 className="font-medium text-[#1E3A32]">
+                    <PDFClickInterceptor label="View Welcome Letter" title="Welcome Letter">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <FileText size={16} className="text-[#D8B46B]" />
+                          <h4 className="font-medium text-[#1E3A32]">
+                            <CmsText 
+                              contentKey="consultations.step1.doc1.title" 
+                              page="Consultations"
+                              blockTitle="Document 1 Title"
+                              fallback="Welcome Letter" 
+                              contentType="short_text"
+                            />
+                          </h4>
+                        </div>
+                        <div className="text-sm text-[#2B2725]/70 mb-2">
                           <CmsText 
-                            contentKey="consultations.step1.doc1.title" 
+                            contentKey="consultations.step1.doc1.description" 
                             page="Consultations"
-                            blockTitle="Document 1 Title"
-                            fallback="Welcome Letter" 
-                            contentType="short_text"
+                            blockTitle="Document 1 Description"
+                            fallback="Start here to understand how I work and what to expect." 
+                            contentType="rich_text"
                           />
-                        </h4>
+                        </div>
+                        <DocModalLink contentKey="consultations.step1.doc1.link_url" label="View Welcome Letter" title="Welcome Letter" />
                       </div>
-                      <div className="text-sm text-[#2B2725]/70 mb-2">
-                        <CmsText 
-                          contentKey="consultations.step1.doc1.description" 
-                          page="Consultations"
-                          blockTitle="Document 1 Description"
-                          fallback="Start here to understand how I work and what to expect." 
-                          contentType="rich_text"
-                        />
-                      </div>
-                      <DocModalLink contentKey="consultations.step1.doc1.link_url" label="View Welcome Letter" title="Welcome Letter" />
-                    </div>
+                    </PDFClickInterceptor>
 
                     <div>
                       <div className="flex items-center gap-2 mb-2">
