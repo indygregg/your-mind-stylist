@@ -187,7 +187,7 @@ export default function MindStylingSuite() {
                     </h3>
                     <p
                       className="font-serif italic text-lg md:text-xl mb-6"
-                      style={{ color: service.accent }}
+                      style={{ color: service.accentHex }}
                     >
                       <CmsText
                         contentKey={`home.suite.${index}.tagline`}
