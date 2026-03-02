@@ -33,6 +33,28 @@ function DocDownloadLink({ contentKey, label }) {
   );
 }
 
+// Helper component to show PDF preview via Google Docs viewer
+function PDFPreviewEmbed({ contentKey, title }) {
+  const { content: rawUrl } = useCmsText(contentKey, "");
+  const url = rawUrl ? rawUrl.replace(/<[^>]*>/g, "").trim() : "";
+  
+  if (!url || !url.startsWith("http")) {
+    return null;
+  }
+  
+  const googlePreviewUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
+  
+  return (
+    <iframe
+      src={googlePreviewUrl}
+      width="100%"
+      height="100%"
+      style={{ border: "none", borderRadius: "8px" }}
+      title={title}
+    />
+  );
+}
+
 // Helper component for clickable document links that open in modal
 function DocModalLink({ contentKey, label, title }) {
   const [isOpen, setIsOpen] = React.useState(false);
