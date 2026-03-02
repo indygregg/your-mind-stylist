@@ -116,7 +116,7 @@ export default function MindStylingSuite() {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-[var(--brand-sand)]/30">
+    <section className="py-24 md:py-32" style={{ backgroundColor: "rgba(228,217,196,0.3)" }}>
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <motion.div
