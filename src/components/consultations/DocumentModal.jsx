@@ -31,10 +31,10 @@ export default function DocumentModal({ isOpen, onClose, title, url }) {
           ) : url.toLowerCase().endsWith('.pdf') ? (
             <div className="space-y-4">
               <iframe
-                src={`${url}#toolbar=0`}
+                src={`https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`}
                 className="w-full h-[70vh] border border-[#E4D9C4] rounded"
                 title={title}
-                allow="web-share"
+                allowFullScreen
               />
               <p className="text-sm text-[#2B2725]/60 text-center">
                 If the PDF doesn't display above,{' '}
