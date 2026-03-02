@@ -11,18 +11,22 @@ export default function ProductOwnershipCheck({ productKey, children }) {
   const { data: ownershipData, isLoading } = useQuery({
     queryKey: ["productOwnership", productKey],
     queryFn: async () => {
-      const isAuth = await base44.auth.isAuthenticated();
-      if (!isAuth) return { owns_product: false };
-      const response = await base44.functions.invoke("checkProductOwnership", {
-        product_key: productKey,
-      });
-      return response.data;
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (!isAuth) return { owns_product: false };
+        const response = await base44.functions.invoke("checkProductOwnership", {
+          product_key: productKey,
+        });
+        return response.data;
+      } catch {
+        return { owns_product: false };
+      }
     },
     enabled: !!productKey,
   });
 
   if (isLoading) {
-    return <div className="text-center py-12 text-[#2B2725]/60">Loading...</div>;
+    return null;
   }
 
   // If user already owns this product, show access message
