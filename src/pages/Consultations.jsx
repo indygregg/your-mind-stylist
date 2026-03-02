@@ -24,7 +24,7 @@ function DocDownloadLink({ contentKey, label }) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-[#D8B46B] hover:text-[var(--brand-green)] text-sm inline-flex items-center gap-1 transition-colors"
+      className="text-[var(--brand-gold)] hover:text-[var(--brand-green)] text-sm inline-flex items-center gap-1 transition-colors"
     >
       <Download size={14} />
       <span>{label}</span>
@@ -46,7 +46,7 @@ function DocModalLink({ contentKey, label, title }) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="text-[#D8B46B] hover:text-[var(--brand-green)] text-sm inline-flex items-center gap-1 transition-colors underline"
+        className="text-[var(--brand-gold)] hover:text-[var(--brand-green)] text-sm inline-flex items-center gap-1 transition-colors underline"
       >
         <FileText size={14} />
         <span>{label}</span>
@@ -59,7 +59,7 @@ function DocModalLink({ contentKey, label, title }) {
 export default function Consultations() {
 
   return (
-    <div className="bg-[#F9F5EF]">
+    <div className="bg-[var(--brand-cream)]">
       <SEO
         title="Initial Consultation | Your Mind Stylist"
         description="Schedule your initial consultation to explore how Mind Styling can support your personal growth. Available online or in-person in Las Vegas."
@@ -67,7 +67,7 @@ export default function Consultations() {
       />
 
       {/* Hero Section with Video */}
-      <section className="pt-32 pb-20 bg-[var(--brand-green)] text-[#F9F5EF]">
+      <section className="pt-32 pb-20 bg-[var(--brand-green)] text-[var(--brand-cream)]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -75,7 +75,7 @@ export default function Consultations() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+              <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
                 <CmsText 
                   contentKey="consultations.hero.subtitle" 
                   page="Consultations"
@@ -93,7 +93,7 @@ export default function Consultations() {
                   contentType="short_text"
                 />
               </h1>
-              <div className="text-lg leading-relaxed mb-8 text-[#F9F5EF]/90">
+              <div className="text-lg leading-relaxed mb-8 text-[var(--brand-cream)]/90">
                 <CmsText 
                   contentKey="consultations.hero.description" 
                   page="Consultations"
@@ -103,7 +103,7 @@ export default function Consultations() {
                 />
               </div>
               <Link to={createPageUrl("Bookings")}>
-                <Button className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[var(--brand-green)] px-8 py-6 text-lg">
+                <Button className="bg-[var(--brand-gold)] hover:bg-[var(--brand-cream)] text-[var(--brand-green)] px-8 py-6 text-lg">
                   <CmsText 
                     contentKey="consultations.hero.cta" 
                     page="Consultations"
@@ -129,7 +129,7 @@ export default function Consultations() {
                   fallback="https://vimeo.com/1158905462"
                 />
               </div>
-              <p className="text-sm text-[#F9F5EF]/70 mt-4 text-center">
+              <p className="text-sm text-[var(--brand-cream)]/70 mt-4 text-center">
                 <CmsText 
                   contentKey="consultations.hero.video_caption" 
                   page="Consultations"
@@ -163,8 +163,8 @@ export default function Consultations() {
             <div className="grid md:grid-cols-2 gap-6">
               {[1, 2, 3, 4].map((num) => (
                 <div key={num} className="flex items-start gap-3">
-                  <CheckCircle2 size={20} className="text-[#D8B46B] mt-1 flex-shrink-0" />
-                  <p className="text-[#2B2725]/80">
+                  <CheckCircle2 size={20} className="text-[var(--brand-gold)] mt-1 flex-shrink-0" />
+                  <p className="text-[var(--brand-charcoal)]/80">
                     <CmsText 
                       contentKey={`consultations.learn.item${num}`} 
                       page="Consultations"
@@ -181,8 +181,8 @@ export default function Consultations() {
                 </div>
               ))}
             </div>
-            <div className="mt-8 p-6 bg-[#F9F5EF] rounded-lg">
-              <p className="text-[#2B2725]/80">
+            <div className="mt-8 p-6 bg-[var(--brand-cream)] rounded-lg">
+              <p className="text-[var(--brand-charcoal)]/80">
                 <CmsText 
                   contentKey="consultations.learn.availability" 
                   page="Consultations"
@@ -197,7 +197,7 @@ export default function Consultations() {
       </section>
 
       {/* Before Your Consultation */}
-      <section className="py-20 bg-[#F9F5EF]">
+      <section className="py-20 bg-[var(--brand-cream)]">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -265,7 +265,7 @@ export default function Consultations() {
           <Card className="mb-8">
             <CardContent className="pt-6">
               <div className="flex items-start gap-4 mb-6">
-                <div className="bg-[#D8B46B] text-[var(--brand-green)] w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
+                <div className="bg-[var(--brand-gold)] text-[var(--brand-green)] w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
                   1
                 </div>
                 <div className="flex-1">
@@ -278,7 +278,7 @@ export default function Consultations() {
                       contentType="short_text"
                     />
                   </h3>
-                  <p className="text-[#2B2725]/80 mb-6">
+                  <p className="text-[var(--brand-charcoal)]/80 mb-6">
                     <CmsText 
                       contentKey="consultations.step1.intro" 
                       page="Consultations"
@@ -291,7 +291,7 @@ export default function Consultations() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <FileText size={16} className="text-[#D8B46B]" />
+                        <FileText size={16} className="text-[var(--brand-gold)]" />
                         <h4 className="font-medium text-[var(--brand-green)]">
                           <CmsText 
                             contentKey="consultations.step1.doc1.title" 
@@ -302,7 +302,7 @@ export default function Consultations() {
                           />
                         </h4>
                       </div>
-                      <div className="text-sm text-[#2B2725]/70 mb-2">
+                      <div className="text-sm text-[var(--brand-charcoal)]/70 mb-2">
                         <CmsText 
                           contentKey="consultations.step1.doc1.description" 
                           page="Consultations"
@@ -316,7 +316,7 @@ export default function Consultations() {
 
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <FileText size={16} className="text-[#D8B46B]" />
+                        <FileText size={16} className="text-[var(--brand-gold)]" />
                         <h4 className="font-medium text-[var(--brand-green)]">
                           <CmsText 
                             contentKey="consultations.step1.doc2.title" 
@@ -327,7 +327,7 @@ export default function Consultations() {
                           />
                         </h4>
                       </div>
-                      <div className="text-sm text-[#2B2725]/70 mb-2">
+                      <div className="text-sm text-[var(--brand-charcoal)]/70 mb-2">
                         <CmsText 
                           contentKey="consultations.step1.doc2.description" 
                           page="Consultations"
@@ -341,7 +341,7 @@ export default function Consultations() {
 
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <FileText size={16} className="text-[#D8B46B]" />
+                        <FileText size={16} className="text-[var(--brand-gold)]" />
                         <h4 className="font-medium text-[var(--brand-green)]">
                           <CmsText 
                             contentKey="consultations.step1.doc3.title" 
@@ -352,7 +352,7 @@ export default function Consultations() {
                           />
                         </h4>
                       </div>
-                      <div className="text-sm text-[#2B2725]/70 mb-2">
+                      <div className="text-sm text-[var(--brand-charcoal)]/70 mb-2">
                         <CmsText 
                           contentKey="consultations.step1.doc3.description" 
                           page="Consultations"
@@ -369,7 +369,7 @@ export default function Consultations() {
 
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <Video size={16} className="text-[#D8B46B]" />
+                        <Video size={16} className="text-[var(--brand-gold)]" />
                         <h4 className="font-medium text-[var(--brand-green)]">
                           <CmsText 
                             contentKey="consultations.step1.doc4.title" 
@@ -380,7 +380,7 @@ export default function Consultations() {
                           />
                         </h4>
                       </div>
-                      <div className="text-sm text-[#2B2725]/70 mb-3">
+                      <div className="text-sm text-[var(--brand-charcoal)]/70 mb-3">
                         <CmsText 
                           contentKey="consultations.step1.doc4.description" 
                           page="Consultations"
@@ -408,7 +408,7 @@ export default function Consultations() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-start gap-4">
-                <div className="bg-[#D8B46B] text-[var(--brand-green)] w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
+                <div className="bg-[var(--brand-gold)] text-[var(--brand-green)] w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
                   2
                 </div>
                 <div className="flex-1">
@@ -432,7 +432,7 @@ export default function Consultations() {
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Link to={createPageUrl("ConsultationQuestionnaire")}>
-                      <Button variant="outline" className="border-[#D8B46B] text-[var(--brand-green)] hover:bg-[#D8B46B]/10">
+                      <Button variant="outline" className="border-[var(--brand-gold)] text-[var(--brand-green)] hover:bg-[var(--brand-gold)]/10">
                         <FileText size={16} className="mr-2" />
                         <CmsText 
                           contentKey="consultations.step2.button" 
@@ -444,7 +444,7 @@ export default function Consultations() {
                       </Button>
                     </Link>
                     <Link to={createPageUrl("ConsultationFormEditor")}>
-                      <Button variant="ghost" className="text-[#D8B46B] hover:bg-[#D8B46B]/10">
+                      <Button variant="ghost" className="text-[var(--brand-gold)] hover:bg-[var(--brand-gold)]/10">
                         <CmsText 
                           contentKey="consultations.step2.edit_button" 
                           page="Consultations"
@@ -463,7 +463,7 @@ export default function Consultations() {
       </section>
 
       {/* What Happens */}
-      <section className="py-20 bg-[#F9F5EF]">
+      <section className="py-20 bg-[var(--brand-cream)]">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -509,7 +509,7 @@ export default function Consultations() {
                 contentType="short_text"
               />
             </h2>
-            <h3 className="text-xl text-[#2B2725] mb-6">
+            <h3 className="text-xl text-[var(--brand-charcoal)] mb-6">
               <CmsText 
                 contentKey="consultations.not_sure.subtitle" 
                 page="Consultations"
@@ -528,7 +528,7 @@ export default function Consultations() {
               />
             </div>
             <Link to={createPageUrl("Contact")}>
-              <Button className="bg-[var(--brand-green)] hover:bg-[#2B2725] text-[#F9F5EF]">
+              <Button className="bg-[var(--brand-green)] hover:bg-[var(--brand-charcoal)] text-[var(--brand-cream)]">
                 <Phone size={16} className="mr-2" />
                 <CmsText 
                   contentKey="consultations.not_sure.button" 
@@ -544,7 +544,7 @@ export default function Consultations() {
       </section>
 
       {/* How I Work */}
-      <section className="py-20 bg-[#F9F5EF]">
+      <section className="py-20 bg-[var(--brand-cream)]">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -579,7 +579,7 @@ export default function Consultations() {
                     blockTitle="How I Work Item 1 Description"
                     fallback="We work together to set realistic goals and create a strategy tailored to you. Collaboration is key—working as a team gives you the best opportunity for success." 
                     contentType="rich_text"
-                    className="text-[#2B2725]/80"
+                    className="text-[var(--brand-charcoal)]/80"
                   />
                 </CardContent>
               </Card>
@@ -601,7 +601,7 @@ export default function Consultations() {
                     blockTitle="How I Work Item 2 Description"
                     fallback="I do not diagnose, treat, or cure any medical or mental health conditions. I do not work with certain diagnosed medical or mental conditions." 
                     contentType="rich_text"
-                    className="text-[#2B2725]/80"
+                    className="text-[var(--brand-charcoal)]/80"
                   />
                 </CardContent>
               </Card>
@@ -623,7 +623,7 @@ export default function Consultations() {
                     blockTitle="How I Work Item 3 Description"
                     fallback="Programs are client-centered and designed specifically for you. We will determine what's appropriate during your consultation." 
                     contentType="rich_text"
-                    className="text-[#2B2725]/80"
+                    className="text-[var(--brand-charcoal)]/80"
                   />
                 </CardContent>
               </Card>
@@ -645,7 +645,7 @@ export default function Consultations() {
                     blockTitle="How I Work Item 4 Description"
                     fallback="Every client's needs are different. During your consultation, you'll receive an estimated program cost based on your goals. Payment plans are available for your convenience." 
                     contentType="rich_text"
-                    className="text-[#2B2725]/80"
+                    className="text-[var(--brand-charcoal)]/80"
                   />
                 </CardContent>
               </Card>
@@ -655,7 +655,7 @@ export default function Consultations() {
       </section>
 
       {/* Schedule CTA */}
-      <section className="py-24 bg-[var(--brand-green)] text-[#F9F5EF]">
+      <section className="py-24 bg-[var(--brand-green)] text-[var(--brand-cream)]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -671,7 +671,7 @@ export default function Consultations() {
                 contentType="short_text"
               />
             </h2>
-            <p className="text-lg text-[#F9F5EF]/80 mb-8">
+            <p className="text-lg text-[var(--brand-cream)]/80 mb-8">
               <CmsText 
                 contentKey="consultations.schedule_cta.description" 
                 page="Consultations"
@@ -681,7 +681,7 @@ export default function Consultations() {
               />
             </p>
             <Link to={createPageUrl("Bookings")}>
-              <Button className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[var(--brand-green)] px-8 py-6 text-lg">
+              <Button className="bg-[var(--brand-gold)] hover:bg-[var(--brand-cream)] text-[var(--brand-green)] px-8 py-6 text-lg">
                 <Calendar size={20} className="mr-2" />
                 <CmsText 
                   contentKey="consultations.schedule_cta.button" 
@@ -783,7 +783,7 @@ export default function Consultations() {
       </section>
 
       {/* Contact */}
-      <section className="py-20 bg-[#F9F5EF]">
+      <section className="py-20 bg-[var(--brand-cream)]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -799,7 +799,7 @@ export default function Consultations() {
                 contentType="short_text"
               />
             </h2>
-            <a href="tel:612-839-2295" className="text-2xl font-medium text-[#D8B46B] hover:text-[var(--brand-green)] transition-colors flex items-center justify-center gap-2">
+            <a href="tel:612-839-2295" className="text-2xl font-medium text-[var(--brand-gold)] hover:text-[var(--brand-green)] transition-colors flex items-center justify-center gap-2">
               <Phone size={24} />
               <CmsText 
                 contentKey="consultations.contact.phone" 
@@ -814,7 +814,7 @@ export default function Consultations() {
       </section>
 
       {/* Disclaimer */}
-      <section className="py-12 bg-[#2B2725] text-[#F9F5EF]/70">
+      <section className="py-12 bg-[var(--brand-charcoal)] text-[var(--brand-cream)]/70">
         <div className="max-w-5xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0 }}
@@ -822,7 +822,7 @@ export default function Consultations() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h3 className="text-sm font-medium text-[#F9F5EF] mb-3 tracking-wider">
+            <h3 className="text-sm font-medium text-[var(--brand-cream)] mb-3 tracking-wider">
               <CmsText 
                 contentKey="consultations.disclaimer.title" 
                 page="Consultations"

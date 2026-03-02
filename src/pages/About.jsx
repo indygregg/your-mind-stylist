@@ -86,7 +86,7 @@ export default function About() {
   ];
 
   return (
-    <div className="bg-[#F9F5EF]">
+    <div className="bg-[var(--brand-cream)]">
       <SEO
         title="About Roberta | Your Mind Stylist"
         description="Meet Your Mind Stylist, Roberta Fernandez. Learn how decades of emotional intelligence, mindset work, and leadership coaching shaped her unique Mind Styling method."
@@ -102,7 +102,7 @@ export default function About() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+              <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
                 <CmsText 
                   contentKey="about.hero.subtitle" 
                   page="About"
@@ -120,7 +120,7 @@ export default function About() {
                   contentType="short_text"
                 />
               </h1>
-              <p className="text-[#2B2725]/80 text-xl leading-relaxed mb-10">
+              <p className="text-[var(--brand-charcoal)]/80 text-xl leading-relaxed mb-10">
                 <CmsText 
                   contentKey="about.hero.description" 
                   page="About"
@@ -131,7 +131,7 @@ export default function About() {
               </p>
               <Link
                 to={createPageUrl("Contact")}
-                className="group inline-flex items-center gap-3 px-8 py-4 bg-[var(--brand-green)] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+                className="group inline-flex items-center gap-3 px-8 py-4 bg-[var(--brand-green)] text-[var(--brand-cream)] text-sm tracking-wide hover:bg-[var(--brand-charcoal)] transition-all duration-300"
               >
                 Get Started
                 <ArrowRight
@@ -149,8 +149,8 @@ export default function About() {
               className="relative"
             >
               <div className="relative">
-                <div className="absolute -top-6 -left-6 w-24 h-24 border-l-2 border-t-2 border-[#D8B46B]" />
-                <div className="absolute -bottom-6 -right-6 w-24 h-24 border-r-2 border-b-2 border-[#D8B46B]" />
+                <div className="absolute -top-6 -left-6 w-24 h-24 border-l-2 border-t-2 border-[var(--brand-gold)]" />
+                <div className="absolute -bottom-6 -right-6 w-24 h-24 border-r-2 border-b-2 border-[var(--brand-gold)]" />
                 <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/8a50d24ca_Roberta-Fernandez-IG-shoot90.png"
                   alt="Roberta Fernandez"
@@ -170,7 +170,7 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+            <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
               <CmsText 
                 contentKey="about.story.subtitle" 
                 page="About"
@@ -189,7 +189,7 @@ export default function About() {
               />
             </h2>
 
-            <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
+            <div className="space-y-6 text-[var(--brand-charcoal)]/80 text-lg leading-relaxed">
               <CmsText 
                 contentKey="about.story.paragraph1" 
                 page="About"
@@ -237,14 +237,14 @@ export default function About() {
       </section>
 
       {/* Philosophy Section */}
-      <section className="py-24 bg-[#F9F5EF]">
+      <section className="py-24 bg-[var(--brand-cream)]">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+            <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
               <CmsText 
                 contentKey="about.philosophy.subtitle" 
                 page="About"
@@ -263,7 +263,7 @@ export default function About() {
               />
             </h2>
 
-            <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed mb-10">
+            <div className="space-y-6 text-[var(--brand-charcoal)]/80 text-lg leading-relaxed mb-10">
               <CmsText 
                 contentKey="about.philosophy.intro" 
                 page="About"
@@ -274,7 +274,7 @@ export default function About() {
             </div>
 
             <div className="bg-white p-8 md:p-10 mb-10">
-              <p className="text-[#2B2725]/70 mb-6">
+              <p className="text-[var(--brand-charcoal)]/70 mb-6">
                 <CmsText 
                   contentKey="about.philosophy.blend_intro" 
                   page="About"
@@ -286,8 +286,8 @@ export default function About() {
               <div className="grid md:grid-cols-2 gap-3">
                 {approaches.map((approach, index) => (
                   <div key={index} className="flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#D8B46B] flex-shrink-0" />
-                    <span className="text-[#2B2725]/80">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[var(--brand-gold)] flex-shrink-0" />
+                    <span className="text-[var(--brand-charcoal)]/80">
                       <CmsText 
                         contentKey={`about.philosophy.approach${index + 1}`}
                         page="About"
@@ -302,7 +302,7 @@ export default function About() {
               </div>
             </div>
 
-            <div className="space-y-4 text-[#2B2725]/80 text-lg leading-relaxed">
+            <div className="space-y-4 text-[var(--brand-charcoal)]/80 text-lg leading-relaxed">
               <CmsText 
                 contentKey="about.philosophy.closing" 
                 page="About"
@@ -324,7 +324,7 @@ export default function About() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+            <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
               <CmsText 
                 contentKey="about.beliefs.subtitle" 
                 page="About"
@@ -333,7 +333,7 @@ export default function About() {
                 contentType="short_text"
               />
             </span>
-            <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF]">
+            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-cream)]">
               <CmsText 
                 contentKey="about.beliefs.title" 
                 page="About"
@@ -352,7 +352,7 @@ export default function About() {
             viewport={{ once: true }}
             className="mt-12 text-center"
           >
-            <p className="font-serif text-2xl text-[#D8B46B] italic">
+            <p className="font-serif text-2xl text-[var(--brand-gold)] italic">
               <CmsText 
                 contentKey="about.beliefs.closing" 
                 page="About"
@@ -366,14 +366,14 @@ export default function About() {
       </section>
 
       {/* Credentials Section */}
-      <section className="py-24 bg-[#F9F5EF]">
+      <section className="py-24 bg-[var(--brand-cream)]">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+            <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
               <CmsText 
                 contentKey="about.credentials.subtitle" 
                 page="About"
@@ -392,7 +392,7 @@ export default function About() {
               />
             </h2>
 
-            <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10">
+            <p className="text-[var(--brand-charcoal)]/80 text-lg leading-relaxed mb-10">
               <CmsText 
                 contentKey="about.credentials.intro" 
                 page="About"
@@ -406,8 +406,8 @@ export default function About() {
               <div className="space-y-4">
                 {credentials.map((credential, index) => (
                   <div key={index} className="flex items-start gap-4">
-                    <Check size={20} className="text-[#D8B46B] flex-shrink-0 mt-1" />
-                    <span className="text-[#2B2725]/80 text-lg">
+                    <Check size={20} className="text-[var(--brand-gold)] flex-shrink-0 mt-1" />
+                    <span className="text-[var(--brand-charcoal)]/80 text-lg">
                       <CmsText 
                         contentKey={`about.credentials.item${index + 1}`}
                         page="About"
@@ -443,7 +443,7 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+            <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
               <CmsText 
                 contentKey="about.origin.subtitle" 
                 page="About"
@@ -462,12 +462,12 @@ export default function About() {
               />
             </h2>
 
-            <div className="space-y-6 text-[#2B2725]/80 text-lg leading-relaxed">
+            <div className="space-y-6 text-[var(--brand-charcoal)]/80 text-lg leading-relaxed">
               <CmsText 
                 contentKey="about.origin.content" 
                 page="About"
                 blockTitle="Origin Content"
-                fallback="<p>Because transformation isn't about starting over — it's about refining, tailoring, and redesigning the mindset you already have.</p><p>Just like personal style, your mental patterns can be:</p><ul class='list-none space-y-2 pl-6'><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>outdated</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>ill-fitting</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>inherited</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>misunderstood</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>or simply never chosen intentionally</li></ul><p>Mind Styling allows you to build a mental wardrobe that fits the life you want to live.</p><p class='font-serif text-xl text-[var(--brand-green)] italic'>It's elegant, intuitive, and profoundly effective.</p>" 
+                fallback="<p>Because transformation isn't about starting over — it's about refining, tailoring, and redesigning the mindset you already have.</p><p>Just like personal style, your mental patterns can be:</p><ul class='list-none space-y-2 pl-6'><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[var(--brand-gold)]'></span>outdated</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[var(--brand-gold)]'></span>ill-fitting</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[var(--brand-gold)]'></span>inherited</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[var(--brand-gold)]'></span>misunderstood</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[var(--brand-gold)]'></span>or simply never chosen intentionally</li></ul><p>Mind Styling allows you to build a mental wardrobe that fits the life you want to live.</p><p class='font-serif text-xl text-[var(--brand-green)] italic'>It's elegant, intuitive, and profoundly effective.</p>" 
                 contentType="rich_text"
               />
             </div>
@@ -476,7 +476,7 @@ export default function About() {
       </section>
 
       {/* Work With Me Section */}
-      <section className="py-24 bg-[#E4D9C4]/30">
+      <section className="py-24 bg-[var(--brand-sand)]/30">
         <div className="max-w-6xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -484,7 +484,7 @@ export default function About() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+            <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
               <CmsText 
                 contentKey="about.work.subtitle" 
                 page="About"
@@ -502,7 +502,7 @@ export default function About() {
                 contentType="short_text"
               />
             </h2>
-            <p className="text-[#2B2725]/80 text-lg max-w-2xl mx-auto">
+            <p className="text-[var(--brand-charcoal)]/80 text-lg max-w-2xl mx-auto">
               <CmsText 
                 contentKey="about.work.description" 
                 page="About"
@@ -520,8 +520,8 @@ export default function About() {
                 to={createPageUrl(offering.link)}
                 className="block bg-white p-8 h-full group hover:shadow-lg transition-all duration-300"
               >
-                <div className="w-14 h-14 rounded-full bg-[#D8B46B]/20 flex items-center justify-center mb-6">
-                  <offering.icon size={24} className="text-[#D8B46B]" />
+                <div className="w-14 h-14 rounded-full bg-[var(--brand-gold)]/20 flex items-center justify-center mb-6">
+                  <offering.icon size={24} className="text-[var(--brand-gold)]" />
                 </div>
                 <h3 className="font-serif text-2xl text-[var(--brand-green)] mb-3">
                   <CmsText 
@@ -533,7 +533,7 @@ export default function About() {
                     as="span"
                   />
                 </h3>
-                <p className="text-[#2B2725]/70 mb-6">
+                <p className="text-[var(--brand-charcoal)]/70 mb-6">
                   <CmsText 
                     contentKey={`about.work.offering${index + 1}.description`}
                     page="About"
@@ -542,7 +542,7 @@ export default function About() {
                     contentType="rich_text"
                   />
                 </p>
-                <span className="text-[var(--brand-green)] font-medium group-hover:text-[#D8B46B] transition-colors inline-flex items-center gap-2">
+                <span className="text-[var(--brand-green)] font-medium group-hover:text-[var(--brand-gold)] transition-colors inline-flex items-center gap-2">
                   <CmsText 
                     contentKey={`about.work.offering${index + 1}.cta`}
                     page="About"
@@ -567,17 +567,17 @@ export default function About() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[var(--brand-cream)] leading-tight mb-6">
               <CmsText 
                 contentKey="about.cta.title" 
                 page="About"
                 blockTitle="CTA Title"
-                fallback="If You're Ready,<br /><span class='italic text-[#D8B46B]'>I'm Ready.</span>" 
+                fallback="If You're Ready,<br /><span class='italic text-[var(--brand-gold)]'>I'm Ready.</span>" 
                 contentType="rich_text"
               />
             </h2>
 
-            <p className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
+            <p className="text-[var(--brand-cream)]/80 text-lg leading-relaxed mb-10 max-w-2xl mx-auto">
               <CmsText 
                 contentKey="about.cta.description" 
                 page="About"
@@ -589,7 +589,7 @@ export default function About() {
 
             <Link
               to={createPageUrl("Bookings")}
-              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[var(--brand-green)] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[var(--brand-gold)] text-[var(--brand-green)] text-sm tracking-wide hover:bg-[var(--brand-cream)] transition-all duration-300"
             >
               Schedule Your Complimentary Consultation
               <ArrowRight
