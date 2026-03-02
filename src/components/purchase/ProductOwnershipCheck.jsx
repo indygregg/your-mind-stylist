@@ -11,6 +11,8 @@ export default function ProductOwnershipCheck({ productKey, children }) {
   const { data: ownershipData, isLoading } = useQuery({
     queryKey: ["productOwnership", productKey],
     queryFn: async () => {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (!isAuth) return { owns_product: false };
       const response = await base44.functions.invoke("checkProductOwnership", {
         product_key: productKey,
       });
