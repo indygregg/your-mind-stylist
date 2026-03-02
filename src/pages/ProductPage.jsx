@@ -16,6 +16,7 @@ export default function ProductPage() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [selectedPriceId, setSelectedPriceId] = useState(null);
   const [selectedPlan, setSelectedPlan] = useState("full");
+  const { addItem } = useCart();
 
   const urlParams = new URLSearchParams(window.location.search);
   const slug = urlParams.get("slug") || "";
