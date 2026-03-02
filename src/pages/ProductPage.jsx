@@ -520,7 +520,7 @@ export default function ProductPage() {
               <Button
                 onClick={handlePurchase}
                 disabled={checkoutLoading}
-                className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] py-6 text-lg mb-4"
+                className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] py-6 text-lg mb-3"
               >
                 {checkoutLoading ? (
                   <>
@@ -533,6 +533,15 @@ export default function ProductPage() {
                     Purchase Now
                   </>
                 )}
+              </Button>
+
+              <Button
+                onClick={() => { addItem(product); toast.success(`${product.name} added to cart!`); }}
+                variant="outline"
+                className="w-full border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32]/5 py-5 text-base mb-4"
+              >
+                <Plus size={16} className="mr-2" />
+                Add to Cart
               </Button>
 
               <p className="text-center text-[#2B2725]/60 text-sm mb-6">
