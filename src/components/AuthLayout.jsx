@@ -254,6 +254,9 @@ export default function AuthLayout({ children, currentPageName }) {
               </Link>
             )}
 
+            {/* Cart Icon */}
+            <CartIcon hasDarkHero={true} />
+
             {/* User Menu */}
             <div className="flex items-center gap-4 border-l border-[#F9F5EF]/20 pl-6">
               <DropdownMenu open={profileDropdownOpen} onOpenChange={setProfileDropdownOpen}>
