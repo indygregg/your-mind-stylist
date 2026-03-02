@@ -29,8 +29,8 @@ export default function MindStylingSuite() {
       ],
       cta: "Explore Cleaning Out Your Closet",
       link: "CleaningOutYourCloset",
-      accent: "var(--brand-green)",
-      bg: "bg-white",
+      accentHex: "#1E3A32",
+      bgStyle: { backgroundColor: "#ffffff" },
     },
     {
       icon: User,
@@ -48,8 +48,8 @@ export default function MindStylingSuite() {
       },
       cta: "Learn About LENS™",
       link: "LENS",
-      accent: "var(--brand-mauve)",
-      bg: "bg-[var(--brand-cream)]",
+      accentHex: "#6D507D",
+      bgStyle: { backgroundColor: "#F9F5EF" },
     },
     {
       icon: Sparkles,
@@ -70,8 +70,8 @@ export default function MindStylingSuite() {
         "Not meditation. Not napping. This is inner rehearsal—a fast, elegant way to shift your state and reset your mind.",
       cta: "Explore Pocket Mindset",
       link: "PocketMindset",
-      accent: "var(--brand-sage)",
-      bg: "bg-[var(--brand-sage)]/10",
+      accentHex: "#A6B7A3",
+      bgStyle: { backgroundColor: "rgba(166,183,163,0.1)" },
     },
     {
       icon: Users,
@@ -89,8 +89,8 @@ export default function MindStylingSuite() {
       ],
       cta: "Book Roberta to Speak",
       link: "SpeakingTraining",
-      accent: "var(--brand-green)",
-      bg: "bg-white",
+      accentHex: "#1E3A32",
+      bgStyle: { backgroundColor: "#ffffff" },
     },
     {
       icon: Brain,
@@ -110,8 +110,8 @@ export default function MindStylingSuite() {
         "No prior experience required. This is hypnosis for people who want to facilitate transformation, not memorize scripts.",
       cta: "Explore Hypnosis Training",
       link: "LearnHypnosis",
-      accent: "var(--brand-mauve)",
-      bg: "bg-white",
+      accentHex: "#6D507D",
+      bgStyle: { backgroundColor: "#ffffff" },
     },
   ];
 
