@@ -207,9 +207,9 @@ export default function CoursePage() {
       }
     }
 
-    // Check if user hasn't tracked emotional state before for this lesson
+    // Check if user hasn't tracked emotional state before for this lesson (only if enabled)
     const lessonProgress = userLessonProgress.find(p => p.lesson_id === lessonId);
-    if (!lessonProgress?.mood_before && !lessonProgress?.completed) {
+    if (lesson?.enable_checkin && !lessonProgress?.mood_before && !lessonProgress?.completed) {
       setCheckInType("before");
       setShowEmotionalCheckIn(true);
     }
