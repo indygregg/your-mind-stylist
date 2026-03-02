@@ -25,10 +25,20 @@
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
     
-    /* Brand colors */
-    --forest-green: #1E3A32;
-    --soft-gold: #D8B46B;
-    --cream: #F9F5EF;
+    /* ─── Brand Colors — change these to retheme the entire site ─── */
+    --brand-green:   #1E3A32;
+    --brand-charcoal:#2B2725;
+    --brand-gold:    #D8B46B;
+    --brand-cream:   #F9F5EF;
+    --brand-sand:    #E4D9C4;
+    --brand-mauve:   #6D507D;
+    --brand-sage:    #A6B7A3;
+    /* ────────────────────────────────────────────────────────────── */
+
+    /* Legacy aliases (kept for backward compat) */
+    --forest-green: var(--brand-green);
+    --soft-gold: var(--brand-gold);
+    --cream: var(--brand-cream);
   }
   
   .dark {
