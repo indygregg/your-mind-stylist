@@ -223,7 +223,7 @@ export default function Layout({ children, currentPageName }) {
       >
         {/* Determine if page has dark hero */}
         {(() => {
-          const darkHeroPages = ['LearnHypnosis', 'Consultations'];
+          const darkHeroPages = ['LearnHypnosis', 'Consultations', 'ProgramsCourses'];
           // For Bookings: only use dark hero style on step 1 (signalled via body attribute)
           const isBookingsDarkHero = currentPageName === 'Bookings' && document.body.hasAttribute('data-dark-hero');
           const hasDarkHero = (darkHeroPages.includes(currentPageName) || isBookingsDarkHero) && !isScrolled;
