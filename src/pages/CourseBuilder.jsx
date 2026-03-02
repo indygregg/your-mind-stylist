@@ -188,6 +188,7 @@ export default function CourseBuilder() {
               resources: lesson.resources,
               attached_resource_ids: lesson.attached_resource_ids || [],
               order: lesson.order,
+              enable_checkin: lesson.enable_checkin || false,
             };
 
             await base44.entities.Lesson.create(lessonData);
