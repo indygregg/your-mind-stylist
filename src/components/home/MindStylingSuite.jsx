@@ -260,7 +260,7 @@ export default function MindStylingSuite() {
                             <div key={bullet} className="flex items-center gap-2">
                               <div
                                 className="w-1.5 h-1.5 rounded-full"
-                                style={{ backgroundColor: service.accent }}
+                                style={{ backgroundColor: service.accentHex }}
                               />
                               <span className="text-[var(--brand-charcoal)]/80 text-sm">{bullet}</span>
                             </div>
