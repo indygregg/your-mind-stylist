@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { useCart } from "@/components/shop/CartContext";
 import haptics from "@/components/utils/haptics";
+import { toast } from "react-hot-toast";
 
 export default function ProductCard({ product }) {
   const { addItem } = useCart();
