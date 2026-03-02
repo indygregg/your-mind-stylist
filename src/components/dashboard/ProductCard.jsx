@@ -29,7 +29,7 @@ export default function ProductCard({ product }) {
       <p className="text-lg font-bold text-[#1E3A32] mb-3">{formatPrice(product.price, product.billing_interval)}</p>
       <div className="flex gap-2">
         <Link
-          to={createPageUrl(product.slug ? `ProductPage?slug=${product.slug}` : `Programs`)}
+          to={createPageUrl(`ProductPage?slug=${product.slug}`)}
           className="flex-1 text-center text-xs py-2 border border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-white transition-colors"
         >
           Details
@@ -38,7 +38,7 @@ export default function ProductCard({ product }) {
           onClick={handleAddToCart}
           className="flex-1 flex items-center justify-center gap-1 text-xs py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors active:scale-95"
         >
-          <ShoppingCart size={12} /> Buy
+          <ShoppingCart size={12} /> Add to Cart
         </button>
       </div>
     </div>
