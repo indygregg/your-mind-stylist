@@ -11,7 +11,7 @@ import SmartLoginRedirect from "../components/dashboard/SmartLoginRedirect";
 
 export default function Home() {
   return (
-    <div className="bg-[var(--brand-cream)]">
+    <div className="bg-[#F9F5EF]">
       <SmartLoginRedirect />
       <SEO
         title="Your Mind Stylist | Emotional Intelligence & Mindset Transformation"

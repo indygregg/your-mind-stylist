@@ -29,8 +29,8 @@ export default function MindStylingSuite() {
       ],
       cta: "Explore Cleaning Out Your Closet",
       link: "CleaningOutYourCloset",
-      accentHex: "#1E3A32",
-      bgStyle: { backgroundColor: "#ffffff" },
+      accent: "#1E3A32",
+      bg: "bg-white",
     },
     {
       icon: User,
@@ -48,8 +48,8 @@ export default function MindStylingSuite() {
       },
       cta: "Learn About LENS™",
       link: "LENS",
-      accentHex: "#6D507D",
-      bgStyle: { backgroundColor: "#F9F5EF" },
+      accent: "#6E4F7D",
+      bg: "bg-[#F9F5EF]",
     },
     {
       icon: Sparkles,
@@ -70,8 +70,8 @@ export default function MindStylingSuite() {
         "Not meditation. Not napping. This is inner rehearsal—a fast, elegant way to shift your state and reset your mind.",
       cta: "Explore Pocket Mindset",
       link: "PocketMindset",
-      accentHex: "#A6B7A3",
-      bgStyle: { backgroundColor: "rgba(166,183,163,0.1)" },
+      accent: "#A6B7A3",
+      bg: "bg-[#A6B7A3]/10",
     },
     {
       icon: Users,
@@ -89,8 +89,8 @@ export default function MindStylingSuite() {
       ],
       cta: "Book Roberta to Speak",
       link: "SpeakingTraining",
-      accentHex: "#1E3A32",
-      bgStyle: { backgroundColor: "#ffffff" },
+      accent: "#1E3A32",
+      bg: "bg-white",
     },
     {
       icon: Brain,
@@ -110,13 +110,13 @@ export default function MindStylingSuite() {
         "No prior experience required. This is hypnosis for people who want to facilitate transformation, not memorize scripts.",
       cta: "Explore Hypnosis Training",
       link: "LearnHypnosis",
-      accentHex: "#6D507D",
-      bgStyle: { backgroundColor: "#ffffff" },
+      accent: "#6E4F7D",
+      bg: "bg-white",
     },
   ];
 
   return (
-    <section className="py-24 md:py-32" style={{ backgroundColor: "rgba(228,217,196,0.3)" }}>
+    <section className="py-24 md:py-32 bg-[#E4D9C4]/30">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <motion.div
@@ -125,7 +125,7 @@ export default function MindStylingSuite() {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <span className="text-[var(--brand-gold)] text-sm md:text-base tracking-[0.3em] uppercase mb-4 block font-bold">
+          <span className="text-[#D8B46B] text-sm md:text-base tracking-[0.3em] uppercase mb-4 block font-bold">
             <CmsText
               contentKey="home.mind_styling_suite.label"
               page="Home"
@@ -134,7 +134,7 @@ export default function MindStylingSuite() {
               contentType="short_text"
             />
           </span>
-          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[var(--brand-green)]">
+          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32]">
             <CmsText
               contentKey="home.mind_styling_suite.title"
               page="Home"
@@ -154,28 +154,27 @@ export default function MindStylingSuite() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="p-8 md:p-12 lg:p-16 relative overflow-hidden group"
-              style={service.bgStyle}
+              className={`${service.bg} p-8 md:p-12 lg:p-16 relative overflow-hidden group`}
             >
               {/* Decorative Corner */}
               <div
                 className="absolute top-0 right-0 w-32 h-32 opacity-10"
-                style={{ backgroundColor: service.accentHex }}
+                style={{ backgroundColor: service.accent }}
               />
 
               <div className="relative z-10">
                 {/* Icon */}
                 <div
                   className="w-14 h-14 rounded-full flex items-center justify-center mb-8"
-                  style={{ backgroundColor: `${service.accentHex}22` }}
+                  style={{ backgroundColor: `${service.accent}15` }}
                 >
-                  <service.icon size={24} style={{ color: service.accentHex }} />
+                  <service.icon size={24} style={{ color: service.accent }} />
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
                   {/* Left Content */}
                   <div>
-                    <h3 className="font-serif text-2xl md:text-3xl text-[var(--brand-green)] mb-4">
+                    <h3 className="font-serif text-2xl md:text-3xl text-[#1E3A32] mb-4">
                       <CmsText
                         contentKey={`home.suite.${index}.title`}
                         page="Home"
@@ -187,7 +186,7 @@ export default function MindStylingSuite() {
                     </h3>
                     <p
                       className="font-serif italic text-lg md:text-xl mb-6"
-                      style={{ color: service.accentHex }}
+                      style={{ color: service.accent }}
                     >
                       <CmsText
                         contentKey={`home.suite.${index}.tagline`}
@@ -204,7 +203,7 @@ export default function MindStylingSuite() {
                       blockTitle={`${service.title} - Description`}
                       fallback={service.description}
                       contentType="rich_text"
-                      className="text-[var(--brand-charcoal)]/80 leading-relaxed"
+                      className="text-[#2B2725]/80 leading-relaxed"
                     />
                   </div>
 
@@ -214,8 +213,8 @@ export default function MindStylingSuite() {
                     {service.phases && (
                       <div className="space-y-6 mb-8">
                         {service.phases.map((phase, phaseIndex) => (
-                          <div key={phase.name} className="border-l-2 border-[var(--brand-gold)] pl-6">
-                            <h4 className="font-serif text-lg text-[var(--brand-green)] mb-1">
+                          <div key={phase.name} className="border-l-2 border-[#D8B46B] pl-6">
+                            <h4 className="font-serif text-lg text-[#1E3A32] mb-1">
                               <CmsText
                                 contentKey={`home.suite.${index}.phase${phaseIndex}.name`}
                                 page="Home"
@@ -231,7 +230,7 @@ export default function MindStylingSuite() {
                               blockTitle={`${service.title} - ${phase.name} Text`}
                               fallback={phase.text}
                               contentType="short_text"
-                              className="text-[var(--brand-charcoal)]/70 text-sm"
+                              className="text-[#2B2725]/70 text-sm"
                               as="p"
                             />
                           </div>
@@ -241,10 +240,10 @@ export default function MindStylingSuite() {
 
                     {/* Right Box for Expanding Your Mind Style */}
                     {service.rightBox && (
-                      <div className="bg-white p-8 border-2 border-[var(--brand-gold)] mb-8">
+                      <div className="bg-white p-8 border-2 border-[#D8B46B] mb-8">
                         <div className="space-y-3">
                           {service.rightBox.bullets.map((bullet, idx) => (
-                            <p key={idx} className="text-[var(--brand-green)] font-medium text-lg">
+                            <p key={idx} className="text-[#1E3A32] font-medium text-lg">
                               {bullet}
                             </p>
                           ))}
@@ -260,9 +259,9 @@ export default function MindStylingSuite() {
                             <div key={bullet} className="flex items-center gap-2">
                               <div
                                 className="w-1.5 h-1.5 rounded-full"
-                                style={{ backgroundColor: service.accentHex }}
+                                style={{ backgroundColor: service.accent }}
                               />
-                              <span className="text-[var(--brand-charcoal)]/80 text-sm">{bullet}</span>
+                              <span className="text-[#2B2725]/80 text-sm">{bullet}</span>
                             </div>
                           ))}
                         </div>
@@ -277,7 +276,7 @@ export default function MindStylingSuite() {
                         blockTitle={`${service.title} - Bottom Note`}
                         fallback={service.bottomNote}
                         contentType="short_text"
-                        className="text-[var(--brand-charcoal)]/80 text-sm italic mb-8"
+                        className="text-[#2B2725]/80 text-sm italic mb-8"
                         as="p"
                       />
                     )}
@@ -285,7 +284,7 @@ export default function MindStylingSuite() {
                     {/* CTA */}
                     <Link
                       to={createPageUrl(service.link)}
-                      className="group/link inline-flex items-center gap-3 text-[var(--brand-green)] font-medium hover:gap-4 transition-all"
+                      className="group/link inline-flex items-center gap-3 text-[#1E3A32] font-medium hover:gap-4 transition-all"
                     >
                       <CmsText
                         contentKey={`home.suite.${index}.cta`}

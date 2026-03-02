@@ -25,20 +25,10 @@
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
     
-    /* ─── Brand Colors — change these to retheme the entire site ─── */
-    --brand-green:   #1E3A32;
-    --brand-charcoal:#2B2725;
-    --brand-gold:    #D8B46B;
-    --brand-cream:   #F9F5EF;
-    --brand-sand:    #E4D9C4;
-    --brand-mauve:   #6D507D;
-    --brand-sage:    #A6B7A3;
-    /* ────────────────────────────────────────────────────────────── */
-
-    /* Legacy aliases (kept for backward compat) */
-    --forest-green: var(--brand-green);
-    --soft-gold: var(--brand-gold);
-    --cream: var(--brand-cream);
+    /* Brand colors */
+    --forest-green: #1E3A32;
+    --soft-gold: #D8B46B;
+    --cream: #F9F5EF;
   }
   
   .dark {
@@ -62,13 +52,10 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
     
-    /* Dark mode brand color overrides */
-    --brand-green:   #2B4A40;
-    --brand-gold:    #E4C589;
-    --brand-cream:   #1A1714;
-    --forest-green: var(--brand-green);
-    --soft-gold: var(--brand-gold);
-    --cream: var(--brand-cream);
+    /* Dark mode brand colors */
+    --forest-green: #2B4A40;
+    --soft-gold: #E4C589;
+    --cream: #1A1714;
   }
 }
 
@@ -94,13 +81,10 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
     
-    /* Dark mode brand color overrides */
-    --brand-green:   #2B4A40;
-    --brand-gold:    #E4C589;
-    --brand-cream:   #1A1714;
-    --forest-green: var(--brand-green);
-    --soft-gold: var(--brand-gold);
-    --cream: var(--brand-cream);
+    /* Dark mode brand colors */
+    --forest-green: #2B4A40;
+    --soft-gold: #E4C589;
+    --cream: #1A1714;
   }
 }
 
@@ -177,7 +161,7 @@ button, [role="button"] {
 
 /* Better focus visible for accessibility */
 *:focus-visible {
-  outline: 2px solid var(--brand-gold);
+  outline: 2px solid #D8B46B;
   outline-offset: 2px;
 }
 

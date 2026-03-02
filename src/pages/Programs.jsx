@@ -27,7 +27,7 @@ const DEFAULT_BANDS = [
     key: "signature_services",
     title: "Signature Services",
     subtitle: "One-on-one hypnosis, coaching & private sessions with Roberta",
-    bg: "bg-[var(--brand-mauve)]",
+    bg: "bg-[#6E4F7D]",
     textColor: "text-white",
     subtitleColor: "text-white/80",
     arrowColor: "text-white/60",
@@ -37,17 +37,17 @@ const DEFAULT_BANDS = [
     key: "webinars",
     title: "Webinars & Live Events",
     subtitle: "Live sessions and workshops for real-time learning and transformation",
-    bg: "bg-[var(--brand-gold)]",
-    textColor: "text-[var(--brand-green)]",
-    subtitleColor: "text-[var(--brand-green)]/80",
-    arrowColor: "text-[var(--brand-green)]/60",
+    bg: "bg-[#D8B46B]",
+    textColor: "text-[#1E3A32]",
+    subtitleColor: "text-[#1E3A32]/80",
+    arrowColor: "text-[#1E3A32]/60",
     linkPage: "ProgramsWebinars",
   },
   {
     key: "books",
     title: "Books & Resources",
     subtitle: "Deep dives and practical guides for your transformation journey",
-    bg: "bg-[var(--brand-green)]",
+    bg: "bg-[#1E3A32]",
     textColor: "text-white",
     subtitleColor: "text-white/80",
     arrowColor: "text-white/60",
@@ -57,17 +57,17 @@ const DEFAULT_BANDS = [
     key: "hypnosis_training",
     title: "Hypnosis Training",
     subtitle: "Become a certified hypnotist — full professional training program",
-    bg: "bg-[var(--brand-sage)]",
-    textColor: "text-[var(--brand-green)]",
-    subtitleColor: "text-[var(--brand-green)]/80",
-    arrowColor: "text-[var(--brand-green)]/60",
+    bg: "bg-[#A6B7A3]",
+    textColor: "text-[#1E3A32]",
+    subtitleColor: "text-[#1E3A32]/80",
+    arrowColor: "text-[#1E3A32]/60",
     linkPage: "ProgramsCourses",
   },
   {
     key: "other",
     title: "Other Programs & Tools",
     subtitle: "Additional resources, tools, and offerings to support your journey",
-    bg: "bg-[var(--brand-charcoal)]",
+    bg: "bg-[#2B2725]",
     textColor: "text-white",
     subtitleColor: "text-white/80",
     arrowColor: "text-white/60",
@@ -165,7 +165,7 @@ export default function Programs() {
   };
 
   return (
-    <div className="bg-[var(--brand-cream)]">
+    <div className="bg-[#F9F5EF]">
       <SEO
         title="Tools and Programs | Your Mind Stylist"
         description="Find your next step with Your Mind Stylist tools and programs — from introductory tools to deep transformation coaching."
@@ -181,7 +181,7 @@ export default function Programs() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
+            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
               <CmsText 
                 contentKey="programs.hero.subtitle" 
                 page="Programs"
@@ -190,7 +190,7 @@ export default function Programs() {
                 contentType="short_text"
               />
             </span>
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[var(--brand-green)] leading-tight mb-6">
+            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
               <CmsText 
                 contentKey="programs.hero.title" 
                 page="Programs"
@@ -199,7 +199,7 @@ export default function Programs() {
                 contentType="short_text"
               />
             </h1>
-            <p className="text-[var(--brand-charcoal)]/80 text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto mb-8">
+            <p className="text-[#2B2725]/80 text-xl md:text-2xl leading-relaxed max-w-3xl mx-auto mb-8">
               <CmsText 
                 contentKey="programs.hero.description" 
                 page="Programs"
@@ -211,7 +211,7 @@ export default function Programs() {
             
             <Link
               to={createPageUrl("Bookings")}
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-[var(--brand-gold)] text-[var(--brand-green)] text-sm font-semibold tracking-wide hover:bg-[#C5A35B] transition-all duration-300 shadow-lg"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm font-semibold tracking-wide hover:bg-[#C5A35B] transition-all duration-300 shadow-lg"
             >
               <CmsText 
                 contentKey="programs.hero.cta_experience" 
@@ -235,13 +235,13 @@ export default function Programs() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <Sparkles size={40} className="text-[var(--brand-gold)] mx-auto mb-6" />
-            <div className="text-[var(--brand-charcoal)]/80 text-lg leading-relaxed max-w-3xl mx-auto">
+            <Sparkles size={40} className="text-[#D8B46B] mx-auto mb-6" />
+            <div className="text-[#2B2725]/80 text-lg leading-relaxed max-w-3xl mx-auto">
               <CmsText 
                 contentKey="programs.intro.content" 
                 page="Programs"
                 blockTitle="Intro Content"
-                fallback="<p class='mb-6'><strong class='text-[var(--brand-green)]'>Your Mind Stylist offers transformational pathways for every phase of your inner journey.</strong></p><p class='mb-6'>From introductory tools that help you clear mental clutter to high-touch coaching that reshapes your emotional operating system — choose what aligns with you today.</p><p class='text-[var(--brand-green)] font-serif text-xl italic mt-8'>Every program below is designed to help you understand yourself better, shift patterns with awareness, and build emotional resilience that lasts.</p>" 
+                fallback="<p class='mb-6'><strong class='text-[#1E3A32]'>Your Mind Stylist offers transformational pathways for every phase of your inner journey.</strong></p><p class='mb-6'>From introductory tools that help you clear mental clutter to high-touch coaching that reshapes your emotional operating system — choose what aligns with you today.</p><p class='text-[#1E3A32] font-serif text-xl italic mt-8'>Every program below is designed to help you understand yourself better, shift patterns with awareness, and build emotional resilience that lasts.</p>" 
                 contentType="rich_text"
               />
             </div>
@@ -250,14 +250,14 @@ export default function Programs() {
       </section>
 
       {/* 5 Category Bands */}
-      <section className="py-16 bg-[var(--brand-cream)]">
+      <section className="py-16 bg-[#F9F5EF]">
         <div className="max-w-5xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] text-center mb-12">
+            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] text-center mb-12">
               <CmsText 
                 contentKey="programs.path.title" 
                 page="Programs"
@@ -287,8 +287,8 @@ export default function Programs() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <Heart size={40} className="text-[var(--brand-gold)] mx-auto mb-6" />
-            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] text-center mb-12">
+            <Heart size={40} className="text-[#D8B46B] mx-auto mb-6" />
+            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] text-center mb-12">
               <CmsText 
                 contentKey="programs.choose.title" 
                 page="Programs"
@@ -298,7 +298,7 @@ export default function Programs() {
               />
             </h2>
 
-            <p className="text-[var(--brand-charcoal)]/80 text-lg text-center mb-10">
+            <p className="text-[#2B2725]/80 text-lg text-center mb-10">
               <CmsText 
                 contentKey="programs.choose.subtitle" 
                 page="Programs"
@@ -309,21 +309,21 @@ export default function Programs() {
             </p>
 
             <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              <div className="bg-[var(--brand-cream)] p-6 border-l-4 border-[var(--brand-gold)]">
-                <p className="text-[var(--brand-charcoal)]/80 mb-2">New to this world?</p>
-                <p className="font-serif text-xl text-[var(--brand-green)]">Pocket Mindset™ is the perfect gentle entry.</p>
+              <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#D8B46B]">
+                <p className="text-[#2B2725]/80 mb-2">New to this world?</p>
+                <p className="font-serif text-xl text-[#1E3A32]">Pocket Mindset™ is the perfect gentle entry.</p>
               </div>
-              <div className="bg-[var(--brand-cream)] p-6 border-l-4 border-[var(--brand-mauve)]">
-                <p className="text-[var(--brand-charcoal)]/80 mb-2">Want structured learning with tangible skills?</p>
-                <p className="font-serif text-xl text-[var(--brand-green)]">LENS™ is your foundation.</p>
+              <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#6E4F7D]">
+                <p className="text-[#2B2725]/80 mb-2">Want structured learning with tangible skills?</p>
+                <p className="font-serif text-xl text-[#1E3A32]">LENS™ is your foundation.</p>
               </div>
-              <div className="bg-[var(--brand-cream)] p-6 border-l-4 border-[var(--brand-sage)]">
-                <p className="text-[var(--brand-charcoal)]/80 mb-2">You want community + live support?</p>
-                <p className="font-serif text-xl text-[var(--brand-green)]">Salon Group delivers that.</p>
+              <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#A6B7A3]">
+                <p className="text-[#2B2725]/80 mb-2">You want community + live support?</p>
+                <p className="font-serif text-xl text-[#1E3A32]">Salon Group delivers that.</p>
               </div>
-              <div className="bg-[var(--brand-cream)] p-6 border-l-4 border-[var(--brand-green)]">
-                <p className="text-[var(--brand-charcoal)]/80 mb-2">You want the deepest transformation?</p>
-                <p className="font-serif text-xl text-[var(--brand-green)]">Private one-to-one work is for you.</p>
+              <div className="bg-[#F9F5EF] p-6 border-l-4 border-[#1E3A32]">
+                <p className="text-[#2B2725]/80 mb-2">You want the deepest transformation?</p>
+                <p className="font-serif text-xl text-[#1E3A32]">Private one-to-one work is for you.</p>
               </div>
             </div>
           </motion.div>
@@ -331,7 +331,7 @@ export default function Programs() {
       </section>
 
       {/* Pricing Philosophy */}
-      <section className="py-20 bg-[var(--brand-cream)]">
+      <section className="py-20 bg-[#F9F5EF]">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -339,7 +339,7 @@ export default function Programs() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-8">
+            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-8">
               <CmsText 
                 contentKey="programs.pricing.title" 
                 page="Programs"
@@ -349,7 +349,7 @@ export default function Programs() {
               />
             </h2>
 
-            <p className="text-[var(--brand-charcoal)]/80 text-lg leading-relaxed mb-8">
+            <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
               <CmsText 
                 contentKey="programs.pricing.intro" 
                 page="Programs"
@@ -367,8 +367,8 @@ export default function Programs() {
                 "Value that grows with you"
               ].map((item, idx) => (
                 <div key={idx} className="flex items-center gap-3 bg-white p-4">
-                  <CheckCircle size={18} className="text-[var(--brand-sage)] flex-shrink-0" />
-                  <p className="text-[var(--brand-charcoal)]">{item}</p>
+                  <CheckCircle size={18} className="text-[#A6B7A3] flex-shrink-0" />
+                  <p className="text-[#2B2725]">{item}</p>
                 </div>
               ))}
             </div>
@@ -380,8 +380,8 @@ export default function Programs() {
                 "A clear refund policy (see Terms)"
               ].map((item, idx) => (
                 <div key={idx} className="flex items-start gap-3 bg-white p-4">
-                  <CheckCircle size={18} className="text-[var(--brand-gold)] flex-shrink-0 mt-1" />
-                  <p className="text-[var(--brand-charcoal)]/80">{item}</p>
+                  <CheckCircle size={18} className="text-[#D8B46B] flex-shrink-0 mt-1" />
+                  <p className="text-[#2B2725]/80">{item}</p>
                 </div>
               ))}
             </div>
@@ -390,14 +390,14 @@ export default function Programs() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 bg-[var(--brand-green)]">
+      <section className="py-20 bg-[#1E3A32]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-cream)] mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF] mb-6">
               <CmsText 
                 contentKey="programs.cta.title" 
                 page="Programs"
@@ -406,16 +406,16 @@ export default function Programs() {
                 contentType="short_text"
               />
             </h2>
-            <p className="text-[var(--brand-cream)]/70 mb-8">Not sure where to start? Let's talk.</p>
+            <p className="text-[#F9F5EF]/70 mb-8">Not sure where to start? Let's talk.</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to={createPageUrl("Bookings")}>
-                <Button className="bg-[var(--brand-gold)] text-[var(--brand-green)] hover:bg-[#C5A35B] px-8 py-3 text-base">
+                <Button className="bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] px-8 py-3 text-base">
                   Book a Consultation
                   <ArrowRight size={18} className="ml-2" />
                 </Button>
               </Link>
               <Link to={createPageUrl("Contact")}>
-                <Button variant="outline" className="border-[var(--brand-gold)] text-[var(--brand-gold)] hover:bg-[var(--brand-gold)] hover:text-[var(--brand-green)] px-8 py-3 text-base">
+                <Button variant="outline" className="border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32] px-8 py-3 text-base">
                   Contact Us
                 </Button>
               </Link>

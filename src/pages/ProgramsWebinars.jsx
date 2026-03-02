@@ -71,24 +71,24 @@ export default function ProgramsWebinars() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[var(--brand-cream)] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-mauve)] mx-auto mb-4"></div>
-          <p className="text-[var(--brand-charcoal)]/70">Loading webinars...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6E4F7D] mx-auto mb-4"></div>
+          <p className="text-[#2B2725]/70">Loading webinars...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[var(--brand-cream)]">
+    <div className="min-h-screen bg-[#F9F5EF]">
       <SEO
         title="Webinars & Live Events | Your Mind Stylist"
         description="Join live sessions and workshops for real-time learning and transformation"
       />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-[var(--brand-green)] to-[#2B4A40] text-white">
+      <section className="pt-32 pb-16 bg-gradient-to-br from-[#1E3A32] to-[#2B4A40] text-white">
         <div className="max-w-6xl mx-auto px-6">
           <Link to={createPageUrl("Programs")} className="inline-flex items-center gap-2 text-white/70 hover:text-white mb-6 transition-colors">
             <ArrowLeft size={18} />
@@ -100,7 +100,7 @@ export default function ProgramsWebinars() {
             animate={{ opacity: 1, y: 0 }}
           >
             <div className="flex items-center gap-3 mb-4">
-              <Sparkles size={40} className="text-[var(--brand-gold)]" />
+              <Sparkles size={40} className="text-[#D8B46B]" />
               <h1 className="font-serif text-4xl md:text-5xl">Webinars & Live Events</h1>
             </div>
             <p className="text-xl text-white/90 max-w-3xl">
@@ -115,11 +115,11 @@ export default function ProgramsWebinars() {
         <div className="max-w-6xl mx-auto">
           {allWebinars.length === 0 ? (
             <div className="text-center py-20">
-              <Sparkles size={64} className="mx-auto mb-4 text-[var(--brand-mauve)]/40" />
-              <h3 className="font-serif text-2xl text-[var(--brand-green)] mb-2">No Webinars Available Yet</h3>
-              <p className="text-[var(--brand-charcoal)]/70 mb-6">Check back soon for upcoming live events.</p>
+              <Sparkles size={64} className="mx-auto mb-4 text-[#6E4F7D]/40" />
+              <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">No Webinars Available Yet</h3>
+              <p className="text-[#2B2725]/70 mb-6">Check back soon for upcoming live events.</p>
               <Link to={createPageUrl("Programs")}>
-                <Button variant="outline" className="border-[var(--brand-green)] text-[var(--brand-green)]">
+                <Button variant="outline" className="border-[#1E3A32] text-[#1E3A32]">
                   View All Programs
                 </Button>
               </Link>
@@ -146,29 +146,29 @@ export default function ProgramsWebinars() {
                         </div>
                       )}
                       <div className="p-6 flex-1 flex flex-col">
-                        <h3 className="font-serif text-xl text-[var(--brand-green)] mb-2 group-hover:text-[var(--brand-mauve)] transition-colors">
+                        <h3 className="font-serif text-xl text-[#1E3A32] mb-2 group-hover:text-[#6E4F7D] transition-colors">
                           {item.name}
                         </h3>
                         {item.tagline && (
-                          <p className="text-sm text-[var(--brand-mauve)] mb-3 font-medium">{item.tagline}</p>
+                          <p className="text-sm text-[#6E4F7D] mb-3 font-medium">{item.tagline}</p>
                         )}
                         {item.event_date && (
-                          <div className="flex items-center gap-2 text-sm text-[var(--brand-gold)] mb-3">
+                          <div className="flex items-center gap-2 text-sm text-[#D8B46B] mb-3">
                             <Calendar size={14} />
                             <span>{new Date(item.event_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                           </div>
                         )}
                         {item.description && (
-                          <p className="text-sm text-[var(--brand-charcoal)]/70 mb-4 line-clamp-3 flex-1">
+                          <p className="text-sm text-[#2B2725]/70 mb-4 line-clamp-3 flex-1">
                             {item.description}
                           </p>
                         )}
                         
-                        <div className="flex items-center justify-between pt-4 border-t border-[var(--brand-sand)] mt-auto">
-                          <span className="text-2xl font-bold text-[var(--brand-green)]">
+                        <div className="flex items-center justify-between pt-4 border-t border-[#E4D9C4] mt-auto">
+                          <span className="text-2xl font-bold text-[#1E3A32]">
                             {formatPrice(item.price)}
                           </span>
-                          <span className="text-[var(--brand-mauve)] text-sm font-medium group-hover:translate-x-1 transition-transform">
+                          <span className="text-[#6E4F7D] text-sm font-medium group-hover:translate-x-1 transition-transform">
                             Learn More →
                           </span>
                         </div>
@@ -183,7 +183,7 @@ export default function ProgramsWebinars() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-[var(--brand-mauve)] text-white">
+      <section className="py-16 bg-[#6E4F7D] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <Users size={48} className="mx-auto mb-4" />
           <h2 className="font-serif text-3xl mb-4">Join Our Community</h2>
@@ -191,7 +191,7 @@ export default function ProgramsWebinars() {
             Webinars are a great way to experience Mind Styling in a supportive group setting with live interaction.
           </p>
           <Link to={createPageUrl("Contact")}>
-            <Button className="bg-[var(--brand-gold)] text-[var(--brand-green)] hover:bg-[#C5A35B] px-8 py-6 text-lg">
+            <Button className="bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] px-8 py-6 text-lg">
               Get Notified of Upcoming Events
             </Button>
           </Link>

@@ -7,10 +7,10 @@ import CmsText from "../cms/CmsText";
 
 export default function FreeMasterclass() {
   return (
-    <section className="py-24 md:py-32 bg-[var(--brand-green)] relative overflow-hidden">
+    <section className="py-24 md:py-32 bg-[#1E3A32] relative overflow-hidden">
       {/* Decorative Elements */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-[var(--brand-gold)]/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-[var(--brand-sage)]/10 rounded-full blur-3xl" />
+      <div className="absolute top-0 left-0 w-96 h-96 bg-[#D8B46B]/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-80 h-80 bg-[#A6B7A3]/10 rounded-full blur-3xl" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -24,7 +24,7 @@ export default function FreeMasterclass() {
           >
             <Link
               to={createPageUrl("FreeMasterclass")}
-              className="relative aspect-video bg-[var(--brand-charcoal)] overflow-hidden group cursor-pointer block"
+              className="relative aspect-video bg-[#2B2725] overflow-hidden group cursor-pointer block"
             >
               <img
                 src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80"
@@ -34,8 +34,8 @@ export default function FreeMasterclass() {
 
               {/* Play Button */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[var(--brand-gold)] flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-2xl">
-                  <Play size={32} className="text-[var(--brand-green)] ml-1" fill="currentColor" />
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-[#D8B46B] flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-2xl">
+                  <Play size={32} className="text-[#1E3A32] ml-1" fill="currentColor" />
                 </div>
               </div>
 
@@ -51,10 +51,10 @@ export default function FreeMasterclass() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              className="absolute -bottom-6 -left-6 md:left-auto md:-right-6 bg-[var(--brand-gold)] p-4 flex items-center gap-3"
+              className="absolute -bottom-6 -left-6 md:left-auto md:-right-6 bg-[#D8B46B] p-4 flex items-center gap-3"
             >
-              <Sparkles size={20} className="text-[var(--brand-green)]" />
-              <span className="text-[var(--brand-green)] text-sm font-medium">Most Popular Resource</span>
+              <Sparkles size={20} className="text-[#1E3A32]" />
+              <span className="text-[#1E3A32] text-sm font-medium">Most Popular Resource</span>
             </motion.div>
           </motion.div>
 
@@ -65,7 +65,7 @@ export default function FreeMasterclass() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
+            <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
               <CmsText
                 contentKey="home.masterclass.label"
                 page="Home"
@@ -75,7 +75,7 @@ export default function FreeMasterclass() {
               />
             </span>
 
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[var(--brand-cream)] leading-tight mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#F9F5EF] leading-tight mb-6">
               <CmsText
                 contentKey="home.masterclass.title"
                 page="Home"
@@ -85,7 +85,7 @@ export default function FreeMasterclass() {
               />
             </h2>
 
-            <div className="text-[var(--brand-cream)]/80 text-lg leading-relaxed mb-8">
+            <div className="text-[#F9F5EF]/80 text-lg leading-relaxed mb-8">
               <CmsText
                 contentKey="home.masterclass.description"
                 page="Home"
@@ -97,7 +97,7 @@ export default function FreeMasterclass() {
 
             <Link
               to={createPageUrl("FreeMasterclass")}
-              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[var(--brand-gold)] text-[var(--brand-green)] text-sm tracking-wide font-medium hover:bg-[var(--brand-cream)] transition-all duration-300"
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide font-medium hover:bg-[#F9F5EF] transition-all duration-300"
             >
               <Play size={16} />
               Watch the Free Webinar

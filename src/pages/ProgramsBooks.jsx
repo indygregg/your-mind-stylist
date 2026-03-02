@@ -38,26 +38,26 @@ export default function ProgramsBooks() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[var(--brand-cream)] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-gold)] mx-auto mb-4"></div>
-          <p className="text-[var(--brand-charcoal)]/70">Loading books...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D8B46B] mx-auto mb-4"></div>
+          <p className="text-[#2B2725]/70">Loading books...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[var(--brand-cream)]">
+    <div className="min-h-screen bg-[#F9F5EF]">
       <SEO
         title="Books & Resources | Your Mind Stylist"
         description="Deep dives and practical guides for your transformation journey"
       />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-[var(--brand-gold)] to-[#C5A35B] text-[var(--brand-green)]">
+      <section className="pt-32 pb-16 bg-gradient-to-br from-[#D8B46B] to-[#C5A35B] text-[#1E3A32]">
         <div className="max-w-6xl mx-auto px-6">
-          <Link to={createPageUrl("Programs")} className="inline-flex items-center gap-2 text-[var(--brand-green)]/70 hover:text-[var(--brand-green)] mb-6 transition-colors">
+          <Link to={createPageUrl("Programs")} className="inline-flex items-center gap-2 text-[#1E3A32]/70 hover:text-[#1E3A32] mb-6 transition-colors">
             <ArrowLeft size={18} />
             <span className="text-sm">Back to All Programs</span>
           </Link>
@@ -70,7 +70,7 @@ export default function ProgramsBooks() {
               <BookOpen size={40} />
               <h1 className="font-serif text-4xl md:text-5xl">Books & Resources</h1>
             </div>
-            <p className="text-xl text-[var(--brand-green)]/90 max-w-3xl">
+            <p className="text-xl text-[#1E3A32]/90 max-w-3xl">
               Foundational reading to deepen your understanding of Mind Styling principles and emotional intelligence.
             </p>
           </motion.div>
@@ -82,11 +82,11 @@ export default function ProgramsBooks() {
         <div className="max-w-6xl mx-auto">
           {books.length === 0 ? (
             <div className="text-center py-20">
-              <BookOpen size={64} className="mx-auto mb-4 text-[var(--brand-gold)]/40" />
-              <h3 className="font-serif text-2xl text-[var(--brand-green)] mb-2">No Books Available Yet</h3>
-              <p className="text-[var(--brand-charcoal)]/70 mb-6">Check back soon for new resources.</p>
+              <BookOpen size={64} className="mx-auto mb-4 text-[#D8B46B]/40" />
+              <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">No Books Available Yet</h3>
+              <p className="text-[#2B2725]/70 mb-6">Check back soon for new resources.</p>
               <Link to={createPageUrl("Programs")}>
-                <Button variant="outline" className="border-[var(--brand-gold)] text-[var(--brand-gold)]">
+                <Button variant="outline" className="border-[#D8B46B] text-[#D8B46B]">
                   View All Programs
                 </Button>
               </Link>
@@ -103,7 +103,7 @@ export default function ProgramsBooks() {
                 >
                   <div className="bg-white shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
                     {book.thumbnail && (
-                      <div className="h-64 overflow-hidden bg-[var(--brand-cream)]">
+                      <div className="h-64 overflow-hidden bg-[#F9F5EF]">
                         <img
                           src={book.thumbnail}
                           alt={book.name}
@@ -112,27 +112,27 @@ export default function ProgramsBooks() {
                       </div>
                     )}
                     <div className="p-6 flex-1 flex flex-col">
-                      <h3 className="font-serif text-xl text-[var(--brand-green)] mb-2">
+                      <h3 className="font-serif text-xl text-[#1E3A32] mb-2">
                         {book.name}
                       </h3>
                       {book.tagline && (
-                        <p className="text-sm text-[var(--brand-gold)] mb-3 font-medium">{book.tagline}</p>
+                        <p className="text-sm text-[#D8B46B] mb-3 font-medium">{book.tagline}</p>
                       )}
                       {book.short_description && (
-                        <p className="text-sm text-[var(--brand-charcoal)]/70 mb-4 flex-1">
+                        <p className="text-sm text-[#2B2725]/70 mb-4 flex-1">
                           {book.short_description}
                         </p>
                       )}
                       
-                      <div className="pt-4 border-t border-[var(--brand-sand)] mt-auto">
-                        <div className="text-2xl font-bold text-[var(--brand-green)] mb-3">
+                      <div className="pt-4 border-t border-[#E4D9C4] mt-auto">
+                        <div className="text-2xl font-bold text-[#1E3A32] mb-3">
                           {formatPrice(book.price)}
                         </div>
                         <div className="flex gap-2">
                           {book.slug && (
                             <Link
                               to={createPageUrl(`ProductPage?slug=${book.slug}`)}
-                              className="flex-1 text-center text-sm py-2.5 border border-[var(--brand-gold)] text-[var(--brand-gold)] hover:bg-[var(--brand-gold)] hover:text-[var(--brand-green)] transition-colors"
+                              className="flex-1 text-center text-sm py-2.5 border border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32] transition-colors"
                             >
                               Details
                             </Link>
@@ -140,7 +140,7 @@ export default function ProgramsBooks() {
                           <button
                             onClick={() => handlePurchase(book.id)}
                             disabled={checkoutLoading === book.id}
-                            className="flex-1 flex items-center justify-center gap-2 text-sm py-2.5 bg-[var(--brand-green)] text-white hover:bg-[var(--brand-charcoal)] transition-colors disabled:opacity-50"
+                            className="flex-1 flex items-center justify-center gap-2 text-sm py-2.5 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors disabled:opacity-50"
                           >
                             {checkoutLoading === book.id ? (
                               <Loader2 size={16} className="animate-spin" />
@@ -160,14 +160,14 @@ export default function ProgramsBooks() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-[var(--brand-green)] text-white">
+      <section className="py-16 bg-[#1E3A32] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl mb-4">Transform Your Understanding</h2>
           <p className="text-white/80 mb-8 text-lg">
             These books are designed to complement your journey with practical wisdom and deep insights.
           </p>
           <Link to={createPageUrl("Contact")}>
-            <Button variant="outline" className="border-[var(--brand-gold)] text-[var(--brand-gold)] hover:bg-[var(--brand-gold)] hover:text-[var(--brand-green)] px-8 py-6 text-lg">
+            <Button variant="outline" className="border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32] px-8 py-6 text-lg">
               Have Questions? Contact Us
             </Button>
           </Link>
