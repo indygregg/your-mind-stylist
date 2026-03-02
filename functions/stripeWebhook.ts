@@ -171,6 +171,43 @@ Deno.serve(async (req) => {
                         });
                     }
 
+                    // Add to CRM
+                    try {
+                        const webinarLeads = await base44.asServiceRole.entities.Lead.filter({ email: session.customer_email });
+                        const webinarName = session.metadata.webinar_slug || 'Webinar';
+                        const today = new Date().toISOString().split('T')[0];
+                        if (webinarLeads.length > 0) {
+                            const existing = webinarLeads[0];
+                            const boughtHistory = existing.what_they_bought ? `${existing.what_they_bought}, ${webinarName}` : webinarName;
+                            await base44.asServiceRole.entities.Lead.update(existing.id, {
+                                what_they_bought: boughtHistory,
+                                date_of_purchase: today,
+                                stage: 'won',
+                                converted_to_client: true,
+                                notes: `${existing.notes || ''}\n[${new Date().toLocaleDateString()}] Purchased webinar: ${webinarName}`.trim()
+                            });
+                        } else {
+                            const nameParts = (session.customer_details?.name || '').split(' ');
+                            await base44.asServiceRole.entities.Lead.create({
+                                full_name: session.customer_details?.name || '',
+                                first_name: nameParts[0] || '',
+                                last_name: nameParts.slice(1).join(' ') || '',
+                                email: session.customer_email,
+                                stage: 'won',
+                                source: 'product_purchase',
+                                interest_level: 'hot',
+                                lead_score: 75,
+                                converted_to_client: true,
+                                converted_date: new Date().toISOString(),
+                                what_they_bought: webinarName,
+                                date_of_purchase: today,
+                                notes: `Purchased webinar: ${webinarName}`
+                            });
+                        }
+                    } catch (crmErr) {
+                        console.error('CRM update for webinar failed:', crmErr.message);
+                    }
+
                     await base44.asServiceRole.integrations.Core.SendEmail({
                         to: session.customer_email,
                         subject: 'Webinar Access Granted',
