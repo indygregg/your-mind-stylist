@@ -62,10 +62,13 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
     
-    /* Dark mode brand colors */
-    --forest-green: #2B4A40;
-    --soft-gold: #E4C589;
-    --cream: #1A1714;
+    /* Dark mode brand color overrides */
+    --brand-green:   #2B4A40;
+    --brand-gold:    #E4C589;
+    --brand-cream:   #1A1714;
+    --forest-green: var(--brand-green);
+    --soft-gold: var(--brand-gold);
+    --cream: var(--brand-cream);
   }
 }
 
@@ -91,10 +94,13 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
     
-    /* Dark mode brand colors */
-    --forest-green: #2B4A40;
-    --soft-gold: #E4C589;
-    --cream: #1A1714;
+    /* Dark mode brand color overrides */
+    --brand-green:   #2B4A40;
+    --brand-gold:    #E4C589;
+    --brand-cream:   #1A1714;
+    --forest-green: var(--brand-green);
+    --soft-gold: var(--brand-gold);
+    --cream: var(--brand-cream);
   }
 }
 
@@ -171,7 +177,7 @@ button, [role="button"] {
 
 /* Better focus visible for accessibility */
 *:focus-visible {
-  outline: 2px solid #D8B46B;
+  outline: 2px solid var(--brand-gold);
   outline-offset: 2px;
 }
 
