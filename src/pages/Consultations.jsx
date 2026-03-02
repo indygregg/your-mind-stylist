@@ -344,33 +344,35 @@ export default function Consultations() {
                       </div>
                     </PDFClickInterceptor>
 
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <FileText size={16} className="text-[#D8B46B]" />
-                        <h4 className="font-medium text-[#1E3A32]">
+                    <PDFClickInterceptor label="View Bill of Rights" title="Bill of Rights">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <FileText size={16} className="text-[#D8B46B]" />
+                          <h4 className="font-medium text-[#1E3A32]">
+                            <CmsText 
+                              contentKey="consultations.step1.doc3.title" 
+                              page="Consultations"
+                              blockTitle="Document 3 Title"
+                              fallback="Your Rights" 
+                              contentType="short_text"
+                            />
+                          </h4>
+                        </div>
+                        <div className="text-sm text-[#2B2725]/70 mb-2">
                           <CmsText 
-                            contentKey="consultations.step1.doc3.title" 
+                            contentKey="consultations.step1.doc3.description" 
                             page="Consultations"
-                            blockTitle="Document 3 Title"
-                            fallback="Your Rights" 
-                            contentType="short_text"
+                            blockTitle="Document 3 Description"
+                            fallback="<p>Please read:</p><ul class='text-left ml-4 list-disc'><li>The <em>Bill of Rights for Adults</em> <strong>or</strong></li><li>The <em>Bill of Rights for Minors</em></li></ul>" 
+                            contentType="rich_text"
                           />
-                        </h4>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <DocModalLink contentKey="consultations.step1.doc3.adult_url" label="View Adult Bill of Rights" title="Bill of Rights for Adults" />
+                          <DocModalLink contentKey="consultations.step1.doc3.minor_url" label="View Minor Bill of Rights" title="Bill of Rights for Minors" />
+                        </div>
                       </div>
-                      <div className="text-sm text-[#2B2725]/70 mb-2">
-                        <CmsText 
-                          contentKey="consultations.step1.doc3.description" 
-                          page="Consultations"
-                          blockTitle="Document 3 Description"
-                          fallback="<p>Please read:</p><ul class='text-left ml-4 list-disc'><li>The <em>Bill of Rights for Adults</em> <strong>or</strong></li><li>The <em>Bill of Rights for Minors</em></li></ul>" 
-                          contentType="rich_text"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <DocModalLink contentKey="consultations.step1.doc3.adult_url" label="View Adult Bill of Rights" title="Bill of Rights for Adults" />
-                        <DocModalLink contentKey="consultations.step1.doc3.minor_url" label="View Minor Bill of Rights" title="Bill of Rights for Minors" />
-                      </div>
-                    </div>
+                    </PDFClickInterceptor>
 
                     <div>
                       <div className="flex items-center gap-2 mb-2">
