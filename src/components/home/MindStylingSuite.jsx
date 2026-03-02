@@ -154,21 +154,22 @@ export default function MindStylingSuite() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className={`${service.bg} p-8 md:p-12 lg:p-16 relative overflow-hidden group`}
+              className="p-8 md:p-12 lg:p-16 relative overflow-hidden group"
+              style={service.bgStyle}
             >
               {/* Decorative Corner */}
               <div
                 className="absolute top-0 right-0 w-32 h-32 opacity-10"
-                style={{ backgroundColor: service.accent }}
+                style={{ backgroundColor: service.accentHex }}
               />
 
               <div className="relative z-10">
                 {/* Icon */}
                 <div
                   className="w-14 h-14 rounded-full flex items-center justify-center mb-8"
-                  style={{ backgroundColor: `${service.accent}15` }}
+                  style={{ backgroundColor: `${service.accentHex}22` }}
                 >
-                  <service.icon size={24} style={{ color: service.accent }} />
+                  <service.icon size={24} style={{ color: service.accentHex }} />
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-8 lg:gap-16">
