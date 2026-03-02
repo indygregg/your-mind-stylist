@@ -111,8 +111,8 @@ export default function Layout({ children, currentPageName }) {
 
   if (authPagesList && !layoutReady) {
     return (
-      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
-        <div className="animate-pulse text-[#1E3A32]">Loading...</div>
+      <div className="min-h-screen bg-[var(--brand-cream)] flex items-center justify-center">
+        <div className="animate-pulse text-[var(--brand-green)]">Loading...</div>
       </div>
     );
   }
@@ -166,7 +166,7 @@ export default function Layout({ children, currentPageName }) {
         <title>Your Mind Stylist</title>
         <link rel="icon" type="image/png" href="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/7d5c32b99_Mind-stylist-dark-icon2x.png" />
       </Helmet>
-      <div className="min-h-screen bg-[#F9F5EF]">
+      <div className="min-h-screen bg-[var(--brand-cream)]">
         <AffiliateTracker />
         <ManagerBar />
         <ScrollToTop />
@@ -174,13 +174,13 @@ export default function Layout({ children, currentPageName }) {
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
 
         :root {
-          --forest-green: #1E3A32;
-          --soft-gold: #D8B46B;
-          --cream: #F9F5EF;
-          --charcoal: #2B2725;
+          --forest-green: var(--brand-green);
+          --soft-gold: var(--brand-gold);
+          --cream: var(--brand-cream);
+          --charcoal: var(--brand-charcoal);
           --dusty-sage: #A6B7A3;
           --soft-plum: #6E4F7D;
-          --warm-sand: #E4D9C4;
+          --warm-sand: var(--brand-sand);
         }
 
         @media (prefers-color-scheme: dark) {
@@ -217,7 +217,7 @@ export default function Layout({ children, currentPageName }) {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 safe-area-top ${
           isScrolled
-            ? "bg-[#F9F5EF]/95 backdrop-blur-md shadow-sm"
+            ? "bg-[var(--brand-cream)]/95 backdrop-blur-md shadow-sm"
             : "bg-transparent"
         }`}
       >
@@ -227,8 +227,8 @@ export default function Layout({ children, currentPageName }) {
           // For Bookings: only use dark hero style on step 1 (signalled via body attribute)
           const isBookingsDarkHero = currentPageName === 'Bookings' && document.body.hasAttribute('data-dark-hero');
           const hasDarkHero = (darkHeroPages.includes(currentPageName) || isBookingsDarkHero) && !isScrolled;
-          const textColorClass = hasDarkHero ? 'text-white' : 'text-[#2B2725]';
-          const textColorOpacity = hasDarkHero ? 'text-white/80' : 'text-[#2B2725]/60';
+          const textColorClass = hasDarkHero ? 'text-white' : 'text-[var(--brand-charcoal)]';
+          const textColorOpacity = hasDarkHero ? 'text-white/80' : 'text-[var(--brand-charcoal)]/60';
           const logoSrc = hasDarkHero 
             ? 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/60b825e58_Mind-stylist-light-icon2x.png'
             : 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/7d5c32b99_Mind-stylist-dark-icon2x.png';
@@ -236,7 +236,7 @@ export default function Layout({ children, currentPageName }) {
           return (
             <>
         {/* Micro Header */}
-        <div className={`hidden lg:block border-b ${hasDarkHero ? 'border-white/20' : 'border-[#D8B46B]/20'}`}>
+        <div className={`hidden lg:block border-b ${hasDarkHero ? 'border-white/20' : 'border-[var(--brand-gold)]/20'}`}>
           <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
             <p className={`text-xs tracking-[0.2em] ${textColorOpacity} uppercase font-light`}>
               Las Vegas • Emotional Intelligence • Mind Styling • Hypnosis • Professional Development
@@ -244,13 +244,13 @@ export default function Layout({ children, currentPageName }) {
             <div className="flex flex-col items-end gap-1">
               <Link
                 to={createPageUrl("Bookings")}
-                className={`text-xs tracking-wide ${hasDarkHero ? 'text-white hover:text-[#D8B46B]' : 'text-[#1E3A32] hover:text-[#D8B46B]'} transition-colors font-medium`}
+                className={`text-xs tracking-wide ${hasDarkHero ? 'text-white hover:text-[var(--brand-gold)]' : 'text-[var(--brand-green)] hover:text-[var(--brand-gold)]'} transition-colors font-medium`}
               >
                 Schedule Your Complimentary Consultation
               </Link>
               <Link
                 to={createPageUrl("Consultations")}
-                className={`text-[9px] ${hasDarkHero ? 'text-white/60 hover:text-white/80' : 'text-[#1E3A32]/60 hover:text-[#1E3A32]/80'} transition-colors`}
+                className={`text-[9px] ${hasDarkHero ? 'text-white/60 hover:text-white/80' : 'text-[var(--brand-green)]/60 hover:text-[var(--brand-green)]/80'} transition-colors`}
               >
                 (Complete intake form before first session)
               </Link>
@@ -271,7 +271,7 @@ export default function Layout({ children, currentPageName }) {
                   navigate(createPageUrl('Home'));
                 }
               }}
-              className={`lg:hidden p-2 ${hasDarkHero ? 'text-white hover:bg-white/10' : 'text-[#1E3A32] hover:bg-[#1E3A32]/5'} rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center`}
+              className={`lg:hidden p-2 ${hasDarkHero ? 'text-white hover:bg-white/10' : 'text-[var(--brand-green)] hover:bg-[var(--brand-green)]/5'} rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center`}
             >
               <ArrowLeft size={24} />
             </button>
@@ -281,7 +281,7 @@ export default function Layout({ children, currentPageName }) {
           {isManager && !useAuthLayout && (
             <Link
               to={createPageUrl('ManagerDashboard')}
-              className={`absolute left-6 top-1/2 -translate-y-1/2 px-3 py-2 ${hasDarkHero ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-[#D8B46B]/20 text-[#1E3A32] hover:bg-[#D8B46B]/30'} text-xs font-medium transition-all duration-300 rounded backdrop-blur-sm z-10 hidden lg:block`}
+              className={`absolute left-6 top-1/2 -translate-y-1/2 px-3 py-2 ${hasDarkHero ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-[var(--brand-gold)]/20 text-[var(--brand-green)] hover:bg-[var(--brand-gold)]/30'} text-xs font-medium transition-all duration-300 rounded backdrop-blur-sm z-10 hidden lg:block`}
             >
               Dashboard
             </Link>
@@ -299,7 +299,7 @@ export default function Layout({ children, currentPageName }) {
               <span className={`text-[10px] md:text-xs ${textColorOpacity} tracking-[0.2em] uppercase`}>
                 Roberta Fernandez
               </span>
-              <span className={`font-serif font-bold text-lg md:text-xl ${hasDarkHero ? 'text-white' : 'text-[#1E3A32]'} tracking-wide`}>
+              <span className={`font-serif font-bold text-lg md:text-xl ${hasDarkHero ? 'text-white' : 'text-[var(--brand-green)]'} tracking-wide`}>
                 Your Mind Stylist
               </span>
             </div>
@@ -311,13 +311,13 @@ export default function Layout({ children, currentPageName }) {
               to={createPageUrl("Home")}
               className={`text-sm tracking-wide transition-all duration-300 relative group ${
                 currentPageName === "Home"
-                  ? (hasDarkHero ? "text-white" : "text-[#1E3A32]")
-                  : (hasDarkHero ? "text-white/80 hover:text-white" : "text-[#2B2725]/70 hover:text-[#1E3A32]")
+                  ? (hasDarkHero ? "text-white" : "text-[var(--brand-green)]")
+                  : (hasDarkHero ? "text-white/80 hover:text-white" : "text-[var(--brand-charcoal)]/70 hover:text-[var(--brand-green)]")
               }`}
             >
               Home
               <span
-                className={`absolute -bottom-1 left-0 h-[1px] bg-[#D8B46B] transition-all duration-300 ${
+                className={`absolute -bottom-1 left-0 h-[1px] bg-[var(--brand-gold)] transition-all duration-300 ${
                   currentPageName === "Home" ? "w-full" : "w-0 group-hover:w-full"
                 }`}
               />
@@ -331,12 +331,12 @@ export default function Layout({ children, currentPageName }) {
             >
               <button
                 className={`text-sm tracking-wide transition-all duration-300 relative group ${
-                  hasDarkHero ? "text-white/80 hover:text-white" : "text-[#2B2725]/70 hover:text-[#1E3A32]"
+                  hasDarkHero ? "text-white/80 hover:text-white" : "text-[var(--brand-charcoal)]/70 hover:text-[var(--brand-green)]"
                 }`}
               >
                 Services
                 <span
-                  className={`absolute -bottom-1 left-0 h-[1px] bg-[#D8B46B] transition-all duration-300 ${
+                  className={`absolute -bottom-1 left-0 h-[1px] bg-[var(--brand-gold)] transition-all duration-300 ${
                     servicesOpen ? "w-full" : "w-0 group-hover:w-full"
                   }`}
                 />
@@ -349,12 +349,12 @@ export default function Layout({ children, currentPageName }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full right-0 mt-4 bg-white shadow-2xl border border-[#E4D9C4] min-w-[700px] z-50"
+                    className="absolute top-full right-0 mt-4 bg-white shadow-2xl border border-[var(--brand-sand)] min-w-[700px] z-50"
                   >
                     <div className="grid grid-cols-3 gap-6 p-8">
                       {servicesMenu.map((section) => (
                         <div key={section.category}>
-                          <h3 className="font-serif text-sm text-[#D8B46B] tracking-wider uppercase mb-4">
+                          <h3 className="font-serif text-sm text-[var(--brand-gold)] tracking-wider uppercase mb-4">
                             {section.category}
                           </h3>
                           <div className="space-y-3">
@@ -364,10 +364,10 @@ export default function Layout({ children, currentPageName }) {
                                 to={createPageUrl(item.page)}
                                 className="block group"
                               >
-                                <p className="text-[#1E3A32] font-medium mb-1 group-hover:text-[#D8B46B] transition-colors">
+                                <p className="text-[var(--brand-green)] font-medium mb-1 group-hover:text-[var(--brand-gold)] transition-colors">
                                   {item.name}
                                 </p>
-                                <p className="text-xs text-[#2B2725]/60">
+                                <p className="text-xs text-[var(--brand-charcoal)]/60">
                                   {item.description}
                                 </p>
                               </Link>
@@ -387,32 +387,32 @@ export default function Layout({ children, currentPageName }) {
                 to={createPageUrl(link.page)}
                 className={`text-sm tracking-wide transition-all duration-300 relative group ${
                   currentPageName === link.page
-                    ? (hasDarkHero ? "text-white" : "text-[#1E3A32]")
-                    : (hasDarkHero ? "text-white/80 hover:text-white" : "text-[#2B2725]/70 hover:text-[#1E3A32]")
+                    ? (hasDarkHero ? "text-white" : "text-[var(--brand-green)]")
+                    : (hasDarkHero ? "text-white/80 hover:text-white" : "text-[var(--brand-charcoal)]/70 hover:text-[var(--brand-green)]")
                 }`}
                 >
                 {link.name}
                 <span
-                  className={`absolute -bottom-1 left-0 h-[1px] bg-[#D8B46B] transition-all duration-300 ${
+                  className={`absolute -bottom-1 left-0 h-[1px] bg-[var(--brand-gold)] transition-all duration-300 ${
                     currentPageName === link.page ? "w-full" : "w-0 group-hover:w-full"
                   }`}
                 />
                 </Link>
                 ))}
 
-                <div className={`flex items-center gap-3 ml-6 pl-6 border-l ${hasDarkHero ? 'border-white/20' : 'border-[#D8B46B]/20'}`}>
+                <div className={`flex items-center gap-3 ml-6 pl-6 border-l ${hasDarkHero ? 'border-white/20' : 'border-[var(--brand-gold)]/20'}`}>
                   <CartIcon hasDarkHero={hasDarkHero} />
                   <a
                     href="https://yourmindstylist.com/login"
                     onClick={() => haptics.light()}
-                    className={`text-sm tracking-wide ${hasDarkHero ? 'text-white/80 hover:text-white' : 'text-[#2B2725]/70 hover:text-[#1E3A32]'} transition-colors`}
+                    className={`text-sm tracking-wide ${hasDarkHero ? 'text-white/80 hover:text-white' : 'text-[var(--brand-charcoal)]/70 hover:text-[var(--brand-green)]'} transition-colors`}
                   >
                     Login
                   </a>
                   <a
                     href="https://yourmindstylist.com/login"
                     onClick={() => haptics.medium()}
-                    className={`px-5 py-2 ${hasDarkHero ? 'bg-white text-[#1E3A32] hover:bg-[#F9F5EF]' : 'bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725]'} text-sm tracking-wide transition-all duration-300`}
+                    className={`px-5 py-2 ${hasDarkHero ? 'bg-white text-[var(--brand-green)] hover:bg-[var(--brand-cream)]' : 'bg-[var(--brand-green)] text-[var(--brand-cream)] hover:bg-[var(--brand-charcoal)]'} text-sm tracking-wide transition-all duration-300`}
                   >
                     Get Started
                   </a>
@@ -425,7 +425,7 @@ export default function Layout({ children, currentPageName }) {
                     haptics.light();
                     setMobileMenuOpen(!mobileMenuOpen);
                   }}
-                  className={`lg:hidden p-3 ${hasDarkHero ? 'text-white hover:bg-white/10' : 'text-[#1E3A32] hover:bg-[#1E3A32]/5'} rounded-lg transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center`}
+                  className={`lg:hidden p-3 ${hasDarkHero ? 'text-white hover:bg-white/10' : 'text-[var(--brand-green)] hover:bg-[var(--brand-green)]/5'} rounded-lg transition-colors active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center`}
                 >
                   {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -444,7 +444,7 @@ export default function Layout({ children, currentPageName }) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden bg-[#F9F5EF] border-t border-[#D8B46B]/20 max-h-[calc(100vh-80px)] overflow-y-auto"
+              className="lg:hidden bg-[var(--brand-cream)] border-t border-[var(--brand-gold)]/20 max-h-[calc(100vh-80px)] overflow-y-auto"
             >
               <div className="px-6 py-8 flex flex-col gap-2">
                 {navLinks.map((link) => (
@@ -457,25 +457,25 @@ export default function Layout({ children, currentPageName }) {
                     }}
                     className={`text-lg py-4 px-4 rounded-lg transition-colors active:scale-98 min-h-[52px] flex items-center ${
                       currentPageName === link.page
-                        ? "text-[#1E3A32] font-medium bg-[#D8B46B]/10"
-                        : "text-[#2B2725]/70 hover:bg-[#E4D9C4]/50"
+                        ? "text-[var(--brand-green)] font-medium bg-[var(--brand-gold)]/10"
+                        : "text-[var(--brand-charcoal)]/70 hover:bg-[var(--brand-sand)]/50"
                     }`}
                   >
                     {link.name}
                   </Link>
                 ))}
-                <div className="mt-6 pt-4 border-t border-[#E4D9C4] flex flex-col gap-3">
+                <div className="mt-6 pt-4 border-t border-[var(--brand-sand)] flex flex-col gap-3">
                   <a
                     href="https://yourmindstylist.com/login"
                     onClick={() => haptics.light()}
-                    className="px-6 py-4 border border-[#1E3A32] text-[#1E3A32] text-center text-sm tracking-wide rounded-lg hover:bg-[#1E3A32]/5 active:scale-98 transition-all min-h-[52px] flex items-center justify-center"
+                    className="px-6 py-4 border border-[var(--brand-green)] text-[var(--brand-green)] text-center text-sm tracking-wide rounded-lg hover:bg-[var(--brand-green)]/5 active:scale-98 transition-all min-h-[52px] flex items-center justify-center"
                   >
                     Login
                   </a>
                   <a
                     href="https://yourmindstylist.com/login"
                     onClick={() => haptics.medium()}
-                    className="px-6 py-4 bg-[#1E3A32] text-[#F9F5EF] text-center text-sm tracking-wide rounded-lg hover:bg-[#2B2725] active:scale-98 transition-all min-h-[52px] flex items-center justify-center"
+                    className="px-6 py-4 bg-[var(--brand-green)] text-[var(--brand-cream)] text-center text-sm tracking-wide rounded-lg hover:bg-[var(--brand-charcoal)] active:scale-98 transition-all min-h-[52px] flex items-center justify-center"
                   >
                     Get Started
                   </a>
@@ -492,7 +492,7 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#1E3A32] text-[#F9F5EF]">
+      <footer className="bg-[var(--brand-green)] text-[var(--brand-cream)]">
         <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
           <div className="grid md:grid-cols-3 gap-12 md:gap-8">
             {/* Brand */}
@@ -504,18 +504,18 @@ export default function Layout({ children, currentPageName }) {
                     className="w-12 h-12 flex-shrink-0 object-contain"
                   />
                 <div>
-                  <p className="text-[#F9F5EF]/60 text-xs tracking-[0.2em] uppercase mb-1">
+                  <p className="text-[var(--brand-cream)]/60 text-xs tracking-[0.2em] uppercase mb-1">
                     Roberta Fernandez
                   </p>
-                  <h3 className="font-serif font-bold text-2xl text-[#F9F5EF]">
+                  <h3 className="font-serif font-bold text-2xl text-[var(--brand-cream)]">
                     Your Mind Stylist
                   </h3>
                 </div>
               </div>
-              <p className="text-[#F9F5EF]/70 text-sm leading-relaxed mb-4">
+              <p className="text-[var(--brand-cream)]/70 text-sm leading-relaxed mb-4">
                 Emotional Intelligence • Mind Styling • Hypnosis • Professional Development
               </p>
-              <div className="text-[#F9F5EF]/70 text-sm space-y-1">
+              <div className="text-[var(--brand-cream)]/70 text-sm space-y-1">
                 <p>8724 Spanish Ridge Ave #B</p>
                 <p>Las Vegas, NV 89148</p>
                 <p className="mt-2">612-839-2295</p>
@@ -525,7 +525,7 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Quick Links */}
             <div>
-              <h4 className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-6">
+              <h4 className="text-[var(--brand-gold)] text-xs tracking-[0.2em] uppercase mb-6">
                 Quick Links
               </h4>
               <div className="grid grid-cols-2 gap-x-4 gap-y-3">
@@ -533,7 +533,7 @@ export default function Layout({ children, currentPageName }) {
                   <Link
                     key={link.page}
                     to={createPageUrl(link.page)}
-                    className="text-sm text-[#F9F5EF]/70 hover:text-[#D8B46B] transition-colors"
+                    className="text-sm text-[var(--brand-cream)]/70 hover:text-[var(--brand-gold)] transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -543,17 +543,17 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Contact */}
             <div>
-              <h4 className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-6">
+              <h4 className="text-[var(--brand-gold)] text-xs tracking-[0.2em] uppercase mb-6">
                 Connect
               </h4>
-              <p className="text-[#F9F5EF]/70 text-sm mb-6 leading-relaxed">
+              <p className="text-[var(--brand-cream)]/70 text-sm mb-6 leading-relaxed">
                 Ready to transform how you think?
                 <br />
                 Let's start a conversation.
               </p>
               <Link
                 to={createPageUrl("Contact")}
-                className="inline-flex items-center gap-2 px-6 py-3 border border-[#D8B46B] text-[#D8B46B] text-sm tracking-wide hover:bg-[#D8B46B] hover:text-[#1E3A32] transition-all duration-300"
+                className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--brand-gold)] text-[var(--brand-gold)] text-sm tracking-wide hover:bg-[var(--brand-gold)] hover:text-[var(--brand-green)] transition-all duration-300"
               >
                 Get in Touch
               </Link>
@@ -561,21 +561,21 @@ export default function Layout({ children, currentPageName }) {
           </div>
 
           {/* Bottom Bar */}
-          <div className="mt-16 pt-8 border-t border-[#F9F5EF]/10 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-[#F9F5EF]/40">
+          <div className="mt-16 pt-8 border-t border-[var(--brand-cream)]/10 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-[var(--brand-cream)]/40">
               © {new Date().getFullYear()} Your Mind Stylist. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <Link to={createPageUrl("LegalPage?slug=privacy-policy")} className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
+              <Link to={createPageUrl("LegalPage?slug=privacy-policy")} className="text-xs text-[var(--brand-cream)]/40 hover:text-[var(--brand-gold)] transition-colors">
                 Privacy Policy
               </Link>
-              <Link to={createPageUrl("LegalPage?slug=terms-of-service")} className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
+              <Link to={createPageUrl("LegalPage?slug=terms-of-service")} className="text-xs text-[var(--brand-cream)]/40 hover:text-[var(--brand-gold)] transition-colors">
                 Terms of Service
               </Link>
-              <Link to={createPageUrl("LegalPage?slug=cookie-policy")} className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
+              <Link to={createPageUrl("LegalPage?slug=cookie-policy")} className="text-xs text-[var(--brand-cream)]/40 hover:text-[var(--brand-gold)] transition-colors">
                 Cookies
               </Link>
-              <Link to={createPageUrl("Accessibility")} className="text-xs text-[#F9F5EF]/40 hover:text-[#D8B46B] transition-colors">
+              <Link to={createPageUrl("Accessibility")} className="text-xs text-[var(--brand-cream)]/40 hover:text-[var(--brand-gold)] transition-colors">
                 Accessibility
               </Link>
             </div>
