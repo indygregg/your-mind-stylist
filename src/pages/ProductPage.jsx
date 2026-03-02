@@ -11,28 +11,17 @@ import { toast } from "react-hot-toast";
 import ProductOwnershipCheck from "../components/purchase/ProductOwnershipCheck";
 
 export default function ProductPage() {
-  const [slug, setSlug] = useState("");
   const [isPreview, setIsPreview] = useState(false);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [selectedPriceId, setSelectedPriceId] = useState(null);
   const [selectedPlan, setSelectedPlan] = useState("full");
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    setSlug(urlParams.get("slug") || "");
-    setIsPreview(urlParams.get("preview") === "true");
-  }, []);
+  const urlParams = new URLSearchParams(window.location.search);
+  const slug = urlParams.get("slug") || "";
   
   useEffect(() => {
-    if (product && !isPreview) {
-      // Track product detail view
-      base44.functions.invoke('trackPurchaseEvent', {
-        event_type: 'product.detail_viewed',
-        product_id: product.id,
-        product_key: product.key
-      }).catch(() => {});
-    }
-  }, [product, isPreview]);
+    setIsPreview(new URLSearchParams(window.location.search).get("preview") === "true");
+  }, []);
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["product", slug],
@@ -44,6 +33,18 @@ export default function ProductPage() {
     },
     enabled: !!slug,
   });
+
+  const product = products[0];
+
+  useEffect(() => {
+    if (product && !isPreview) {
+      base44.functions.invoke('trackPurchaseEvent', {
+        event_type: 'product.detail_viewed',
+        product_id: product.id,
+        product_key: product.key
+      }).catch(() => {});
+    }
+  }, [product, isPreview]);
 
   const product = products[0];
 
