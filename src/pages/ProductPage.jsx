@@ -34,9 +34,8 @@ export default function ProductPage() {
     enabled: !!slug,
   });
 
-  const product = products[0];
-
   useEffect(() => {
+    const product = products[0];
     if (product && !isPreview) {
       base44.functions.invoke('trackPurchaseEvent', {
         event_type: 'product.detail_viewed',
