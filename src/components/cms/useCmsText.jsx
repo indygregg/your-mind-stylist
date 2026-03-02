@@ -5,7 +5,8 @@ export function useCmsText(key, fallback = "") {
   const { data: blocks = [] } = useQuery({
     queryKey: ["cms-content", key],
     queryFn: () => base44.entities.CmsContent.filter({ key }),
-    staleTime: 0, // Always fresh
+    staleTime: 60 * 60 * 1000, // Cache for 1 hour
+    gcTime: 60 * 60 * 1000, // Keep in memory for 1 hour
   });
 
   const block = blocks[0];
