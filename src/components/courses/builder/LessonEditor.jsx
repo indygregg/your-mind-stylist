@@ -252,30 +252,40 @@ export default function LessonEditor({ lesson, onUpdate, onClose, onMediaUpload,
             </div>
 
             {/* Estimated Time */}
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="estimated-time">Estimated Time (minutes)</Label>
-                <Input
-                  id="estimated-time"
-                  type="number"
-                  value={lesson.estimated_time || ""}
-                  onChange={(e) => onUpdate({ ...lesson, estimated_time: parseInt(e.target.value) || 0 })}
-                  placeholder="e.g., 15"
-                />
-              </div>
-              <div className="flex items-end">
-                <div className="flex items-center gap-2">
-                  <Checkbox
-                    id="required"
-                    checked={lesson.required !== false}
-                    onCheckedChange={(checked) => onUpdate({ ...lesson, required: checked })}
-                  />
-                  <Label htmlFor="required" className="font-normal cursor-pointer">
-                    Required lesson
-                  </Label>
-                </div>
-              </div>
-            </div>
+             <div className="grid md:grid-cols-2 gap-4">
+               <div>
+                 <Label htmlFor="estimated-time">Estimated Time (minutes)</Label>
+                 <Input
+                   id="estimated-time"
+                   type="number"
+                   value={lesson.estimated_time || ""}
+                   onChange={(e) => onUpdate({ ...lesson, estimated_time: parseInt(e.target.value) || 0 })}
+                   placeholder="e.g., 15"
+                 />
+               </div>
+               <div className="space-y-2">
+                 <div className="flex items-center gap-2">
+                   <Checkbox
+                     id="required"
+                     checked={lesson.required !== false}
+                     onCheckedChange={(checked) => onUpdate({ ...lesson, required: checked })}
+                   />
+                   <Label htmlFor="required" className="font-normal cursor-pointer">
+                     Required lesson
+                   </Label>
+                 </div>
+                 <div className="flex items-center gap-2">
+                   <Checkbox
+                     id="enable-checkin"
+                     checked={lesson.enable_checkin === true}
+                     onCheckedChange={(checked) => onUpdate({ ...lesson, enable_checkin: checked })}
+                   />
+                   <Label htmlFor="enable-checkin" className="font-normal cursor-pointer">
+                     Emotional check-in
+                   </Label>
+                 </div>
+               </div>
+             </div>
 
             {/* Key Takeaways */}
             <div>
