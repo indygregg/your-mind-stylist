@@ -229,19 +229,36 @@ Deno.serve(async (req) => {
                                 email: session.customer_email
                             });
 
+                            const today = new Date().toISOString().split('T')[0];
                             if (existingLeads.length > 0) {
-                                await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, {
+                                const existing = existingLeads[0];
+                                const boughtHistory = existing.what_they_bought
+                                    ? `${existing.what_they_bought}, ${product.name}`
+                                    : product.name;
+                                await base44.asServiceRole.entities.Lead.update(existing.id, {
                                     last_activity_date: new Date().toISOString(),
-                                    notes: `${existingLeads[0].notes || ''}\n[${new Date().toLocaleDateString()}] Purchased: ${product.name}`
+                                    what_they_bought: boughtHistory,
+                                    date_of_purchase: today,
+                                    stage: 'won',
+                                    converted_to_client: true,
+                                    converted_date: new Date().toISOString(),
+                                    notes: `${existing.notes || ''}\n[${new Date().toLocaleDateString()}] Purchased: ${product.name}`.trim()
                                 });
                             } else {
+                                const nameParts = (session.customer_details?.name || '').split(' ');
                                 await base44.asServiceRole.entities.Lead.create({
                                     full_name: session.customer_details?.name || '',
+                                    first_name: nameParts[0] || '',
+                                    last_name: nameParts.slice(1).join(' ') || '',
                                     email: session.customer_email,
                                     stage: 'won',
                                     source: 'product_purchase',
                                     interest_level: 'hot',
                                     lead_score: 80,
+                                    converted_to_client: true,
+                                    converted_date: new Date().toISOString(),
+                                    what_they_bought: product.name,
+                                    date_of_purchase: today,
                                     last_activity_date: new Date().toISOString(),
                                     notes: `Purchased: ${product.name}`
                                 });
