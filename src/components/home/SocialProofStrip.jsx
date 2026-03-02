@@ -15,13 +15,13 @@ export default function SocialProofStrip() {
   ];
 
   return (
-    <section className="py-16 md:py-20 bg-[#1E3A32]">
+    <section className="py-16 md:py-20 bg-[var(--brand-green)]">
       <div className="max-w-7xl mx-auto px-6">
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center text-[#D8B46B] text-sm md:text-base tracking-[0.3em] uppercase mb-10 font-medium"
+          className="text-center text-[var(--brand-gold)] text-sm md:text-base tracking-[0.3em] uppercase mb-10 font-medium"
         >
           <CmsText
             contentKey="home.social_proof.title"
@@ -46,7 +46,7 @@ export default function SocialProofStrip() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="text-[#F9F5EF]/60 text-sm md:text-base font-light tracking-wide hover:text-[#F9F5EF] transition-colors cursor-default"
+              className="text-[var(--brand-cream)]/60 text-sm md:text-base font-light tracking-wide hover:text-[var(--brand-cream)] transition-colors cursor-default"
             >
               {logo}
             </motion.span>
