@@ -26,7 +26,6 @@ export default function ProgramsBooks() {
     queryFn: async () => {
       const all = await base44.entities.Product.filter({ 
         status: "published",
-        active: true,
         product_subtype: "book"
       });
       return all;
