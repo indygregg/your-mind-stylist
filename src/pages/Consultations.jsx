@@ -24,7 +24,7 @@ function DocDownloadLink({ contentKey, label }) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+      className="text-[#D8B46B] hover:text-[var(--brand-green)] text-sm inline-flex items-center gap-1 transition-colors"
     >
       <Download size={14} />
       <span>{label}</span>
@@ -46,7 +46,7 @@ function DocModalLink({ contentKey, label, title }) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors underline"
+        className="text-[#D8B46B] hover:text-[var(--brand-green)] text-sm inline-flex items-center gap-1 transition-colors underline"
       >
         <FileText size={14} />
         <span>{label}</span>
@@ -67,7 +67,7 @@ export default function Consultations() {
       />
 
       {/* Hero Section with Video */}
-      <section className="pt-32 pb-20 bg-[#1E3A32] text-[#F9F5EF]">
+      <section className="pt-32 pb-20 bg-[var(--brand-green)] text-[#F9F5EF]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <motion.div
@@ -103,7 +103,7 @@ export default function Consultations() {
                 />
               </div>
               <Link to={createPageUrl("Bookings")}>
-                <Button className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[#1E3A32] px-8 py-6 text-lg">
+                <Button className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[var(--brand-green)] px-8 py-6 text-lg">
                   <CmsText 
                     contentKey="consultations.hero.cta" 
                     page="Consultations"
@@ -151,7 +151,7 @@ export default function Consultations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-8">
+            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-8">
               <CmsText 
                 contentKey="consultations.learn.title" 
                 page="Consultations"
@@ -204,7 +204,7 @@ export default function Consultations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-6">
               <CmsText 
                 contentKey="consultations.before.title" 
                 page="Consultations"
@@ -226,7 +226,7 @@ export default function Consultations() {
               <div className="flex items-start gap-3">
                 <AlertCircle className="text-yellow-600 mt-1 flex-shrink-0" size={20} />
                 <div>
-                  <p className="font-medium text-[#1E3A32] mb-1">Important:</p>
+                  <p className="font-medium text-[var(--brand-green)] mb-1">Important:</p>
                   <CmsText 
                     contentKey="consultations.before.important" 
                     page="Consultations"
@@ -250,7 +250,7 @@ export default function Consultations() {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4">
+            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-4">
               <CmsText 
                 contentKey="consultations.steps.title" 
                 page="Consultations"
@@ -265,11 +265,11 @@ export default function Consultations() {
           <Card className="mb-8">
             <CardContent className="pt-6">
               <div className="flex items-start gap-4 mb-6">
-                <div className="bg-[#D8B46B] text-[#1E3A32] w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
+                <div className="bg-[#D8B46B] text-[var(--brand-green)] w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
                   1
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-serif text-2xl text-[#1E3A32] mb-4">
+                  <h3 className="font-serif text-2xl text-[var(--brand-green)] mb-4">
                     <CmsText 
                       contentKey="consultations.step1.title" 
                       page="Consultations"
@@ -292,7 +292,7 @@ export default function Consultations() {
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <FileText size={16} className="text-[#D8B46B]" />
-                        <h4 className="font-medium text-[#1E3A32]">
+                        <h4 className="font-medium text-[var(--brand-green)]">
                           <CmsText 
                             contentKey="consultations.step1.doc1.title" 
                             page="Consultations"
@@ -317,7 +317,7 @@ export default function Consultations() {
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <FileText size={16} className="text-[#D8B46B]" />
-                        <h4 className="font-medium text-[#1E3A32]">
+                        <h4 className="font-medium text-[var(--brand-green)]">
                           <CmsText 
                             contentKey="consultations.step1.doc2.title" 
                             page="Consultations"
@@ -342,7 +342,7 @@ export default function Consultations() {
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <FileText size={16} className="text-[#D8B46B]" />
-                        <h4 className="font-medium text-[#1E3A32]">
+                        <h4 className="font-medium text-[var(--brand-green)]">
                           <CmsText 
                             contentKey="consultations.step1.doc3.title" 
                             page="Consultations"
@@ -370,7 +370,7 @@ export default function Consultations() {
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <Video size={16} className="text-[#D8B46B]" />
-                        <h4 className="font-medium text-[#1E3A32]">
+                        <h4 className="font-medium text-[var(--brand-green)]">
                           <CmsText 
                             contentKey="consultations.step1.doc4.title" 
                             page="Consultations"
@@ -408,11 +408,11 @@ export default function Consultations() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-start gap-4">
-                <div className="bg-[#D8B46B] text-[#1E3A32] w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
+                <div className="bg-[#D8B46B] text-[var(--brand-green)] w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
                   2
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-serif text-2xl text-[#1E3A32] mb-4">
+                  <h3 className="font-serif text-2xl text-[var(--brand-green)] mb-4">
                     <CmsText 
                       contentKey="consultations.step2.title" 
                       page="Consultations"
@@ -432,7 +432,7 @@ export default function Consultations() {
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Link to={createPageUrl("ConsultationQuestionnaire")}>
-                      <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10">
+                      <Button variant="outline" className="border-[#D8B46B] text-[var(--brand-green)] hover:bg-[#D8B46B]/10">
                         <FileText size={16} className="mr-2" />
                         <CmsText 
                           contentKey="consultations.step2.button" 
@@ -470,7 +470,7 @@ export default function Consultations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-6">
               <CmsText 
                 contentKey="consultations.what_happens.title" 
                 page="Consultations"
@@ -500,7 +500,7 @@ export default function Consultations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4">
+            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-4">
               <CmsText 
                 contentKey="consultations.not_sure.title" 
                 page="Consultations"
@@ -528,7 +528,7 @@ export default function Consultations() {
               />
             </div>
             <Link to={createPageUrl("Contact")}>
-              <Button className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]">
+              <Button className="bg-[var(--brand-green)] hover:bg-[#2B2725] text-[#F9F5EF]">
                 <Phone size={16} className="mr-2" />
                 <CmsText 
                   contentKey="consultations.not_sure.button" 
@@ -551,7 +551,7 @@ export default function Consultations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-12 text-center">
+            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-12 text-center">
               <CmsText 
                 contentKey="consultations.how_i_work.title" 
                 page="Consultations"
@@ -564,7 +564,7 @@ export default function Consultations() {
             <div className="grid md:grid-cols-2 gap-8">
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="font-medium text-[#1E3A32] mb-3">
+                  <h3 className="font-medium text-[var(--brand-green)] mb-3">
                     <CmsText 
                       contentKey="consultations.how_i_work.item1.title" 
                       page="Consultations"
@@ -586,7 +586,7 @@ export default function Consultations() {
 
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="font-medium text-[#1E3A32] mb-3">
+                  <h3 className="font-medium text-[var(--brand-green)] mb-3">
                     <CmsText 
                       contentKey="consultations.how_i_work.item2.title" 
                       page="Consultations"
@@ -608,7 +608,7 @@ export default function Consultations() {
 
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="font-medium text-[#1E3A32] mb-3">
+                  <h3 className="font-medium text-[var(--brand-green)] mb-3">
                     <CmsText 
                       contentKey="consultations.how_i_work.item3.title" 
                       page="Consultations"
@@ -630,7 +630,7 @@ export default function Consultations() {
 
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="font-medium text-[#1E3A32] mb-3">
+                  <h3 className="font-medium text-[var(--brand-green)] mb-3">
                     <CmsText 
                       contentKey="consultations.how_i_work.item4.title" 
                       page="Consultations"
@@ -655,7 +655,7 @@ export default function Consultations() {
       </section>
 
       {/* Schedule CTA */}
-      <section className="py-24 bg-[#1E3A32] text-[#F9F5EF]">
+      <section className="py-24 bg-[var(--brand-green)] text-[#F9F5EF]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -681,7 +681,7 @@ export default function Consultations() {
               />
             </p>
             <Link to={createPageUrl("Bookings")}>
-              <Button className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[#1E3A32] px-8 py-6 text-lg">
+              <Button className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[var(--brand-green)] px-8 py-6 text-lg">
                 <Calendar size={20} className="mr-2" />
                 <CmsText 
                   contentKey="consultations.schedule_cta.button" 
@@ -704,7 +704,7 @@ export default function Consultations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-12">
+            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-12">
               <CmsText 
                 contentKey="consultations.policies.title" 
                 page="Consultations"
@@ -716,7 +716,7 @@ export default function Consultations() {
 
             <div className="space-y-8">
               <div>
-                <h3 className="font-medium text-xl text-[#1E3A32] mb-4">
+                <h3 className="font-medium text-xl text-[var(--brand-green)] mb-4">
                   <CmsText 
                     contentKey="consultations.policies.appointment.title" 
                     page="Consultations"
@@ -737,7 +737,7 @@ export default function Consultations() {
               </div>
 
               <div>
-                <h3 className="font-medium text-xl text-[#1E3A32] mb-4">
+                <h3 className="font-medium text-xl text-[var(--brand-green)] mb-4">
                   <CmsText 
                     contentKey="consultations.policies.cancellation.title" 
                     page="Consultations"
@@ -758,7 +758,7 @@ export default function Consultations() {
               </div>
 
               <div>
-                <h3 className="font-medium text-xl text-[#1E3A32] mb-4">
+                <h3 className="font-medium text-xl text-[var(--brand-green)] mb-4">
                   <CmsText 
                     contentKey="consultations.policies.payment.title" 
                     page="Consultations"
@@ -790,7 +790,7 @@ export default function Consultations() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-serif text-3xl text-[#1E3A32] mb-6">
+            <h2 className="font-serif text-3xl text-[var(--brand-green)] mb-6">
               <CmsText 
                 contentKey="consultations.contact.title" 
                 page="Consultations"
@@ -799,7 +799,7 @@ export default function Consultations() {
                 contentType="short_text"
               />
             </h2>
-            <a href="tel:612-839-2295" className="text-2xl font-medium text-[#D8B46B] hover:text-[#1E3A32] transition-colors flex items-center justify-center gap-2">
+            <a href="tel:612-839-2295" className="text-2xl font-medium text-[#D8B46B] hover:text-[var(--brand-green)] transition-colors flex items-center justify-center gap-2">
               <Phone size={24} />
               <CmsText 
                 contentKey="consultations.contact.phone" 

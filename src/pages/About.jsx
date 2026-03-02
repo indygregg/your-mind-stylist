@@ -111,7 +111,7 @@ export default function About() {
                   contentType="short_text"
                 />
               </span>
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] leading-tight mb-6">
+              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[var(--brand-green)] leading-tight mb-6">
                 <CmsText 
                   contentKey="about.hero.title" 
                   page="About"
@@ -131,7 +131,7 @@ export default function About() {
               </p>
               <Link
                 to={createPageUrl("Contact")}
-                className="group inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+                className="group inline-flex items-center gap-3 px-8 py-4 bg-[var(--brand-green)] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
                 Get Started
                 <ArrowRight
@@ -179,7 +179,7 @@ export default function About() {
                 contentType="short_text"
               />
             </span>
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[var(--brand-green)] mb-8">
               <CmsText 
                 contentKey="about.story.title" 
                 page="About"
@@ -198,7 +198,7 @@ export default function About() {
                 contentType="rich_text"
               />
 
-              <p className="font-serif text-2xl text-[#1E3A32] italic py-6">
+              <p className="font-serif text-2xl text-[var(--brand-green)] italic py-6">
                 <CmsText 
                   contentKey="about.story.quote" 
                   page="About"
@@ -253,7 +253,7 @@ export default function About() {
                 contentType="short_text"
               />
             </span>
-            <h2 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-8">
+            <h2 className="font-serif text-4xl md:text-5xl text-[var(--brand-green)] mb-8">
               <CmsText 
                 contentKey="about.philosophy.title" 
                 page="About"
@@ -307,7 +307,7 @@ export default function About() {
                 contentKey="about.philosophy.closing" 
                 page="About"
                 blockTitle="Philosophy Closing"
-                fallback="<p>The work is profound, but it's not complicated.</p><p>It's simple, elegant, and deeply human.</p><p class='font-serif italic text-xl text-[#1E3A32]'>Just like great styling, it isn't about becoming someone else — it's about uncovering the version of yourself that has always been there.</p>" 
+                fallback="<p>The work is profound, but it's not complicated.</p><p>It's simple, elegant, and deeply human.</p><p class='font-serif italic text-xl text-[var(--brand-green)]'>Just like great styling, it isn't about becoming someone else — it's about uncovering the version of yourself that has always been there.</p>" 
                 contentType="rich_text"
               />
             </div>
@@ -316,7 +316,7 @@ export default function About() {
       </section>
 
       {/* Beliefs Section */}
-      <section className="py-24 bg-[#1E3A32]">
+      <section className="py-24 bg-[var(--brand-green)]">
         <div className="max-w-5xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -382,7 +382,7 @@ export default function About() {
                 contentType="short_text"
               />
             </span>
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[var(--brand-green)] mb-8">
               <CmsText 
                 contentKey="about.credentials.title" 
                 page="About"
@@ -422,7 +422,7 @@ export default function About() {
               </div>
             </div>
 
-            <p className="font-serif text-xl text-[#1E3A32] italic">
+            <p className="font-serif text-xl text-[var(--brand-green)] italic">
               <CmsText 
                 contentKey="about.credentials.closing" 
                 page="About"
@@ -452,7 +452,7 @@ export default function About() {
                 contentType="short_text"
               />
             </span>
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-8">
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[var(--brand-green)] mb-8">
               <CmsText 
                 contentKey="about.origin.title" 
                 page="About"
@@ -467,7 +467,7 @@ export default function About() {
                 contentKey="about.origin.content" 
                 page="About"
                 blockTitle="Origin Content"
-                fallback="<p>Because transformation isn't about starting over — it's about refining, tailoring, and redesigning the mindset you already have.</p><p>Just like personal style, your mental patterns can be:</p><ul class='list-none space-y-2 pl-6'><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>outdated</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>ill-fitting</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>inherited</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>misunderstood</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>or simply never chosen intentionally</li></ul><p>Mind Styling allows you to build a mental wardrobe that fits the life you want to live.</p><p class='font-serif text-xl text-[#1E3A32] italic'>It's elegant, intuitive, and profoundly effective.</p>" 
+                fallback="<p>Because transformation isn't about starting over — it's about refining, tailoring, and redesigning the mindset you already have.</p><p>Just like personal style, your mental patterns can be:</p><ul class='list-none space-y-2 pl-6'><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>outdated</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>ill-fitting</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>inherited</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>misunderstood</li><li class='flex items-center gap-3'><span class='w-2 h-2 rounded-full bg-[#D8B46B]'></span>or simply never chosen intentionally</li></ul><p>Mind Styling allows you to build a mental wardrobe that fits the life you want to live.</p><p class='font-serif text-xl text-[var(--brand-green)] italic'>It's elegant, intuitive, and profoundly effective.</p>" 
                 contentType="rich_text"
               />
             </div>
@@ -493,7 +493,7 @@ export default function About() {
                 contentType="short_text"
               />
             </span>
-            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[var(--brand-green)] mb-6">
               <CmsText 
                 contentKey="about.work.title" 
                 page="About"
@@ -523,7 +523,7 @@ export default function About() {
                 <div className="w-14 h-14 rounded-full bg-[#D8B46B]/20 flex items-center justify-center mb-6">
                   <offering.icon size={24} className="text-[#D8B46B]" />
                 </div>
-                <h3 className="font-serif text-2xl text-[#1E3A32] mb-3">
+                <h3 className="font-serif text-2xl text-[var(--brand-green)] mb-3">
                   <CmsText 
                     contentKey={`about.work.offering${index + 1}.title`}
                     page="About"
@@ -542,7 +542,7 @@ export default function About() {
                     contentType="rich_text"
                   />
                 </p>
-                <span className="text-[#1E3A32] font-medium group-hover:text-[#D8B46B] transition-colors inline-flex items-center gap-2">
+                <span className="text-[var(--brand-green)] font-medium group-hover:text-[#D8B46B] transition-colors inline-flex items-center gap-2">
                   <CmsText 
                     contentKey={`about.work.offering${index + 1}.cta`}
                     page="About"
@@ -560,7 +560,7 @@ export default function About() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-24 bg-[#1E3A32]">
+      <section className="py-24 bg-[var(--brand-green)]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -589,7 +589,7 @@ export default function About() {
 
             <Link
               to={createPageUrl("Bookings")}
-              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[var(--brand-green)] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
             >
               Schedule Your Complimentary Consultation
               <ArrowRight

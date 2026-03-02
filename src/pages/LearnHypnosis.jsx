@@ -30,7 +30,7 @@ export default function LearnHypnosis() {
       />
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 bg-gradient-to-b from-[#1E3A32] to-[#2B2725]">
+      <section className="pt-32 pb-20 bg-gradient-to-b from-[var(--brand-green)] to-[#2B2725]">
         <div className="max-w-5xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -86,7 +86,7 @@ export default function LearnHypnosis() {
             </p>
             <Link
               to={createPageUrl("Contact")}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[var(--brand-green)] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
             >
               Begin Your Training
               <ArrowRight size={18} />
@@ -120,7 +120,7 @@ export default function LearnHypnosis() {
           >
             <div className="text-center mb-12">
               <Heart size={40} className="text-[#D8B46B] mx-auto mb-4" />
-              <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
+              <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-6">
                 <CmsText 
                   contentKey="hypnosis.why.title"
                   page="LearnHypnosis"
@@ -142,7 +142,7 @@ export default function LearnHypnosis() {
                     contentType="rich_text"
                   />
                 </p>
-                <p className="font-serif text-2xl text-[#1E3A32]">
+                <p className="font-serif text-2xl text-[var(--brand-green)]">
                   <CmsText 
                     contentKey="hypnosis.why.compare1b"
                     page="LearnHypnosis"
@@ -162,7 +162,7 @@ export default function LearnHypnosis() {
                     contentType="rich_text"
                   />
                 </p>
-                <p className="font-serif text-2xl text-[#1E3A32]">
+                <p className="font-serif text-2xl text-[var(--brand-green)]">
                   <CmsText 
                     contentKey="hypnosis.why.compare2b"
                     page="LearnHypnosis"
@@ -203,7 +203,7 @@ export default function LearnHypnosis() {
               contentType="rich_text"
             />
 
-            <p className="text-center text-[#1E3A32] font-serif text-xl mt-10 italic">
+            <p className="text-center text-[var(--brand-green)] font-serif text-xl mt-10 italic">
               <CmsText 
                 contentKey="hypnosis.why.closing"
                 page="LearnHypnosis"
@@ -226,7 +226,7 @@ export default function LearnHypnosis() {
           >
             <div className="text-center mb-12">
               <Brain size={40} className="text-[#D8B46B] mx-auto mb-4" />
-              <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4">
+              <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-4">
                 <CmsText 
                   contentKey="hypnosis.learn.title"
                   page="LearnHypnosis"
@@ -252,7 +252,7 @@ export default function LearnHypnosis() {
           >
             <div className="text-center mb-12">
               <Users size={40} className="text-[#D8B46B] mx-auto mb-4" />
-              <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
+              <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-6">
                 <CmsText 
                   contentKey="hypnosis.who.title"
                   page="LearnHypnosis"
@@ -276,11 +276,11 @@ export default function LearnHypnosis() {
               contentKey="hypnosis.who.list"
               page="LearnHypnosis"
               blockTitle="Who Audience List"
-              fallback={`<div class='grid md:grid-cols-3 gap-6 mb-10'>${["New hypnotists", "Coaches & wellness practitioners", "Therapists", "Educators", "Yoga/meditation teachers", "Public speakers", "Corporate trainers", "Anyone who wants to guide others into clarity and internal alignment"].map(audience => `<div class='bg-[#F9F5EF] p-6 text-center border-l-4 border-[#D8B46B]'><p class='text-[#1E3A32] font-medium'>${audience}</p></div>`).join('')}</div>`}
+              fallback={`<div class='grid md:grid-cols-3 gap-6 mb-10'>${["New hypnotists", "Coaches & wellness practitioners", "Therapists", "Educators", "Yoga/meditation teachers", "Public speakers", "Corporate trainers", "Anyone who wants to guide others into clarity and internal alignment"].map(audience => `<div class='bg-[#F9F5EF] p-6 text-center border-l-4 border-[#D8B46B]'><p class='text-[var(--brand-green)] font-medium'>${audience}</p></div>`).join('')}</div>`}
               contentType="rich_text"
             />
 
-            <p className="text-center text-xl text-[#1E3A32] font-serif italic">
+            <p className="text-center text-xl text-[var(--brand-green)] font-serif italic">
               <CmsText 
                 contentKey="hypnosis.who.note"
                 page="LearnHypnosis"
@@ -303,7 +303,7 @@ export default function LearnHypnosis() {
           >
             <div className="text-center mb-12">
               <BookOpen size={40} className="text-[#D8B46B] mx-auto mb-4" />
-              <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
+              <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-6">
                 <CmsText 
                   contentKey="hypnosis.included.title"
                   page="LearnHypnosis"
@@ -322,7 +322,7 @@ export default function LearnHypnosis() {
 
 
       {/* Section 6 — The Mind Stylist Hypnosis Method™ */}
-      <section className="py-24 bg-gradient-to-br from-[#6E4F7D] to-[#1E3A32] text-white">
+      <section className="py-24 bg-gradient-to-br from-[#6E4F7D] to-[var(--brand-green)] text-white">
         <div className="max-w-5xl mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -373,7 +373,7 @@ export default function LearnHypnosis() {
               contentKey="hypnosis.method.traits"
               page="LearnHypnosis"
               blockTitle="Method Traits"
-              fallback={`<div class='flex flex-wrap justify-center gap-4 mb-10'>${["steady", "intuitive", "ethical", "calming", "adaptable", "client-centered"].map(trait => `<span class='px-6 py-2 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide'>${trait}</span>`).join('')}</div>`}
+              fallback={`<div class='flex flex-wrap justify-center gap-4 mb-10'>${["steady", "intuitive", "ethical", "calming", "adaptable", "client-centered"].map(trait => `<span class='px-6 py-2 bg-[#D8B46B] text-[var(--brand-green)] text-sm tracking-wide'>${trait}</span>`).join('')}</div>`}
               contentType="rich_text"
             />
 
@@ -410,7 +410,7 @@ export default function LearnHypnosis() {
             viewport={{ once: true }}
             className="text-center"
           >
-            <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-8">
+            <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-8">
               <CmsText 
                 contentKey="hypnosis.pricing.title"
                 page="LearnHypnosis"
@@ -426,7 +426,7 @@ export default function LearnHypnosis() {
                   contentKey="hypnosis.pricing.cert"
                   page="LearnHypnosis"
                   blockTitle="Certification Pricing"
-                  fallback="Certification Track: <span class='font-medium text-[#1E3A32]'>TBD</span>"
+                  fallback="Certification Track: <span class='font-medium text-[var(--brand-green)]'>TBD</span>"
                   contentType="rich_text"
                 />
               </p>
@@ -435,7 +435,7 @@ export default function LearnHypnosis() {
                   contentKey="hypnosis.pricing.audit"
                   page="LearnHypnosis"
                   blockTitle="Audit Pricing"
-                  fallback="Audit Track: <span class='font-medium text-[#1E3A32]'>TBD</span>"
+                  fallback="Audit Track: <span class='font-medium text-[var(--brand-green)]'>TBD</span>"
                   contentType="rich_text"
                 />
               </p>
@@ -443,7 +443,7 @@ export default function LearnHypnosis() {
 
             <Link
               to={createPageUrl("Contact")}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-[var(--brand-green)] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
             >
               Begin Your Training
               <ArrowRight size={18} />
@@ -462,7 +462,7 @@ export default function LearnHypnosis() {
           >
             <div className="text-center mb-12">
               <MessageCircle size={40} className="text-[#D8B46B] mx-auto mb-4" />
-              <h2 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-6">
+              <h2 className="font-serif text-3xl md:text-4xl text-[var(--brand-green)] mb-6">
                 <CmsText 
                   contentKey="hypnosis.faq.title"
                   page="LearnHypnosis"
@@ -493,7 +493,7 @@ export default function LearnHypnosis() {
                 }
               ].map((faq, idx) => (
                 <div key={idx} className="bg-white p-8 border-l-4 border-[#D8B46B]">
-                  <h3 className="font-serif text-xl text-[#1E3A32] mb-3">
+                  <h3 className="font-serif text-xl text-[var(--brand-green)] mb-3">
                     <CmsText 
                       contentKey={`hypnosis.faq${idx + 1}.question`}
                       page="LearnHypnosis"
@@ -519,7 +519,7 @@ export default function LearnHypnosis() {
       </section>
 
       {/* Section 9 — Final CTA */}
-      <section className="py-24 bg-[#1E3A32]">
+      <section className="py-24 bg-[var(--brand-green)]">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -546,7 +546,7 @@ export default function LearnHypnosis() {
             </p>
             <Link
               to={createPageUrl("Contact")}
-              className="inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
+              className="inline-flex items-center gap-3 px-8 py-4 bg-[#D8B46B] text-[var(--brand-green)] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
             >
               Begin Your Training
               <ArrowRight size={18} />

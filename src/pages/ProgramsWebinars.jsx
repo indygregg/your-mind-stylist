@@ -88,7 +88,7 @@ export default function ProgramsWebinars() {
       />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-[#1E3A32] to-[#2B4A40] text-white">
+      <section className="pt-32 pb-16 bg-gradient-to-br from-[var(--brand-green)] to-[#2B4A40] text-white">
         <div className="max-w-6xl mx-auto px-6">
           <Link to={createPageUrl("Programs")} className="inline-flex items-center gap-2 text-white/70 hover:text-white mb-6 transition-colors">
             <ArrowLeft size={18} />
@@ -116,10 +116,10 @@ export default function ProgramsWebinars() {
           {allWebinars.length === 0 ? (
             <div className="text-center py-20">
               <Sparkles size={64} className="mx-auto mb-4 text-[#6E4F7D]/40" />
-              <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">No Webinars Available Yet</h3>
+              <h3 className="font-serif text-2xl text-[var(--brand-green)] mb-2">No Webinars Available Yet</h3>
               <p className="text-[#2B2725]/70 mb-6">Check back soon for upcoming live events.</p>
               <Link to={createPageUrl("Programs")}>
-                <Button variant="outline" className="border-[#1E3A32] text-[#1E3A32]">
+                <Button variant="outline" className="border-[var(--brand-green)] text-[var(--brand-green)]">
                   View All Programs
                 </Button>
               </Link>
@@ -146,7 +146,7 @@ export default function ProgramsWebinars() {
                         </div>
                       )}
                       <div className="p-6 flex-1 flex flex-col">
-                        <h3 className="font-serif text-xl text-[#1E3A32] mb-2 group-hover:text-[#6E4F7D] transition-colors">
+                        <h3 className="font-serif text-xl text-[var(--brand-green)] mb-2 group-hover:text-[#6E4F7D] transition-colors">
                           {item.name}
                         </h3>
                         {item.tagline && (
@@ -165,7 +165,7 @@ export default function ProgramsWebinars() {
                         )}
                         
                         <div className="flex items-center justify-between pt-4 border-t border-[#E4D9C4] mt-auto">
-                          <span className="text-2xl font-bold text-[#1E3A32]">
+                          <span className="text-2xl font-bold text-[var(--brand-green)]">
                             {formatPrice(item.price)}
                           </span>
                           <span className="text-[#6E4F7D] text-sm font-medium group-hover:translate-x-1 transition-transform">
@@ -191,7 +191,7 @@ export default function ProgramsWebinars() {
             Webinars are a great way to experience Mind Styling in a supportive group setting with live interaction.
           </p>
           <Link to={createPageUrl("Contact")}>
-            <Button className="bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] px-8 py-6 text-lg">
+            <Button className="bg-[#D8B46B] text-[var(--brand-green)] hover:bg-[#C5A35B] px-8 py-6 text-lg">
               Get Notified of Upcoming Events
             </Button>
           </Link>
