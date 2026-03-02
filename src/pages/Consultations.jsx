@@ -45,13 +45,15 @@ function PDFPreviewEmbed({ contentKey, title }) {
   const googlePreviewUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
   
   return (
-    <iframe
-      src={googlePreviewUrl}
-      width="100%"
-      height="100%"
-      style={{ border: "none", borderRadius: "8px" }}
-      title={title}
-    />
+    <div className="mb-3 border border-[#E4D9C4] rounded-lg overflow-hidden bg-gray-100 h-64">
+      <iframe
+        src={googlePreviewUrl}
+        width="100%"
+        height="100%"
+        style={{ border: "none", borderRadius: "8px" }}
+        title={title}
+      />
+    </div>
   );
 }
 
