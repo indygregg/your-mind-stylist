@@ -117,7 +117,8 @@ export default function HeroSection() {
               </Link>
               <Link
                 to={createPageUrl("FreeMasterclass")}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[var(--brand-gold)] text-[var(--brand-green)] text-sm tracking-wide hover:bg-[var(--brand-gold)]/10 transition-all duration-300"
+                style={{ border: "1px solid #D8B46B", color: "#1E3A32" }}
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 text-sm tracking-wide transition-all duration-300"
               >
                 <Play size={16} className="text-[var(--brand-gold)]" />
                 <CmsText
