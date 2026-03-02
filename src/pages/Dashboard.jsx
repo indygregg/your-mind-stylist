@@ -47,7 +47,7 @@ export default function Dashboard() {
 
   const { data: publishedProducts = [] } = useQuery({
     queryKey: ["dashboard-published-products"],
-    queryFn: () => base44.entities.Product.filter({ status: "published", active: true }, "display_order"),
+    queryFn: () => base44.entities.Product.filter({ status: "published" }, "display_order"),
   });
 
 
