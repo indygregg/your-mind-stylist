@@ -317,30 +317,32 @@ export default function Consultations() {
                       </div>
                     </PDFClickInterceptor>
 
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <FileText size={16} className="text-[#D8B46B]" />
-                        <h4 className="font-medium text-[#1E3A32]">
+                    <PDFClickInterceptor label="View Online Instructions" title="Online Instructions">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <FileText size={16} className="text-[#D8B46B]" />
+                          <h4 className="font-medium text-[#1E3A32]">
+                            <CmsText 
+                              contentKey="consultations.step1.doc2.title" 
+                              page="Consultations"
+                              blockTitle="Document 2 Title"
+                              fallback="Online Instructions" 
+                              contentType="short_text"
+                            />
+                          </h4>
+                        </div>
+                        <div className="text-sm text-[#2B2725]/70 mb-2">
                           <CmsText 
-                            contentKey="consultations.step1.doc2.title" 
+                            contentKey="consultations.step1.doc2.description" 
                             page="Consultations"
-                            blockTitle="Document 2 Title"
-                            fallback="Online Instructions" 
-                            contentType="short_text"
+                            blockTitle="Document 2 Description"
+                            fallback="Learn how to make the most of your virtual consultation." 
+                            contentType="rich_text"
                           />
-                        </h4>
+                        </div>
+                        <DocModalLink contentKey="consultations.step1.doc2.link_url" label="View Online Instructions" title="Online Instructions" />
                       </div>
-                      <div className="text-sm text-[#2B2725]/70 mb-2">
-                        <CmsText 
-                          contentKey="consultations.step1.doc2.description" 
-                          page="Consultations"
-                          blockTitle="Document 2 Description"
-                          fallback="Learn how to make the most of your virtual consultation." 
-                          contentType="rich_text"
-                        />
-                      </div>
-                      <DocModalLink contentKey="consultations.step1.doc2.link_url" label="View Online Instructions" title="Online Instructions" />
-                    </div>
+                    </PDFClickInterceptor>
 
                     <div>
                       <div className="flex items-center gap-2 mb-2">
