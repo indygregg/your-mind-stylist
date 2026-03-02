@@ -43,7 +43,9 @@ export default function ProductPage() {
         product_key: product.key
       }).catch(() => {});
     }
-  }, [product, isPreview]);
+  }, [products, isPreview]);
+
+  const product = products[0];
 
   const handlePurchase = async () => {
     setCheckoutLoading(true);
