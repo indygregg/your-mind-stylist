@@ -20,6 +20,7 @@ export default function ProductCard({ product }) {
   const handleAddToCart = () => {
     addItem(product);
     haptics.light();
+    toast.success(`${product.name} added to cart!`);
   };
 
   return (
