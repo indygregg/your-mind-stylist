@@ -46,8 +46,6 @@ export default function ProductPage() {
     }
   }, [product, isPreview]);
 
-  const product = products[0];
-
   const handlePurchase = async () => {
     setCheckoutLoading(true);
     
