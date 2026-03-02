@@ -10,6 +10,7 @@ import CmsText from "../components/cms/CmsText";
 import VideoEmbed from "../components/cms/VideoEmbed";
 import { useCmsText } from "../components/cms/useCmsText";
 import DocumentModal from "../components/consultations/DocumentModal";
+import PDFClickInterceptor from "../components/consultations/PDFClickInterceptor";
 
 // Helper component to show a document download link from a CMS URL field
 function DocDownloadLink({ contentKey, label }) {
