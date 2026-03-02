@@ -7,7 +7,7 @@ import CmsText from "../cms/CmsText";
 
 export default function WhatIDo() {
   return (
-    <section className="py-24 md:py-32 bg-[#F9F5EF]">
+    <section className="py-24 md:py-32 bg-[var(--brand-cream)]">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left - Content */}
@@ -17,7 +17,7 @@ export default function WhatIDo() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <span className="text-[#6E4F7D] text-base md:text-lg font-bold tracking-[0.2em] uppercase mb-4 block">
+            <span className="text-[var(--brand-mauve)] text-base md:text-lg font-bold tracking-[0.2em] uppercase mb-4 block">
               The Approach
             </span>
             <CmsText
@@ -28,7 +28,7 @@ export default function WhatIDo() {
               maxLength={120}
               fallback="Helping You Think From Where You Want to Be"
               as="h2"
-              className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] leading-tight mb-8"
+              className="font-serif text-3xl md:text-4xl lg:text-5xl text-[var(--brand-green)] leading-tight mb-8"
             />
 
             <CmsText
@@ -39,14 +39,14 @@ export default function WhatIDo() {
               maxLength={1000}
               fallback="<p>Hi, I'm <strong>Roberta Fernandez — Your Mind Stylist.</strong></p><p>I'm an Integrative Emotional Intelligence Specialist, Master Practitioner of NLP, and Board-certified Hypnotherapist with decades of experience helping individuals and teams transform the way they think, communicate, and lead.</p><p>My work blends neuroscience, emotional intelligence, inner pattern work, and guided mental rehearsal to create meaningful, sustainable change.</p>"
               as="div"
-              className="text-[#2B2725]/80 text-lg leading-relaxed mb-10"
+              className="text-[var(--brand-charcoal)]/80 text-lg leading-relaxed mb-10"
             />
 
             {/* Micro Links */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 to={createPageUrl("Bookings")}
-                className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:text-[#D8B46B] transition-colors"
+                className="group inline-flex items-center gap-2 text-[var(--brand-green)] font-medium hover:text-[var(--brand-gold)] transition-colors"
               >
                 Work With Me
                 <ArrowUpRight
@@ -56,7 +56,7 @@ export default function WhatIDo() {
               </Link>
               <Link
                 to={createPageUrl("FreeMasterclass")}
-                className="group inline-flex items-center gap-2 text-[#1E3A32] font-medium hover:text-[#D8B46B] transition-colors"
+                className="group inline-flex items-center gap-2 text-[var(--brand-green)] font-medium hover:text-[var(--brand-gold)] transition-colors"
               >
                 Watch the Free Webinar
                 <ArrowUpRight
@@ -77,8 +77,8 @@ export default function WhatIDo() {
           >
             <div className="relative">
               {/* Decorative Elements */}
-              <div className="absolute -top-8 -right-8 w-32 h-32 border border-[#D8B46B]/30 rounded-full" />
-              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-[#A6B7A3]/20 rounded-full" />
+              <div className="absolute -top-8 -right-8 w-32 h-32 border border-[var(--brand-gold)]/30 rounded-full" />
+              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-[var(--brand-sage)]/20 rounded-full" />
 
               {/* Main Card */}
               <div className="relative bg-white p-10 md:p-14 shadow-lg">
@@ -96,14 +96,14 @@ export default function WhatIDo() {
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: 0.3 + index * 0.1 }}
-                      className="flex items-start gap-6 pb-8 border-b border-[#E4D9C4] last:border-0 last:pb-0"
+                      className="flex items-start gap-6 pb-8 border-b border-[var(--brand-sand)] last:border-0 last:pb-0"
                     >
                       {item.number && (
-                        <span className="font-serif text-3xl md:text-4xl text-[#D8B46B]">
+                        <span className="font-serif text-3xl md:text-4xl text-[var(--brand-gold)]">
                           {item.number}
                         </span>
                       )}
-                      <span className="text-[#2B2725]/70 text-sm tracking-wide pt-3">
+                      <span className="text-[var(--brand-charcoal)]/70 text-sm tracking-wide pt-3">
                         {item.label}
                       </span>
                     </motion.div>

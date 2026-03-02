@@ -22,7 +22,7 @@ export default function HeroSection() {
       </div>
 
       {/* Gold Accent Line */}
-      <div className="absolute left-0 top-1/4 w-24 md:w-48 h-[1px] bg-gradient-to-r from-[#D8B46B] to-transparent" />
+      <div className="absolute left-0 top-1/4 w-24 md:w-48 h-[1px] bg-gradient-to-r from-[var(--brand-gold)] to-transparent" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -39,15 +39,15 @@ export default function HeroSection() {
               transition={{ delay: 0.3, duration: 0.6 }}
               className="mb-10"
             >
-              <p className="text-[#2B2725]/60 text-xs tracking-[0.3em] uppercase mb-2">
+              <p className="text-[var(--brand-charcoal)]/60 text-xs tracking-[0.3em] uppercase mb-2">
                 Roberta Fernandez
               </p>
               <div className="flex items-center gap-6">
-                <div className="w-12 h-[2px] bg-[#D8B46B]" />
-                <h2 className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-[#1E3A32] tracking-wide">
+                <div className="w-12 h-[2px] bg-[var(--brand-gold)]" />
+                <h2 className="font-serif font-black text-4xl md:text-5xl lg:text-6xl text-[var(--brand-green)] tracking-wide">
                   YOUR MIND STYLIST
                 </h2>
-                <div className="w-12 h-[2px] bg-[#D8B46B]" />
+                <div className="w-12 h-[2px] bg-[var(--brand-gold)]" />
               </div>
             </motion.div>
 
@@ -60,7 +60,7 @@ export default function HeroSection() {
               maxLength={120}
               fallback="Rewrite Your Mind. Restyle Your Life."
               as="h1"
-              className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-[#1E3A32] leading-[1.1] mb-8"
+              className="font-serif text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-[var(--brand-green)] leading-[1.1] mb-8"
             />
 
             {/* Subheadline */}
@@ -72,14 +72,14 @@ export default function HeroSection() {
               maxLength={500}
               fallback="Your thinking shapes everything—your choices, confidence, relationships, and leadership. When your thoughts evolve, so does your entire life. I help you identify the patterns that no longer fit, release the ones holding you back, and redesign your mindset so you can move forward with clarity, confidence, and emotional intelligence."
               as="p"
-              className="text-[#2B2725]/80 text-lg md:text-xl leading-relaxed mb-10 max-w-xl"
+              className="text-[var(--brand-charcoal)]/80 text-lg md:text-xl leading-relaxed mb-10 max-w-xl"
             />
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 to={createPageUrl("Bookings")}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm font-semibold tracking-wide hover:bg-[#C5A35B] transition-all duration-300 shadow-lg"
+                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[var(--brand-gold)] text-[var(--brand-green)] text-sm font-semibold tracking-wide hover:bg-[#C5A35B] transition-all duration-300 shadow-lg"
               >
                 <CmsText
                   contentKey="home.hero.cta_experience"
@@ -97,7 +97,7 @@ export default function HeroSection() {
               </Link>
               <Link
                 to={createPageUrl("Bookings")}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[var(--brand-green)] text-[var(--brand-cream)] text-sm tracking-wide hover:bg-[var(--brand-charcoal)] transition-all duration-300"
               >
                 <CmsText
                   contentKey="home.hero.cta_primary"
@@ -115,9 +115,9 @@ export default function HeroSection() {
               </Link>
               <Link
                 to={createPageUrl("FreeMasterclass")}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
+                className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[var(--brand-gold)] text-[var(--brand-green)] text-sm tracking-wide hover:bg-[var(--brand-gold)]/10 transition-all duration-300"
               >
-                <Play size={16} className="text-[#D8B46B]" />
+                <Play size={16} className="text-[var(--brand-gold)]" />
                 <CmsText
                   contentKey="home.hero.cta_secondary"
                   page="home"
@@ -141,32 +141,32 @@ export default function HeroSection() {
             {/* Frame */}
             <div className="relative">
               {/* Gold Corner Accents */}
-              <div className="absolute -top-4 -left-4 w-20 h-20 border-l-2 border-t-2 border-[#D8B46B]" />
-              <div className="absolute -bottom-4 -right-4 w-20 h-20 border-r-2 border-b-2 border-[#D8B46B]" />
+              <div className="absolute -top-4 -left-4 w-20 h-20 border-l-2 border-t-2 border-[var(--brand-gold)]" />
+              <div className="absolute -bottom-4 -right-4 w-20 h-20 border-r-2 border-b-2 border-[var(--brand-gold)]" />
 
               {/* Image Container */}
-              <div className="relative aspect-[4/5] overflow-hidden bg-[#E4D9C4] group cursor-pointer" onClick={() => setShowVideoModal(true)}>
+              <div className="relative aspect-[4/5] overflow-hidden bg-[var(--brand-sand)] group cursor-pointer" onClick={() => setShowVideoModal(true)}>
                 <img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/9bff2cefb_Roberta-Fernandez-The-Mind-Stylist.jpg"
                   alt="Roberta Fernandez - Your Mind Stylist"
                   className="w-full h-full object-cover object-center hover:scale-105 transition-all duration-700"
                 />
                 {/* Video Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1E3A32]/40 via-transparent to-[#1E3A32]/20 group-hover:from-[#1E3A32]/50 transition-all duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--brand-green)]/40 via-transparent to-[var(--brand-green)]/20 group-hover:from-[var(--brand-green)]/50 transition-all duration-300" />
                 
                 {/* Video Indicator */}
-                <div className="absolute top-4 right-4 px-3 py-1 bg-[#1E3A32]/80 backdrop-blur-sm rounded-full flex items-center gap-2">
-                  <Play size={12} className="text-[#D8B46B]" fill="currentColor" />
-                  <span className="text-[#F9F5EF] text-xs font-medium">Watch Video</span>
+                <div className="absolute top-4 right-4 px-3 py-1 bg-[var(--brand-green)]/80 backdrop-blur-sm rounded-full flex items-center gap-2">
+                  <Play size={12} className="text-[var(--brand-gold)]" fill="currentColor" />
+                  <span className="text-[var(--brand-cream)] text-xs font-medium">Watch Video</span>
                 </div>
 
                 {/* Play Button */}
                 <button
                   onClick={() => setShowVideoModal(true)}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-[#D8B46B] flex items-center justify-center hover:scale-110 hover:bg-[#F9F5EF] transition-all duration-300 shadow-2xl"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-[var(--brand-gold)] flex items-center justify-center hover:scale-110 hover:bg-[var(--brand-cream)] transition-all duration-300 shadow-2xl"
                   aria-label="Play welcome video"
                 >
-                  <Play size={32} className="text-[#1E3A32] ml-1" fill="currentColor" />
+                  <Play size={32} className="text-[var(--brand-green)] ml-1" fill="currentColor" />
                 </button>
               </div>
             </div>
@@ -178,7 +178,7 @@ export default function HeroSection() {
               transition={{ delay: 0.8, duration: 0.6 }}
               className="absolute -bottom-8 -left-8 md:left-auto md:-right-8 bg-white p-6 shadow-xl max-w-xs"
             >
-              <p className="font-serif text-[#1E3A32] italic text-lg leading-relaxed">
+              <p className="font-serif text-[var(--brand-green)] italic text-lg leading-relaxed">
                 "When you change your thinking, everything changes."
               </p>
             </motion.div>

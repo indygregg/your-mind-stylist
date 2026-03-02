@@ -32,7 +32,7 @@ export default function Testimonials() {
   ];
 
   return (
-    <section className="py-24 md:py-32 bg-[#F9F5EF]">
+    <section className="py-24 md:py-32 bg-[var(--brand-cream)]">
       <div className="max-w-7xl mx-auto px-6">
         {/* Section Header */}
         <motion.div
@@ -41,7 +41,7 @@ export default function Testimonials() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4 block">
+          <span className="text-[var(--brand-gold)] text-xs tracking-[0.3em] uppercase mb-4 block">
             <CmsText
               contentKey="home.testimonials.label"
               page="Home"
@@ -50,7 +50,7 @@ export default function Testimonials() {
               contentType="short_text"
             />
           </span>
-          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32]">
+          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[var(--brand-green)]">
             <CmsText
               contentKey="home.testimonials.title"
               page="Home"
@@ -73,12 +73,12 @@ export default function Testimonials() {
               className="bg-white p-8 md:p-10 relative group hover:shadow-lg transition-shadow duration-500"
             >
               {/* Gold Corner */}
-              <div className="absolute top-0 left-0 w-12 h-12 border-l-2 border-t-2 border-[#D8B46B] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute top-0 left-0 w-12 h-12 border-l-2 border-t-2 border-[var(--brand-gold)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               {/* Quote Icon */}
               <Quote
                 size={32}
-                className="text-[#D8B46B]/30 mb-6"
+                className="text-[var(--brand-gold)]/30 mb-6"
               />
 
               {/* Quote Text */}
@@ -88,14 +88,14 @@ export default function Testimonials() {
                 blockTitle={`Testimonial ${index + 1} - Quote`}
                 fallback={`"${testimonial.quote}"`}
                 contentType="rich_text"
-                className="font-serif text-xl text-[#2B2725] leading-relaxed mb-8 italic"
+                className="font-serif text-xl text-[var(--brand-charcoal)] leading-relaxed mb-8 italic"
                 as="p"
               />
 
               {/* Attribution */}
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-[#A6B7A3]/30 flex items-center justify-center">
-                  <span className="font-serif text-[#1E3A32] text-lg">
+                <div className="w-12 h-12 rounded-full bg-[var(--brand-sage)]/30 flex items-center justify-center">
+                  <span className="font-serif text-[var(--brand-green)] text-lg">
                     {testimonial.name.charAt(0)}
                   </span>
                 </div>
@@ -106,7 +106,7 @@ export default function Testimonials() {
                     blockTitle={`Testimonial ${index + 1} - Name`}
                     fallback={testimonial.name}
                     contentType="short_text"
-                    className="font-medium text-[#1E3A32]"
+                    className="font-medium text-[var(--brand-green)]"
                     as="p"
                   />
                   <CmsText
@@ -115,7 +115,7 @@ export default function Testimonials() {
                     blockTitle={`Testimonial ${index + 1} - Role`}
                     fallback={testimonial.role}
                     contentType="short_text"
-                    className="text-sm text-[#2B2725]/60"
+                    className="text-sm text-[var(--brand-charcoal)]/60"
                     as="p"
                   />
                 </div>

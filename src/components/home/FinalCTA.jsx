@@ -7,9 +7,9 @@ import CmsText from "../cms/CmsText";
 
 export default function FinalCTA() {
   return (
-    <section className="py-24 md:py-32 bg-[#F9F5EF] relative overflow-hidden">
+    <section className="py-24 md:py-32 bg-[var(--brand-cream)] relative overflow-hidden">
       {/* Decorative Line */}
-      <div className="absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#D8B46B]/30 to-transparent" />
+      <div className="absolute top-1/2 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--brand-gold)]/30 to-transparent" />
 
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
         <motion.div
@@ -20,7 +20,7 @@ export default function FinalCTA() {
         >
           {/* Decorative Quote Marks */}
           <div className="flex justify-center mb-8">
-            <div className="w-16 h-[2px] bg-[#D8B46B]" />
+            <div className="w-16 h-[2px] bg-[var(--brand-gold)]" />
           </div>
 
           <CmsText
@@ -31,7 +31,7 @@ export default function FinalCTA() {
             maxLength={120}
             fallback="When You Change Your Thinking, Everything Changes."
             as="h2"
-            className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] leading-tight mb-8"
+            className="font-serif text-3xl md:text-4xl lg:text-5xl text-[var(--brand-green)] leading-tight mb-8"
           />
 
           <CmsText
@@ -42,14 +42,14 @@ export default function FinalCTA() {
             maxLength={500}
             fallback="If you're ready to release old patterns, elevate your emotional intelligence, and build a life that feels aligned, grounded, and emotionally clear—I'd love to support you."
             as="p"
-            className="text-[#2B2725]/80 text-lg md:text-xl leading-relaxed mb-12 max-w-2xl mx-auto"
+            className="text-[var(--brand-charcoal)]/80 text-lg md:text-xl leading-relaxed mb-12 max-w-2xl mx-auto"
           />
 
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link
               to={createPageUrl("Bookings")}
-              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[var(--brand-green)] text-[var(--brand-cream)] text-sm tracking-wide hover:bg-[var(--brand-charcoal)] transition-all duration-300"
             >
               <CmsText
                 contentKey="home.closing.cta1"
@@ -66,9 +66,9 @@ export default function FinalCTA() {
             </Link>
             <Link
               to={createPageUrl("Contact")}
-              className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#D8B46B]/10 transition-all duration-300"
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 border border-[var(--brand-gold)] text-[var(--brand-green)] text-sm tracking-wide hover:bg-[var(--brand-gold)]/10 transition-all duration-300"
             >
-              <Mail size={16} className="text-[#D8B46B]" />
+              <Mail size={16} className="text-[var(--brand-gold)]" />
               <CmsText
                 contentKey="home.closing.cta2"
                 page="Home"

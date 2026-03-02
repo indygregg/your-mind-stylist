@@ -42,24 +42,24 @@ export default function ProgramsCourses() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--brand-cream)] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6E4F7D] mx-auto mb-4"></div>
-          <p className="text-[#2B2725]/70">Loading courses...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--brand-mauve)] mx-auto mb-4"></div>
+          <p className="text-[var(--brand-charcoal)]/70">Loading courses...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F5EF]">
+    <div className="min-h-screen bg-[var(--brand-cream)]">
       <SEO
         title="Courses & Training | Your Mind Stylist"
         description="Comprehensive learning programs to master Mind Styling techniques"
       />
 
       {/* Hero */}
-      <section className="pt-32 pb-16 bg-gradient-to-br from-[#6E4F7D] to-[#8B659B] text-white">
+      <section className="pt-32 pb-16 bg-gradient-to-br from-[var(--brand-mauve)] to-[#8B659B] text-white">
         <div className="max-w-6xl mx-auto px-6">
           <Link to={createPageUrl("Programs")} className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors">
             <ArrowLeft size={18} />
@@ -86,11 +86,11 @@ export default function ProgramsCourses() {
         <div className="max-w-6xl mx-auto">
           {products.length === 0 ? (
             <div className="text-center py-20">
-              <BookOpen size={64} className="mx-auto mb-4 text-[#6E4F7D]/40" />
-              <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">No Courses Available Yet</h3>
-              <p className="text-[#2B2725]/70 mb-6">Check back soon for new learning programs.</p>
+              <BookOpen size={64} className="mx-auto mb-4 text-[var(--brand-mauve)]/40" />
+              <h3 className="font-serif text-2xl text-[var(--brand-green)] mb-2">No Courses Available Yet</h3>
+              <p className="text-[var(--brand-charcoal)]/70 mb-6">Check back soon for new learning programs.</p>
               <Link to={createPageUrl("Programs")}>
-                <Button variant="outline" className="border-[#6E4F7D] text-[#6E4F7D]">
+                <Button variant="outline" className="border-[var(--brand-mauve)] text-[var(--brand-mauve)]">
                   View All Programs
                 </Button>
               </Link>
@@ -116,14 +116,14 @@ export default function ProgramsCourses() {
                       </div>
                     )}
                     <div className="p-6 flex-1 flex flex-col">
-                      <h3 className="font-serif text-xl text-[#1E3A32] mb-2">
+                      <h3 className="font-serif text-xl text-[var(--brand-green)] mb-2">
                         {product.name}
                       </h3>
                       {product.tagline && (
-                        <p className="text-sm text-[#6E4F7D] mb-3 font-medium">{product.tagline}</p>
+                        <p className="text-sm text-[var(--brand-mauve)] mb-3 font-medium">{product.tagline}</p>
                       )}
                       {product.short_description && (
-                        <p className="text-sm text-[#2B2725]/70 mb-4 line-clamp-3 flex-1">
+                        <p className="text-sm text-[var(--brand-charcoal)]/70 mb-4 line-clamp-3 flex-1">
                           {product.short_description}
                         </p>
                       )}
@@ -132,22 +132,22 @@ export default function ProgramsCourses() {
                         <div className="mb-4 space-y-1">
                           {product.features.slice(0, 3).map((feature, idx) => (
                             <div key={idx} className="flex items-start gap-2">
-                              <CheckCircle size={14} className="text-[#6E4F7D] mt-0.5 flex-shrink-0" />
-                              <span className="text-xs text-[#2B2725]/70">{feature}</span>
+                              <CheckCircle size={14} className="text-[var(--brand-mauve)] mt-0.5 flex-shrink-0" />
+                              <span className="text-xs text-[var(--brand-charcoal)]/70">{feature}</span>
                             </div>
                           ))}
                         </div>
                       )}
 
-                      <div className="pt-4 border-t border-[#E4D9C4] mt-auto">
-                        <div className="text-2xl font-bold text-[#1E3A32] mb-3">
+                      <div className="pt-4 border-t border-[var(--brand-sand)] mt-auto">
+                        <div className="text-2xl font-bold text-[var(--brand-green)] mb-3">
                           {formatPrice(product.price, product.billing_interval)}
                         </div>
                         <div className="flex gap-2">
                           {product.slug && (
                             <Link
                               to={createPageUrl(`ProductPage?slug=${product.slug}`)}
-                              className="flex-1 text-center text-sm py-2.5 border border-[#6E4F7D] text-[#6E4F7D] hover:bg-[#6E4F7D] hover:text-white transition-colors"
+                              className="flex-1 text-center text-sm py-2.5 border border-[var(--brand-mauve)] text-[var(--brand-mauve)] hover:bg-[var(--brand-mauve)] hover:text-white transition-colors"
                             >
                               Details
                             </Link>
@@ -155,7 +155,7 @@ export default function ProgramsCourses() {
                           <button
                             onClick={() => handlePurchase(product.id)}
                             disabled={checkoutLoading === product.id}
-                            className="flex-1 flex items-center justify-center gap-2 text-sm py-2.5 bg-[#6E4F7D] text-white hover:bg-[#5D4169] transition-colors disabled:opacity-50"
+                            className="flex-1 flex items-center justify-center gap-2 text-sm py-2.5 bg-[var(--brand-mauve)] text-white hover:bg-[#5D4169] transition-colors disabled:opacity-50"
                           >
                             {checkoutLoading === product.id ? (
                               <Loader2 size={16} className="animate-spin" />
@@ -175,14 +175,14 @@ export default function ProgramsCourses() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-[#1E3A32] text-white">
+      <section className="py-16 bg-[var(--brand-green)] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl mb-4">Not Sure Which Course is Right?</h2>
           <p className="text-white/80 mb-8 text-lg">
             Schedule a complimentary consultation to discuss your goals and find the perfect fit.
           </p>
           <Link to={createPageUrl("Bookings")}>
-            <Button className="bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] px-8 py-6 text-lg">
+            <Button className="bg-[var(--brand-gold)] text-[var(--brand-green)] hover:bg-[#C5A35B] px-8 py-6 text-lg">
               Book Free Consultation
             </Button>
           </Link>
