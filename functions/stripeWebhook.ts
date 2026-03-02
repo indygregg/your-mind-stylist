@@ -73,21 +73,34 @@ Deno.serve(async (req) => {
                         if (bookings.length > 0) {
                             const booking = bookings[0];
                             const existingLeads = await base44.asServiceRole.entities.Lead.filter({ email: booking.user_email });
+                            const bookingDate = new Date().toISOString().split('T')[0];
                             if (existingLeads.length > 0) {
+                                const existing = existingLeads[0];
                                 const updates = { last_activity_date: new Date().toISOString() };
-                                if (!existingLeads[0].full_name && booking.user_name) updates.full_name = booking.user_name;
-                                if (!existingLeads[0].phone && booking.client_phone) updates.phone = booking.client_phone;
-                                updates.notes = `${existingLeads[0].notes || ''}\n[${new Date().toLocaleDateString()}] Booked: ${booking.service_type}`.trim();
-                                await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, updates);
+                                if (!existing.full_name && booking.user_name) updates.full_name = booking.user_name;
+                                if (!existing.phone && booking.client_phone) updates.phone = booking.client_phone;
+                                const boughtHistory = existing.what_they_bought
+                                    ? `${existing.what_they_bought}, ${booking.service_type}`
+                                    : booking.service_type;
+                                updates.what_they_bought = boughtHistory;
+                                updates.date_of_purchase = bookingDate;
+                                updates.stage = 'booked';
+                                updates.notes = `${existing.notes || ''}\n[${new Date().toLocaleDateString()}] Booked: ${booking.service_type}`.trim();
+                                await base44.asServiceRole.entities.Lead.update(existing.id, updates);
                             } else {
+                                const nameParts = (booking.user_name || '').split(' ');
                                 await base44.asServiceRole.entities.Lead.create({
                                     full_name: booking.user_name || '',
+                                    first_name: nameParts[0] || '',
+                                    last_name: nameParts.slice(1).join(' ') || '',
                                     email: booking.user_email,
                                     phone: booking.client_phone || '',
-                                    stage: 'qualified',
+                                    stage: 'booked',
                                     source: 'booking_system',
                                     interest_level: 'hot',
                                     lead_score: 75,
+                                    what_they_bought: booking.service_type,
+                                    date_of_purchase: bookingDate,
                                     notes: `Initial booking: ${booking.service_type} - ${booking.scheduled_date ? new Date(booking.scheduled_date).toLocaleString() : 'date TBD'}`
                                 });
                             }
