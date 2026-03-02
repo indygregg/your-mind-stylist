@@ -288,7 +288,10 @@ export default function Layout({ children, currentPageName }) {
           )}
           <Link to={createPageUrl("Home")} className={`group flex items-center gap-3 ${isManager && !useAuthLayout ? 'lg:ml-28' : ''} ${currentPageName !== 'Home' ? 'ml-12 lg:ml-0' : ''}`}>
             <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/5fbe0fe56_mind-stylist-purple-m2x.png" 
+              src={hasDarkHero
+                ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/60b825e58_Mind-stylist-light-icon2x.png"
+                : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/5fbe0fe56_mind-stylist-purple-m2x.png"
+              }
               alt="Your Mind Stylist Logo" 
               className="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 object-contain"
             />
