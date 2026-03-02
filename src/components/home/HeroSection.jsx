@@ -98,7 +98,8 @@ export default function HeroSection() {
               </Link>
               <Link
                 to={createPageUrl("Bookings")}
-                className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[var(--brand-green)] text-[var(--brand-cream)] text-sm tracking-wide hover:bg-[var(--brand-charcoal)] transition-all duration-300"
+                style={{ backgroundColor: "#1E3A32", color: "#F9F5EF" }}
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 text-sm tracking-wide transition-all duration-300"
               >
                 <CmsText
                   contentKey="home.hero.cta_primary"
