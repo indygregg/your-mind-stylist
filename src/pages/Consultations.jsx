@@ -10,25 +10,28 @@ import CmsText from "../components/cms/CmsText";
 import VideoEmbed from "../components/cms/VideoEmbed";
 import { useCmsText } from "../components/cms/useCmsText";
 
-// Opens document via Google Docs Viewer (handles PDF + DOCX) in a new tab
 function DocLink({ contentKey, label }) {
   const { content: rawUrl } = useCmsText(contentKey, "");
-  // Strip HTML tags — CMS sometimes wraps URLs in <p><a href="...">
+
   const extractUrl = (raw) => {
     if (!raw) return "";
-    // Try to extract href from anchor tag first
     const hrefMatch = raw.match(/href=["']([^"']+)["']/);
     if (hrefMatch) return hrefMatch[1];
-    // Otherwise strip all tags
     return raw.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").trim();
   };
+
   const url = extractUrl(rawUrl);
   if (!url || !url.startsWith("http")) return null;
-  const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=false`;
+
+  const isDocx = url.toLowerCase().includes(".docx");
+  const previewUrl = isDocx
+    ? `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(url)}`
+    : url;
+
   return (
     <div className="flex items-center gap-2 flex-wrap">
       <a
-        href={viewerUrl}
+        href={previewUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-2 px-4 py-2 border border-[#D8B46B] text-[#1E3A32] text-sm font-medium hover:bg-[#D8B46B]/10 transition-colors rounded"
@@ -41,7 +44,8 @@ function DocLink({ contentKey, label }) {
         download
         className="inline-flex items-center gap-1 text-xs text-[#2B2725]/50 hover:text-[#1E3A32] transition-colors"
       >
-        (download)
+        <Download size={12} />
+        Download
       </a>
     </div>
   );
