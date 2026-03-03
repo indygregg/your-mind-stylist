@@ -23,7 +23,7 @@ const createGroups = [
     title: "Courses & Learning",
     items: [
       { icon: FileVideo, label: "Course Manager", link: "CourseManager" },
-      { icon: Headphones, label: "Audio Sessions", link: "StudioAudio" },
+      { icon: Headphones, label: "Audio Sessions", link: "ManagerAudioSessions" },
     ]
   },
   {
