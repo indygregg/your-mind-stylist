@@ -5,79 +5,26 @@ import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle2, Phone, Calendar, FileText, Video, Download, AlertCircle } from "lucide-react";
+import { CheckCircle2, Phone, Calendar, FileText, Video, ExternalLink, AlertCircle } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 import VideoEmbed from "../components/cms/VideoEmbed";
 import { useCmsText } from "../components/cms/useCmsText";
-import DocumentModal from "../components/consultations/DocumentModal";
-import PDFClickInterceptor from "../components/consultations/PDFClickInterceptor";
 
-// Helper component to show a document download link from a CMS URL field
-function DocDownloadLink({ contentKey, label }) {
+// Opens a document in a new tab — simple, stable, no Google viewer dependency
+function DocLink({ contentKey, label }) {
   const { content: rawUrl } = useCmsText(contentKey, "");
-  // Strip any HTML tags (CMS may wrap in <p> tags)
-  const url = rawUrl ? rawUrl.replace(/<[^>]*>/g, "").trim() : "";
-  if (!url || !url.startsWith("http")) {
-    return null;
-  }
+  const url = rawUrl ? rawUrl.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").trim() : "";
+  if (!url || !url.startsWith("http")) return null;
   return (
     <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors"
+      className="inline-flex items-center gap-2 px-4 py-2 border border-[#D8B46B] text-[#1E3A32] text-sm font-medium hover:bg-[#D8B46B]/10 transition-colors rounded"
     >
-      <Download size={14} />
+      <ExternalLink size={14} />
       <span>{label}</span>
     </a>
-  );
-}
-
-// Helper component to show PDF preview via Google Docs viewer
-function PDFPreviewEmbed({ contentKey, title }) {
-  const { content: rawUrl } = useCmsText(contentKey, "");
-  const url = rawUrl ? rawUrl.replace(/<[^>]*>/g, "").trim() : "";
-  
-  if (!url || !url.startsWith("http")) {
-    return null;
-  }
-  
-  const googlePreviewUrl = `https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`;
-  
-  return (
-    <div className="mb-3 border border-[#E4D9C4] rounded-lg overflow-hidden bg-gray-100 h-64">
-      <iframe
-        src={googlePreviewUrl}
-        width="100%"
-        height="100%"
-        style={{ border: "none", borderRadius: "8px" }}
-        title={title}
-      />
-    </div>
-  );
-}
-
-// Helper component for clickable document links that open in modal
-function DocModalLink({ contentKey, label, title }) {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const { content: rawUrl } = useCmsText(contentKey, "");
-  const url = rawUrl ? rawUrl.replace(/<[^>]*>/g, "").trim() : "";
-  
-  if (!url || !url.startsWith("http")) {
-    return null;
-  }
-  
-  return (
-    <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="text-[#D8B46B] hover:text-[#1E3A32] text-sm inline-flex items-center gap-1 transition-colors underline"
-      >
-        <FileText size={14} />
-        <span>{label}</span>
-      </button>
-      <DocumentModal isOpen={isOpen} onClose={() => setIsOpen(false)} title={title} url={url} />
-    </>
   );
 }
 
