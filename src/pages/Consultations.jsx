@@ -41,7 +41,8 @@ function DocLink({ contentKey, label }) {
       </a>
       <a
         href={url}
-        download
+        target="_blank"
+        rel="noopener noreferrer"
         className="inline-flex items-center gap-1 text-xs text-[#2B2725]/50 hover:text-[#1E3A32] transition-colors"
       >
         <Download size={12} />
