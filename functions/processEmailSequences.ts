@@ -23,6 +23,15 @@ Deno.serve(async (req) => {
 
         for (const enrollment of dueEnrollments) {
             try {
+                // Check if user has unsubscribed
+                const users = await base44.asServiceRole.entities.User.filter({ email: enrollment.user_email });
+                const isUnsubscribed = users.some(u => u.email_unsubscribed);
+                if (isUnsubscribed) {
+                    await base44.asServiceRole.entities.UserEmailSequence.update(enrollment.id, { status: 'unsubscribed' });
+                    results.completed++;
+                    continue;
+                }
+
                 // Get sequence steps
                 const steps = await base44.asServiceRole.entities.EmailSequenceStep.filter({
                     sequence_id: enrollment.sequence_id,
