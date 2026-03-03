@@ -26,7 +26,9 @@ export default function VideoEmbed({ contentKey, fallback, page, blockTitle }) {
     return null;
   };
 
-  const embedUrl = getVideoEmbedUrl(content);
+  // Strip HTML tags in case CMS wraps the URL in <p> or <a> tags
+  const rawContent = content ? content.replace(/<[^>]*>/g, "").replace(/&amp;/g, "&").trim() : "";
+  const embedUrl = getVideoEmbedUrl(rawContent);
 
   if (!embedUrl) {
     if (isManager && isEditMode) {
