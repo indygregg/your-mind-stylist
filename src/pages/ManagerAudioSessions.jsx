@@ -188,9 +188,14 @@ export default function ManagerAudioSessions() {
                 />
               </div>
 
-              {/* Audio Upload */}
+              {/* Audio File */}
               <div>
                 <label className="text-sm font-medium text-[#1E3A32] block mb-1">Audio File *</label>
+                <p className="text-xs text-[#2B2725]/50 mb-2">
+                  Upload MP3/WAV/M4A (max ~50MB, ~50 min at 128kbps) — or paste an external URL below. 
+                  Clients <strong>stream</strong> the audio in-browser; they do not download it.
+                  For files larger than 50MB, use a direct-link URL (e.g. Dropbox: change <code>?dl=0</code> to <code>?raw=1</code>).
+                </p>
                 {form.audio_url ? (
                   <div className="flex items-center gap-3 p-3 bg-[#F9F5EF] border border-[#E4D9C4] rounded">
                     <Check size={16} className="text-green-600" />
@@ -200,19 +205,35 @@ export default function ManagerAudioSessions() {
                     </button>
                   </div>
                 ) : (
-                  <label className="flex items-center gap-2 px-4 py-3 border-2 border-dashed border-[#D8B46B]/50 rounded cursor-pointer hover:border-[#D8B46B] transition-colors">
-                    <Upload size={16} className="text-[#D8B46B]" />
-                    <span className="text-sm text-[#2B2725]/70">
-                      {uploadingAudio ? "Uploading..." : "Upload audio file (MP3, WAV, M4A)"}
-                    </span>
-                    <input type="file" accept="audio/*" className="hidden" onChange={handleAudioUpload} disabled={uploadingAudio} />
-                  </label>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 px-4 py-3 border-2 border-dashed border-[#D8B46B]/50 rounded cursor-pointer hover:border-[#D8B46B] transition-colors">
+                      <Upload size={16} className="text-[#D8B46B]" />
+                      <span className="text-sm text-[#2B2725]/70">
+                        {uploadingAudio ? "Uploading..." : "Upload audio file (MP3, WAV, M4A — max 50MB)"}
+                      </span>
+                      <input type="file" accept="audio/*" className="hidden" onChange={handleAudioUpload} disabled={uploadingAudio} />
+                    </label>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-px bg-[#E4D9C4]" />
+                      <span className="text-xs text-[#2B2725]/40">or paste a URL</span>
+                      <div className="flex-1 h-px bg-[#E4D9C4]" />
+                    </div>
+                    <Input
+                      value={form.audio_url}
+                      onChange={e => setForm(f => ({ ...f, audio_url: e.target.value }))}
+                      placeholder="https://dropbox.com/... or any direct audio URL"
+                      className="border-[#E4D9C4]"
+                    />
+                  </div>
                 )}
               </div>
 
-              {/* Cover Image Upload */}
+              {/* Cover Image */}
               <div>
                 <label className="text-sm font-medium text-[#1E3A32] block mb-1">Cover Image</label>
+                <p className="text-xs text-[#2B2725]/50 mb-2">
+                  Recommended: <strong>square (1:1), 800×800px minimum</strong>, JPEG or PNG. Displayed as a thumbnail in the library.
+                </p>
                 {form.cover_image ? (
                   <div className="flex items-center gap-3">
                     <img src={form.cover_image} alt="cover" className="w-20 h-20 object-cover rounded" />
@@ -222,7 +243,7 @@ export default function ManagerAudioSessions() {
                   <label className="flex items-center gap-2 px-4 py-3 border-2 border-dashed border-[#D8B46B]/50 rounded cursor-pointer hover:border-[#D8B46B] transition-colors">
                     <Upload size={16} className="text-[#D8B46B]" />
                     <span className="text-sm text-[#2B2725]/70">
-                      {uploadingImage ? "Uploading..." : "Upload cover image"}
+                      {uploadingImage ? "Uploading..." : "Upload cover image (square, 800×800px+, JPEG/PNG)"}
                     </span>
                     <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
                   </label>
