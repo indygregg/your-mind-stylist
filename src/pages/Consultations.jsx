@@ -5,7 +5,7 @@ import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle2, Phone, Calendar, FileText, Video, ExternalLink, AlertCircle } from "lucide-react";
+import { CheckCircle2, Phone, Calendar, FileText, Video, ExternalLink, AlertCircle, Download } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
 import VideoEmbed from "../components/cms/VideoEmbed";
 import { useCmsText } from "../components/cms/useCmsText";
