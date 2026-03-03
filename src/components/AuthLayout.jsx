@@ -102,7 +102,7 @@ export default function AuthLayout({ children, currentPageName }) {
         { name: "Blog", page: "BlogManager" },
         { name: "Author Profile", page: "AuthorProfile" },
         { name: "Courses", page: "CourseManager" },
-        { name: "Audio", page: "AudioManager" },
+        { name: "Audio", page: "ManagerAudioSessions" },
         { name: "Messages", page: "MessagesManager" },
         { name: "Affiliates", page: "ManagerAffiliates" },
       ];
