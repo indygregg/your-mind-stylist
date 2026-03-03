@@ -1,54 +1,81 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
-import { X, Download } from "lucide-react";
+import { X, Download, ExternalLink, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function DocumentModal({ isOpen, onClose, title, url }) {
+  const [iframeError, setIframeError] = useState(false);
+
+  const handleOpen = () => {
+    setIframeError(false);
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
-        <DialogHeader className="sticky top-0 bg-white border-b border-[#E4D9C4] p-6 flex items-center justify-between">
-          <DialogTitle className="text-[#1E3A32] font-serif text-2xl">{title}</DialogTitle>
-          <div className="flex items-center gap-3">
-            {url && url.toLowerCase().endsWith('.pdf') && (
-              <a href={url} download className="inline-flex">
-                <Button variant="outline" size="sm" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10">
-                  <Download size={16} className="mr-1" />
-                  Download
-                </Button>
-              </a>
-            )}
-            <DialogClose asChild>
-              <button className="p-2 hover:bg-[#F9F5EF] rounded transition-colors">
-                <X size={24} className="text-[#1E3A32]" />
-              </button>
-            </DialogClose>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) { onClose(); setIframeError(false); } }}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0 flex flex-col">
+        <DialogHeader className="bg-white border-b border-[#E4D9C4] p-4 flex-shrink-0">
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-[#1E3A32] font-serif text-xl">{title}</DialogTitle>
+            <div className="flex items-center gap-2">
+              {url && (
+                <>
+                  <a href={url} target="_blank" rel="noopener noreferrer">
+                    <Button variant="outline" size="sm" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10">
+                      <ExternalLink size={14} className="mr-1" />
+                      Open in Tab
+                    </Button>
+                  </a>
+                  <a href={url} download>
+                    <Button variant="outline" size="sm" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10">
+                      <Download size={14} className="mr-1" />
+                      Download
+                    </Button>
+                  </a>
+                </>
+              )}
+              <DialogClose asChild>
+                <button className="p-2 hover:bg-[#F9F5EF] rounded transition-colors ml-2">
+                  <X size={20} className="text-[#1E3A32]" />
+                </button>
+              </DialogClose>
+            </div>
           </div>
         </DialogHeader>
-        <div className="p-6">
+
+        <div className="flex-1 overflow-hidden min-h-[60vh]">
           {!url ? (
-            <p className="text-[#2B2725] text-center py-8">Document URL not configured. Please add the document link in the CMS.</p>
-          ) : url.toLowerCase().endsWith('.pdf') ? (
-            <div className="space-y-4">
-              <iframe
-                src={`https://docs.google.com/gview?url=${encodeURIComponent(url)}&embedded=true`}
-                className="w-full h-[70vh] border border-[#E4D9C4] rounded"
-                title={title}
-                allowFullScreen
-              />
-              <p className="text-sm text-[#2B2725]/60 text-center">
-                If the PDF doesn't display above,{' '}
-                <a href={url} target="_blank" rel="noopener noreferrer" className="text-[#D8B46B] hover:text-[#1E3A32] underline">
-                  open it in a new tab
+            <div className="flex items-center justify-center h-full p-8 text-center">
+              <p className="text-[#2B2725]/60">Document URL not configured. Please add the link in the CMS.</p>
+            </div>
+          ) : iframeError ? (
+            <div className="flex flex-col items-center justify-center h-full p-8 text-center gap-4">
+              <AlertCircle className="text-[#D8B46B]" size={40} />
+              <p className="text-[#2B2725]">This document can't be previewed here.</p>
+              <div className="flex gap-3">
+                <a href={url} target="_blank" rel="noopener noreferrer">
+                  <Button className="bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725]">
+                    <ExternalLink size={16} className="mr-2" />
+                    Open in New Tab
+                  </Button>
                 </a>
-              </p>
+                <a href={url} download>
+                  <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32]">
+                    <Download size={16} className="mr-2" />
+                    Download
+                  </Button>
+                </a>
+              </div>
             </div>
           ) : (
-            <p className="text-[#2B2725] text-center py-8">
-              <a href={url} target="_blank" rel="noopener noreferrer" className="text-[#D8B46B] hover:text-[#1E3A32] underline">
-                Open document in new tab
-              </a>
-            </p>
+            <iframe
+              key={url}
+              src={url}
+              className="w-full h-full"
+              style={{ minHeight: "60vh", border: "none" }}
+              title={title}
+              onLoad={handleOpen}
+              onError={() => setIframeError(true)}
+            />
           )}
         </div>
       </DialogContent>
