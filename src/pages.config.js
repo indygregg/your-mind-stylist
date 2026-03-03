@@ -181,6 +181,7 @@ import WebinarPage from './pages/WebinarPage';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
+import ManagerAudioSessions from './pages/ManagerAudioSessions';
 import __Layout from './Layout.jsx';
 
 
@@ -319,6 +320,7 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
+    "ManagerAudioSessions": ManagerAudioSessions,
 }
 
 export const pagesConfig = {
