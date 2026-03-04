@@ -285,6 +285,65 @@ export default function Programs() {
         </div>
       </section>
 
+      {/* Bundles & Packages */}
+      {bundles.length > 0 && (
+        <section className="py-16 bg-[#1E3A32]">
+          <div className="max-w-5xl mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <div className="flex items-center gap-3 mb-4 justify-center">
+                <Package size={32} className="text-[#D8B46B]" />
+                <h2 className="font-serif text-3xl md:text-4xl text-[#F9F5EF]">Bundles & Packages</h2>
+              </div>
+              <p className="text-[#F9F5EF]/70 text-center mb-12">Get more for less — curated combinations designed for deeper transformation</p>
+              <div className="grid md:grid-cols-2 gap-6">
+                {bundles.map((bundle) => {
+                  const savings = bundle.bundled_product_ids?.length > 0 ? null : null;
+                  return (
+                    <div key={bundle.id} className="bg-white/10 backdrop-blur border border-[#D8B46B]/30 rounded-lg p-8 hover:border-[#D8B46B] transition-all">
+                      {bundle.tagline && (
+                        <p className="text-[#D8B46B] text-xs tracking-widest uppercase mb-3">{bundle.tagline}</p>
+                      )}
+                      <h3 className="font-serif text-2xl text-[#F9F5EF] mb-3">{bundle.name}</h3>
+                      {bundle.short_description && (
+                        <p className="text-[#F9F5EF]/70 text-sm mb-6">{bundle.short_description}</p>
+                      )}
+                      <div className="flex items-end gap-3 mb-6">
+                        <span className="text-3xl font-bold text-[#D8B46B]">
+                          ${((bundle.price || 0) / 100).toFixed(0)}
+                        </span>
+                        {bundle.billing_interval && bundle.billing_interval !== "one_time" && (
+                          <span className="text-[#F9F5EF]/60 text-sm mb-1">/{bundle.billing_interval}</span>
+                        )}
+                      </div>
+                      {bundle.features?.length > 0 && (
+                        <ul className="space-y-2 mb-6">
+                          {bundle.features.slice(0, 4).map((f, i) => (
+                            <li key={i} className="flex items-start gap-2 text-sm text-[#F9F5EF]/80">
+                              <CheckCircle size={15} className="text-[#D8B46B] flex-shrink-0 mt-0.5" />
+                              {f}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <Link to={createPageUrl(`ProductPage?key=${bundle.key}`)}>
+                        <Button className="w-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] font-semibold">
+                          View Bundle
+                          <ArrowRight size={16} className="ml-2" />
+                        </Button>
+                      </Link>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {/* How to Choose */}
       <section className="py-20 bg-white">
         <div className="max-w-5xl mx-auto px-6">
