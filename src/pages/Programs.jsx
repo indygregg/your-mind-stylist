@@ -90,15 +90,18 @@ function EditableBand({ band, isManager, onSave }) {
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(band.title);
   const [subtitle, setSubtitle] = useState(band.subtitle);
+  const [servicesText, setServicesText] = useState((band.services || []).join(", "));
 
   const handleSave = () => {
-    onSave(band.key, { title, subtitle });
+    const services = servicesText.split(",").map(s => s.trim()).filter(Boolean);
+    onSave(band.key, { title, subtitle, services });
     setEditing(false);
   };
 
   const handleCancel = () => {
     setTitle(band.title);
     setSubtitle(band.subtitle);
+    setServicesText((band.services || []).join(", "));
     setEditing(false);
   };
 
@@ -112,19 +115,29 @@ function EditableBand({ band, isManager, onSave }) {
           <div className="flex items-center justify-between">
             <div className="flex-1 pr-4">
               {editing ? (
-                <div onClick={(e) => e.preventDefault()} className="space-y-2">
+                <div onClick={(e) => e.preventDefault()} className="space-y-3">
                   <input
                     className={`w-full bg-transparent border-b border-white/40 font-serif text-3xl ${band.textColor} focus:outline-none focus:border-white`}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     onClick={(e) => e.stopPropagation()}
+                    placeholder="Band title"
                   />
                   <input
-                    className={`w-full bg-transparent border-b border-white/30 text-lg ${band.subtitleColor} focus:outline-none focus:border-white/60 mt-3`}
+                    className={`w-full bg-transparent border-b border-white/30 text-lg ${band.subtitleColor} focus:outline-none focus:border-white/60`}
                     value={subtitle}
                     onChange={(e) => setSubtitle(e.target.value)}
                     onClick={(e) => e.stopPropagation()}
+                    placeholder="Subtitle"
                   />
+                  <input
+                    className={`w-full bg-transparent border-b border-white/30 text-sm ${band.subtitleColor} focus:outline-none focus:border-white/60`}
+                    value={servicesText}
+                    onChange={(e) => setServicesText(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    placeholder="Service tags (comma-separated, e.g. LENS™, Pocket Mindset™)"
+                  />
+                  <p className="text-white/40 text-xs">Separate service tags with commas</p>
                 </div>
               ) : (
                 <>
