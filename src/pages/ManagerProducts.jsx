@@ -20,6 +20,8 @@ export default function ManagerProducts() {
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [bundleDialogOpen, setBundleDialogOpen] = useState(false);
+  const [giftDialogOpen, setGiftDialogOpen] = useState(false);
+  const [giftProduct, setGiftProduct] = useState(null);
   const [editingProduct, setEditingProduct] = useState(null);
   const [editingBundle, setEditingBundle] = useState(null);
   const [syncing, setSyncing] = useState(false);
