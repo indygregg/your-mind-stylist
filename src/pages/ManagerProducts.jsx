@@ -407,7 +407,7 @@ export default function ManagerProducts() {
       if (group.key === "bundle") return p.is_bundle || p.type === "bundle";
       if (group.key === "signature_services") return (!p.product_subtype || p.product_subtype === "" || p.product_subtype === "digital_service" || p.product_subtype === "physical_product") && !p.is_bundle && p.type !== "bundle";
       return p.product_subtype === group.key && !p.is_bundle && p.type !== "bundle";
-    })
+    }).sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999))
   }));
 
   if (isLoading) {
