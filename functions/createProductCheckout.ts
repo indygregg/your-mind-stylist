@@ -24,9 +24,9 @@ Deno.serve(async (req) => {
         // Ensure affiliate_code is either a non-empty string or null
         const affiliateCodeValue = affiliate_code && affiliate_code.trim() ? affiliate_code.trim() : null;
 
-        // Get all product details
-        const allProducts = await base44.asServiceRole.entities.Product.filter({});
-        const products = allProducts.filter(p => ids.includes(p.id));
+        // Get product details for only the requested IDs
+        const productPromises = ids.map(id => base44.asServiceRole.entities.Product.get(id));
+        const products = await Promise.all(productPromises);
 
         if (products.length === 0) {
             return Response.json({ error: 'No products found' }, { status: 404 });
