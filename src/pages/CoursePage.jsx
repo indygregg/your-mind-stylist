@@ -50,9 +50,17 @@ export default function CoursePage() {
 
   // Fetch course
   const { data: courses = [] } = useQuery({
-    queryKey: ["courses", courseSlug],
-    queryFn: () => base44.entities.Course.filter({ slug: courseSlug, status: "published" }),
-    enabled: !!courseSlug,
+    queryKey: ["courses", courseSlug, courseId],
+    queryFn: async () => {
+      if (courseSlug) {
+        return base44.entities.Course.filter({ slug: courseSlug, status: "published" });
+      } else if (courseId) {
+        const course = await base44.entities.Course.get(courseId);
+        return course ? [course] : [];
+      }
+      return [];
+    },
+    enabled: !!(courseSlug || courseId),
   });
   const course = courses[0];
 
