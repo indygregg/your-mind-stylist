@@ -77,7 +77,7 @@ function BundleCard({ bundle }) {
           <span className="text-sm font-normal text-white/60 ml-2">or payment plan</span>
         )}
       </p>
-      <Link to={createPageUrl(`ProductPage?key=${bundle.key}`)}>
+      <Link to={createPageUrl(`ProductPage?slug=${bundle.slug || bundle.key}`)}>
         <Button className="w-full bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] font-semibold">
           View Bundle <ArrowRight size={16} className="ml-2" />
         </Button>
