@@ -457,6 +457,96 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
                   </div>
                 )}
 
+                {/* Payment Plans */}
+                <div className="mt-6 border border-[#E4D9C4] rounded-lg p-4">
+                  <label className="flex items-center gap-3 cursor-pointer mb-4">
+                    <input
+                      type="checkbox"
+                      checked={enablePaymentPlans}
+                      onChange={(e) => {
+                        setEnablePaymentPlans(e.target.checked);
+                        if (!e.target.checked) {
+                          setBundleData({ ...bundleData, payment_plan_options: [] });
+                        } else {
+                          const fullPrice = parseInt(parseFloat(bundleData.price) * 100) || 0;
+                          setBundleData({
+                            ...bundleData,
+                            payment_plan_options: [
+                              { name: "Pay in Full", months: 1, monthly_price: fullPrice },
+                              { name: "3 Monthly Payments", months: 3, monthly_price: Math.round(fullPrice / 3) },
+                            ],
+                          });
+                        }
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <span className="font-medium text-[#1E3A32]">Offer Payment Plans</span>
+                  </label>
+                  {enablePaymentPlans && (
+                    <div className="space-y-3">
+                      {bundleData.payment_plan_options.map((plan, idx) => (
+                        <div key={idx} className="bg-[#F9F5EF] p-3 rounded space-y-2">
+                          <div className="grid grid-cols-3 gap-2">
+                            <input
+                              className="border border-[#E4D9C4] rounded px-3 py-2 text-sm"
+                              placeholder="Plan name"
+                              value={plan.name}
+                              onChange={(e) => {
+                                const updated = [...bundleData.payment_plan_options];
+                                updated[idx] = { ...updated[idx], name: e.target.value };
+                                setBundleData({ ...bundleData, payment_plan_options: updated });
+                              }}
+                            />
+                            <input
+                              type="number"
+                              className="border border-[#E4D9C4] rounded px-3 py-2 text-sm"
+                              placeholder="Months"
+                              min="1" max="12"
+                              value={plan.months}
+                              onChange={(e) => {
+                                const updated = [...bundleData.payment_plan_options];
+                                updated[idx] = { ...updated[idx], months: parseInt(e.target.value) || 1 };
+                                setBundleData({ ...bundleData, payment_plan_options: updated });
+                              }}
+                            />
+                            <div className="flex gap-1">
+                              <input
+                                type="number"
+                                className="border border-[#E4D9C4] rounded px-3 py-2 text-sm flex-1"
+                                placeholder="Monthly $"
+                                value={(plan.monthly_price / 100).toFixed(2)}
+                                onChange={(e) => {
+                                  const updated = [...bundleData.payment_plan_options];
+                                  updated[idx] = { ...updated[idx], monthly_price: Math.round((parseFloat(e.target.value) || 0) * 100) };
+                                  setBundleData({ ...bundleData, payment_plan_options: updated });
+                                }}
+                              />
+                              <Button size="sm" variant="outline" onClick={() => {
+                                const updated = bundleData.payment_plan_options.filter((_, i) => i !== idx);
+                                setBundleData({ ...bundleData, payment_plan_options: updated });
+                              }}><Trash2 size={14} /></Button>
+                            </div>
+                          </div>
+                          <p className="text-xs text-[#2B2725]/60">
+                            Total: ${((plan.monthly_price * plan.months) / 100).toFixed(2)}
+                          </p>
+                        </div>
+                      ))}
+                      <Button size="sm" variant="outline" onClick={() => {
+                        setBundleData({
+                          ...bundleData,
+                          payment_plan_options: [
+                            ...bundleData.payment_plan_options,
+                            { name: `Plan ${bundleData.payment_plan_options.length + 1}`, months: bundleData.payment_plan_options.length + 1, monthly_price: 0 }
+                          ]
+                        });
+                      }} className="w-full">
+                        <Plus size={14} className="mr-1" /> Add Plan Option
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
                 {/* Features */}
                 <div className="mt-6">
                   <Label>Bundle Features/Benefits</Label>
