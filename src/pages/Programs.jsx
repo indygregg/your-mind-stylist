@@ -161,6 +161,11 @@ export default function Programs() {
   const { isManager } = useEditMode ? useEditMode() : { isManager: false };
   const [bands, setBands] = useState(DEFAULT_BANDS);
 
+  const { data: bundles = [] } = useQuery({
+    queryKey: ["published-bundles"],
+    queryFn: () => base44.entities.Product.filter({ status: "published", is_bundle: true }),
+  });
+
   const handleBandSave = (key, updates) => {
     setBands(prev => prev.map(b => b.key === key ? { ...b, ...updates } : b));
   };
