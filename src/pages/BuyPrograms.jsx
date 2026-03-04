@@ -92,8 +92,9 @@ export default function BuyPrograms() {
     queryFn: () => base44.entities.Product.list("-display_order", 200),
   });
 
-  const bundles = products.filter(p => p.is_bundle || p.type === "bundle");
-  const nonBundles = products.filter(p => !p.is_bundle && p.type !== "bundle");
+  const published = products.filter(p => p.status === "published");
+  const bundles = published.filter(p => p.is_bundle || p.type === "bundle");
+  const nonBundles = published.filter(p => !p.is_bundle && p.type !== "bundle");
 
   const byCategory = Object.entries(CATEGORY_META).map(([key, meta]) => ({
     key,
