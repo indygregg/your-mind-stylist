@@ -20,6 +20,7 @@ import CmsText from "../components/cms/CmsText";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { useEditMode } from "../components/cms/EditModeProvider";
+import { Package } from "lucide-react";
 
 // Default band configs — editable via CMS or inline
 const DEFAULT_BANDS = [
