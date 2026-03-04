@@ -1076,6 +1076,24 @@ export default function ManagerProducts() {
         </DialogContent>
       </Dialog>
 
+      {/* Gift Code Dialog */}
+      <GiftDialog open={giftDialogOpen} onOpenChange={setGiftDialogOpen}>
+        <GiftDialogContent className="max-w-lg">
+          <GiftDialogHeader>
+            <GiftDialogTitle className="font-serif text-xl text-[#1E3A32]">
+              Generate Gift Code — {giftProduct?.name}
+            </GiftDialogTitle>
+          </GiftDialogHeader>
+          {giftProduct && (
+            <GiftCodeGenerator
+              productId={giftProduct.id}
+              productType={giftProduct.type}
+              onCodeGenerated={() => {}}
+            />
+          )}
+        </GiftDialogContent>
+      </GiftDialog>
+
       {/* Bundle Creator Dialog */}
       <BundleCreator
         open={bundleDialogOpen}
