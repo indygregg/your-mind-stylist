@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Package, ChevronRight, ChevronLeft, Check, DollarSign, Search } from "lucide-react";
+import { Package, ChevronRight, ChevronLeft, Check, DollarSign, Search, Plus, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ReactQuill from "react-quill";
 
