@@ -74,6 +74,28 @@ Deno.serve(async (req) => {
             quantity: 1,
         }));
 
+        // Handle gift code discount — apply a Stripe coupon if 100% off
+        let discountConfig = {};
+        if (gift_code) {
+            const giftCodes = await base44.asServiceRole.entities.GiftCode.filter({ code: gift_code.toUpperCase() });
+            const gc = giftCodes[0];
+            if (gc && gc.is_active && gc.discount_percentage) {
+                // Create a one-time Stripe coupon for this discount
+                const coupon = await stripe.coupons.create({
+                    percent_off: gc.discount_percentage,
+                    duration: 'once',
+                    name: `Gift Code: ${gift_code}`,
+                });
+                discountConfig = { discounts: [{ coupon: coupon.id }] };
+
+                // Mark code as used
+                await base44.asServiceRole.entities.GiftCode.update(gc.id, {
+                    times_used: (gc.times_used || 0) + 1,
+                    is_active: gc.is_single_use ? false : gc.is_active,
+                });
+            }
+        }
+
         // Create checkout session
         const sessionConfig = {
             customer: customer.id,
@@ -87,7 +109,9 @@ Deno.serve(async (req) => {
                 product_keys: products.map(p => p.key).join(','),
                 product_names: products.map(p => p.name).join('; '),
                 affiliate_code: affiliateCodeValue || '',
+                gift_code: gift_code || '',
             },
+            ...discountConfig,
         };
         
         // Only set client_reference_id if affiliate_code is provided and non-empty
