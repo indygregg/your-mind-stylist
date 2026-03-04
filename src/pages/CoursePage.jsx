@@ -17,9 +17,10 @@ export default function CoursePage() {
   const [showEmotionalCheckIn, setShowEmotionalCheckIn] = useState(false);
   const [checkInType, setCheckInType] = useState("before"); // "before" or "after"
 
-  // Get course slug from URL
+  // Get course slug or id from URL
   const urlParams = new URLSearchParams(window.location.search);
   const courseSlug = urlParams.get("slug");
+  const courseId = urlParams.get("id");
 
   // Fetch user
   useEffect(() => {
