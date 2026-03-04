@@ -44,7 +44,7 @@ function ProductCard({ product }) {
           <span className="text-sm font-normal text-[#2B2725]/60 ml-2">or payment plan</span>
         )}
       </p>
-      <Link to={createPageUrl(`ProductPage?key=${product.key}`)}>
+      <Link to={createPageUrl(`ProductPage?slug=${product.slug || product.key}`)}>
         <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
           Learn More <ArrowRight size={16} className="ml-2" />
         </Button>
