@@ -110,13 +110,14 @@ export default function GlobalSearch({ isOpen, onClose }) {
 
   const handleClose = useCallback(() => {
     setQuery("");
-    setResults({ products: [], roadmap: [], users: [], blogPosts: [] });
+    setResults({ products: [], pages: [], roadmap: [], users: [], blogPosts: [] });
     onClose();
   }, [onClose]);
 
   const totalResults = useMemo(
     () =>
       results.products.length +
+      results.pages.length +
       results.roadmap.length +
       results.users.length +
       results.blogPosts.length,
