@@ -56,7 +56,7 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
           currency: "usd", billing_interval: "one_time", features: [""], icon: "Package",
           color: "#1E3A32", status: "draft", ui_group: "standard", display_order: 0,
           template_choice: "detailed", is_bundle: true, bundled_product_ids: [], access_grants: [],
-          payment_plan_options: [],
+          payment_plan_options: [], show_on_pages: ["programs", "buy_programs"],
         });
       }
     }
