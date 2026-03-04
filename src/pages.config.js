@@ -109,6 +109,7 @@ import ManagerAnalytics from './pages/ManagerAnalytics';
 import ManagerApplications from './pages/ManagerApplications';
 import ManagerAppointmentTypes from './pages/ManagerAppointmentTypes';
 import ManagerAppointments from './pages/ManagerAppointments';
+import ManagerAudioSessions from './pages/ManagerAudioSessions';
 import ManagerAvailability from './pages/ManagerAvailability';
 import ManagerBookings from './pages/ManagerBookings';
 import ManagerCRM from './pages/ManagerCRM';
@@ -165,8 +166,8 @@ import StudioAudio from './pages/StudioAudio';
 import StudioDashboard from './pages/StudioDashboard';
 import StudioDevDocs from './pages/StudioDevDocs';
 import StudioLegal from './pages/StudioLegal';
-import StudioLegalEditor from './pages/StudioLegalEditor';
 import Welcome from './pages/Welcome';
+import StudioLegalEditor from './pages/StudioLegalEditor';
 import StudioLogs from './pages/StudioLogs';
 import StudioNotes from './pages/StudioNotes';
 import StudioPricing from './pages/StudioPricing';
@@ -181,7 +182,6 @@ import WebinarPage from './pages/WebinarPage';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import ManagerAudioSessions from './pages/ManagerAudioSessions';
 import __Layout from './Layout.jsx';
 
 
@@ -248,6 +248,7 @@ export const PAGES = {
     "ManagerApplications": ManagerApplications,
     "ManagerAppointmentTypes": ManagerAppointmentTypes,
     "ManagerAppointments": ManagerAppointments,
+    "ManagerAudioSessions": ManagerAudioSessions,
     "ManagerAvailability": ManagerAvailability,
     "ManagerBookings": ManagerBookings,
     "ManagerCRM": ManagerCRM,
@@ -304,8 +305,8 @@ export const PAGES = {
     "StudioDashboard": StudioDashboard,
     "StudioDevDocs": StudioDevDocs,
     "StudioLegal": StudioLegal,
-    "StudioLegalEditor": StudioLegalEditor,
     "Welcome": Welcome,
+    "StudioLegalEditor": StudioLegalEditor,
     "StudioLogs": StudioLogs,
     "StudioNotes": StudioNotes,
     "StudioPricing": StudioPricing,
@@ -320,7 +321,6 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "ManagerAudioSessions": ManagerAudioSessions,
 }
 
 export const pagesConfig = {
