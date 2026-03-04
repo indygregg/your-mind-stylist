@@ -45,8 +45,9 @@ export default function ClientPortal() {
       const courseIds = progress.map(p => p.course_id);
       if (courseIds.length === 0) return [];
       
-      const allCourses = await base44.entities.Course.list();
-      return allCourses.filter(c => courseIds.includes(c.id));
+      const allCourses = await base44.entities.Course.list('-created_date', 200);
+      const uniqueCourseIds = [...new Set(courseIds)];
+      return allCourses.filter(c => uniqueCourseIds.includes(c.id));
     },
     enabled: !!user,
   });
