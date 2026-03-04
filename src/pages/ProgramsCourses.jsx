@@ -32,6 +32,13 @@ export default function ProgramsCourses() {
     },
   });
 
+  const { data: allBundles = [] } = useQuery({
+    queryKey: ["course-page-bundles"],
+    queryFn: () => base44.entities.Product.filter({ status: "published", is_bundle: true }),
+  });
+
+  const bundles = allBundles.filter(b => (b.show_on_pages || []).includes("courses"));
+
   const formatPrice = (price, billing_interval) => {
     if (!price || price === 0) return "Contact for Pricing";
     const dollars = (price / 100).toFixed(2);
