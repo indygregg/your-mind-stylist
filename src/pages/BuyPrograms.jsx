@@ -102,7 +102,7 @@ export default function BuyPrograms() {
   })).filter(c => c.items.length > 0);
 
   return (
-    <div className="bg-[#F9F5EF] min-h-screen py-12">
+    <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-12">
       <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
         <motion.div
