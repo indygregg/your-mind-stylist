@@ -54,32 +54,23 @@ export default function ProductPage() {
   const handlePurchase = async () => {
     setCheckoutLoading(true);
     
-    // Track checkout started event
-    try {
-      await base44.functions.invoke('trackPurchaseEvent', {
-        event_type: 'product.checkout_started',
-        product_id: product.id,
-        product_key: product.key
-      });
-    } catch (e) {
-      // Non-critical, continue with checkout
-    }
+    // Fire-and-forget tracking — never block checkout
+    base44.functions.invoke('trackPurchaseEvent', {
+      event_type: 'product.checkout_started',
+      product_id: product.id,
+      product_key: product.key
+    }).catch(() => {});
     
-    try {
-      const response = await base44.functions.invoke('createProductCheckout', {
-        product_id: product.id,
-        selected_price_id: selectedPriceId,
-      });
+    const response = await base44.functions.invoke('createProductCheckout', {
+      product_id: product.id,
+      selected_price_id: selectedPriceId,
+    });
 
-      if (response.data.url) {
-        window.location.href = response.data.url;
-      } else {
-        toast.error('Failed to create checkout session');
-        setCheckoutLoading(false);
-      }
-    } catch (error) {
-      console.error('Checkout error:', error);
-      toast.error('Something went wrong. Please try again.');
+    if (response.data?.url) {
+      window.location.href = response.data.url;
+    } else {
+      const errMsg = response.data?.error || 'Failed to create checkout session';
+      toast.error(errMsg);
       setCheckoutLoading(false);
     }
   };
