@@ -23,17 +23,44 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
   React.useEffect(() => {
     if (open) {
       setStep(1);
-      if (!existingBundle) {
+      setEnablePaymentPlans(!!(existingBundle?.payment_plan_options?.length));
+      if (existingBundle) {
+        setBundleData({
+          key: existingBundle.key || "",
+          slug: existingBundle.slug || "",
+          name: existingBundle.name || "",
+          tagline: existingBundle.tagline || "",
+          short_description: existingBundle.short_description || "",
+          long_description: existingBundle.long_description || "",
+          type: existingBundle.type || "bundle",
+          category: existingBundle.category || "foundation",
+          price: existingBundle.price ? (existingBundle.price / 100).toString() : "",
+          currency: "usd",
+          billing_interval: existingBundle.billing_interval || "one_time",
+          features: existingBundle.features || [""],
+          icon: existingBundle.icon || "Package",
+          color: existingBundle.color || "#1E3A32",
+          status: existingBundle.status || "draft",
+          ui_group: existingBundle.ui_group || "standard",
+          display_order: existingBundle.display_order || 0,
+          template_choice: existingBundle.template_choice || "detailed",
+          is_bundle: true,
+          bundled_product_ids: existingBundle.bundled_product_ids || [],
+          access_grants: existingBundle.access_grants || [],
+          payment_plan_options: existingBundle.payment_plan_options || [],
+        });
+      } else {
         setBundleData({
           key: "", slug: "", name: "", tagline: "", short_description: "",
           long_description: "", type: "bundle", category: "foundation", price: "",
           currency: "usd", billing_interval: "one_time", features: [""], icon: "Package",
           color: "#1E3A32", status: "draft", ui_group: "standard", display_order: 0,
           template_choice: "detailed", is_bundle: true, bundled_product_ids: [], access_grants: [],
+          payment_plan_options: [],
         });
       }
     }
-  }, [open]);
+  }, [open, existingBundle]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const [bundleData, setBundleData] = useState({
