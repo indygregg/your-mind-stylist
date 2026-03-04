@@ -15,6 +15,9 @@ import ReactQuill from "react-quill";
 export default function BundleCreator({ open, onClose, existingBundle = null }) {
   const queryClient = useQueryClient();
   const [step, setStep] = useState(1);
+  const [enablePaymentPlans, setEnablePaymentPlans] = useState(
+    !!(existingBundle?.payment_plan_options?.length)
+  );
 
   // Reset step and form when dialog opens
   React.useEffect(() => {
