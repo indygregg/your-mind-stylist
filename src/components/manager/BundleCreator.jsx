@@ -112,30 +112,41 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
 
   const createBundleMutation = useMutation({
     mutationFn: async (data) => {
+      const priceInCents = data.price ? parseInt(parseFloat(data.price) * 100) : 0;
       const dataToSave = {
         ...data,
-        price: data.price ? parseInt(parseFloat(data.price) * 100) : 0,
+        price: priceInCents,
         features: data.features.filter(f => f.trim() !== ""),
       };
 
+      let savedId;
       if (existingBundle) {
-        return await base44.entities.Product.update(existingBundle.id, dataToSave);
+        await base44.entities.Product.update(existingBundle.id, dataToSave);
+        savedId = existingBundle.id;
       } else {
         const created = await base44.entities.Product.create(dataToSave);
-        
-        // Sync with Stripe
-        await base44.functions.invoke('syncProductStripe', {
-          product_id: created.id,
-          key: dataToSave.key,
-          name: dataToSave.name,
-          description: dataToSave.short_description,
-          price: parseInt(parseFloat(data.price) * 100) || 0,
-          currency: dataToSave.currency,
-          billing_interval: dataToSave.billing_interval,
-          type: "bundle",
-        });
+        savedId = created.id;
+      }
 
-        return created;
+      // Sync with Stripe and save back the IDs
+      const syncResult = await base44.functions.invoke('syncProductStripe', {
+        product_id: savedId,
+        key: dataToSave.key,
+        name: dataToSave.name,
+        description: dataToSave.short_description,
+        price: priceInCents,
+        currency: dataToSave.currency,
+        billing_interval: dataToSave.billing_interval,
+        payment_plan_options: dataToSave.payment_plan_options,
+        type: "bundle",
+      });
+
+      if (syncResult.data?.success) {
+        await base44.entities.Product.update(savedId, {
+          stripe_product_id: syncResult.data.stripe_product_id,
+          stripe_price_id: syncResult.data.stripe_price_id,
+          stripe_price_ids: syncResult.data.stripe_price_ids,
+        });
       }
     },
     onSuccess: () => {
