@@ -132,7 +132,7 @@ export default function GlobalSearch({ isOpen, onClose }) {
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search products, roadmap, users, blog posts..."
+            placeholder="Search pages, programs, blog posts..."
             className="border-0 focus-visible:ring-0 text-lg"
             autoFocus
           />
