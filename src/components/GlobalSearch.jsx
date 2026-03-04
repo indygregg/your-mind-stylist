@@ -14,55 +14,51 @@ export default function GlobalSearch({ isOpen, onClose }) {
   const [results, setResults] = useState({ products: [], roadmap: [], users: [], blogPosts: [] });
   const [isSearching, setIsSearching] = useState(false);
 
+  const STATIC_PAGES = [
+    { name: "LENS™ Mind Styling Framework", description: "Flagship Mind Styling framework", page: "LENS" },
+    { name: "Cleaning Out Your Closet", description: "One-on-one hypnosis work", page: "CleaningOutYourCloset" },
+    { name: "Pocket Mindset™", description: "Daily guided experiences", page: "PocketMindset" },
+    { name: "Hypnosis Training & Certification", description: "Become a certified hypnotist", page: "LearnHypnosis" },
+    { name: "Speaking & Training", description: "Mind Styling for Organizations", page: "SpeakingTraining" },
+    { name: "Initial Consultation", description: "Schedule a free consult", page: "Consultations" },
+    { name: "Book a Session", description: "Book an appointment with Roberta", page: "Bookings" },
+    { name: "Programs & Tools", description: "All programs and offerings", page: "Programs" },
+    { name: "Blog", description: "Articles and insights", page: "Blog" },
+    { name: "About", description: "About Roberta Fernandez", page: "About" },
+    { name: "Contact", description: "Get in touch", page: "Contact" },
+    { name: "Podcast", description: "Listen to the podcast", page: "Podcast" },
+  ];
+
   useEffect(() => {
     const search = async () => {
       if (debouncedQuery.trim().length < 2) {
-        setResults({ products: [], roadmap: [], users: [], blogPosts: [] });
+        setResults({ products: [], pages: [], roadmap: [], users: [], blogPosts: [] });
         return;
       }
 
       setIsSearching(true);
       try {
-        const user = await base44.auth.me();
         const searchLower = debouncedQuery.toLowerCase();
 
-        // Search products (limit results)
-        const allProducts = await base44.entities.Product.list();
+        // Search static pages
+        const pages = STATIC_PAGES.filter(
+          (p) =>
+            p.name?.toLowerCase().includes(searchLower) ||
+            p.description?.toLowerCase().includes(searchLower)
+        ).slice(0, 5);
+
+        // Search products (published only)
+        const allProducts = await base44.entities.Product.filter({ status: "published" });
         const products = allProducts
           .filter(
             (p) =>
               p.name?.toLowerCase().includes(searchLower) ||
-              p.short_description?.toLowerCase().includes(searchLower)
+              p.short_description?.toLowerCase().includes(searchLower) ||
+              p.tagline?.toLowerCase().includes(searchLower)
           )
           .slice(0, 5);
 
-        // Search roadmap (admin/manager only, limit results)
-        let roadmap = [];
-        if (user.role === "admin" || user.role === "manager") {
-          const allRoadmap = await base44.entities.RoadmapItem.list();
-          roadmap = allRoadmap
-            .filter(
-              (r) =>
-                r.title?.toLowerCase().includes(searchLower) ||
-                r.description?.toLowerCase().includes(searchLower)
-            )
-            .slice(0, 5);
-        }
-
-        // Search users (admin only, limit results)
-        let users = [];
-        if (user.role === "admin") {
-          const allUsers = await base44.entities.User.list();
-          users = allUsers
-            .filter(
-              (u) =>
-                u.full_name?.toLowerCase().includes(searchLower) ||
-                u.email?.toLowerCase().includes(searchLower)
-            )
-            .slice(0, 5);
-        }
-
-        // Search blog posts (limit results)
+        // Search blog posts
         const allPosts = await base44.entities.BlogPost.filter({ status: "published" });
         const blogPosts = allPosts
           .filter(
@@ -72,7 +68,36 @@ export default function GlobalSearch({ isOpen, onClose }) {
           )
           .slice(0, 5);
 
-        setResults({ products, roadmap, users, blogPosts });
+        // Admin-only searches
+        let roadmap = [];
+        let users = [];
+        try {
+          const user = await base44.auth.me();
+          if (user?.role === "admin" || user?.role === "manager") {
+            const allRoadmap = await base44.entities.RoadmapItem.list();
+            roadmap = allRoadmap
+              .filter(
+                (r) =>
+                  r.title?.toLowerCase().includes(searchLower) ||
+                  r.description?.toLowerCase().includes(searchLower)
+              )
+              .slice(0, 3);
+          }
+          if (user?.role === "admin") {
+            const allUsers = await base44.entities.User.list();
+            users = allUsers
+              .filter(
+                (u) =>
+                  u.full_name?.toLowerCase().includes(searchLower) ||
+                  u.email?.toLowerCase().includes(searchLower)
+              )
+              .slice(0, 3);
+          }
+        } catch (e) {
+          // Not logged in — skip admin searches
+        }
+
+        setResults({ products, pages, roadmap, users, blogPosts });
       } catch (error) {
         console.error("Search error:", error);
       } finally {
