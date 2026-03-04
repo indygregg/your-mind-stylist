@@ -20,20 +20,22 @@ export default function ProductPage() {
 
   const urlParams = new URLSearchParams(window.location.search);
   const slug = urlParams.get("slug") || "";
+  const key = urlParams.get("key") || "";
   
   useEffect(() => {
     setIsPreview(new URLSearchParams(window.location.search).get("preview") === "true");
   }, []);
 
   const { data: products = [], isLoading } = useQuery({
-    queryKey: ["product", slug],
+    queryKey: ["product", slug, key],
     queryFn: () => {
+      const filter = key ? { key } : { slug };
       if (isPreview) {
-        return base44.entities.Product.filter({ slug });
+        return base44.entities.Product.filter(filter);
       }
-      return base44.entities.Product.filter({ slug, status: "published" });
+      return base44.entities.Product.filter({ ...filter, status: "published" });
     },
-    enabled: !!slug,
+    enabled: !!(slug || key),
   });
 
   useEffect(() => {
