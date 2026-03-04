@@ -480,9 +480,10 @@ export default function ManagerCRM() {
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setSelectedLead(lead);
-                                setEmailSubject("");
-                                setEmailBody("");
-                                setEmailDialogOpen(true);
+                                  setEditingLead({ ...lead });
+                                  setEmailSubject("");
+                                  setEmailBody("");
+                                  setEmailDialogOpen(true);
                               }}
                             >
                               <Mail size={12} className="mr-1" />
@@ -922,12 +923,12 @@ export default function ManagerCRM() {
         <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
           <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>Send Email to {selectedLead?.full_name || selectedLead?.email}</DialogTitle>
+              <DialogTitle>Send Email to {editingLead?.full_name || editingLead?.email || selectedLead?.full_name || selectedLead?.email}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
                 <Label>To</Label>
-                <Input value={selectedLead?.email || ""} readOnly className="bg-gray-50" />
+                <Input value={editingLead?.email || selectedLead?.email || ""} readOnly className="bg-gray-50" />
               </div>
               <div>
                 <Label>Subject</Label>
@@ -953,14 +954,16 @@ export default function ManagerCRM() {
                   onClick={async () => {
                     setSendingEmail(true);
                     try {
+                      const emailTo = editingLead?.email || selectedLead?.email;
                       await base44.integrations.Core.SendEmail({
-                        to: selectedLead.email,
+                        to: emailTo,
                         from_name: "Roberta Fernandez - Your Mind Stylist",
                         subject: emailSubject,
                         body: emailBody,
                       });
+                      const leadId = editingLead?.id || selectedLead?.id;
                       await base44.entities.LeadActivity.create({
-                        lead_id: selectedLead.id,
+                        lead_id: leadId,
                         activity_type: "email_sent",
                         description: `Email sent: "${emailSubject}"`,
                       });

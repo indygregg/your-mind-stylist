@@ -32,7 +32,7 @@ const DEFAULT_BANDS = [
     textColor: "text-white",
     subtitleColor: "text-white/80",
     arrowColor: "text-white/60",
-    linkPage: "Bookings",
+    linkPage: "BuyPrograms",
   },
   {
     key: "webinars",

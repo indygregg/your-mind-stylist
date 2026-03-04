@@ -658,7 +658,7 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
                   </div>
 
                   {/* Publish Options */}
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid md:grid-cols-3 gap-4">
                     <div>
                       <Label>Status</Label>
                       <Select
@@ -689,6 +689,16 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
                           <SelectItem value="standard">Standard</SelectItem>
                         </SelectContent>
                       </Select>
+                    </div>
+                    <div>
+                      <Label>Display Order</Label>
+                      <Input
+                        type="number"
+                        value={bundleData.display_order}
+                        onChange={(e) => setBundleData({ ...bundleData, display_order: parseInt(e.target.value) || 0 })}
+                        placeholder="0"
+                      />
+                      <p className="text-xs text-[#2B2725]/60 mt-1">Lower = appears first</p>
                     </div>
                   </div>
                 </div>
