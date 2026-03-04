@@ -221,44 +221,32 @@ Deno.serve(async (req) => {
                     });
                 }
                 
-                // Handle Product Purchase (universal)
-                else if (session.metadata.product_id && session.metadata.user_id) {
-                    // Get the product to see what access it grants
-                    const products = await base44.asServiceRole.entities.Product.filter({ 
-                        id: session.metadata.product_id 
-                    });
-                    
-                    if (products.length > 0) {
-                        const product = products[0];
-                        
-                        // Grant access based on product configuration
-                        const courseIds = [];
-                        
-                        // Add related course if exists
-                        if (product.related_course_id) {
-                            courseIds.push(product.related_course_id);
-                        }
-                        
-                        // Add all access grants
-                        if (product.access_grants && product.access_grants.length > 0) {
-                            courseIds.push(...product.access_grants);
-                        }
-                        
-                        // Grant course access for each course
-                        for (const courseId of courseIds) {
-                            // Check if access already exists
-                            const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
-                                user_id: session.metadata.user_id,
-                                course_id: courseId
-                            });
-                            
-                            if (existing.length === 0) {
-                                await base44.asServiceRole.entities.UserCourseProgress.create({
-                                    user_id: session.metadata.user_id,
-                                    course_id: courseId,
-                                    status: 'not_started',
-                                    completion_percentage: 0
-                                });
+                // Handle Product Purchase (single product_id OR multi product_ids from cart)
+                else if ((session.metadata.product_id || session.metadata.product_ids) && session.metadata.user_id) {
+                    // Support both single and multiple product IDs
+                    const productIdList = session.metadata.product_ids
+                        ? session.metadata.product_ids.split(',').map(id => id.trim()).filter(Boolean)
+                        : [session.metadata.product_id];
+
+                    const allProducts = await base44.asServiceRole.entities.Product.filter({});
+                    const purchasedProducts = allProducts.filter(p => productIdList.includes(p.id));
+
+                    const allCourseIds = new Set();
+                    const productNames = [];
+
+                    for (const product of purchasedProducts) {
+                        productNames.push(product.name);
+
+                        // Collect course access from this product
+                        if (product.related_course_id) allCourseIds.add(product.related_course_id);
+                        if (product.access_grants?.length > 0) product.access_grants.forEach(id => allCourseIds.add(id));
+
+                        // For bundles, also look at bundled products' access grants
+                        if (product.is_bundle && product.bundled_product_ids?.length > 0) {
+                            const bundledProducts = allProducts.filter(p => product.bundled_product_ids.includes(p.id));
+                            for (const bp of bundledProducts) {
+                                if (bp.related_course_id) allCourseIds.add(bp.related_course_id);
+                                if (bp.access_grants?.length > 0) bp.access_grants.forEach(id => allCourseIds.add(id));
                             }
                         }
 
@@ -270,79 +258,93 @@ Deno.serve(async (req) => {
                             });
                         } catch (tagError) {
                             console.error('Auto-tagging failed:', tagError);
-                            // Continue even if tagging fails
                         }
+                    }
 
-                        // Add to CRM as lead
-                        try {
-                            const existingLeads = await base44.asServiceRole.entities.Lead.filter({
-                                email: session.customer_email
+                    // Grant course access for all collected course IDs
+                    for (const courseId of allCourseIds) {
+                        const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
+                            user_id: session.metadata.user_id,
+                            course_id: courseId
+                        });
+                        if (existing.length === 0) {
+                            await base44.asServiceRole.entities.UserCourseProgress.create({
+                                user_id: session.metadata.user_id,
+                                course_id: courseId,
+                                status: 'not_started',
+                                completion_percentage: 0
                             });
-
-                            const today = new Date().toISOString().split('T')[0];
-                            if (existingLeads.length > 0) {
-                                const existing = existingLeads[0];
-                                const boughtHistory = existing.what_they_bought
-                                    ? `${existing.what_they_bought}, ${product.name}`
-                                    : product.name;
-                                await base44.asServiceRole.entities.Lead.update(existing.id, {
-                                    last_activity_date: new Date().toISOString(),
-                                    what_they_bought: boughtHistory,
-                                    date_of_purchase: today,
-                                    stage: 'won',
-                                    converted_to_client: true,
-                                    converted_date: new Date().toISOString(),
-                                    notes: `${existing.notes || ''}\n[${new Date().toLocaleDateString()}] Purchased: ${product.name}`.trim()
-                                });
-                            } else {
-                                const nameParts = (session.customer_details?.name || '').split(' ');
-                                await base44.asServiceRole.entities.Lead.create({
-                                    full_name: session.customer_details?.name || '',
-                                    first_name: nameParts[0] || '',
-                                    last_name: nameParts.slice(1).join(' ') || '',
-                                    email: session.customer_email,
-                                    stage: 'won',
-                                    source: 'product_purchase',
-                                    interest_level: 'hot',
-                                    lead_score: 80,
-                                    converted_to_client: true,
-                                    converted_date: new Date().toISOString(),
-                                    what_they_bought: product.name,
-                                    date_of_purchase: today,
-                                    last_activity_date: new Date().toISOString(),
-                                    notes: `Purchased: ${product.name}`
-                                });
-                            }
-                        } catch (crmError) {
-                            console.error('Failed to add to CRM (non-critical):', crmError.message);
                         }
+                    }
 
-                        // Check if this is Pocket Mindset purchase - send special email
-                        if (product.key === 'pocket-mindset' || product.slug === 'pocket-mindset') {
-                            await base44.asServiceRole.functions.invoke('sendTemplatedEmail', {
-                                template_key: 'pocket_mindset_purchase',
-                                recipient: session.customer_email,
-                                variables: {
-                                    customer_name: session.customer_details?.name || 'there',
-                                    access_code: '935384',
-                                    current_year: new Date().getFullYear().toString()
-                                }
+                    const combinedProductName = productNames.join(', ');
+                    const today = new Date().toISOString().split('T')[0];
+
+                    // Add to CRM as lead
+                    try {
+                        const existingLeads = await base44.asServiceRole.entities.Lead.filter({ email: session.customer_email });
+                        if (existingLeads.length > 0) {
+                            const existing = existingLeads[0];
+                            const boughtHistory = existing.what_they_bought
+                                ? `${existing.what_they_bought}, ${combinedProductName}`
+                                : combinedProductName;
+                            await base44.asServiceRole.entities.Lead.update(existing.id, {
+                                last_activity_date: new Date().toISOString(),
+                                what_they_bought: boughtHistory,
+                                date_of_purchase: today,
+                                stage: 'won',
+                                converted_to_client: true,
+                                converted_date: new Date().toISOString(),
+                                notes: `${existing.notes || ''}\n[${new Date().toLocaleDateString()}] Purchased: ${combinedProductName}`.trim()
                             });
                         } else {
-                            // Standard product purchase email for all other products
-                            await base44.asServiceRole.integrations.Core.SendEmail({
-                                to: session.customer_email,
-                                subject: `Welcome to ${product.name}`,
-                                body: `
-                                    <h2>Your purchase is confirmed!</h2>
-                                    <p>Thank you for purchasing ${product.name}.</p>
-                                    <p>You now have access to all included content.</p>
-                                    <p>Log in to your dashboard to get started: https://yourmindstylist.com/login</p>
-                                    <br>
-                                    <p>Roberta Fernandez<br>Your Mind Stylist</p>
-                                `
+                            const nameParts = (session.customer_details?.name || '').split(' ');
+                            await base44.asServiceRole.entities.Lead.create({
+                                full_name: session.customer_details?.name || '',
+                                first_name: nameParts[0] || '',
+                                last_name: nameParts.slice(1).join(' ') || '',
+                                email: session.customer_email,
+                                stage: 'won',
+                                source: 'product_purchase',
+                                interest_level: 'hot',
+                                lead_score: 80,
+                                converted_to_client: true,
+                                converted_date: new Date().toISOString(),
+                                what_they_bought: combinedProductName,
+                                date_of_purchase: today,
+                                last_activity_date: new Date().toISOString(),
+                                notes: `Purchased: ${combinedProductName}`
                             });
                         }
+                    } catch (crmError) {
+                        console.error('Failed to add to CRM (non-critical):', crmError.message);
+                    }
+
+                    // Send purchase confirmation email
+                    const hasPocketMindset = purchasedProducts.some(p => p.key === 'pocket-mindset' || p.slug === 'pocket-mindset');
+                    if (hasPocketMindset && purchasedProducts.length === 1) {
+                        await base44.asServiceRole.functions.invoke('sendTemplatedEmail', {
+                            template_key: 'pocket_mindset_purchase',
+                            recipient: session.customer_email,
+                            variables: {
+                                customer_name: session.customer_details?.name || 'there',
+                                access_code: '935384',
+                                current_year: new Date().getFullYear().toString()
+                            }
+                        });
+                    } else {
+                        await base44.asServiceRole.integrations.Core.SendEmail({
+                            to: session.customer_email,
+                            subject: `Welcome to ${combinedProductName}`,
+                            body: `
+                                <h2>Your purchase is confirmed!</h2>
+                                <p>Thank you for purchasing ${combinedProductName}.</p>
+                                <p>You now have access to all included content.</p>
+                                <p>Log in to your dashboard to get started: https://yourmindstylist.com/login</p>
+                                <br>
+                                <p>Roberta Fernandez<br>Your Mind Stylist</p>
+                            `
+                        });
                     }
                 }
                 
