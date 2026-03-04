@@ -68,7 +68,11 @@ export default function Cart() {
       if (appliedCode) payload.gift_code = giftCode.trim().toUpperCase();
 
       const { data } = await base44.functions.invoke("createProductCheckout", payload);
-      if (data?.url) {
+      if (data?.free && data?.url) {
+        // 100% gift code — no Stripe needed, redirect directly to success
+        clearCart();
+        window.location.href = data.url;
+      } else if (data?.url) {
         window.location.href = data.url;
       } else {
         toast.error("Failed to create checkout");
