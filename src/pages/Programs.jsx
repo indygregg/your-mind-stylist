@@ -130,6 +130,13 @@ function EditableBand({ band, isManager, onSave }) {
                 <>
                   <h3 className={`font-serif text-3xl mb-2 ${band.textColor}`}>{band.title}</h3>
                   <p className={`text-lg ${band.subtitleColor}`}>{band.subtitle}</p>
+                  {band.services?.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {band.services.map((s, i) => (
+                        <span key={i} className={`text-xs px-3 py-1 rounded-full font-medium ${band.tagColor || 'bg-white/20 text-white'}`}>{s}</span>
+                      ))}
+                    </div>
+                  )}
                 </>
               )}
             </div>
