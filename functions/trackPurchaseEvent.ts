@@ -29,16 +29,16 @@ Deno.serve(async (req) => {
 
     // Log event to ActivityLog entity
     await base44.asServiceRole.entities.ActivityLog.create({
-      user_id: user.id,
-      user_email: user.email,
-      event_type,
-      event_category: 'purchase_funnel',
-      event_data: {
+      actor: user.email,
+      action: event_type,
+      target: product_key || product_id || '',
+      details: JSON.stringify({
+        user_id: user.id,
+        event_category: 'purchase_funnel',
         product_id,
         product_key,
         ...metadata
-      },
-      timestamp: new Date().toISOString()
+      })
     });
 
     return Response.json({ success: true });
