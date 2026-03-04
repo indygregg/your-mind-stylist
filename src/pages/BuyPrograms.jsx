@@ -89,7 +89,7 @@ function BundleCard({ bundle }) {
 export default function BuyPrograms() {
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["buy-programs-products"],
-    queryFn: () => base44.entities.Product.filter({ status: "published" }),
+    queryFn: () => base44.entities.Product.list("-display_order", 200),
   });
 
   const bundles = products.filter(p => p.is_bundle || p.type === "bundle");
