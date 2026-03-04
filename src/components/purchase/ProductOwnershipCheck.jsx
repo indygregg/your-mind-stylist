@@ -26,7 +26,11 @@ export default function ProductOwnershipCheck({ productKey, children }) {
   });
 
   if (isLoading) {
-    return null;
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[#D8B46B] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
   // If user already owns this product, show access message

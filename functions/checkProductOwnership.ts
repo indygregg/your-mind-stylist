@@ -30,20 +30,24 @@ Deno.serve(async (req) => {
     let hasAccess = false;
     let accessDetails = null;
 
-    // Check for course access
-    if (product.related_course_id) {
+    // Check for course access via related_course_id OR access_grants
+    const courseIdsToCheck = [];
+    if (product.related_course_id) courseIdsToCheck.push(product.related_course_id);
+    if (product.access_grants?.length > 0) courseIdsToCheck.push(...product.access_grants);
+
+    for (const courseId of courseIdsToCheck) {
       const courseProgress = await base44.entities.UserCourseProgress.filter({
         user_id: user.id,
-        course_id: product.related_course_id
+        course_id: courseId
       });
-      
       if (courseProgress.length > 0) {
         hasAccess = true;
         accessDetails = {
           type: 'course',
-          id: product.related_course_id,
-          link: `CoursePage?id=${product.related_course_id}`
+          id: courseId,
+          link: `CoursePage?id=${courseId}`
         };
+        break;
       }
     }
 
