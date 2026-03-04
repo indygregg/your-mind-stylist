@@ -88,6 +88,36 @@ export default function ProgramsCourses() {
         </div>
       </section>
 
+      {/* Bundles Section */}
+      {bundles.length > 0 && (
+        <section className="py-12 px-6 bg-[#1E3A32]">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center gap-3 mb-2 justify-center">
+              <Package size={28} className="text-[#D8B46B]" />
+              <h2 className="font-serif text-2xl md:text-3xl text-white">Bundles & Packages</h2>
+            </div>
+            <p className="text-white/60 text-center mb-8 text-sm">Get more for less — curated combinations</p>
+            <div className="grid md:grid-cols-2 gap-6">
+              {bundles.map(bundle => (
+                <div key={bundle.id} className="bg-white/10 border border-[#D8B46B]/30 rounded-lg p-6 hover:border-[#D8B46B] transition-all">
+                  {bundle.tagline && <p className="text-[#D8B46B] text-xs tracking-widest uppercase mb-2">{bundle.tagline}</p>}
+                  <h3 className="font-serif text-xl text-white mb-2">{bundle.name}</h3>
+                  {bundle.short_description && <p className="text-white/70 text-sm mb-4">{bundle.short_description}</p>}
+                  <div className="flex items-center justify-between">
+                    <span className="text-2xl font-bold text-[#D8B46B]">${((bundle.price || 0) / 100).toFixed(0)}</span>
+                    <Link to={createPageUrl(`ProductPage?key=${bundle.key}`)}>
+                      <Button className="bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] font-semibold">
+                        View Bundle <ArrowRight size={16} className="ml-1" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Courses Grid */}
       <section className="py-16 px-6">
         <div className="max-w-6xl mx-auto">
