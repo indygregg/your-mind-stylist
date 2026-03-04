@@ -151,6 +151,33 @@ export default function GlobalSearch({ isOpen, onClose }) {
           )}
 
           <AnimatePresence>
+            {/* Pages */}
+            {results.pages?.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6"
+              >
+                <h3 className="text-sm font-medium text-[#2B2725]/70 mb-3 flex items-center gap-2">
+                  <Search size={16} />
+                  Pages ({results.pages.length})
+                </h3>
+                <div className="space-y-2">
+                  {results.pages.map((page) => (
+                    <Link
+                      key={page.page}
+                      to={createPageUrl(page.page)}
+                      onClick={handleClose}
+                      className="block p-3 bg-[#F9F5EF] hover:bg-[#E4D9C4] rounded transition-colors"
+                    >
+                      <p className="font-medium text-[#1E3A32]">{page.name}</p>
+                      <p className="text-sm text-[#2B2725]/70">{page.description}</p>
+                    </Link>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
             {/* Products */}
             {results.products.length > 0 && (
               <motion.div
