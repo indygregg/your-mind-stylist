@@ -69,7 +69,7 @@ export default function Layout({ children, currentPageName }) {
         currentPageName.startsWith('Admin') ||
         currentPageName.startsWith('Studio') ||
         currentPageName.startsWith('Manager') ||
-        ['Dashboard', 'PurchaseCenter', 'Library', 'TransformationStory', 'Resources'].includes(currentPageName) ||
+        ['Dashboard', 'PurchaseCenter', 'Library', 'TransformationStory', 'Resources', 'CoursePage', 'CoursePreview', 'ClientPortal'].includes(currentPageName) ||
         currentPageName.endsWith('Editor') ||
         currentPageName.endsWith('Manager');
 
