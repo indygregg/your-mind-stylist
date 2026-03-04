@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { product_id, product_ids, selected_price_id, affiliate_code } = await req.json();
+        const { product_id, product_ids, selected_price_id, affiliate_code, gift_code } = await req.json();
 
         // Support both single and multiple products
         const ids = product_ids || (product_id ? [product_id] : []);
