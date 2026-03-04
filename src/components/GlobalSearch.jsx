@@ -11,7 +11,7 @@ import useDebouncedValue from "./utils/useDebouncedValue";
 export default function GlobalSearch({ isOpen, onClose }) {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebouncedValue(query, 300);
-  const [results, setResults] = useState({ products: [], roadmap: [], users: [], blogPosts: [] });
+  const [results, setResults] = useState({ products: [], pages: [], roadmap: [], users: [], blogPosts: [] });
   const [isSearching, setIsSearching] = useState(false);
 
   const STATIC_PAGES = [
