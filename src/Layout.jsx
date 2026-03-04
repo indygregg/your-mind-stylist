@@ -16,7 +16,8 @@ import AffiliateTracker from "./components/affiliate/AffiliateTracker";
 import { PageTransition } from "./components/ui/PageTransition";
 import { CartProvider } from "./components/shop/CartContext";
 import CartIcon from "./components/shop/CartIcon";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft, ExternalLink, Search } from "lucide-react";
+import GlobalSearch from "./components/GlobalSearch";
 import { useNavigate } from "react-router-dom";
 
 // Helper to detect if running in WebView
