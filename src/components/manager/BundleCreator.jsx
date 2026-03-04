@@ -58,6 +58,7 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
     is_bundle: true,
     bundled_product_ids: existingBundle?.bundled_product_ids || [],
     access_grants: existingBundle?.access_grants || [],
+    payment_plan_options: existingBundle?.payment_plan_options || [],
   });
 
   const { data: products = [] } = useQuery({
