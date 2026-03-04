@@ -659,6 +659,41 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
                     </div>
                   </div>
 
+                  {/* Page Visibility */}
+                  <div className="border border-[#E4D9C4] rounded-lg p-4">
+                    <Label className="mb-3 block font-medium text-[#1E3A32]">Show this bundle on:</Label>
+                    <p className="text-xs text-[#2B2725]/60 mb-3">Select which public pages this bundle appears on</p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { value: "programs", label: "Programs Overview page" },
+                        { value: "buy_programs", label: "Buy Programs page" },
+                        { value: "courses", label: "Courses & Training page" },
+                        { value: "webinars", label: "Webinars page" },
+                        { value: "books", label: "Books & Resources page" },
+                        { value: "other", label: "Other Programs page" },
+                      ].map(({ value, label }) => {
+                        const checked = (bundleData.show_on_pages || []).includes(value);
+                        return (
+                          <label key={value} className="flex items-center gap-2 cursor-pointer p-2 rounded hover:bg-[#F9F5EF]">
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => {
+                                const current = bundleData.show_on_pages || [];
+                                const updated = checked
+                                  ? current.filter(p => p !== value)
+                                  : [...current, value];
+                                setBundleData({ ...bundleData, show_on_pages: updated });
+                              }}
+                              className="w-4 h-4"
+                            />
+                            <span className="text-sm text-[#2B2725]">{label}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   {/* Publish Options */}
                   <div className="grid md:grid-cols-3 gap-4">
                     <div>
