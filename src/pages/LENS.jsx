@@ -73,12 +73,19 @@ export default function LENS() {
                 />
               </div>
 
-              {/* CTA */}
-              <Link to={createPageUrl("Bookings")}>
-                <Button className="bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725] px-8 py-6 text-lg">
-                  Book Your Consultation
-                </Button>
-              </Link>
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link to={createPageUrl("BuyPrograms")}>
+                  <Button className="bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] px-8 py-6 text-lg font-semibold">
+                    Enroll in LENS™
+                  </Button>
+                </Link>
+                <Link to={createPageUrl("Bookings")}>
+                  <Button className="bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725] px-8 py-6 text-lg">
+                    Book Your Consultation
+                  </Button>
+                </Link>
+              </div>
             </motion.div>
 
             {/* Right - Video Space */}

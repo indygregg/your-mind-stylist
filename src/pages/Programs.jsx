@@ -158,7 +158,7 @@ function EditableBand({ band, isManager, onSave }) {
 }
 
 export default function Programs() {
-  const { isManager } = useEditMode ? useEditMode() : { isManager: false };
+  const { isManager } = useEditMode();
   const [bands, setBands] = useState(DEFAULT_BANDS);
 
   const { data: bundles = [] } = useQuery({
