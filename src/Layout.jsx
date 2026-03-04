@@ -403,6 +403,13 @@ export default function Layout({ children, currentPageName }) {
                 ))}
 
                 <div className={`flex items-center gap-3 ml-6 pl-6 border-l ${hasDarkHero ? 'border-white/20' : 'border-[#D8B46B]/20'}`}>
+                  <button
+                    onClick={() => setSearchOpen(true)}
+                    className={`p-2 ${hasDarkHero ? 'text-white/80 hover:text-white' : 'text-[#2B2725]/70 hover:text-[#1E3A32]'} transition-colors`}
+                    title="Search"
+                  >
+                    <Search size={18} />
+                  </button>
                   <CartIcon hasDarkHero={hasDarkHero} />
                   <a
                     href="https://yourmindstylist.com/login"
