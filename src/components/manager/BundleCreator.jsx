@@ -48,6 +48,7 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
           bundled_product_ids: existingBundle.bundled_product_ids || [],
           access_grants: existingBundle.access_grants || [],
           payment_plan_options: existingBundle.payment_plan_options || [],
+          show_on_pages: existingBundle.show_on_pages || ["programs", "buy_programs"],
         });
       } else {
         setBundleData({
