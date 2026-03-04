@@ -74,13 +74,51 @@ Deno.serve(async (req) => {
             quantity: 1,
         }));
 
-        // Handle gift code discount — apply a Stripe coupon if 100% off
+        // Handle gift code discount
+        let giftCodeRecord = null;
         let discountConfig = {};
         if (gift_code) {
             const giftCodes = await base44.asServiceRole.entities.GiftCode.filter({ code: gift_code.toUpperCase() });
             const gc = giftCodes[0];
             if (gc && gc.is_active && gc.discount_percentage) {
-                // Create a one-time Stripe coupon for this discount
+                giftCodeRecord = gc;
+
+                // If 100% off, skip Stripe entirely and fulfill directly
+                if (gc.discount_percentage === 100) {
+                    // Mark code as used
+                    await base44.asServiceRole.entities.GiftCode.update(gc.id, {
+                        times_used: (gc.times_used || 0) + 1,
+                        is_active: gc.is_single_use ? false : gc.is_active,
+                    });
+
+                    // Grant access: create a pseudo-purchase record for each product
+                    for (const product of products) {
+                        // Grant course access if product has a related_course_id
+                        if (product.related_course_id) {
+                            const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
+                                user_id: user.id,
+                                course_id: product.related_course_id,
+                            });
+                            if (existing.length === 0) {
+                                await base44.asServiceRole.entities.UserCourseProgress.create({
+                                    user_id: user.id,
+                                    course_id: product.related_course_id,
+                                    status: 'not_started',
+                                    completion_percentage: 0,
+                                });
+                            }
+                        }
+                    }
+
+                    const origin = req.headers.get('origin') || 'https://yourmindstylist.com';
+                    return Response.json({
+                        url: `${origin}/PurchaseSuccess?gift=true&product_ids=${products.map(p => p.id).join(',')}`,
+                        session_id: null,
+                        free: true,
+                    });
+                }
+
+                // Partial discount — create a Stripe coupon
                 const coupon = await stripe.coupons.create({
                     percent_off: gc.discount_percentage,
                     duration: 'once',
@@ -96,13 +134,15 @@ Deno.serve(async (req) => {
             }
         }
 
+        const origin = req.headers.get('origin') || 'https://yourmindstylist.com';
+
         // Create checkout session
         const sessionConfig = {
             customer: customer.id,
             mode: mode,
             line_items: line_items,
-            success_url: `${req.headers.get('origin')}/PurchaseSuccess?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${req.headers.get('origin')}/Cart`,
+            success_url: `${origin}/PurchaseSuccess?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${origin}/Cart`,
             metadata: {
                 user_id: user.id,
                 product_ids: products.map(p => p.id).join(','),
