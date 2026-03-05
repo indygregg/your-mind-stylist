@@ -132,16 +132,40 @@ john@example.com,John,Doe,+1234567890,123 Main St,Las Vegas,NV,89148,referral,ne
           </div>
 
           <div>
-            <h3 className="font-medium text-[#1E3A32] mb-2">Step 2: Required Fields</h3>
-            <ul className="text-sm text-[#2B2725]/70 space-y-1 list-disc list-inside">
-              <li><strong>email</strong> (required) - Lead's email</li>
-              <li><strong>full_name</strong> - Full name</li>
-              <li><strong>phone</strong> - Phone number</li>
-              <li><strong>source</strong> - e.g., "kajabi", "website"</li>
-              <li><strong>stage</strong> - new, contacted, qualified, etc.</li>
-              <li><strong>interest_level</strong> - cold, warm, hot</li>
-              <li><strong>lead_score</strong> - Number 0-100</li>
-            </ul>
+            <h3 className="font-medium text-[#1E3A32] mb-2">Step 2: CSV Column Headers</h3>
+            <p className="text-sm text-[#2B2725]/70 mb-3">Include these headers in your CSV (only email is required):</p>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="text-xs bg-[#F9F5EF] p-2 rounded">
+                <p className="font-medium text-[#1E3A32]">Contact Info</p>
+                <ul className="text-[#2B2725]/70 list-disc list-inside">
+                  <li>email <span className="text-red-600">*</span></li>
+                  <li>first_name</li>
+                  <li>last_name</li>
+                  <li>phone</li>
+                </ul>
+              </div>
+              <div className="text-xs bg-[#F9F5EF] p-2 rounded">
+                <p className="font-medium text-[#1E3A32]">Address</p>
+                <ul className="text-[#2B2725]/70 list-disc list-inside">
+                  <li>address_line1</li>
+                  <li>city</li>
+                  <li>state</li>
+                  <li>zip</li>
+                </ul>
+              </div>
+              <div className="text-xs bg-[#F9F5EF] p-2 rounded col-span-2">
+                <p className="font-medium text-[#1E3A32]">CRM Info</p>
+                <ul className="text-[#2B2725]/70 list-disc list-inside">
+                  <li>source (website, masterclass, referral, social_media, paid_ad, organic_search, email_campaign, event, other)</li>
+                  <li>stage (new, contacted, booked, qualified, proposal, negotiation, won, lost)</li>
+                  <li>what_inquired_about</li>
+                  <li>what_they_bought</li>
+                  <li>date_of_purchase (YYYY-MM-DD format)</li>
+                  <li>follow_up_actions</li>
+                  <li>notes</li>
+                </ul>
+              </div>
+            </div>
           </div>
 
           <div>
