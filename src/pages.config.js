@@ -159,6 +159,7 @@ import PurchaseSuccess from './pages/PurchaseSuccess';
 import Resources from './pages/Resources';
 import RobotsText from './pages/RobotsText';
 import Shop from './pages/Shop';
+import SignatureServices from './pages/SignatureServices';
 import Sitemap from './pages/Sitemap';
 import SpeakingTraining from './pages/SpeakingTraining';
 import StaffManagement from './pages/StaffManagement';
@@ -166,7 +167,6 @@ import StudioAudio from './pages/StudioAudio';
 import StudioDashboard from './pages/StudioDashboard';
 import StudioDevDocs from './pages/StudioDevDocs';
 import StudioLegal from './pages/StudioLegal';
-import Welcome from './pages/Welcome';
 import StudioLegalEditor from './pages/StudioLegalEditor';
 import StudioLogs from './pages/StudioLogs';
 import StudioNotes from './pages/StudioNotes';
@@ -179,10 +179,10 @@ import TransformationDemo from './pages/TransformationDemo';
 import TransformationStory from './pages/TransformationStory';
 import TransitionGuide from './pages/TransitionGuide';
 import WebinarPage from './pages/WebinarPage';
+import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import SignatureServices from './pages/SignatureServices';
 import __Layout from './Layout.jsx';
 
 
@@ -299,6 +299,7 @@ export const PAGES = {
     "Resources": Resources,
     "RobotsText": RobotsText,
     "Shop": Shop,
+    "SignatureServices": SignatureServices,
     "Sitemap": Sitemap,
     "SpeakingTraining": SpeakingTraining,
     "StaffManagement": StaffManagement,
@@ -306,7 +307,6 @@ export const PAGES = {
     "StudioDashboard": StudioDashboard,
     "StudioDevDocs": StudioDevDocs,
     "StudioLegal": StudioLegal,
-    "Welcome": Welcome,
     "StudioLegalEditor": StudioLegalEditor,
     "StudioLogs": StudioLogs,
     "StudioNotes": StudioNotes,
@@ -319,10 +319,10 @@ export const PAGES = {
     "TransformationStory": TransformationStory,
     "TransitionGuide": TransitionGuide,
     "WebinarPage": WebinarPage,
+    "Welcome": Welcome,
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "SignatureServices": SignatureServices,
 }
 
 export const pagesConfig = {

@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import SendSMSDialog from "../components/crm/SendSMSDialog";
 import LeadImport from "../components/manager/LeadImport";
+import LeadTagManager from "../components/manager/LeadTagManager";
 
 export default function ManagerCRM() {
   const queryClient = useQueryClient();
@@ -723,54 +724,10 @@ export default function ManagerCRM() {
 
                 {/* Tags */}
                 <div>
-                  <Label className="flex items-center gap-1 mb-2"><Tag size={14} /> Tags</Label>
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {(editingLead.tags || []).map((tag) => (
-                      <span key={tag} className="flex items-center gap-1 bg-[#D8B46B]/20 text-[#1E3A32] text-xs px-2 py-1 rounded-full">
-                        {tag}
-                        <button
-                          onClick={() => setEditingLead({ ...editingLead, tags: editingLead.tags.filter(t => t !== tag) })}
-                          className="hover:text-red-600 transition-colors"
-                        >
-                          <X size={10} />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <Input
-                      value={newTagInput}
-                      onChange={(e) => setNewTagInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && newTagInput.trim()) {
-                          const tag = newTagInput.trim().toLowerCase();
-                          const existing = editingLead.tags || [];
-                          if (!existing.includes(tag)) {
-                            setEditingLead({ ...editingLead, tags: [...existing, tag] });
-                          }
-                          setNewTagInput("");
-                        }
-                      }}
-                      placeholder="Add tag, press Enter..."
-                      className="flex-1 h-8 text-sm"
-                    />
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        const tag = newTagInput.trim().toLowerCase();
-                        if (tag) {
-                          const existing = editingLead.tags || [];
-                          if (!existing.includes(tag)) {
-                            setEditingLead({ ...editingLead, tags: [...existing, tag] });
-                          }
-                          setNewTagInput("");
-                        }
-                      }}
-                    >
-                      <Plus size={14} />
-                    </Button>
-                  </div>
+                  <LeadTagManager
+                    tags={editingLead.tags || []}
+                    onChange={(newTags) => setEditingLead({ ...editingLead, tags: newTags })}
+                  />
                 </div>
 
                 <div className="flex justify-between items-center pt-2">
