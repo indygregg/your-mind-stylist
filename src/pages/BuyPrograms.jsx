@@ -10,12 +10,14 @@ import {
   Zap, BookOpen, Users, Crown, Heart, Loader2
 } from "lucide-react";
 
-const CATEGORY_META = {
-  foundation: { icon: Zap, color: "text-[#D8B46B]", label: "Foundations & Everyday Support", desc: "Entry-level offerings for daily guidance and emotional reset" },
-  mid_level:  { icon: BookOpen, color: "text-[#6E4F7D]", label: "Mid-Level Learning", desc: "Structured, self-paced learning designed for deeper change" },
-  high_touch: { icon: Users, color: "text-[#A6B7A3]", label: "High-Touch Coaching", desc: "Work with Roberta more directly — small group or 1:1 support" },
-  advanced:   { icon: Crown, color: "text-[#D8B46B]", label: "Advanced Opportunities", desc: "Build mastery and expand your transformational reach" },
-};
+// Products with product_subtype === "course" and category === "mid_level" or "advanced"
+// are considered Hypnosis Training offerings
+const isHypnosisTraining = (p) =>
+  (p.product_subtype === "course" || p.is_bundle || p.type === "bundle") &&
+  (p.category === "mid_level" || p.category === "advanced");
+
+const isSignatureService = (p) =>
+  !isHypnosisTraining(p) && !(p.is_bundle || p.type === "bundle");
 
 function ProductCard({ product }) {
   const price = product.price ? `$${(product.price / 100).toFixed(0)}` : "Contact";
