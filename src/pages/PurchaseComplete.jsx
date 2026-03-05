@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ShoppingBag } from "lucide-react";
+import { useCart } from "../components/shop/CartContext";
 
 export default function PurchaseComplete() {
+  const { clearCart } = useCart();
+
+  useEffect(() => {
+    clearCart();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center px-6 py-20">
       <motion.div
