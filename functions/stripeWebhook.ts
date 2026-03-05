@@ -413,10 +413,12 @@ Deno.serve(async (req) => {
                                 notes: `${existingLeads[0].notes || ''}\n[${new Date().toLocaleDateString()}] Signed up for free masterclass`
                             });
                         } else {
+                            const nameParts = (session.customer_details?.name || '').split(' ');
                             await base44.asServiceRole.entities.Lead.create({
-                                name: session.customer_details?.name || 'Unknown',
+                                first_name: nameParts[0] || '',
+                                last_name: nameParts.slice(1).join(' ') || '',
                                 email: session.customer_email,
-                                stage: 'masterclass_lead',
+                                stage: 'new',
                                 source: 'free_masterclass',
                                 last_activity_date: new Date().toISOString(),
                                 notes: 'Signed up for free masterclass'
