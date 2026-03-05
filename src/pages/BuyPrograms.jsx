@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import {
-  ShoppingCart, ArrowRight, CheckCircle, Package,
-  Zap, BookOpen, Users, Crown, Heart, Loader2
+  ShoppingCart, ArrowRight, CheckCircle,
+  Crown, Heart, Loader2
 } from "lucide-react";
 
 // Hypnosis Training = courses (practitioner training) and bundles
