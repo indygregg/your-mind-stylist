@@ -5,15 +5,18 @@ import { motion } from "framer-motion";
 import { CheckCircle, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
+import { useCart } from "../components/shop/CartContext";
 
 export default function PurchaseSuccess() {
   const [purchaseType, setPurchaseType] = useState("");
   const [paymentType, setPaymentType] = useState("");
+  const { clearCart } = useCart();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setPurchaseType(params.get("type") || "");
     setPaymentType(params.get("payment_type") || "");
+    clearCart();
   }, []);
 
   const getTitle = () => {
