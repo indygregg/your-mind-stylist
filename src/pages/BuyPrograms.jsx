@@ -92,15 +92,11 @@ export default function BuyPrograms() {
     queryFn: () => base44.entities.Product.list("-display_order", 200),
   });
 
-  const published = products.filter(p => p.status === "published");
-  const bundles = published.filter(p => p.is_bundle || p.type === "bundle");
-  const nonBundles = published.filter(p => !p.is_bundle && p.type !== "bundle");
+  const published = products.filter(p => p.status === "published" && p.ui_group !== "hidden");
+  const sorted = [...published].sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
 
-  const byCategory = Object.entries(CATEGORY_META).map(([key, meta]) => ({
-    key,
-    meta,
-    items: nonBundles.filter(p => p.category === key).sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999)),
-  })).filter(c => c.items.length > 0);
+  const hypnosisItems = sorted.filter(isHypnosisTraining);
+  const signatureItems = sorted.filter(isSignatureService);
 
   return (
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-12">
