@@ -169,8 +169,8 @@ export default function ClientBookings() {
               <div className="text-center py-16 bg-white shadow-md">
                 <Calendar size={64} className="mx-auto mb-4 text-[#2B2725]/30" />
                 <p className="text-[#2B2725]/70 mb-4">No upcoming bookings</p>
-                <Button onClick={() => window.location.href = '/book-appointment'}>
-                  Book a Session
+                <Button asChild>
+                  <Link to={createPageUrl("Bookings")}>Book a Session</Link>
                 </Button>
               </div>
             ) : (
