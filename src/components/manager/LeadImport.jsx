@@ -53,14 +53,20 @@ export default function LeadImport({ open, onOpenChange, onSuccess }) {
           
           const leadData = {
             email: item.email,
-            full_name: item.full_name || item.name || '',
+            first_name: item.first_name || '',
+            last_name: item.last_name || '',
             phone: item.phone || '',
-            source: item.source || 'import',
+            address_line1: item.address_line1 || '',
+            city: item.city || '',
+            state: item.state || '',
+            zip: item.zip || '',
+            source: item.source || 'other',
             stage: item.stage || 'new',
-            interest_level: item.interest_level || 'warm',
-            lead_score: parseInt(item.lead_score) || 50,
+            what_inquired_about: item.what_inquired_about || '',
+            what_they_bought: item.what_they_bought || '',
+            date_of_purchase: item.date_of_purchase || '',
+            follow_up_actions: item.follow_up_actions || '',
             notes: item.notes || '',
-            tags: item.tags ? (typeof item.tags === 'string' ? item.tags.split(',').map(t => t.trim()) : item.tags) : [],
           };
 
           if (existing.length > 0) {
