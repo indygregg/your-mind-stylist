@@ -93,8 +93,8 @@ export default function LeadImport({ open, onOpenChange, onSuccess }) {
   };
 
   const downloadTemplate = () => {
-    const csvTemplate = `email,full_name,phone,source,stage,interest_level,lead_score,tags,notes
-example@email.com,John Doe,+1234567890,kajabi,new,warm,75,"tag1,tag2",Sample notes`;
+    const csvTemplate = `email,first_name,last_name,phone,address_line1,city,state,zip,source,stage,what_inquired_about,what_they_bought,date_of_purchase,follow_up_actions,notes
+john@example.com,John,Doe,+1234567890,123 Main St,Las Vegas,NV,89148,referral,new,Hypnosis Training,,,Follow up next week,Great referral from Sarah`;
     
     const blob = new Blob([csvTemplate], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
