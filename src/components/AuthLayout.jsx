@@ -116,7 +116,7 @@ export default function AuthLayout({ children, currentPageName }) {
       { name: "Book", page: "ClientBookings" },
       { name: "Client Portal", page: "ClientPortal" },
       { name: "Library", page: "Library" },
-      { name: "Buy Programs", page: "BuyPrograms" },
+      { name: "Shop", page: "Shop" },
       { name: "Notes", page: "StudioNotes" },
       { name: "Blog", page: "Blog" },
       { name: "Affiliate", page: "AffiliatePortal" },
