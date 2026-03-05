@@ -122,21 +122,26 @@ Deno.serve(async (req) => {
                         });
                     } else {
                         // Create new lead
+                        const nameParts = (user_name || '').split(' ');
                         await base44.asServiceRole.entities.Lead.create({
-                            full_name: user_name,
+                            first_name: nameParts[0] || '',
+                            last_name: nameParts.slice(1).join(' ') || '',
                             email: user_email,
                             phone: intake_data?.phone || '',
-                            stage: 'qualified',
+                            stage: 'booked',
                             source: 'booking_system',
-                            interest_level: 'hot',
-                            lead_score: 75,
-                            last_activity_date: new Date().toISOString(),
                             notes: `Initial booking: ${service_type} - ${scheduled_date ? new Date(scheduled_date).toLocaleString() : 'Date TBD'}`
                         });
                     }
                     // Update name on existing lead if missing
-                    if (existingLeads.length > 0 && !existingLeads[0].full_name && user_name) {
-                        await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, { full_name: user_name });
+                    if (existingLeads.length > 0 && user_name) {
+                        const nameParts = (user_name || '').split(' ');
+                        const updates = {};
+                        if (!existingLeads[0].first_name) updates.first_name = nameParts[0] || '';
+                        if (!existingLeads[0].last_name) updates.last_name = nameParts.slice(1).join(' ') || '';
+                        if (Object.keys(updates).length > 0) {
+                            await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, updates);
+                        }
                     }
                     console.log('Lead created/updated in CRM for:', user_email);
                 } catch (crmError) {
