@@ -182,6 +182,7 @@ import WebinarPage from './pages/WebinarPage';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
+import SignatureServices from './pages/SignatureServices';
 import __Layout from './Layout.jsx';
 
 
@@ -321,6 +322,7 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
+    "SignatureServices": SignatureServices,
 }
 
 export const pagesConfig = {

@@ -34,7 +34,7 @@ const DEFAULT_BANDS = [
     subtitleColor: "text-white/80",
     arrowColor: "text-white/60",
     tagColor: "bg-white/20 text-white",
-    linkPage: "BuyPrograms",
+    linkPage: "SignatureServices",
   },
   {
     key: "webinars",
