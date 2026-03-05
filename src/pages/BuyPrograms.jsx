@@ -123,36 +123,37 @@ export default function BuyPrograms() {
           </div>
         )}
 
-        {/* Bundles Section */}
-        {bundles.length > 0 && (
+        {/* Signature Services */}
+        {signatureItems.length > 0 && (
           <div className="mb-16">
             <div className="flex items-center gap-3 mb-4">
-              <Package size={28} className="text-[#D8B46B]" />
-              <h2 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">Bundles & Packages</h2>
+              <Heart size={28} className="text-[#6E4F7D]" />
+              <h2 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">Signature Services</h2>
             </div>
-            <p className="text-[#2B2725]/70 mb-8">Get more for less — curated combinations for deeper transformation</p>
-            <div className="grid md:grid-cols-2 gap-6">
-              {bundles.map(b => <BundleCard key={b.id} bundle={b} />)}
+            <p className="text-[#2B2725]/70 mb-8">One-on-one hypnosis, coaching & personal programs with Roberta</p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {signatureItems.map(p => <ProductCard key={p.id} product={p} />)}
             </div>
           </div>
         )}
 
-        {/* Dynamic Category Sections */}
-        {byCategory.map(({ key, meta, items }) => {
-          const Icon = meta.icon;
-          return (
-            <div key={key} className="mb-16">
-              <div className="flex items-center gap-3 mb-4">
-                <Icon size={28} className={meta.color} />
-                <h2 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">{meta.label}</h2>
-              </div>
-              <p className="text-[#2B2725]/70 mb-8">{meta.desc}</p>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {items.map(p => <ProductCard key={p.id} product={p} />)}
-              </div>
+        {/* Hypnosis Training */}
+        {hypnosisItems.length > 0 && (
+          <div className="mb-16">
+            <div className="flex items-center gap-3 mb-4">
+              <Crown size={28} className="text-[#D8B46B]" />
+              <h2 className="font-serif text-2xl md:text-3xl text-[#1E3A32]">Hypnosis Training</h2>
             </div>
-          );
-        })}
+            <p className="text-[#2B2725]/70 mb-8">Professional hypnosis courses and complete training bundles</p>
+            <div className="grid md:grid-cols-2 gap-6">
+              {hypnosisItems.map(p =>
+                p.is_bundle || p.type === "bundle"
+                  ? <BundleCard key={p.id} bundle={p} />
+                  : <ProductCard key={p.id} product={p} />
+              )}
+            </div>
+          </div>
+        )}
 
         {/* How to Choose */}
         {!isLoading && (
