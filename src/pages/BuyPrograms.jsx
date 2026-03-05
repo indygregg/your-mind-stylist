@@ -10,14 +10,12 @@ import {
   Zap, BookOpen, Users, Crown, Heart, Loader2
 } from "lucide-react";
 
-// Products with product_subtype === "course" and category === "mid_level" or "advanced"
-// are considered Hypnosis Training offerings
+// Hypnosis Training = courses (practitioner training) and bundles
 const isHypnosisTraining = (p) =>
-  (p.product_subtype === "course" || p.is_bundle || p.type === "bundle") &&
-  (p.category === "mid_level" || p.category === "advanced");
+  p.product_subtype === "course" || p.is_bundle || p.type === "bundle";
 
-const isSignatureService = (p) =>
-  !isHypnosisTraining(p) && !(p.is_bundle || p.type === "bundle");
+// Signature Services = everything else (consultations, webinars, personal programs)
+const isSignatureService = (p) => !isHypnosisTraining(p);
 
 function ProductCard({ product }) {
   const price = product.price ? `$${(product.price / 100).toFixed(0)}` : "Contact";
