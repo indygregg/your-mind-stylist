@@ -15,6 +15,8 @@ export default function MassEmailDialog({ open, onOpenChange, leads }) {
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [attachments, setAttachments] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedStages, setSelectedStages] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
