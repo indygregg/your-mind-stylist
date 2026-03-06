@@ -1152,6 +1152,13 @@ export default function ManagerCRM() {
             // Optionally refresh leads if you want to show enrollment info
           }}
         />
+
+        {/* Mass Email Dialog */}
+        <MassEmailDialog
+          open={massEmailDialogOpen}
+          onOpenChange={setMassEmailDialogOpen}
+          leads={leads}
+        />
       </div>
     </div>
   );
