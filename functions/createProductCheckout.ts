@@ -83,42 +83,7 @@ Deno.serve(async (req) => {
             if (gc && gc.is_active && gc.discount_percentage) {
                 giftCodeRecord = gc;
 
-                // If 100% off, skip Stripe entirely and fulfill directly
-                if (gc.discount_percentage === 100) {
-                    // Mark code as used
-                    await base44.asServiceRole.entities.GiftCode.update(gc.id, {
-                        times_used: (gc.times_used || 0) + 1,
-                        is_active: gc.is_single_use ? false : gc.is_active,
-                    });
-
-                    // Grant access: create a pseudo-purchase record for each product
-                    for (const product of products) {
-                        // Grant course access if product has a related_course_id
-                        if (product.related_course_id) {
-                            const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
-                                user_id: user.id,
-                                course_id: product.related_course_id,
-                            });
-                            if (existing.length === 0) {
-                                await base44.asServiceRole.entities.UserCourseProgress.create({
-                                    user_id: user.id,
-                                    course_id: product.related_course_id,
-                                    status: 'not_started',
-                                    completion_percentage: 0,
-                                });
-                            }
-                        }
-                    }
-
-                    const origin = req.headers.get('origin') || 'https://yourmindstylist.com';
-                    return Response.json({
-                        url: `${origin}/PurchaseSuccess?gift=true&product_ids=${products.map(p => p.id).join(',')}`,
-                        session_id: null,
-                        free: true,
-                    });
-                }
-
-                // Partial discount — create a Stripe coupon
+                // Create a Stripe coupon for any discount (including 100% off)
                 const coupon = await stripe.coupons.create({
                     percent_off: gc.discount_percentage,
                     duration: 'once',
