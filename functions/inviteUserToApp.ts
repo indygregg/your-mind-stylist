@@ -21,9 +21,9 @@ Deno.serve(async (req) => {
     }
 
     // Check if user already exists
-    const existingUsers = await base44.asServiceRole.entities.User.list();
-    if (existingUsers.some(u => u.email?.toLowerCase() === email.toLowerCase())) {
-      return Response.json({ error: 'User already exists' }, { status: 400 });
+    const existingUsers = await base44.asServiceRole.entities.User.filter({ email: email.toLowerCase() });
+    if (existingUsers.length > 0) {
+      return Response.json({ error: 'User already exists', userExists: true }, { status: 400 });
     }
 
     // Invite the user
