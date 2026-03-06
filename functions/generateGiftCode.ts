@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized: Managers only' }, { status: 403 });
     }
 
-    const { product_id, product_type, recipient_email, recipient_name, notes, max_uses, expires_at } = await req.json();
+    const { product_id, product_type, recipient_email, recipient_name, notes, is_single_use, max_uses, expires_at } = await req.json();
 
     if (!product_id || !product_type) {
       return Response.json({ error: 'Missing required fields' }, { status: 400 });
@@ -52,7 +52,7 @@ Deno.serve(async (req) => {
       product_type,
       recipient_email: recipient_email || null,
       recipient_name: recipient_name || null,
-      is_single_use: true,
+      is_single_use: is_single_use !== undefined ? is_single_use : true,
       max_uses: max_uses || null,
       expires_at: expires_at || null,
       is_active: true,
