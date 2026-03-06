@@ -223,7 +223,7 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}
-              disabled={enrollmentMutation.isPending}
+              disabled={enrollmentMutation.isPending || inviteMutation.isPending}
             >
               Cancel
             </Button>
@@ -232,7 +232,9 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
               disabled={
                 !userEmail.trim() ||
                 !selectedCourse ||
-                enrollmentMutation.isPending
+                !userExists ||
+                enrollmentMutation.isPending ||
+                inviteMutation.isPending
               }
               className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
             >
