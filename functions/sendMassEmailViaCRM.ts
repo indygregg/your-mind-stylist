@@ -47,6 +47,26 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'No leads match the selected filters' }, { status: 400 });
     }
 
+    // Build campaign payload
+    const campaignPayload = {
+      name: `CRM Campaign - ${new Date().toISOString()}`,
+      subject,
+      from_name: 'Roberta Fernandez',
+      from: 'roberta@yourmindstylist.com',
+      content: body,
+      recipients: {
+        emails: validEmails,
+      },
+    };
+
+    // Add attachments if provided
+    if (attachments.length > 0) {
+      campaignPayload.attachments = attachments.map(att => ({
+        filename: att.name,
+        url: att.url,
+      }));
+    }
+
     // Send via MailerLite API - create a campaign and send
     const campaignResponse = await fetch('https://connect.mailerlite.com/api/campaigns', {
       method: 'POST',
@@ -54,16 +74,7 @@ Deno.serve(async (req) => {
         'Authorization': `Bearer ${MAILERLITE_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        name: `CRM Campaign - ${new Date().toISOString()}`,
-        subject,
-        from_name: 'Roberta Fernandez',
-        from: 'roberta@yourmindstylist.com',
-        content: body,
-        recipients: {
-          emails: validEmails,
-        },
-      }),
+      body: JSON.stringify(campaignPayload),
     });
 
     if (!campaignResponse.ok) {
