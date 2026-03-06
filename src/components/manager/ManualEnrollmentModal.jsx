@@ -53,8 +53,11 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
         email: userEmail.toLowerCase(),
         role: 'user',
       }),
-    onSuccess: () => {
+    onSuccess: (response) => {
       toast.success(`Invitation sent to ${userEmail}`);
+      if (response.data?.emailSent) {
+        toast.success("Invitation email delivered!");
+      }
       setUserExists(true);
     },
     onError: (error) => {
