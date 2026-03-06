@@ -40,6 +40,28 @@ export default function MassEmailDialog({ open, onOpenChange, leads }) {
     return tagMatch && stageMatch && courseMatch;
   }).length;
 
+  const handleUploadAttachment = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    setUploading(true);
+    try {
+      for (const file of files) {
+        const uploadedFile = await base44.integrations.Core.UploadFile({ file });
+        setAttachments(prev => [...prev, {
+          name: file.name,
+          url: uploadedFile.file_url,
+          size: file.size
+        }]);
+        toast.success(`${file.name} uploaded`);
+      }
+    } catch (error) {
+      toast.error(`Upload failed: ${error.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSend = async () => {
     if (!subject.trim() || !body.trim()) {
       toast.error("Subject and message are required");
@@ -56,6 +78,7 @@ export default function MassEmailDialog({ open, onOpenChange, leads }) {
       const response = await base44.functions.invoke('sendMassEmailViaCRM', {
         subject,
         body,
+        attachments,
         filters: {
           tags: selectedTags,
           stages: selectedStages,
@@ -67,6 +90,7 @@ export default function MassEmailDialog({ open, onOpenChange, leads }) {
         toast.success(`Email sent to ${response.data.recipientCount} leads!`);
         setSubject("");
         setBody("");
+        setAttachments([]);
         setSelectedTags([]);
         setSelectedStages([]);
         setSelectedCourses([]);
