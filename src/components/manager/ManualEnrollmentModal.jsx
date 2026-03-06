@@ -27,7 +27,7 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
     enabled: open,
   });
 
-  // Check if user exists
+  // Check if user exists via backend
   const checkUserExists = async (email) => {
     if (!email.trim()) {
       setUserExists(false);
@@ -35,12 +35,18 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
     }
     setCheckingUser(true);
     try {
-      const allUsers = await base44.entities.User.list();
-      const exists = allUsers.some(u => u.email?.toLowerCase() === email.toLowerCase());
-      setUserExists(exists);
+      const response = await base44.functions.invoke("inviteUserToApp", {
+        email: email.toLowerCase(),
+        checkOnly: true,
+      });
+      setUserExists(response.data?.userExists || false);
     } catch (error) {
-      console.error('Error checking user:', error);
-      setUserExists(false);
+      // Assume user exists if we get an "already exists" error
+      if (error.response?.data?.userExists) {
+        setUserExists(true);
+      } else {
+        setUserExists(false);
+      }
     } finally {
       setCheckingUser(false);
     }
