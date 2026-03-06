@@ -27,6 +27,41 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
     enabled: open,
   });
 
+  // Check if user exists
+  const checkUserExists = async (email) => {
+    if (!email.trim()) {
+      setUserExists(false);
+      return;
+    }
+    setCheckingUser(true);
+    try {
+      const allUsers = await base44.entities.User.list();
+      const exists = allUsers.some(u => u.email?.toLowerCase() === email.toLowerCase());
+      setUserExists(exists);
+    } catch (error) {
+      console.error('Error checking user:', error);
+      setUserExists(false);
+    } finally {
+      setCheckingUser(false);
+    }
+  };
+
+  // Invite user mutation
+  const inviteMutation = useMutation({
+    mutationFn: () =>
+      base44.functions.invoke("inviteUserToApp", {
+        email: userEmail.toLowerCase(),
+        role: 'user',
+      }),
+    onSuccess: () => {
+      toast.success(`Invitation sent to ${userEmail}`);
+      setUserExists(true);
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.error || error.message);
+    },
+  });
+
   // Enrollment mutation
   const enrollmentMutation = useMutation({
     mutationFn: () =>
@@ -48,6 +83,7 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
       setLastName("");
       setSelectedCourse("");
       setSendNotification(true);
+      setUserExists(false);
       onOpenChange(false);
       onSuccess?.();
     },
