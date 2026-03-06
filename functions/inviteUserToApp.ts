@@ -29,7 +29,22 @@ Deno.serve(async (req) => {
     // Invite the user
     await base44.auth.inviteUser(email, role);
 
-    return Response.json({ success: true, message: `Invitation sent to ${email}` });
+    // Send invitation email
+    try {
+      await base44.asServiceRole.integrations.Core.SendEmail({
+        to: email,
+        subject: "You're Invited to Your Mind Stylist Platform",
+        body: `You've been invited to join the Your Mind Stylist community! Click the link in your email to get started and set up your account.`,
+      });
+    } catch (emailError) {
+      console.error('Error sending invitation email:', emailError);
+    }
+
+    return Response.json({ 
+      success: true, 
+      message: `Invitation sent to ${email}`,
+      emailSent: true
+    });
   } catch (error) {
     console.error('Error inviting user:', error);
     return Response.json({ error: error.message }, { status: 500 });
