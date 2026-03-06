@@ -17,23 +17,21 @@ Deno.serve(async (req) => {
     }
 
     // Find the user by email
-    const users = await base44.asServiceRole.entities.User.filter({ email: user_email });
-    if (users.length === 0) {
+    const allUsers = await base44.asServiceRole.entities.User.list();
+    const targetUser = allUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
+    
+    if (!targetUser) {
       return Response.json({ error: `User with email ${user_email} not found` }, { status: 404 });
     }
 
-    const targetUser = users[0];
-
     // Check if user already has progress for this course
-    const existingProgress = await base44.asServiceRole.entities.UserCourseProgress.filter({
-      user_id: targetUser.id,
-      course_id: course_id,
-    });
+    const allProgress = await base44.asServiceRole.entities.UserCourseProgress.list();
+    const existingProgress = allProgress.find(p => p.user_id === targetUser.id && p.course_id === course_id);
 
     let progressRecord;
-    if (existingProgress.length > 0) {
+    if (existingProgress) {
       // User already enrolled, just return existing
-      progressRecord = existingProgress[0];
+      progressRecord = existingProgress;
     } else {
       // Create new enrollment
       progressRecord = await base44.asServiceRole.entities.UserCourseProgress.create({
