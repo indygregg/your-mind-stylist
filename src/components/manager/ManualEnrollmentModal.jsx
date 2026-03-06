@@ -83,7 +83,7 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
               disabled={enrollmentMutation.isPending}
             />
             <p className="text-xs text-[#2B2725]/50 mt-1">
-              Account will be auto-created if it doesn't exist
+              User must already be invited to the app
             </p>
           </div>
 
