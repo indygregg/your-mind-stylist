@@ -38,8 +38,8 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
     onSuccess: (response) => {
       const message = response.data.message || "User enrolled successfully!";
       toast.success(message);
-      if (response.data.send_notification) {
-        toast.success("Notification email sent!");
+      if (response.data.emailSent) {
+        toast.success("Enrollment notification email sent!");
       }
       setUserEmail("");
       setFirstName("");
