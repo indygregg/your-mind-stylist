@@ -12,6 +12,8 @@ export default function GiftCodeGenerator({ productId, productType, onCodeGenera
   const [recipientName, setRecipientName] = useState("");
   const [recipientEmail, setRecipientEmail] = useState("");
   const [notes, setNotes] = useState("");
+  const [isSingleUse, setIsSingleUse] = useState(true);
+  const [maxUses, setMaxUses] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [generatedCode, setGeneratedCode] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -29,7 +31,9 @@ export default function GiftCodeGenerator({ productId, productType, onCodeGenera
         product_type: productType,
         recipient_name: recipientName || null,
         recipient_email: recipientEmail || null,
-        notes: notes || null
+        notes: notes || null,
+        is_single_use: isSingleUse,
+        max_uses: !isSingleUse ? maxUses : null
       });
 
       setGeneratedCode(response.data.code);
@@ -41,6 +45,8 @@ export default function GiftCodeGenerator({ productId, productType, onCodeGenera
       setRecipientName("");
       setRecipientEmail("");
       setNotes("");
+      setIsSingleUse(true);
+      setMaxUses(1);
     } catch (error) {
       alert('Failed to generate code: ' + error.message);
     } finally {
@@ -136,6 +142,33 @@ export default function GiftCodeGenerator({ productId, productType, onCodeGenera
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
           />
+        </div>
+
+        <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="singleUse"
+              checked={isSingleUse}
+              onChange={(e) => setIsSingleUse(e.target.checked)}
+              className="w-4 h-4"
+            />
+            <Label htmlFor="singleUse" className="cursor-pointer mb-0">
+              Single-Use Code
+            </Label>
+          </div>
+          {!isSingleUse && (
+            <div>
+              <Label htmlFor="maxUses">Maximum Uses</Label>
+              <Input
+                id="maxUses"
+                type="number"
+                min="2"
+                value={maxUses}
+                onChange={(e) => setMaxUses(parseInt(e.target.value) || 1)}
+              />
+            </div>
+          )}
         </div>
 
         <Button
