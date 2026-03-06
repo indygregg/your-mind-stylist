@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Only admins and managers can invite users' }, { status: 403 });
     }
 
-    const { email, role = 'user' } = await req.json();
+    const { email, role = 'user', checkOnly = false } = await req.json();
 
     if (!email) {
       return Response.json({ error: 'Email is required' }, { status: 400 });
@@ -22,7 +22,14 @@ Deno.serve(async (req) => {
 
     // Check if user already exists
     const existingUsers = await base44.asServiceRole.entities.User.filter({ email: email.toLowerCase() });
-    if (existingUsers.length > 0) {
+    const userExists = existingUsers.length > 0;
+
+    // If just checking, return early
+    if (checkOnly) {
+      return Response.json({ userExists });
+    }
+
+    if (userExists) {
       return Response.json({ error: 'User already exists', userExists: true }, { status: 400 });
     }
 
