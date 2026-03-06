@@ -18,20 +18,13 @@ Deno.serve(async (req) => {
 
     // Find the user by email
     const allUsers = await base44.asServiceRole.entities.User.list();
-    let targetUser = allUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
+    const targetUser = allUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
     
-    // Auto-create user if doesn't exist using auth.inviteUser
+    // User must exist - cannot create users programmatically
     if (!targetUser) {
-      try {
-        await base44.auth.inviteUser(user_email, 'user');
-        // Fetch the newly created user
-        const updatedUsers = await base44.asServiceRole.entities.User.list();
-        targetUser = updatedUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
-      } catch (inviteError) {
-        console.error('Error inviting user:', inviteError);
-        // If invite fails, the user might not exist yet - return error
-        throw new Error(`Failed to create user account for ${user_email}`);
-      }
+      return Response.json({ 
+        error: `User with email ${user_email} not found. Please invite them to the app first via Dashboard > Overview > Send Invites` 
+      }, { status: 404 });
     }
 
     // Check if user already has progress for this course
