@@ -117,12 +117,37 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
               type="email"
               placeholder="user@example.com"
               value={userEmail}
-              onChange={(e) => setUserEmail(e.target.value)}
-              disabled={enrollmentMutation.isPending}
+              onChange={(e) => {
+                setUserEmail(e.target.value);
+                checkUserExists(e.target.value);
+              }}
+              disabled={enrollmentMutation.isPending || inviteMutation.isPending}
             />
-            <p className="text-xs text-[#2B2725]/50 mt-1">
-              User must already be invited to the app
-            </p>
+            {userEmail && !userExists && !checkingUser && (
+              <div className="flex items-center gap-2 mt-2 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                <Mail size={16} className="text-yellow-700 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-yellow-800 font-medium">User not in system</p>
+                  <p className="text-xs text-yellow-700">Send them an invite first</p>
+                </div>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => inviteMutation.mutate()}
+                  disabled={inviteMutation.isPending}
+                  className="flex-shrink-0 text-xs"
+                >
+                  {inviteMutation.isPending ? (
+                    <Loader2 size={12} className="animate-spin" />
+                  ) : (
+                    'Send Invite'
+                  )}
+                </Button>
+              </div>
+            )}
+            {userExists && (
+              <p className="text-xs text-green-600 mt-1">✓ User is in the system</p>
+            )}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
