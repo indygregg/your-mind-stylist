@@ -368,34 +368,22 @@ export default function Library() {
         >
           {/* Header */}
           <div className="mb-12">
-            <div className="flex items-center justify-between mb-3">
-              <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32]">
-                Your Library
-              </h1>
-              {userProgress.length > 0 && (
-                <div className="flex gap-2">
-                  <Button
-                    variant={showDashboard ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setShowDashboard(true)}
-                    className={showDashboard ? "bg-[#1E3A32]" : ""}
-                  >
-                    Dashboard
-                  </Button>
-                  <Button
-                    variant={!showDashboard ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setShowDashboard(false)}
-                    className={!showDashboard ? "bg-[#1E3A32]" : ""}
-                  >
-                    Browse All
-                  </Button>
-                </div>
-              )}
+            <div className="flex items-center justify-between gap-4 mb-3">
+              <div>
+                <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32]">
+                  Your Learning Library
+                </h1>
+                <p className="text-[#2B2725]/60 text-lg italic mt-2">
+                  Your courses and learning progress. {userProgress.length > 0 ? "Continue where you left off." : "Start your transformation journey."}
+                </p>
+              </div>
+              <Link 
+                to={createPageUrl("ClientPortal")}
+                className="whitespace-nowrap px-6 py-3 bg-[#1E3A32] text-white text-sm tracking-wide hover:bg-[#2B2725] transition-all"
+              >
+                View All Products →
+              </Link>
             </div>
-            <p className="text-[#2B2725]/60 text-lg italic">
-              Everything you've unlocked lives here. Continue your journey at your own pace.
-            </p>
           </div>
 
           {/* AI Learning Path Recommender */}
@@ -417,43 +405,45 @@ export default function Library() {
             />
           )}
 
-          {/* Traditional Library View */}
-          {!showDashboard && (
-            <div>
+          {/* Course Progress Dashboard and Library View */}
+          {userProgress.length === 0 ? (
+            <>
 
-          {/* Resources Card - Prominent placement */}
-          <Link to={createPageUrl("Resources")}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.02 }}
-              className="bg-gradient-to-br from-[#D8B46B] to-[#C9A55B] p-8 mb-8 cursor-pointer shadow-lg hover:shadow-xl transition-all"
-            >
-              <div className="flex items-start gap-6">
-                <div className="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <FileText size={32} className="text-white" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-serif text-2xl text-white mb-2">Resource Library</h3>
-                  <p className="text-white/90 mb-4">
-                    Access worksheets, guides, audio sessions, and tools to support your journey.
-                  </p>
-                  <div className="flex items-center gap-6 text-sm text-white/80">
-                    <span>{resources.length} Resources Available</span>
-                    {resources.filter(r => r.featured).length > 0 && (
-                      <span>• {resources.filter(r => r.featured).length} Featured</span>
-                    )}
-                    {resources.filter(r => r.access_level === "public").length > 0 && (
-                      <span>• {resources.filter(r => r.access_level === "public").length} Free</span>
-                    )}
-                  </div>
-                </div>
-                <div className="text-white/60 self-center">
-                  <ChevronDown size={24} className="rotate-[-90deg]" />
-                </div>
-              </div>
-            </motion.div>
-          </Link>
+          ) : (
+            <>
+           {/* Resources Card - Prominent placement */}
+           <Link to={createPageUrl("Resources")}>
+             <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               whileHover={{ scale: 1.02 }}
+               className="bg-gradient-to-br from-[#D8B46B] to-[#C9A55B] p-8 mb-8 cursor-pointer shadow-lg hover:shadow-xl transition-all"
+             >
+               <div className="flex items-start gap-6">
+                 <div className="w-16 h-16 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                   <FileText size={32} className="text-white" />
+                 </div>
+                 <div className="flex-1">
+                   <h3 className="font-serif text-2xl text-white mb-2">Resource Library</h3>
+                   <p className="text-white/90 mb-4">
+                     Access worksheets, guides, audio sessions, and tools to support your journey.
+                   </p>
+                   <div className="flex items-center gap-6 text-sm text-white/80">
+                     <span>{resources.length} Resources Available</span>
+                     {resources.filter(r => r.featured).length > 0 && (
+                       <span>• {resources.filter(r => r.featured).length} Featured</span>
+                     )}
+                     {resources.filter(r => r.access_level === "public").length > 0 && (
+                       <span>• {resources.filter(r => r.access_level === "public").length} Free</span>
+                     )}
+                   </div>
+                 </div>
+                 <div className="text-white/60 self-center">
+                   <ChevronDown size={24} className="rotate-[-90deg]" />
+                 </div>
+               </div>
+             </motion.div>
+           </Link>
 
           {/* Featured Programs */}
           {featuredPrograms.length > 0 && (
@@ -551,10 +541,10 @@ export default function Library() {
               </Link>
             </div>
             )}
-          </div>
+          </>
           )}
-        </motion.div>
-      </div>
-    </div>
-  );
-}
+          </motion.div>
+          </div>
+          </div>
+          );
+          }
