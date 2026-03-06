@@ -20,9 +20,9 @@ Deno.serve(async (req) => {
     const allUsers = await base44.asServiceRole.entities.User.list();
     let targetUser = allUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
     
-    // Auto-create user if doesn't exist - use the proper SDK method
+    // Auto-create user if doesn't exist using auth.inviteUser
     if (!targetUser) {
-      await base44.asServiceRole.entities.User.inviteUser(user_email, 'user');
+      await base44.asServiceRole.auth.inviteUser(user_email, 'user');
       // Fetch the newly created user
       const updatedUsers = await base44.asServiceRole.entities.User.list();
       targetUser = updatedUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
