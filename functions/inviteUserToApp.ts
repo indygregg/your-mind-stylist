@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
 
     // Send invitation email
     try {
-      await base44.asServiceRole.integrations.Core.SendEmail({
+      await base44.integrations.Core.SendEmail({
         to: email,
         subject: "You're Invited to Your Mind Stylist Platform",
         body: `You've been invited to join the Your Mind Stylist community! Click the link in your email to get started and set up your account.`,
