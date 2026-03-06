@@ -22,10 +22,16 @@ Deno.serve(async (req) => {
     
     // Auto-create user if doesn't exist using auth.inviteUser
     if (!targetUser) {
-      await base44.asServiceRole.auth.inviteUser(user_email, 'user');
-      // Fetch the newly created user
-      const updatedUsers = await base44.asServiceRole.entities.User.list();
-      targetUser = updatedUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
+      try {
+        await base44.auth.inviteUser(user_email, 'user');
+        // Fetch the newly created user
+        const updatedUsers = await base44.asServiceRole.entities.User.list();
+        targetUser = updatedUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
+      } catch (inviteError) {
+        console.error('Error inviting user:', inviteError);
+        // If invite fails, the user might not exist yet - return error
+        throw new Error(`Failed to create user account for ${user_email}`);
+      }
     }
 
     // Check if user already has progress for this course
