@@ -9,7 +9,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Admin access required' }, { status: 403 });
     }
 
-    const { subject, body, filters } = await req.json();
+    const { subject, body, attachments = [], filters } = await req.json();
 
     if (!subject || !body) {
       return Response.json({ error: 'Subject and body are required' }, { status: 400 });
