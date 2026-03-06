@@ -1,0 +1,73 @@
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+
+    // Only admins can enroll users
+    if (user?.role !== 'admin') {
+      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    }
+
+    const { user_email, course_id, send_notification } = await req.json();
+
+    if (!user_email || !course_id) {
+      return Response.json({ error: 'user_email and course_id are required' }, { status: 400 });
+    }
+
+    // Find the user by email
+    const users = await base44.asServiceRole.entities.User.filter({ email: user_email });
+    if (users.length === 0) {
+      return Response.json({ error: `User with email ${user_email} not found` }, { status: 404 });
+    }
+
+    const targetUser = users[0];
+
+    // Check if user already has progress for this course
+    const existingProgress = await base44.asServiceRole.entities.UserCourseProgress.filter({
+      user_id: targetUser.id,
+      course_id: course_id,
+    });
+
+    let progressRecord;
+    if (existingProgress.length > 0) {
+      // User already enrolled, just return existing
+      progressRecord = existingProgress[0];
+    } else {
+      // Create new enrollment
+      progressRecord = await base44.asServiceRole.entities.UserCourseProgress.create({
+        user_id: targetUser.id,
+        course_id: course_id,
+        status: 'not_started',
+        completion_percentage: 0,
+      });
+    }
+
+    // Fetch course details for notification
+    const course = await base44.asServiceRole.entities.Course.get(course_id);
+
+    // Send notification email if requested
+    if (send_notification) {
+      await base44.asServiceRole.integrations.Core.SendEmail({
+        to: targetUser.email,
+        from_name: 'Your Mind Stylist',
+        subject: `You've been enrolled in ${course.title}!`,
+        body: `
+          <p>Hi ${targetUser.full_name || targetUser.email},</p>
+          <p>You've been enrolled in <strong>${course.title}</strong>. You can access it in your account under the Library section.</p>
+          <p>Get started whenever you're ready!</p>
+          <p>Best,<br>Roberta</p>
+        `,
+      });
+    }
+
+    return Response.json({
+      success: true,
+      message: `${targetUser.full_name || targetUser.email} enrolled in ${course.title}`,
+      progressRecord,
+    });
+  } catch (error) {
+    return Response.json({ error: error.message }, { status: 500 });
+  }
+});
