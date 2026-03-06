@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import SendSMSDialog from "../components/crm/SendSMSDialog";
 import LeadImport from "../components/manager/LeadImport";
 import LeadTagManager from "../components/manager/LeadTagManager";
+import ManualEnrollmentModal from "../components/manager/ManualEnrollmentModal";
 
 export default function ManagerCRM() {
   const queryClient = useQueryClient();
@@ -39,6 +40,7 @@ export default function ManagerCRM() {
   const [leadToDelete, setLeadToDelete] = useState(null);
   const [newTagInput, setNewTagInput] = useState("");
   const [addLeadDialogOpen, setAddLeadDialogOpen] = useState(false);
+  const [enrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
   const [newLead, setNewLead] = useState({ first_name: "", last_name: "", full_name: "", email: "", phone: "", source: "", stage: "new", notes: "" });
 
   // Fetch leads
@@ -167,6 +169,13 @@ export default function ManagerCRM() {
             <p className="text-[#2B2725]/70">Track leads, manage pipeline, and convert prospects</p>
           </div>
           <div className="flex gap-3">
+            <Button
+              onClick={() => setEnrollmentModalOpen(true)}
+              className="bg-[#6E4F7D] hover:bg-[#5A3F69] text-[#F9F5EF]"
+            >
+              <Plus size={16} className="mr-2" />
+              Enroll User
+            </Button>
             <Button
               onClick={() => setAddLeadDialogOpen(true)}
               className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
@@ -1101,6 +1110,15 @@ export default function ManagerCRM() {
           onSuccess={() => {
             queryClient.invalidateQueries({ queryKey: ["leads"] });
             setImportDialogOpen(false);
+          }}
+        />
+
+        {/* Manual Enrollment Modal */}
+        <ManualEnrollmentModal
+          open={enrollmentModalOpen}
+          onOpenChange={setEnrollmentModalOpen}
+          onSuccess={() => {
+            // Optionally refresh leads if you want to show enrollment info
           }}
         />
       </div>
