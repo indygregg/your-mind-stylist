@@ -171,7 +171,35 @@ export default function ManagerCRM() {
             <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">CRM & Lead Management</h1>
             <p className="text-[#2B2725]/70">Track leads, manage pipeline, and convert prospects</p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 flex-wrap">
+            <Button
+              onClick={() => setMassEmailDialogOpen(true)}
+              className="bg-[#D8B46B] hover:bg-[#C9A557] text-[#1E3A32]"
+            >
+              <Mail size={16} className="mr-2" />
+              Mass Email
+            </Button>
+            <Button
+              onClick={async () => {
+                setSyncing(true);
+                try {
+                  const response = await base44.functions.invoke('syncLeadsToMailerLite', {});
+                  if (response.data.success) {
+                    toast.success(`Synced ${response.data.syncedCount} leads to MailerLite`);
+                  }
+                } catch (e) {
+                  toast.error("Sync failed: " + e.message);
+                } finally {
+                  setSyncing(false);
+                }
+              }}
+              disabled={syncing}
+              variant="outline"
+              className="border-[#D8B46B] text-[#1E3A32]"
+            >
+              {syncing ? <Loader2 size={16} className="animate-spin mr-2" /> : <Send size={16} className="mr-2" />}
+              {syncing ? "Syncing..." : "Sync to MailerLite"}
+            </Button>
             <Button
               onClick={() => setEnrollmentModalOpen(true)}
               className="bg-[#6E4F7D] hover:bg-[#5A3F69] text-[#F9F5EF]"
