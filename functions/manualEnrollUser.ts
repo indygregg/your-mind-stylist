@@ -10,7 +10,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
-    const { user_email, course_id, send_notification } = await req.json();
+    const { user_email, course_id, send_notification, first_name, last_name } = await req.json();
 
     if (!user_email || !course_id) {
       return Response.json({ error: 'user_email and course_id are required' }, { status: 400 });
@@ -18,10 +18,13 @@ Deno.serve(async (req) => {
 
     // Find the user by email
     const allUsers = await base44.asServiceRole.entities.User.list();
-    const targetUser = allUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
+    let targetUser = allUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
     
+    // Auto-create user if doesn't exist
     if (!targetUser) {
-      return Response.json({ error: `User with email ${user_email} not found` }, { status: 404 });
+      const full_name = [first_name, last_name].filter(Boolean).join(' ') || user_email;
+      targetUser = await base44.asServiceRole.users.inviteUser(user_email, 'user');
+      // Note: inviteUser returns the newly created user
     }
 
     // Check if user already has progress for this course
