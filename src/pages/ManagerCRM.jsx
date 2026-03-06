@@ -18,6 +18,7 @@ import SendSMSDialog from "../components/crm/SendSMSDialog";
 import LeadImport from "../components/manager/LeadImport";
 import LeadTagManager from "../components/manager/LeadTagManager";
 import ManualEnrollmentModal from "../components/manager/ManualEnrollmentModal";
+import MassEmailDialog from "../components/crm/MassEmailDialog";
 
 export default function ManagerCRM() {
   const queryClient = useQueryClient();
