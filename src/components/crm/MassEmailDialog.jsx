@@ -206,13 +206,81 @@ export default function MassEmailDialog({ open, onOpenChange, leads }) {
             </div>
 
             <div>
-              <Label>Message</Label>
-              <Textarea
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                placeholder="Write your message here..."
-                className="min-h-[200px] mt-1"
-              />
+              <Label>Message (HTML Editor)</Label>
+              <div className="border rounded-lg bg-white mt-1">
+                <ReactQuill
+                  value={body}
+                  onChange={setBody}
+                  modules={{
+                    toolbar: [
+                      [{ header: [1, 2, 3, false] }],
+                      ["bold", "italic", "underline", "strike"],
+                      ["blockquote", "code-block"],
+                      [{ list: "ordered" }, { list: "bullet" }],
+                      [{ align: [] }],
+                      ["link", "image"],
+                      ["clean"]
+                    ]
+                  }}
+                  theme="snow"
+                  placeholder="Write your message here..."
+                  style={{ minHeight: "250px" }}
+                />
+              </div>
+            </div>
+
+            {/* Attachments */}
+            <div>
+              <Label>Attachments (Optional)</Label>
+              <div className="flex gap-2 mt-2">
+                <label className="flex-1">
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleUploadAttachment}
+                    disabled={uploading}
+                    className="hidden"
+                  />
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full cursor-pointer"
+                    disabled={uploading}
+                  >
+                    <span>
+                      {uploading ? (
+                        <>
+                          <Loader2 size={14} className="animate-spin mr-2" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Upload size={14} className="mr-2" />
+                          Add Files
+                        </>
+                      )}
+                    </span>
+                  </Button>
+                </label>
+              </div>
+
+              {attachments.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  {attachments.map((file, idx) => (
+                    <div key={idx} className="flex items-center justify-between bg-gray-50 p-2 rounded text-sm">
+                      <span className="text-gray-700 truncate">
+                        {file.name} ({(file.size / 1024 / 1024).toFixed(2)}MB)
+                      </span>
+                      <button
+                        onClick={() => setAttachments(attachments.filter((_, i) => i !== idx))}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
