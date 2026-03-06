@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Check, Sparkles, ArrowRight, ShoppingCart, Loader2, Star, Plus } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ProductOwnershipCheck from "../components/purchase/ProductOwnershipCheck";
+import GiftCodeInput from "../components/purchase/GiftCodeInput";
 import { useCart } from "../components/shop/CartContext";
 
 export default function ProductPage() {
@@ -16,6 +17,7 @@ export default function ProductPage() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [selectedPriceId, setSelectedPriceId] = useState(null);
   const [selectedPlan, setSelectedPlan] = useState("full");
+  const [appliedGiftCode, setAppliedGiftCode] = useState(null);
   const { addItem } = useCart();
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -64,6 +66,7 @@ export default function ProductPage() {
     const response = await base44.functions.invoke('createProductCheckout', {
       product_id: product.id,
       selected_price_id: selectedPriceId,
+      gift_code: appliedGiftCode,
     });
 
     if (response.data?.url) {
@@ -214,6 +217,10 @@ export default function ProductPage() {
               )}
             </div>
 
+            <div className="mb-6">
+              <GiftCodeInput productId={product.id} onCodeApplied={setAppliedGiftCode} />
+            </div>
+
             <Button
               onClick={handlePurchase}
               disabled={checkoutLoading}
@@ -298,6 +305,10 @@ export default function ProductPage() {
                     <div className="text-sm">Cancel anytime</div>
                   )}
                 </div>
+                <div className="mb-6 max-w-xs mx-auto">
+                  <GiftCodeInput productId={product.id} onCodeApplied={setAppliedGiftCode} />
+                </div>
+
                 <Button
                   onClick={handlePurchase}
                   disabled={checkoutLoading}
@@ -359,28 +370,31 @@ export default function ProductPage() {
 
         {/* CTA */}
         <section className="py-20 bg-[#1E3A32] text-center">
-          <div className="max-w-4xl mx-auto px-6">
-            <h2 className="font-serif text-4xl text-[#F9F5EF] mb-6">
-              Ready to Begin?
-            </h2>
-            <Button
-              onClick={handlePurchase}
-              disabled={checkoutLoading}
-              className="bg-[#D8B46B] hover:bg-[#C9A55A] text-[#1E3A32] px-12 py-6 text-lg"
-            >
-              {checkoutLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  Purchase {product.name}
-                  <ArrowRight size={20} className="ml-2" />
-                </>
-              )}
-            </Button>
-          </div>
+        <div className="max-w-4xl mx-auto px-6">
+         <h2 className="font-serif text-4xl text-[#F9F5EF] mb-8">
+           Ready to Begin?
+         </h2>
+         <div className="mb-8 max-w-xs mx-auto">
+           <GiftCodeInput productId={product.id} onCodeApplied={setAppliedGiftCode} />
+         </div>
+         <Button
+           onClick={handlePurchase}
+           disabled={checkoutLoading}
+           className="bg-[#D8B46B] hover:bg-[#C9A55A] text-[#1E3A32] px-12 py-6 text-lg"
+         >
+           {checkoutLoading ? (
+             <>
+               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+               Processing...
+             </>
+           ) : (
+             <>
+               Purchase {product.name}
+               <ArrowRight size={20} className="ml-2" />
+             </>
+           )}
+         </Button>
+        </div>
         </section>
         </div>
       </ProductOwnershipCheck>
@@ -510,25 +524,29 @@ export default function ProductPage() {
                 )}
               </div>
 
-              <Button
-                onClick={handlePurchase}
-                disabled={checkoutLoading}
-                className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] py-6 text-lg mb-3"
-              >
-                {checkoutLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart size={20} className="mr-2" />
-                    Purchase Now
-                  </>
-                )}
-              </Button>
+              <div className="mb-4">
+                 <GiftCodeInput productId={product.id} onCodeApplied={setAppliedGiftCode} />
+               </div>
 
-              <Button
+               <Button
+                 onClick={handlePurchase}
+                 disabled={checkoutLoading}
+                 className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] py-6 text-lg mb-3"
+               >
+                 {checkoutLoading ? (
+                   <>
+                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                     Processing...
+                   </>
+                 ) : (
+                   <>
+                     <ShoppingCart size={20} className="mr-2" />
+                     Purchase Now
+                   </>
+                 )}
+               </Button>
+
+               <Button
                 onClick={() => { addItem(product); toast.success(`${product.name} added to cart!`); }}
                 variant="outline"
                 className="w-full border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32]/5 py-5 text-base mb-4"
