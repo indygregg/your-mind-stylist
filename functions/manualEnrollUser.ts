@@ -20,11 +20,12 @@ Deno.serve(async (req) => {
     const allUsers = await base44.asServiceRole.entities.User.list();
     let targetUser = allUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
     
-    // Auto-create user if doesn't exist
+    // Auto-create user if doesn't exist - use the proper SDK method
     if (!targetUser) {
-      const full_name = [first_name, last_name].filter(Boolean).join(' ') || user_email;
-      targetUser = await base44.asServiceRole.users.inviteUser(user_email, 'user');
-      // Note: inviteUser returns the newly created user
+      await base44.asServiceRole.entities.User.inviteUser(user_email, 'user');
+      // Fetch the newly created user
+      const updatedUsers = await base44.asServiceRole.entities.User.list();
+      targetUser = updatedUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
     }
 
     // Check if user already has progress for this course
