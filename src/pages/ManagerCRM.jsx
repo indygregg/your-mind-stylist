@@ -42,6 +42,8 @@ export default function ManagerCRM() {
   const [newTagInput, setNewTagInput] = useState("");
   const [addLeadDialogOpen, setAddLeadDialogOpen] = useState(false);
   const [enrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
+  const [massEmailDialogOpen, setMassEmailDialogOpen] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const [newLead, setNewLead] = useState({ first_name: "", last_name: "", full_name: "", email: "", phone: "", source: "", stage: "new", notes: "" });
 
   // Fetch leads
