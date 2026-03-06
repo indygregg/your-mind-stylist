@@ -49,24 +49,31 @@ Deno.serve(async (req) => {
     const course = await base44.asServiceRole.entities.Course.get(course_id);
 
     // Send notification email if requested
+    let emailSent = false;
     if (send_notification) {
-      await base44.asServiceRole.integrations.Core.SendEmail({
-        to: targetUser.email,
-        from_name: 'Your Mind Stylist',
-        subject: `You've been enrolled in ${course.title}!`,
-        body: `
-          <p>Hi ${targetUser.full_name || targetUser.email},</p>
-          <p>You've been enrolled in <strong>${course.title}</strong>. You can access it in your account under the Library section.</p>
-          <p>Get started whenever you're ready!</p>
-          <p>Best,<br>Roberta</p>
-        `,
-      });
+      try {
+        await base44.asServiceRole.integrations.Core.SendEmail({
+          to: targetUser.email,
+          from_name: 'Your Mind Stylist',
+          subject: `You've been enrolled in ${course.title}!`,
+          body: `
+            <p>Hi ${targetUser.full_name || targetUser.email},</p>
+            <p>You've been enrolled in <strong>${course.title}</strong>. You can access it in your account under the Library section.</p>
+            <p>Get started whenever you're ready!</p>
+            <p>Best,<br>Roberta</p>
+          `,
+        });
+        emailSent = true;
+      } catch (emailError) {
+        console.error('Email send error:', emailError);
+      }
     }
 
     return Response.json({
       success: true,
       message: `${targetUser.full_name || targetUser.email} enrolled in ${course.title}`,
       progressRecord,
+      emailSent,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
