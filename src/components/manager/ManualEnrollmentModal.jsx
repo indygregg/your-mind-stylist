@@ -13,6 +13,8 @@ import toast from "react-hot-toast";
 export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess }) {
   const queryClient = useQueryClient();
   const [userEmail, setUserEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [sendNotification, setSendNotification] = useState(true);
 
@@ -30,6 +32,8 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
         user_email: userEmail.toLowerCase(),
         course_id: selectedCourse,
         send_notification: sendNotification,
+        first_name: firstName || undefined,
+        last_name: lastName || undefined,
       }),
     onSuccess: (response) => {
       const message = response.data.message || "User enrolled successfully!";
@@ -38,6 +42,8 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
         toast.success("Notification email sent!");
       }
       setUserEmail("");
+      setFirstName("");
+      setLastName("");
       setSelectedCourse("");
       setSendNotification(true);
       onOpenChange(false);
@@ -77,8 +83,35 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
               disabled={enrollmentMutation.isPending}
             />
             <p className="text-xs text-[#2B2725]/50 mt-1">
-              The user must already have an account
+              Account will be auto-created if it doesn't exist
             </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label htmlFor="firstName" className="text-sm font-medium">
+                First Name
+              </Label>
+              <Input
+                id="firstName"
+                placeholder="John"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                disabled={enrollmentMutation.isPending}
+              />
+            </div>
+            <div>
+              <Label htmlFor="lastName" className="text-sm font-medium">
+                Last Name
+              </Label>
+              <Input
+                id="lastName"
+                placeholder="Doe"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                disabled={enrollmentMutation.isPending}
+              />
+            </div>
           </div>
 
           <div>
