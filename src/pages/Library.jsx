@@ -407,8 +407,7 @@ export default function Library() {
 
           {/* Course Progress Dashboard and Library View */}
           {userProgress.length === 0 ? (
-            <>
-
+            <></>
           ) : (
             <>
            {/* Resources Card - Prominent placement */}
@@ -541,10 +540,10 @@ export default function Library() {
               </Link>
             </div>
             )}
-          </>
+            </>
           )}
-          </motion.div>
-          </div>
-          </div>
-          );
-          }
+        </motion.div>
+      </div>
+    </div>
+  );
+}
