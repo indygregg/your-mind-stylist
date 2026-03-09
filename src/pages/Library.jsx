@@ -531,8 +531,7 @@ export default function Library() {
               </Link>
             </div>
             )}
-            </>
-          )}
+          </>
         </motion.div>
       </div>
     </div>
