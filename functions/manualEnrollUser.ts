@@ -2,15 +2,18 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
 Deno.serve(async (req) => {
   try {
+    console.log("[manualEnrollUser] Request received");
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
     // Only admins can enroll users
     if (user?.role !== 'admin') {
+      console.error("[manualEnrollUser] Admin check failed:", user?.role);
       return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
     }
 
     const { user_email, course_id, send_notification, first_name, last_name } = await req.json();
+    console.log("[manualEnrollUser] Payload:", { user_email, course_id, send_notification });
 
     if (!user_email || !course_id) {
       return Response.json({ error: 'user_email and course_id are required' }, { status: 400 });
