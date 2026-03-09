@@ -93,9 +93,10 @@ export default function Library() {
         const progress = await base44.entities.UserCourseProgress.filter({ user_id: currentUser.id });
         setUserProgress(progress);
         
-        // TODO: Filter courses by product linkage and user's purchases
-        // For now, showing all published courses
-        setCourses(allCourses);
+        // Filter courses to only show enrolled courses
+        const enrolledCourseIds = progress.map(p => p.course_id);
+        const enrolledCourses = allCourses.filter(c => enrolledCourseIds.includes(c.id));
+        setCourses(enrolledCourses);
         
         setUserAccess({
           hasToolkit: false,
