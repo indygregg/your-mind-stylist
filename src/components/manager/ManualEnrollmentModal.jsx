@@ -96,8 +96,11 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
       setSelectedCourse("");
       setSendNotification(true);
       setUserExists(false);
-      onOpenChange(false);
-      onSuccess?.();
+      // Delay closing modal so toasts are visible
+      setTimeout(() => {
+        onOpenChange(false);
+        onSuccess?.();
+      }, 1500);
     },
     onError: (error) => {
       console.error("Enrollment error:", error);
