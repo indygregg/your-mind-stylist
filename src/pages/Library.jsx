@@ -96,8 +96,6 @@ export default function Library() {
         // For now, showing all published courses
         setCourses(allCourses);
         
-        // TODO: Fetch user's access flags and purchased products
-        // For now, using mock data
         setUserAccess({
           hasToolkit: false,
           hasPocketVisualization: false,
@@ -109,6 +107,8 @@ export default function Library() {
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
