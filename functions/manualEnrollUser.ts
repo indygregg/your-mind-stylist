@@ -35,6 +35,7 @@ Deno.serve(async (req) => {
     if (existingProgress) {
       // User already enrolled, just return existing
       progressRecord = existingProgress;
+      console.log(`User already enrolled in course ${course_id}`);
     } else {
       // Create new enrollment
       progressRecord = await base44.asServiceRole.entities.UserCourseProgress.create({
@@ -43,6 +44,7 @@ Deno.serve(async (req) => {
         status: 'not_started',
         completion_percentage: 0,
       });
+      console.log(`Created new enrollment: ${progressRecord.id} for user ${targetUser.id} in course ${course_id}`);
     }
 
     // Fetch course details for notification
