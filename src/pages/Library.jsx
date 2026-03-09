@@ -17,6 +17,7 @@ export default function Library() {
   const [courses, setCourses] = useState([]);
   const [userProgress, setUserProgress] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
   const [showDashboard, setShowDashboard] = useState(true);
   const { pullY, isRefreshing, handlers: pullToRefreshHandlers } = usePullToRefresh(async () => {
     await queryClient.invalidateQueries({ queryKey: ["userCourseProgress"] });
