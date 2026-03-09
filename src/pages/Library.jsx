@@ -121,8 +121,8 @@ export default function Library() {
     }));
   };
 
-  // Library is empty only if there are no published courses at all
-  const isLibraryEmpty = courses.length === 0;
+  // Library is empty only if loading is done and there are no published courses
+  const isLibraryEmpty = !loading && courses.length === 0;
 
   // Featured Programs (top 3 most relevant)
   const featuredPrograms = [];
