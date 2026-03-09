@@ -108,6 +108,7 @@ export default function Library() {
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
+        setFetchError(true);
       } finally {
         setLoading(false);
       }
