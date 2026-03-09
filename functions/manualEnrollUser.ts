@@ -61,7 +61,8 @@ Deno.serve(async (req) => {
     let emailSent = false;
     if (send_notification) {
       try {
-        await base44.asServiceRole.integrations.Core.SendEmail({
+        console.log(`[manualEnrollUser] Sending email to ${targetUser.email}`);
+        const emailResult = await base44.asServiceRole.integrations.Core.SendEmail({
           to: targetUser.email,
           from_name: 'Your Mind Stylist',
           subject: `You've been enrolled in ${course.title}!`,
@@ -72,14 +73,16 @@ Deno.serve(async (req) => {
             <p>Best,<br>Roberta</p>
           `,
         });
+        console.log(`[manualEnrollUser] Email sent successfully:`, emailResult);
         emailSent = true;
       } catch (emailError) {
-        console.error('Email send error:', emailError?.message || emailError);
+        console.error('[manualEnrollUser] Email send error:', emailError?.message || emailError);
         // Don't throw - enrollment was successful even if email failed
         emailSent = false;
       }
     }
 
+    console.log(`[manualEnrollUser] Enrollment complete. Email sent: ${emailSent}`);
     return Response.json({
       success: true,
       message: `${targetUser.full_name || targetUser.email} enrolled in ${course.title}`,
