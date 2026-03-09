@@ -82,10 +82,13 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
         last_name: lastName || undefined,
       }),
     onSuccess: (response) => {
-      const message = response.data.message || "User enrolled successfully!";
+      console.log("Enrollment response:", response);
+      const message = response.data?.message || "User enrolled successfully!";
       toast.success(message);
-      if (response.data.emailSent) {
+      if (response.data?.emailSent) {
         toast.success("Enrollment notification email sent!");
+      } else if (sendNotification) {
+        toast.warning("User enrolled but notification email could not be sent.");
       }
       setUserEmail("");
       setFirstName("");
@@ -97,7 +100,9 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
       onSuccess?.();
     },
     onError: (error) => {
-      toast.error(error.response?.data?.error || error.message);
+      console.error("Enrollment error:", error);
+      const errorMsg = error.response?.data?.error || error.message || "Enrollment failed";
+      toast.error(errorMsg);
     },
   });
 
