@@ -7,8 +7,13 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
 
     // Only admins or managers can enroll users
-    if (user?.role !== 'admin' && user?.role !== 'manager') {
-      console.error("[manualEnrollUser] Admin/manager check failed:", user?.role);
+    const userRole = user?.role?.toLowerCase() || '';
+    const isAuthorized = userRole === 'admin' || userRole === 'manager' || user?.custom_role === 'manager';
+    
+    console.log("[manualEnrollUser] User role check:", { userRole, custom_role: user?.custom_role, isAuthorized, fullUser: user });
+    
+    if (!isAuthorized) {
+      console.error("[manualEnrollUser] Authorization failed - not admin/manager");
       return Response.json({ error: 'Forbidden: Admin or manager access required' }, { status: 403 });
     }
 
