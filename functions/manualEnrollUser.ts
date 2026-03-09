@@ -65,7 +65,9 @@ Deno.serve(async (req) => {
         });
         emailSent = true;
       } catch (emailError) {
-        console.error('Email send error:', emailError);
+        console.error('Email send error:', emailError?.message || emailError);
+        // Don't throw - enrollment was successful even if email failed
+        emailSent = false;
       }
     }
 
