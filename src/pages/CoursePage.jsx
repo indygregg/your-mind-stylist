@@ -20,7 +20,7 @@ export default function CoursePage() {
   // Get course slug or id from URL
   const urlParams = new URLSearchParams(window.location.search);
   const courseSlug = urlParams.get("slug");
-  const courseId = urlParams.get("id");
+  const courseId = urlParams.get("id") || urlParams.get("courseid");
 
   // Fetch user
   useEffect(() => {
