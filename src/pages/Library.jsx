@@ -123,8 +123,17 @@ export default function Library() {
     }));
   };
 
-  // Library is empty only if loading is done and there are no published courses
-  const isLibraryEmpty = !loading && courses.length === 0;
+  // Show loading spinner while fetching
+  if (loading) {
+    return (
+      <div className="bg-[#F9F5EF] min-h-screen pt-32 flex items-center justify-center">
+        <div className="animate-pulse text-[#1E3A32] text-lg">Loading your library...</div>
+      </div>
+    );
+  }
+
+  // Library is empty only if loading is done, no error, and no published courses
+  const isLibraryEmpty = !fetchError && courses.length === 0;
 
   // Featured Programs (top 3 most relevant)
   const featuredPrograms = [];
