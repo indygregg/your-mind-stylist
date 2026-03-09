@@ -6,10 +6,10 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const user = await base44.auth.me();
 
-    // Only admins can enroll users
-    if (user?.role !== 'admin') {
-      console.error("[manualEnrollUser] Admin check failed:", user?.role);
-      return Response.json({ error: 'Forbidden: Admin access required' }, { status: 403 });
+    // Only admins or managers can enroll users
+    if (user?.role !== 'admin' && user?.role !== 'manager') {
+      console.error("[manualEnrollUser] Admin/manager check failed:", user?.role);
+      return Response.json({ error: 'Forbidden: Admin or manager access required' }, { status: 403 });
     }
 
     const { user_email, course_id, send_notification, first_name, last_name } = await req.json();
