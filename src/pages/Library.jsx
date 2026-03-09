@@ -400,10 +400,7 @@ export default function Library() {
           )}
 
           {/* Course Progress Dashboard and Library View */}
-          {userProgress.length === 0 ? (
-            <></>
-          ) : (
-            <>
+          <>
            {/* Resources Card - Prominent placement */}
            <Link to={createPageUrl("Resources")}>
              <motion.div
