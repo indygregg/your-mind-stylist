@@ -90,6 +90,7 @@ Deno.serve(async (req) => {
       emailSent,
     });
   } catch (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error('[manualEnrollUser] Unexpected error:', error);
+    return Response.json({ error: error?.message || 'Unknown error' }, { status: 500 });
   }
 });
