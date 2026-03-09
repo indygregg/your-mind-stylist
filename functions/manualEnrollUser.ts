@@ -20,15 +20,19 @@ Deno.serve(async (req) => {
     }
 
     // Find the user by email
+    console.log("[manualEnrollUser] Fetching users...");
     const allUsers = await base44.asServiceRole.entities.User.list();
+    console.log(`[manualEnrollUser] Found ${allUsers.length} users total`);
     const targetUser = allUsers.find(u => u.email?.toLowerCase() === user_email.toLowerCase());
     
     // User must exist - cannot create users programmatically
     if (!targetUser) {
+      console.error(`[manualEnrollUser] User not found: ${user_email}`);
       return Response.json({ 
         error: `User with email ${user_email} not found. Please invite them to the app first via Dashboard > Overview > Send Invites` 
       }, { status: 404 });
     }
+    console.log(`[manualEnrollUser] Found user: ${targetUser.id} (${targetUser.email})`);
 
     // Check if user already has progress for this course
     const allProgress = await base44.asServiceRole.entities.UserCourseProgress.list();
