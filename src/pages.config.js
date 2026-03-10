@@ -97,6 +97,7 @@ import FreeMasterclass from './pages/FreeMasterclass';
 import GuestAuthorInvite from './pages/GuestAuthorInvite';
 import Home from './pages/Home';
 import IntegrationSetup from './pages/IntegrationSetup';
+import KajabiImport from './pages/KajabiImport';
 import LENS from './pages/LENS';
 import LeadMagnetPage from './pages/LeadMagnetPage';
 import LearnHypnosis from './pages/LearnHypnosis';
@@ -183,7 +184,7 @@ import Welcome from './pages/Welcome';
 import ZoomCallback from './pages/ZoomCallback';
 import ZoomConnect from './pages/ZoomConnect';
 import ZoomSetup from './pages/ZoomSetup';
-import KajabiImport from './pages/KajabiImport';
+import ClientsHub from './pages/ClientsHub';
 import __Layout from './Layout.jsx';
 
 
@@ -238,6 +239,7 @@ export const PAGES = {
     "GuestAuthorInvite": GuestAuthorInvite,
     "Home": Home,
     "IntegrationSetup": IntegrationSetup,
+    "KajabiImport": KajabiImport,
     "LENS": LENS,
     "LeadMagnetPage": LeadMagnetPage,
     "LearnHypnosis": LearnHypnosis,
@@ -324,7 +326,7 @@ export const PAGES = {
     "ZoomCallback": ZoomCallback,
     "ZoomConnect": ZoomConnect,
     "ZoomSetup": ZoomSetup,
-    "KajabiImport": KajabiImport,
+    "ClientsHub": ClientsHub,
 }
 
 export const pagesConfig = {
