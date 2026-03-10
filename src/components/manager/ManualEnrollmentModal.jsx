@@ -116,26 +116,15 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
         last_name: lastName || undefined,
       }),
     onSuccess: (response) => {
-      console.log("Enrollment response:", response);
-      const message = response.data?.message || "User enrolled successfully!";
-      toast.success(message);
-      if (response.data?.emailSent) {
-        toast.success("Enrollment notification email sent!");
-      } else if (sendNotification) {
-        toast.warning("User enrolled but notification email could not be sent.");
-      }
-      setUserEmail("");
-      setFirstName("");
-      setLastName("");
-      setSelectedCourse("");
-      setSendNotification(true);
-      setUserExists(false);
-      setExistingEnrollments([]);
-      // Delay closing modal so toasts are visible
-      setTimeout(() => {
-        onOpenChange(false);
-        onSuccess?.();
-      }, 1500);
+      const course = courses.find(c => c.id === selectedCourse);
+      setSuccessResult({
+        message: response.data?.message || "User enrolled successfully!",
+        emailSent: response.data?.emailSent,
+        courseName: course?.title || "the course",
+        userEmail,
+        notificationRequested: sendNotification,
+      });
+      onSuccess?.();
     },
     onError: (error) => {
       console.error("Enrollment error:", error);
