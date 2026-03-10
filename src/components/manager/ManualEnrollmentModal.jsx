@@ -24,6 +24,33 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
   const [nameSuggestions, setNameSuggestions] = useState([]);
   const debounceRef = useRef(null);
 
+  // Fetch all users for name search
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ["allUsersForEnrollment"],
+    queryFn: () => base44.entities.User.list(),
+    enabled: open,
+  });
+
+  const handleNameSearch = (value) => {
+    setNameSearch(value);
+    clearTimeout(debounceRef.current);
+    if (!value.trim()) { setNameSuggestions([]); return; }
+    debounceRef.current = setTimeout(() => {
+      const q = value.toLowerCase();
+      const matches = allUsers.filter(u =>
+        u.full_name?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q)
+      ).slice(0, 6);
+      setNameSuggestions(matches);
+    }, 200);
+  };
+
+  const selectUserFromSearch = (u) => {
+    setNameSearch("");
+    setNameSuggestions([]);
+    setUserEmail(u.email);
+    checkUserExists(u.email);
+  };
+
   // Fetch all active courses
   const { data: courses = [] } = useQuery({
     queryKey: ["coursesForEnrollment"],
