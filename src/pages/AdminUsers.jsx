@@ -15,7 +15,10 @@ export default function AdminUsers() {
 
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["admin-all-users"],
-    queryFn: () => base44.entities.User.list("-created_date"),
+    queryFn: async () => {
+      const res = await base44.functions.invoke("getAllUsers");
+      return res.data?.users || [];
+    },
   });
 
   const updateRoleMutation = useMutation({
