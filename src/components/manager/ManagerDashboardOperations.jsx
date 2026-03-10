@@ -52,12 +52,10 @@ const operationsGroups = [
 export default function ManagerDashboardOperations() {
   const queryClient = useQueryClient();
 
-
-
-
-
+  return (
+    <div className="border-t border-[#E4D9C4]">
       {/* Quick Links Section */}
-      <div className="bg-white p-6 border-t border-[#E4D9C4]">
+      <div className="bg-white p-6">
         <h3 className="font-serif text-lg text-[#1E3A32] mb-6">Quick Links</h3>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {operationsGroups.map((group, idx) => (
