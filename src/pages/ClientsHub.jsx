@@ -3,7 +3,8 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Users, TrendingUp, Plus, Upload, Mail, Send, Loader2 } from "lucide-react";
+import { Users, TrendingUp, Plus, Upload, Mail, Send, Loader2, HelpCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import toast from "react-hot-toast";
 import LeadsSection from "../components/clients/LeadsSection.jsx";
 import UsersSection from "../components/clients/UsersSection.jsx";
@@ -41,9 +42,31 @@ export default function ClientsHub() {
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
         <div className="mb-8 flex justify-between items-start flex-wrap gap-4">
-          <div>
-            <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Clients Hub</h1>
-            <p className="text-[#2B2725]/70">Manage leads and user accounts in one place</p>
+          <div className="flex items-start gap-3">
+            <div>
+              <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Clients Hub</h1>
+              <p className="text-[#2B2725]/70">Manage leads and user accounts in one place</p>
+            </div>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="mt-2 p-2 text-[#2B2725]/60 hover:text-[#1E3A32] transition-colors">
+                    <HelpCircle size={20} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-sm bg-[#1E3A32] text-[#F9F5EF] border-0">
+                  <div className="space-y-2 text-sm">
+                    <p className="font-semibold">Workflow for Creating Users</p>
+                    <ol className="list-decimal list-inside space-y-1">
+                      <li><span className="font-medium">Create or Import Leads</span> — Add prospects to the Leads tab</li>
+                      <li><span className="font-medium">Convert to Users</span> — Use "Convert to Users" button to create platform accounts from selected leads</li>
+                      <li><span className="font-medium">Assign Courses</span> — During conversion, optionally assign courses to new users immediately</li>
+                    </ol>
+                    <p className="text-xs text-[#F9F5EF]/80 pt-2 border-t border-[#F9F5EF]/20">Converted leads are marked in the Leads tab and synced to MailerLite.</p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <div className="flex gap-3 flex-wrap">
             <Button
