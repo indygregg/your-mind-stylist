@@ -159,6 +159,41 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
         </DialogHeader>
 
         <div className="space-y-4">
+          {/* Name search */}
+          <div className="relative">
+            <Label className="text-sm font-medium">Search by Name</Label>
+            <div className="relative mt-1">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Input
+                placeholder="Type a name to find user..."
+                value={nameSearch}
+                onChange={(e) => handleNameSearch(e.target.value)}
+                className="pl-8"
+                disabled={enrollmentMutation.isPending}
+              />
+            </div>
+            {nameSuggestions.length > 0 && (
+              <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                {nameSuggestions.map(u => (
+                  <li
+                    key={u.id}
+                    onClick={() => selectUserFromSearch(u)}
+                    className="px-3 py-2 hover:bg-[#F9F5EF] cursor-pointer text-sm flex justify-between items-center"
+                  >
+                    <span className="font-medium">{u.full_name || "(no name)"}</span>
+                    <span className="text-gray-400 text-xs ml-2">{u.email}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <div className="flex-1 border-t border-gray-200" />
+            <span>or enter email directly</span>
+            <div className="flex-1 border-t border-gray-200" />
+          </div>
+
           <div>
             <Label htmlFor="email" className="text-sm font-medium">
               User Email *
