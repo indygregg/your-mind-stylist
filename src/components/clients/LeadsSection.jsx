@@ -276,6 +276,16 @@ export default function LeadsSection({ leads, isLoading }) {
           setImportDialogOpen(false);
         }}
       />
+
+      {/* Kajabi Import Modal */}
+      <KajabiImportModal
+        open={kajabiDialogOpen}
+        onOpenChange={setKajabiDialogOpen}
+        onSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ["leads"] });
+          setKajabiDialogOpen(false);
+        }}
+      />
     </div>
   );
 }
