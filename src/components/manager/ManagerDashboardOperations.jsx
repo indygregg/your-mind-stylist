@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Users, TrendingUp, Plus, Mail, Send, Loader2, HelpCircle, Clock, Settings, Zap, Package, AlertCircle, FileText, Calendar, ShoppingCart, CreditCard } from "lucide-react";
+import { Users, TrendingUp, Plus, Mail, Send, Loader2, HelpCircle, Clock, Settings, Zap, Package, AlertCircle, FileText, Calendar, ShoppingCart, CreditCard, Upload, Database } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
