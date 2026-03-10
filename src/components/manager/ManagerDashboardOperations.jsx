@@ -15,6 +15,12 @@ import MassEmailDialog from "../crm/MassEmailDialog";
 
 const operationsGroups = [
   {
+    title: "Client Management",
+    items: [
+      { icon: Database, label: "Client Hub", link: "ClientsHub" },
+    ]
+  },
+  {
     title: "Booking System",
     items: [
       { icon: Clock, label: "Appointment Types", link: "ManagerAppointmentTypes" },
