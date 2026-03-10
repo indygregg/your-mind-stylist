@@ -23,6 +23,7 @@ export default function LeadsSection({ leads, isLoading }) {
   const [selectedLead, setSelectedLead] = useState(null);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [kajabiDialogOpen, setKajabiDialogOpen] = useState(false);
   const [addLeadDialogOpen, setAddLeadDialogOpen] = useState(false);
 
   const stages = ["new", "contacted", "booked", "qualified", "proposal", "negotiation", "won", "lost"];
