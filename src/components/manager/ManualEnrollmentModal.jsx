@@ -388,6 +388,7 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
         </div>
         )}
       </DialogContent>
+
     </Dialog>
   );
 }
