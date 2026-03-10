@@ -105,6 +105,7 @@ export default function AuthLayout({ children, currentPageName }) {
         { name: "Audio", page: "StudioAudio" },
         { name: "Messages", page: "MessagesManager" },
         { name: "Affiliates", page: "ManagerAffiliates" },
+        { name: "Users", page: "AdminUsers" },
       ];
     }
 
