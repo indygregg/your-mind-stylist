@@ -51,29 +51,6 @@ const operationsGroups = [
 
 export default function ManagerDashboardOperations() {
   const queryClient = useQueryClient();
-  const [convertDialogOpen, setConvertDialogOpen] = useState(false);
-  const [massEmailDialogOpen, setMassEmailDialogOpen] = useState(false);
-  const [syncing, setSyncing] = useState(false);
-
-  // Fetch leads
-  const { data: leads = [], isLoading: leadsLoading } = useQuery({
-    queryKey: ["leads"],
-    queryFn: () => base44.entities.Lead.list("-created_date", 500),
-  });
-
-  // Fetch users
-  const { data: users = [], isLoading: usersLoading } = useQuery({
-    queryKey: ["admin-all-users"],
-    queryFn: async () => {
-      const res = await base44.functions.invoke("getAllUsers");
-      return res.data?.users || [];
-    },
-  });
-
-  // Calculate stats
-  const totalLeads = leads.length;
-  const convertedLeads = leads.filter((l) => l.converted_to_client).length;
-  const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;
 
   return (
     <div className="border-t border-[#E4D9C4] space-y-6">
