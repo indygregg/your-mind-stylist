@@ -85,9 +85,9 @@ export default function AuthLayout({ children, currentPageName }) {
         { name: "Calendar", page: "ManagerCalendar" },
         { name: "Staff", page: "StaffManagement" },
         { name: "Library", page: "Library" },
+        { name: "Clients", page: "ClientsHub" },
         { name: "Studio", page: "StudioDashboard" },
         { name: "Roadmap", page: "AdminRoadmap" },
-        { name: "Users", page: "AdminUsers" },
         { name: "Settings", page: "StudioSettings" },
       ];
     }
@@ -99,13 +99,13 @@ export default function AuthLayout({ children, currentPageName }) {
         { name: "Calendar", page: "ManagerCalendar" },
         { name: "Staff", page: "StaffManagement" },
         { name: "Library", page: "Library" },
+        { name: "Clients", page: "ClientsHub" },
         { name: "Blog", page: "BlogManager" },
         { name: "Author Profile", page: "AuthorProfile" },
         { name: "Courses", page: "CourseManager" },
         { name: "Audio", page: "StudioAudio" },
         { name: "Messages", page: "MessagesManager" },
         { name: "Affiliates", page: "ManagerAffiliates" },
-        { name: "Users", page: "AdminUsers" },
       ];
     }
 
