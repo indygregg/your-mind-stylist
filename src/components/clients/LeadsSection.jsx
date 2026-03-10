@@ -97,12 +97,19 @@ export default function LeadsSection({ leads, isLoading }) {
           Add Lead
         </Button>
         <Button
+          onClick={() => setKajabiDialogOpen(true)}
+          className="bg-[#D8B46B] hover:bg-[#C9A555] text-[#1E3A32] font-medium"
+        >
+          <Upload size={16} className="mr-2" />
+          Import from Kajabi (→ Users)
+        </Button>
+        <Button
           onClick={() => setImportDialogOpen(true)}
           variant="outline"
           className="border-[#D8B46B] text-[#1E3A32]"
         >
           <Upload size={16} className="mr-2" />
-          Import Leads
+          Import CSV
         </Button>
       </div>
 
