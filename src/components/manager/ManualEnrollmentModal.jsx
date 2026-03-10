@@ -19,6 +19,7 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
   const [sendNotification, setSendNotification] = useState(true);
   const [userExists, setUserExists] = useState(false);
   const [checkingUser, setCheckingUser] = useState(false);
+  const [existingEnrollments, setExistingEnrollments] = useState([]);
 
   // Fetch all active courses
   const { data: courses = [] } = useQuery({
