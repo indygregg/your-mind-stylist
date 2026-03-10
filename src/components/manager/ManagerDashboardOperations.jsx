@@ -52,48 +52,7 @@ const operationsGroups = [
 export default function ManagerDashboardOperations() {
   const queryClient = useQueryClient();
 
-  return (
-    <div className="border-t border-[#E4D9C4] space-y-6">
-      {/* User Onboarding Section */}
-      <div className="bg-white p-6">
-        <h3 className="font-serif text-xl text-[#1E3A32] mb-6">User Onboarding</h3>
-        <p className="text-[#2B2725]/70 text-sm mb-6">Import users from Kajabi, create manually, or manage enrollments</p>
-        
-        <div className="grid md:grid-cols-3 gap-4">
-          <Link
-            to={createPageUrl("ClientsHub")}
-            className="flex items-center gap-3 p-4 bg-[#F9F5EF] border border-[#E4D9C4] hover:border-[#D8B46B] rounded-lg transition-all group"
-          >
-            <Upload size={20} className="text-[#D8B46B]" />
-            <div>
-              <p className="font-medium text-[#1E3A32] group-hover:text-[#D8B46B] transition-colors">Import from Kajabi</p>
-              <p className="text-xs text-[#2B2725]/60">CSV → Users + Courses</p>
-            </div>
-          </Link>
 
-          <Link
-            to={createPageUrl("ClientsHub")}
-            className="flex items-center gap-3 p-4 bg-[#F9F5EF] border border-[#E4D9C4] hover:border-[#6E4F7D] rounded-lg transition-all group"
-          >
-            <Plus size={20} className="text-[#6E4F7D]" />
-            <div>
-              <p className="font-medium text-[#1E3A32] group-hover:text-[#6E4F7D] transition-colors">Create User</p>
-              <p className="text-xs text-[#2B2725]/60">Add manually</p>
-            </div>
-          </Link>
-
-          <Link
-            to={createPageUrl("ClientsHub")}
-            className="flex items-center gap-3 p-4 bg-[#F9F5EF] border border-[#E4D9C4] hover:border-[#1E3A32] rounded-lg transition-all group"
-          >
-            <Database size={20} className="text-[#1E3A32]" />
-            <div>
-              <p className="font-medium text-[#1E3A32] group-hover:text-[#D8B46B] transition-colors">Manage Users</p>
-              <p className="text-xs text-[#2B2725]/60">Roles, enrollments</p>
-            </div>
-          </Link>
-        </div>
-      </div>
 
 
 
