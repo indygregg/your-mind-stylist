@@ -223,11 +223,14 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
                 <SelectValue placeholder="Choose a course..." />
               </SelectTrigger>
               <SelectContent>
-                {courses.map((course) => (
-                  <SelectItem key={course.id} value={course.id}>
-                    {course.title}
-                  </SelectItem>
-                ))}
+                {courses.map((course) => {
+                  const alreadyEnrolled = existingEnrollments.some(e => e.course_id === course.id);
+                  return (
+                    <SelectItem key={course.id} value={course.id} disabled={alreadyEnrolled}>
+                      {course.title}{alreadyEnrolled ? " (already enrolled)" : ""}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
             {courses.length === 0 && (
