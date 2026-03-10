@@ -5,9 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Users, TrendingUp, Plus, Upload, Mail, Send, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
-import LeadsSection from "../components/clients/LeadsSection";
-import UsersSection from "../components/clients/UsersSection";
-import ConvertLeadsDialog from "../components/clients/ConvertLeadsDialog";
+import LeadsSection from "../components/clients/LeadsSection.jsx";
+import UsersSection from "../components/clients/UsersSection.jsx";
+import ConvertLeadsDialog from "../components/clients/ConvertLeadsDialog.jsx";
 import MassEmailDialog from "../components/crm/MassEmailDialog";
 
 export default function ClientsHub() {

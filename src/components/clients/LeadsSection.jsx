@@ -12,7 +12,7 @@ import { Search, Mail, Filter, Plus, Trash2, Upload } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import LeadImport from "../manager/LeadImport";
-import LeadDetailsDialog from "./LeadDetailsDialog";
+import LeadDetailsDialog from "./LeadDetailsDialog.jsx";
 
 export default function LeadsSection({ leads, isLoading }) {
   const queryClient = useQueryClient();

@@ -9,7 +9,7 @@ import { Search, Mail, Calendar, Plus } from "lucide-react";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import CreateUserModal from "./CreateUserModal";
+import CreateUserModal from "./CreateUserModal.jsx";
 import ManualEnrollmentModal from "../manager/ManualEnrollmentModal";
 
 export default function UsersSection({ users, isLoading }) {
