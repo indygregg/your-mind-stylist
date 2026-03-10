@@ -133,6 +133,19 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
     },
   });
 
+  const handleReset = () => {
+    setUserEmail("");
+    setFirstName("");
+    setLastName("");
+    setSelectedCourse("");
+    setSendNotification(true);
+    setUserExists(false);
+    setExistingEnrollments([]);
+    setSuccessResult(null);
+    setNameSearch("");
+    setNameSuggestions([]);
+  };
+
   const handleEnroll = () => {
     if (!userEmail.trim() || !selectedCourse) {
       toast.error("Please fill in all required fields");
