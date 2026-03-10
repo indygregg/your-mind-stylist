@@ -22,6 +22,7 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
   const [existingEnrollments, setExistingEnrollments] = useState([]);
   const [nameSearch, setNameSearch] = useState("");
   const [nameSuggestions, setNameSuggestions] = useState([]);
+  const [successResult, setSuccessResult] = useState(null); // { message, emailSent, courseName }
   const debounceRef = useRef(null);
 
   // Fetch all users for name search
