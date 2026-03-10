@@ -8,9 +8,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import toast from "react-hot-toast";
-import LeadsSection from "../clients/LeadsSection.jsx";
-import UsersSection from "../clients/UsersSection.jsx";
-import ConvertLeadsDialog from "../clients/ConvertLeadsDialog.jsx";
 import MassEmailDialog from "../crm/MassEmailDialog";
 
 const operationsGroups = [
