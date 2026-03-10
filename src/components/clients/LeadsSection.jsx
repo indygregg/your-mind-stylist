@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import LeadImport from "../manager/LeadImport";
 import LeadDetailsDialog from "./LeadDetailsDialog.jsx";
+import KajabiImportModal from "./KajabiImportModal";
 
 export default function LeadsSection({ leads, isLoading }) {
   const queryClient = useQueryClient();
