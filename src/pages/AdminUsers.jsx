@@ -59,9 +59,16 @@ export default function AdminUsers() {
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">User Management</h1>
-          <p className="text-[#2B2725]/70">View and manage all platform users</p>
+        <div className="mb-8 flex items-start justify-between flex-wrap gap-4">
+          <div>
+            <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">User Management</h1>
+            <p className="text-[#2B2725]/70">View and manage all platform users</p>
+          </div>
+          <Link to={createPageUrl("KajabiImport")}>
+            <Button className="bg-[#D8B46B] hover:bg-[#c9a55c] text-[#1E3A32] font-medium">
+              <Upload size={16} className="mr-2" /> Import from Kajabi
+            </Button>
+          </Link>
         </div>
 
         {/* Filters */}
