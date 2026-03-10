@@ -166,7 +166,20 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
               </div>
             )}
             {userExists && (
-              <p className="text-xs text-green-600 mt-1">✓ User is in the system</p>
+              <div className="mt-1">
+                <p className="text-xs text-green-600">✓ User is in the system</p>
+                {existingEnrollments.length > 0 && (
+                  <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
+                    <p className="font-medium mb-1">Already enrolled in:</p>
+                    <ul className="space-y-0.5">
+                      {existingEnrollments.map(e => {
+                        const course = courses.find(c => c.id === e.course_id);
+                        return course ? <li key={e.course_id}>• {course.title}</li> : null;
+                      })}
+                    </ul>
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
