@@ -155,11 +155,47 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(v) => { if (!v) handleReset(); onOpenChange(v); }}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>Manually Enroll User</DialogTitle>
         </DialogHeader>
+
+        {successResult ? (
+          <div className="py-4 space-y-4">
+            <div className="flex flex-col items-center text-center gap-3 p-6 bg-green-50 rounded-xl border border-green-200">
+              <CheckCircle size={40} className="text-green-500" />
+              <div>
+                <p className="font-semibold text-green-800 text-lg">Enrollment Successful!</p>
+                <p className="text-sm text-green-700 mt-1">{successResult.message}</p>
+              </div>
+              <div className="w-full mt-2 p-3 bg-white rounded-lg border border-green-100 text-sm text-left space-y-1">
+                <p><span className="text-gray-500">Course:</span> <span className="font-medium">{successResult.courseName}</span></p>
+                <p><span className="text-gray-500">User:</span> <span className="font-medium">{successResult.userEmail}</span></p>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-gray-500">Notification email:</span>
+                  {successResult.notificationRequested ? (
+                    successResult.emailSent ? (
+                      <span className="flex items-center gap-1 text-green-600 font-medium">
+                        <CheckCircle size={14} /> Sent successfully
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1 text-amber-600 font-medium">
+                        <AlertCircle size={14} /> Could not be sent
+                      </span>
+                    )
+                  ) : (
+                    <span className="text-gray-400">Not requested</span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={handleReset}>Enroll Another</Button>
+              <Button onClick={() => { handleReset(); onOpenChange(false); }} className="bg-[#1E3A32] hover:bg-[#2B2725] text-white">Done</Button>
+            </div>
+          </div>
+        ) : (
 
         <div className="space-y-4">
           {/* Name search */}
