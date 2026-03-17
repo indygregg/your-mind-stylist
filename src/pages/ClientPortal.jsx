@@ -30,39 +30,47 @@ export default function ClientPortal() {
   const { data: user } = useQuery({
     queryKey: ["currentUser"],
     queryFn: () => base44.auth.me(),
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: bookings = [] } = useQuery({
     queryKey: ["myBookings", user?.email],
     queryFn: () => base44.entities.Booking.filter({ user_email: user.email }),
-    enabled: !!user,
+    enabled: !!user?.email,
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const { data: userProgress = [] } = useQuery({
+    queryKey: ["userCourseProgress", user?.id],
+    queryFn: () => base44.entities.UserCourseProgress.filter({ user_id: user.id }),
+    enabled: !!user?.id,
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: courses = [] } = useQuery({
-    queryKey: ["myCourses"],
+    queryKey: ["enrolledCourses", user?.id],
     queryFn: async () => {
-      const progress = await base44.entities.UserCourseProgress.filter({ user_id: user.id });
-      const courseIds = progress.map(p => p.course_id);
+      const courseIds = userProgress.map(p => p.course_id);
       if (courseIds.length === 0) return [];
-      
       const allCourses = await base44.entities.Course.list('-created_date', 200);
       const uniqueCourseIds = [...new Set(courseIds)];
       return allCourses.filter(c => uniqueCourseIds.includes(c.id));
     },
-    enabled: !!user,
+    enabled: !!user?.id && userProgress.length > 0,
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: webinars = [] } = useQuery({
-    queryKey: ["myWebinars"],
+    queryKey: ["myWebinars", user?.id],
     queryFn: async () => {
       const access = await base44.entities.UserWebinarAccess.filter({ user_id: user.id });
       const webinarIds = access.map(a => a.webinar_id);
       if (webinarIds.length === 0) return [];
-      
       const allWebinars = await base44.entities.Webinar.list();
       return allWebinars.filter(w => webinarIds.includes(w.id));
     },
-    enabled: !!user,
+    enabled: !!user?.id,
+    staleTime: 2 * 60 * 1000,
   });
 
   const { data: purchases = [] } = useQuery({
