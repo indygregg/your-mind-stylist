@@ -69,20 +69,28 @@ export default function Resources() {
       return;
     }
 
-    // Track view
+    // Verify access server-side before serving
     try {
-      await base44.entities.Resource.update(resource.id, {
-        view_count: (resource.view_count || 0) + 1
+      const response = await base44.functions.invoke('getResourceAccess', {
+        resource_id: resource.id
       });
-    } catch (error) {
-      console.error("Failed to track view:", error);
-    }
 
-    // Open resource
-    if (resource.resource_type === "link") {
-      window.open(resource.file_url, "_blank");
-    } else {
-      window.open(resource.file_url, "_blank");
+      if (!response.data.hasAccess) {
+        setLockedResource(resource);
+        return;
+      }
+
+      // Track view
+      try {
+        await base44.entities.Resource.update(resource.id, {
+          view_count: (resource.view_count || 0) + 1
+        });
+      } catch (error) {
+        console.error("Failed to track view:", error);
+      }
+
+      // Open resource
+      window.open(response.data.file_url, "_blank");
       
       // Track download
       try {
@@ -92,6 +100,9 @@ export default function Resources() {
       } catch (error) {
         console.error("Failed to track download:", error);
       }
+    } catch (error) {
+      console.error("Access verification failed:", error);
+      setLockedResource(resource);
     }
   };
 
