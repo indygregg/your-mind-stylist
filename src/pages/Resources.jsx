@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
@@ -14,48 +14,51 @@ import {
 } from "lucide-react";
 
 export default function Resources() {
-  const [user, setUser] = useState(null);
   const [viewMode, setViewMode] = useState("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [accessFilter, setAccessFilter] = useState("all");
-  const [userProducts, setUserProducts] = useState([]);
   const [lockedResource, setLockedResource] = useState(null);
+
+  const { data: user } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: () => base44.auth.me(),
+    staleTime: 5 * 60 * 1000,
+  });
 
   const { data: resources = [], isLoading } = useQuery({
     queryKey: ["resources"],
     queryFn: () => base44.entities.Resource.filter({ status: "published" }, "sort_order"),
+    staleTime: 5 * 60 * 1000,
   });
 
   const { data: products = [] } = useQuery({
     queryKey: ["products"],
     queryFn: () => base44.entities.Product.list(),
+    staleTime: 10 * 60 * 1000,
   });
 
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        
-        // Load user's purchased products
-        if (currentUser.stripe_customer_id) {
-          // In a real implementation, fetch user's active subscriptions/purchases
-          // For now, we'll use a simple approach
-          setUserProducts(currentUser.owned_products || []);
-        }
-      } catch (error) {
-        // User not logged in
-      }
-    };
-    loadUser();
-  }, []);
+  // Fetch user's course progress to check access
+  const { data: userProgress = [] } = useQuery({
+    queryKey: ["userCourseProgress", user?.id],
+    queryFn: () => base44.entities.UserCourseProgress.filter({ user_id: user.id }),
+    enabled: !!user?.id,
+    staleTime: 2 * 60 * 1000,
+  });
 
   const hasAccess = (resource) => {
     if (resource.access_level === "public") return true;
     if (resource.access_level === "authenticated" && user) return true;
-    if (resource.access_level === "product_gated" && user) {
-      return resource.product_ids?.some(pid => userProducts.includes(pid));
+    if (resource.access_level === "product_gated" && user && resource.product_ids?.length > 0) {
+      // Check if user owns any of the gated products via course enrollment or subscriptions
+      const product = products.find(p => resource.product_ids.includes(p.id));
+      if (!product) return false;
+      
+      // Check course access via access_grants
+      if (product.access_grants?.length > 0) {
+        return userProgress.some(p => product.access_grants.includes(p.course_id));
+      }
+      return false;
     }
     return false;
   };
