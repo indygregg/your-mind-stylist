@@ -70,6 +70,16 @@ export default function ConsultationQuestionnaire() {
       isMounted = false;
     };
   }, []);
+
+  // Auto-set step to first step with fields
+  useEffect(() => {
+    if (formFields.length > 0 && step === 1) {
+      const availableSteps = [...new Set(formFields.map(f => parseInt(f.step, 10)))].sort((a, b) => a - b);
+      if (availableSteps.length > 0 && availableSteps[0] > 1) {
+        setStep(availableSteps[0]);
+      }
+    }
+  }, [formFields]);
   
   const totalSteps = 5;
   const progress = (step / totalSteps) * 100;
