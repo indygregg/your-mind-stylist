@@ -4,7 +4,9 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle, Sparkles } from "lucide-react";
+import { X, CheckCircle, Sparkles, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
+import { createPageUrl } from "@/utils";
 
 export default function DailyStyleCheck({ onClose, onComplete }) {
   const queryClient = useQueryClient();
@@ -303,32 +305,38 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                       Back to Studio
                     </Button>
 
-                    <div className="pt-4 border-t border-[#E4D9C4]">
-                      <p className="text-xs lg:text-sm text-[#1E3A32] mb-2 font-medium">Your Stylist's Pick™</p>
-                      <p className="text-xs text-[#2B2725]/60 mb-3">
+                     <div className="pt-4 border-t border-[#E4D9C4] bg-[#D8B46B]/5 -mx-3 lg:-mx-6 px-3 lg:px-6 py-4">
+                      <div className="flex items-start gap-2 mb-3">
+                        <Sparkles size={16} className="text-[#D8B46B] flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs lg:text-sm text-[#1E3A32] font-medium">Your Stylist's Pick™</p>
+                          <p className="text-[9px] lg:text-xs text-[#2B2725]/60 mt-1">
+                            Based on your check-in, Roberta recommends a personalized Style Pause to support your current state.
+                          </p>
+                        </div>
+                      </div>
+                      <p className="text-xs text-[#1E3A32] mb-3 font-medium bg-white/50 p-2 rounded">
+                        💡 
                         {checkInData.state_value > 70 && checkInData.state_key === "calm_activated"
-                          ? "Want a quick reset to bring your system down a notch?"
+                          ? "A quick reset to bring your system down a notch"
                           : checkInData.state_key === "grounded_scattered" && checkInData.state_value > 60
-                          ? "Want a 2-minute pause to help you land back in your body?"
-                          : "Want a 2-minute pause to lock in the state you want to carry forward?"
+                          ? "A 2-minute pause to help you land back in your body"
+                          : "A 2-minute pause to lock in the state you want to carry forward"
                         }
                       </p>
                       <div className="flex flex-col lg:flex-row gap-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="flex-1 text-xs lg:text-sm"
-                          onClick={() => {
-                            if (onComplete) {
-                              onComplete({ showPauseSuggestion: true, checkInData });
-                            }
-                            onClose();
-                          }}
-                        >
-                          <Sparkles size={14} className="mr-2" />
-                          Start a Style Pause™
-                        </Button>
-                        <Button variant="ghost" size="sm" onClick={onClose} className="text-xs lg:text-sm">
+                        <Link to={createPageUrl('StylePauses')} className="flex-1">
+                          <Button 
+                            size="sm" 
+                            className="w-full text-xs lg:text-sm bg-[#D8B46B] hover:bg-[#C9A55A] text-[#1E3A32]"
+                            onClick={onClose}
+                          >
+                            <Sparkles size={14} className="mr-2" />
+                            Browse Style Pauses™
+                            <ArrowRight size={14} className="ml-1" />
+                          </Button>
+                        </Link>
+                        <Button variant="ghost" size="sm" onClick={onClose} className="text-xs lg:text-sm flex-1 lg:flex-none">
                           Skip
                         </Button>
                       </div>
