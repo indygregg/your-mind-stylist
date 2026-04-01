@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, Info } from "lucide-react";
 
 export default function InnerMomentumMeter({ weeklyPoints = 0, className = "" }) {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const getMomentumLevel = () => {
     if (weeklyPoints >= 41) return { 
       name: "Deepening Practice", 
@@ -20,8 +22,9 @@ export default function InnerMomentumMeter({ weeklyPoints = 0, className = "" })
       color: "#6E4F7D" 
     };
     return { 
-      name: "Soft Start", 
-      message: "Every moment of presence matters.",
+      name: "Getting Started", 
+      message: "Every moment of presence matters. You're building a foundation.",
+      tooltip: "You're in the early stages of building your presence practice.",
       color: "#E4D9C4" 
     };
   };
@@ -86,9 +89,28 @@ export default function InnerMomentumMeter({ weeklyPoints = 0, className = "" })
 
         {/* Text */}
         <div className="flex-1">
-          <h3 className="font-serif text-xl text-[#1E3A32] mb-2">
-            {level.name}
-          </h3>
+          <div className="flex items-center gap-2 mb-2">
+            <h3 className="font-serif text-xl text-[#1E3A32]">
+              {level.name}
+            </h3>
+            {level.tooltip && (
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
+                  className="text-[#D8B46B] hover:text-[#C9A55A] transition-colors"
+                  title={level.tooltip}
+                >
+                  <Info size={16} />
+                </button>
+                {showTooltip && (
+                  <div className="absolute bottom-full left-0 mb-2 bg-[#1E3A32] text-white text-xs px-3 py-2 rounded whitespace-nowrap z-10">
+                    {level.tooltip}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           <p className="text-sm text-[#2B2725]/70 leading-relaxed italic">
             {level.message}
           </p>
