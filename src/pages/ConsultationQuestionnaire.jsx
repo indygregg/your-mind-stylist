@@ -115,13 +115,8 @@ export default function ConsultationQuestionnaire() {
   };
 
   const isStepValid = () => {
-    // If no fields are configured for this step, allow progression
-    if (currentStepFields.length === 0) {
-      return true;
-    }
-    // Check if all required fields for current step are filled
+    // Always allow progression if no fields or no required fields
     const requiredFields = currentStepFields.filter(field => field.required);
-    // If no required fields, allow progression
     if (requiredFields.length === 0) {
       return true;
     }
