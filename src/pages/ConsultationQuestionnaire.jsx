@@ -76,12 +76,24 @@ export default function ConsultationQuestionnaire() {
     })
     .sort((a, b) => (a.order || 0) - (b.order || 0));
   
+  // Initialize formData when fields are loaded
+  React.useEffect(() => {
+    if (formFields.length > 0 && Object.keys(formData).length === 0) {
+      const initialData = formFields.reduce((acc, field) => {
+        acc[field.field_name] = field.field_type === 'checkbox' ? false : '';
+        return acc;
+      }, {});
+      setFormData(initialData);
+    }
+  }, [formFields]);
+  
   // Debug logging
   React.useEffect(() => {
     console.log('Current step:', step);
     console.log('All form fields:', formFields);
     console.log('Filtered fields for step:', currentStepFields);
-  }, [step, formFields, currentStepFields]);
+    console.log('Form data:', formData);
+  }, [step, formFields, currentStepFields, formData]);
 
   const handleCheckboxChange = (field, value) => {
     setFormData(prev => ({
@@ -126,6 +138,11 @@ export default function ConsultationQuestionnaire() {
       if (field.field_type === 'checkbox') {
         return value === true;
       }
+      if (field.field_type === 'radio') {
+        // Radio button is valid if any value is selected (including 'yes', 'no', etc.)
+        return value && value.toString().trim().length > 0;
+      }
+      // For text, email, tel, date, number, textarea, etc.
       return value && value.toString().trim().length > 0;
     });
   };
