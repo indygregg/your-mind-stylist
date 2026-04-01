@@ -221,6 +221,48 @@ Deno.serve(async (req) => {
                     });
                 }
                 
+                // Handle Gift Code Purchase (gift code redeemed)
+                else if (session.metadata.gift_code && session.metadata.recipient_user_id) {
+                    const giftCode = session.metadata.gift_code;
+                    const recipientUserId = session.metadata.recipient_user_id;
+                    const productId = session.metadata.product_id;
+                    
+                    // Find the gift code record to get product details
+                    const giftCodes = await base44.asServiceRole.entities.GiftCode.filter({ code: giftCode });
+                    const giftCodeRecord = giftCodes[0];
+                    
+                    if (giftCodeRecord) {
+                        // Update gift code usage
+                        await base44.asServiceRole.entities.GiftCode.update(giftCodeRecord.id, {
+                            times_used: (giftCodeRecord.times_used || 0) + 1
+                        });
+                        
+                        // Get product to find access grants
+                        const product = await base44.asServiceRole.entities.Product.get(productId);
+                        if (product) {
+                            const courseIds = new Set();
+                            if (product.related_course_id) courseIds.add(product.related_course_id);
+                            if (product.access_grants?.length > 0) product.access_grants.forEach(id => courseIds.add(id));
+                            
+                            // Grant course access to RECIPIENT (not payer)
+                            for (const courseId of courseIds) {
+                                const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
+                                    user_id: recipientUserId,
+                                    course_id: courseId
+                                });
+                                if (existing.length === 0) {
+                                    await base44.asServiceRole.entities.UserCourseProgress.create({
+                                        user_id: recipientUserId,
+                                        course_id: courseId,
+                                        status: 'not_started',
+                                        completion_percentage: 0
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+                
                 // Handle Product Purchase (single product_id OR multi product_ids from cart)
                 else if ((session.metadata.product_id || session.metadata.product_ids) && session.metadata.user_id) {
                     // Support both single and multiple product IDs

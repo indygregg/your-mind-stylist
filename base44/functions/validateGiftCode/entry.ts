@@ -73,7 +73,10 @@ Deno.serve(async (req) => {
     return Response.json({
       valid: true,
       discount_percentage: giftCode.discount_percentage,
-      discount_amount: 100 // 100% off
+      discount_amount: 100, // 100% off
+      recipient_user_id: giftCode.recipient_user_id,
+      recipient_email: giftCode.recipient_email,
+      recipient_name: giftCode.recipient_name
     });
   } catch (error) {
     console.error('Error validating gift code:', error);
