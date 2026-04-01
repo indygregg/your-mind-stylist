@@ -18,57 +18,21 @@ export default function ConsultationQuestionnaire() {
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [formFields, setFormFields] = useState([]);
-  const [formData, setFormData] = useState({
-    name: "",
-    address: "",
-    city: "",
-    state: "",
-    zip: "",
-    phone: "",
-    email: "",
-    birth_date: "",
-    occupation: "",
-    emergency_contact_name: "",
-    emergency_contact_phone: "",
-    emergency_secondary: false,
-    referring_party: "",
-    how_did_you_hear: "",
-    primary_concerns: "",
-    previous_hypnosis: "",
-    previous_hypnosis_details: "",
-    health_conditions: [],
-    health_conditions_other: "",
-    current_medications: "",
-    mental_health_diagnosis: "",
-    mental_health_details: "",
-    current_therapy: "",
-    therapist_awareness: "",
-    suicidal_thoughts: "",
-    substance_use: "",
-    substance_details: "",
-    goals_expectations: "",
-    barriers_to_progress: "",
-    commitment_level: "",
-    additional_info: "",
-    consent_no_medical_advice: false,
-    consent_not_therapy: false,
-    consent_confidentiality: false,
-    consent_voluntary: false,
-    consent_questions_answered: false,
-    signature_name: "",
-    signature_date: new Date().toISOString().split('T')[0],
-    guardian_signature: "",
-    guardian_relationship: ""
-  });
+  const [loading, setLoading] = useState(true);
 
   // Fetch form fields from ConsultationForm entity
   useEffect(() => {
     const fetchFields = async () => {
       try {
+        setLoading(true);
         const fields = await base44.entities.ConsultationForm.list();
-        setFormFields(fields);
+        console.log('Fetched ConsultationForm fields:', fields);
+        setFormFields(fields || []);
       } catch (error) {
         console.error("Error fetching form fields:", error);
+        setFormFields([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchFields();
@@ -251,6 +215,17 @@ export default function ConsultationQuestionnaire() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] pt-32 pb-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D8B46B] mx-auto mb-4"></div>
+          <p className="text-[#2B2725]/60">Loading questionnaire...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F9F5EF] pt-32 pb-20">
       <div className="max-w-4xl mx-auto px-6">
@@ -285,70 +260,3 @@ export default function ConsultationQuestionnaire() {
           exit={{ opacity: 0, x: -20 }}
         >
           <Card>
-            <CardContent className="pt-6">
-              {currentStepFields.length > 0 && (
-                <div className="space-y-6">
-                  <CardTitle className="font-serif text-2xl text-[#1E3A32] mb-6">
-                    {currentStepFields[0]?.step_title}
-                  </CardTitle>
-                  
-                  {currentStepFields[0]?.step_description && (
-                    <p className="text-[#2B2725]/70 mb-6">
-                      {currentStepFields[0].step_description}
-                    </p>
-                  )}
-                  
-                  <div className="space-y-6">
-                    {currentStepFields.map(field => renderField(field))}
-                  </div>
-                </div>
-              )}
-              
-              {currentStepFields.length === 0 && (
-                <div className="text-center py-12">
-                  <p className="text-[#2B2725]/60">No fields configured for this step yet.</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Navigation */}
-        <div className="flex justify-between mt-8">
-          {step > 1 && (
-            <Button
-              variant="outline"
-              onClick={() => setStep(step - 1)}
-              className="border-[#D8B46B] text-[#1E3A32]"
-            >
-              Previous
-            </Button>
-          )}
-          {step < totalSteps ? (
-            <Button
-              onClick={() => setStep(step + 1)}
-              disabled={!isStepValid()}
-              className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] ml-auto"
-            >
-              Next
-            </Button>
-          ) : (
-            <Button
-              onClick={handleSubmit}
-              disabled={!isStepValid() || submitting}
-              className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[#1E3A32] ml-auto"
-            >
-              {submitting ? "Submitting..." : "Submit Questionnaire"}
-              {!submitting && <CheckCircle2 className="ml-2" size={16} />}
-            </Button>
-          )}
-        </div>
-
-        {/* Auto-save indicator */}
-        <p className="text-center text-xs text-[#2B2725]/50 mt-4">
-          Your progress is automatically saved as you complete each step
-        </p>
-      </div>
-    </div>
-  );
-}
