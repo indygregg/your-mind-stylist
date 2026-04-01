@@ -257,55 +257,12 @@ export default function Dashboard() {
             <div data-tour="daily-prompt">
               <DailyPocketPrompt 
                 prompt={dailyPrompt?.prompt_text}
-                onCreateNote={() => setNotesDrawerOpen(true)}
+                onCreateNote={(promptData) => {
+                  setDailyPrompt(promptData);
+                  setNotesDrawerOpen(true);
+                }}
               />
             </div>
-          </div>
-
-          {/* Constellation & Momentum */}
-          <div className="grid lg:grid-cols-2 gap-6 mb-12">
-            <div data-tour="constellation">
-              <ConstellationMap totalPoints={studioStats?.constellation?.totalPoints || 0} />
-            </div>
-            <div data-tour="momentum">
-              <InnerMomentumMeter weeklyPoints={studioStats?.momentum?.weeklyPoints || 0} />
-            </div>
-          </div>
-
-          {/* Upcoming Sessions */}
-          {upcomingBookings.length > 0 && (
-            <div className="mb-12">
-              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">
-                <CmsText cmsKey="dashboard.sessions.title" defaultText="Your Upcoming Sessions" />
-              </h2>
-              <UpcomingSessions 
-                bookings={upcomingBookings} 
-                onRefresh={async () => {
-                  const currentUser = await base44.auth.me();
-                  await fetchBookings(currentUser);
-                }} 
-              />
-            </div>
-          )}
-
-          {/* Personalized Recommendations */}
-          {recommendations.length > 0 && (
-            <div className="mb-12">
-              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">
-                <CmsText cmsKey="dashboard.recommendations.title" defaultText="Suggested For You" />
-              </h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                {recommendations.map((rec, index) => (
-                  <RecommendationCard 
-                    key={index} 
-                    recommendation={rec}
-                    onTakeAction={(prompt) => {
-                      setDailyPrompt({ prompt_text: prompt });
-                      setNotesDrawerOpen(true);
-                    }}
-                  />
-                ))}
-              </div>
             </div>
           )}
 

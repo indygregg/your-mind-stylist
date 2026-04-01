@@ -7,7 +7,10 @@ export default function DailyPocketPrompt({ prompt, onCreateNote, className = ""
   const [showNoteOption, setShowNoteOption] = useState(false);
 
   const handleQuickNote = () => {
-    onCreateNote(prompt);
+    onCreateNote({
+      prompt_text: prompt,
+      source_type: 'pocket_prompt',
+    });
   };
 
   return (

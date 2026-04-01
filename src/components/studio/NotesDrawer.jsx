@@ -15,14 +15,18 @@ export default function NotesDrawer({ isOpen, onClose, context }) {
   const sourceId = context?.source_id || null;
   const sourceTitle = context?.source_title || null;
 
-  // Reset form when drawer opens
+  // Reset form when drawer opens (unless there's initial context content)
   useEffect(() => {
     if (isOpen) {
-      setContent("");
+      if (context?.prompt_text) {
+        setContent(context.prompt_text);
+      } else {
+        setContent("");
+      }
       setTags([]);
       setCustomTag("");
     }
-  }, [isOpen]);
+  }, [isOpen, context?.prompt_text]);
 
   // Auto-save every 8 seconds (only if content exists)
   useEffect(() => {
