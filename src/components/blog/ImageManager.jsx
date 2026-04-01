@@ -140,18 +140,68 @@ export default function ImageManager({ onInsert, onSetFeaturedImage, mode = "ins
       </TabsContent>
 
       <TabsContent value="ai" className="space-y-4">
-        <div>
-          <Label className="mb-2 block">Describe the image you want</Label>
-          <Textarea
-            value={aiPrompt}
-            onChange={(e) => setAiPrompt(e.target.value)}
-            placeholder="E.g., A serene illustration of a person meditating in a minimalist room..."
-            rows={3}
-          />
-          <p className="text-xs text-[#2B2725]/60 mt-1">
-            Be descriptive - style, colors, mood, and subject matter
-          </p>
-        </div>
+       <div>
+         <Label className="mb-2 block">Describe the image you want</Label>
+         <Textarea
+           value={aiPrompt}
+           onChange={(e) => setAiPrompt(e.target.value)}
+           placeholder="E.g., A serene illustration of a person meditating in a minimalist room..."
+           rows={3}
+         />
+         <p className="text-xs text-[#2B2725]/60 mt-1">
+           Be descriptive - style, colors, mood, and subject matter
+         </p>
+       </div>
+
+       {/* Style Guide */}
+       <div className="bg-[#F9F5EF] border border-[#D8B46B]/30 rounded-lg p-4 space-y-3">
+         <p className="text-xs font-medium text-[#1E3A32] uppercase tracking-wide">Roberta's Style Guide</p>
+
+         <div className="space-y-2">
+           <p className="text-xs font-medium text-[#1E3A32]">Lighting & Atmosphere:</p>
+           <div className="flex flex-wrap gap-2">
+             {['Golden hour lighting', 'Warm natural light', 'Soft window light', 'Diffused sunlight'].map((style) => (
+               <button
+                 key={style}
+                 onClick={() => setAiPrompt(aiPrompt ? `${aiPrompt}, ${style}` : style)}
+                 className="text-xs px-2 py-1 bg-white border border-[#D8B46B]/50 text-[#1E3A32] rounded hover:bg-[#D8B46B]/10 transition-colors"
+               >
+                 {style}
+               </button>
+             ))}
+           </div>
+         </div>
+
+         <div className="space-y-2">
+           <p className="text-xs font-medium text-[#1E3A32]">Color Palette:</p>
+           <div className="flex flex-wrap gap-2">
+             {['Forest green & gold tones', 'Warm cream & dusty sage', 'Soft plum accents', 'Earthy neutrals'].map((palette) => (
+               <button
+                 key={palette}
+                 onClick={() => setAiPrompt(aiPrompt ? `${aiPrompt}, ${palette}` : palette)}
+                 className="text-xs px-2 py-1 bg-white border border-[#D8B46B]/50 text-[#1E3A32] rounded hover:bg-[#D8B46B]/10 transition-colors"
+               >
+                 {palette}
+               </button>
+             ))}
+           </div>
+         </div>
+
+         <div className="space-y-2">
+           <p className="text-xs font-medium text-[#1E3A32]">Mood & Style:</p>
+           <div className="flex flex-wrap gap-2">
+             {['Professional yet warm', 'Candid and authentic', 'Minimalist elegant', 'Intimate and thoughtful'].map((mood) => (
+               <button
+                 key={mood}
+                 onClick={() => setAiPrompt(aiPrompt ? `${aiPrompt}, ${mood}` : mood)}
+                 className="text-xs px-2 py-1 bg-white border border-[#D8B46B]/50 text-[#1E3A32] rounded hover:bg-[#D8B46B]/10 transition-colors"
+               >
+                 {mood}
+               </button>
+             ))}
+           </div>
+         </div>
+       </div>
         <Button
           onClick={handleGenerateImage}
           disabled={!aiPrompt.trim() || generating}
