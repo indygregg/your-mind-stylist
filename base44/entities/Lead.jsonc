@@ -1,0 +1,179 @@
+{
+  "name": "Lead",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "description": "Lead email"
+    },
+    "first_name": {
+      "type": "string",
+      "description": "First name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Last name"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "address_line1": {
+      "type": "string",
+      "description": "Street address"
+    },
+    "address_line2": {
+      "type": "string",
+      "description": "Apartment, suite, etc."
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "state": {
+      "type": "string",
+      "description": "State / Province"
+    },
+    "zip": {
+      "type": "string",
+      "description": "ZIP / Postal code"
+    },
+    "country": {
+      "type": "string",
+      "description": "Country"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "booked",
+        "qualified",
+        "proposal",
+        "negotiation",
+        "won",
+        "lost"
+      ],
+      "default": "new",
+      "description": "Pipeline stage"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "website",
+        "masterclass",
+        "referral",
+        "social_media",
+        "paid_ad",
+        "organic_search",
+        "email_campaign",
+        "event",
+        "networking",
+        "other"
+      ],
+      "description": "How they found us"
+    },
+    "what_inquired_about": {
+      "type": "string",
+      "description": "What they inquired about"
+    },
+    "what_they_bought": {
+      "type": "string",
+      "description": "Products/services purchased"
+    },
+    "date_of_purchase": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of most recent purchase"
+    },
+    "follow_up_actions": {
+      "type": "string",
+      "description": "Follow-up actions to take"
+    },
+    "interested_products": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Product IDs they're interested in"
+    },
+    "budget_range": {
+      "type": "string",
+      "description": "Budget they mentioned"
+    },
+    "timeline": {
+      "type": "string",
+      "enum": [
+        "immediate",
+        "1-3_months",
+        "3-6_months",
+        "6+_months",
+        "not_sure"
+      ],
+      "description": "When they want to start"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal notes"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Custom tags - unique per lead, not shared across all leads"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Manager email"
+    },
+    "last_contact_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time we contacted them"
+    },
+    "next_follow_up_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When to follow up"
+    },
+    "converted_to_client": {
+      "type": "boolean",
+      "default": false,
+      "description": "Did they become a client"
+    },
+    "converted_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When they converted"
+    },
+    "user_id": {
+      "type": "string",
+      "description": "Reference to User if registered"
+    },
+    "total_value": {
+      "type": "number",
+      "default": 0,
+      "description": "Total purchase value in cents"
+    },
+    "utm_source": {
+      "type": "string",
+      "description": "UTM source"
+    },
+    "utm_medium": {
+      "type": "string",
+      "description": "UTM medium"
+    },
+    "utm_campaign": {
+      "type": "string",
+      "description": "UTM campaign"
+    },
+    "first_page_visited": {
+      "type": "string",
+      "description": "First page they visited"
+    }
+  },
+  "required": [
+    "email"
+  ]
+}
