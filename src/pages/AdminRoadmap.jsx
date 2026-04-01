@@ -37,7 +37,11 @@ export default function AdminRoadmap() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.RoadmapItem.create(data),
+    mutationFn: async (data) => {
+      // Auto-create bug item if coming from bug tracker
+      const item = await base44.entities.RoadmapItem.create(data);
+      return item;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["roadmapItems"] });
       setIsDialogOpen(false);
