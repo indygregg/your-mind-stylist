@@ -65,12 +65,21 @@ export default function LeadsSection({ leads, isLoading }) {
     },
   });
 
+  // Helper to get full name
+  const getFullName = (lead) => {
+    if (lead.full_name) return lead.full_name;
+    if (lead.first_name && lead.last_name) return `${lead.first_name} ${lead.last_name}`;
+    if (lead.first_name) return lead.first_name;
+    return lead.email;
+  };
+
   // Filter leads
   const filteredLeads = leads.filter((lead) => {
     const query = searchQuery.toLowerCase();
+    const fullName = getFullName(lead);
     const matchesSearch =
       lead.email?.toLowerCase().includes(query) ||
-      lead.full_name?.toLowerCase().includes(query) ||
+      fullName.toLowerCase().includes(query) ||
       lead.phone?.includes(query);
 
     const matchesStage = stageFilter === "all" || lead.stage === stageFilter;
@@ -170,7 +179,7 @@ export default function LeadsSection({ leads, isLoading }) {
                           setDetailsDialogOpen(true);
                         }}
                       >
-                        <p className="font-medium text-[#1E3A32] truncate">{lead.full_name || lead.email}</p>
+                        <p className="font-medium text-[#1E3A32] truncate">{getFullName(lead)}</p>
                         <p className="text-xs text-[#2B2725]/60 truncate">{lead.email}</p>
                       </motion.div>
                     ))}
@@ -231,7 +240,7 @@ export default function LeadsSection({ leads, isLoading }) {
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-medium text-[#1E3A32]">{lead.full_name || lead.email}</h3>
+                            <h3 className="font-medium text-[#1E3A32]">{getFullName(lead)}</h3>
                             <Badge className={stageColors[lead.stage]}>{stageLabels[lead.stage]}</Badge>
                           </div>
                           <p className="text-sm text-[#2B2725]/70">{lead.email}</p>
