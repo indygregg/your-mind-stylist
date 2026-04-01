@@ -11,7 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, Lock } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ConsultationQuestionnaire() {
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ export default function ConsultationQuestionnaire() {
   const [submitting, setSubmitting] = useState(false);
   const [formFields, setFormFields] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState({});
 
   // Fetch form fields from ConsultationForm entity
   useEffect(() => {
@@ -45,19 +46,6 @@ export default function ConsultationQuestionnaire() {
   const currentStepFields = formFields
     .filter(field => field.step === step)
     .sort((a, b) => a.order - b.order);
-
-  const healthConditionOptions = [
-    "Epilepsy or seizure disorder",
-    "Heart conditions",
-    "High blood pressure",
-    "Diabetes",
-    "Respiratory conditions",
-    "Chronic pain",
-    "Sleep disorders",
-    "Pregnancy",
-    "Recent surgery",
-    "Other (please specify)"
-  ];
 
   const handleCheckboxChange = (field, value) => {
     setFormData(prev => ({
@@ -253,10 +241,80 @@ export default function ConsultationQuestionnaire() {
         </div>
 
         {/* Form Steps */}
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-        >
-          <Card>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card>
+              <CardContent className="pt-6">
+                {currentStepFields.length > 0 && (
+                  <div className="space-y-6">
+                    <CardTitle className="font-serif text-2xl text-[#1E3A32] mb-6">
+                      {currentStepFields[0]?.step_title}
+                    </CardTitle>
+                    
+                    {currentStepFields[0]?.step_description && (
+                      <p className="text-[#2B2725]/70 mb-6">
+                        {currentStepFields[0].step_description}
+                      </p>
+                    )}
+                    
+                    <div className="space-y-6">
+                      {currentStepFields.map(field => renderField(field))}
+                    </div>
+                  </div>
+                )}
+                
+                {currentStepFields.length === 0 && (
+                  <div className="text-center py-12">
+                    <p className="text-[#2B2725]/60">No fields configured for this step yet.</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Navigation */}
+        <div className="flex justify-between mt-8">
+          {step > 1 && (
+            <Button
+              variant="outline"
+              onClick={() => setStep(step - 1)}
+              className="border-[#D8B46B] text-[#1E3A32]"
+            >
+              Previous
+            </Button>
+          )}
+          {step < totalSteps ? (
+            <Button
+              onClick={() => setStep(step + 1)}
+              disabled={!isStepValid()}
+              className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] ml-auto"
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              disabled={!isStepValid() || submitting}
+              className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[#1E3A32] ml-auto"
+            >
+              {submitting ? "Submitting..." : "Submit Questionnaire"}
+              {!submitting && <CheckCircle2 className="ml-2" size={16} />}
+            </Button>
+          )}
+        </div>
+
+        {/* Auto-save indicator */}
+        <p className="text-center text-xs text-[#2B2725]/50 mt-4">
+          Your progress is automatically saved as you complete each step
+        </p>
+      </div>
+    </div>
+  );
+}
