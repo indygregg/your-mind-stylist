@@ -62,10 +62,46 @@ Provide a friendly, helpful answer (2-3 sentences). If you don't know something 
     }
   };
 
-  const handleQuickQuestion = (question) => {
+  const handleQuickQuestion = async (question) => {
     setQuery(question);
     if (variant === "widget") {
       setIsOpen(true);
+    }
+    
+    // Auto-submit the question
+    setConversation(prev => [...prev, { role: "user", content: question }]);
+    setIsLoading(true);
+    
+    try {
+      const aiResponse = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are a helpful AI assistant for "Your Mind Stylist" - a coaching and hypnosis business run by Roberta Fernandez. Answer the following question from a client.
+
+Knowledge Base:
+- Services: Private 1:1 coaching, Group coaching, Hypnosis certification training, Mind Styling courses, Pocket Visualization™ daily audio
+- Booking: Clients can book through the Bookings page, select a service, choose a time slot, and complete payment
+- Courses: Available in the Library after purchase, include video lessons, audio sessions, and resources
+- Pricing: Various tiers from $9 courses to premium coaching packages
+- Contact: Clients can reach Roberta through the Contact page or email
+- Payments: Processed securely through Stripe, subscriptions can be managed in account settings
+
+Client question: ${question}
+
+Provide a friendly, helpful answer (2-3 sentences). If you don't know something specific, direct them to contact Roberta.`,
+      });
+
+      setConversation(prev => [...prev, { role: "assistant", content: aiResponse }]);
+    } catch (error) {
+      console.error("AI assistant error:", error);
+      setConversation(prev => [
+        ...prev,
+        { 
+          role: "assistant", 
+          content: "I'm having trouble right now. Please reach out to Roberta directly through the Contact page." 
+        }
+      ]);
+    } finally {
+      setIsLoading(false);
+      setQuery("");
     }
   };
 
