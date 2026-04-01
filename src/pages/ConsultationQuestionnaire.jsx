@@ -23,20 +23,39 @@ export default function ConsultationQuestionnaire() {
 
   // Fetch form fields from ConsultationForm entity
   useEffect(() => {
+    let isMounted = true;
+    let retries = 0;
+    const maxRetries = 3;
+
     const fetchFields = async () => {
       try {
         setLoading(true);
         const fields = await base44.entities.ConsultationForm.list();
-        console.log('Fetched ConsultationForm fields:', fields);
-        setFormFields(fields || []);
+        if (isMounted) {
+          console.log('Fetched ConsultationForm fields:', fields);
+          setFormFields(fields || []);
+        }
       } catch (error) {
         console.error("Error fetching form fields:", error);
-        setFormFields([]);
-      } finally {
-        setLoading(false);
+        // Retry on rate limit with exponential backoff
+        if (error.message?.includes('429') && retries < maxRetries) {
+          retries++;
+          const delay = Math.pow(2, retries) * 1000;
+          setTimeout(() => {
+            if (isMounted) fetchFields();
+          }, delay);
+        } else if (isMounted) {
+          setFormFields([]);
+          setLoading(false);
+        }
       }
     };
+
     fetchFields();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const totalSteps = 5;
