@@ -125,7 +125,7 @@ Provide a friendly, helpful answer (2-3 sentences). If you don't know something 
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 20, scale: 0.95 }}
-              className="fixed inset-x-4 bottom-4 lg:bottom-24 lg:right-6 lg:left-auto lg:w-96 max-h-[60vh] lg:max-h-96 bg-white rounded-lg shadow-2xl z-50 overflow-hidden"
+              className="fixed inset-x-4 bottom-4 lg:bottom-24 lg:right-6 lg:left-auto lg:w-96 max-h-[60vh] lg:max-h-96 bg-white rounded-lg shadow-2xl z-50 overflow-hidden flex flex-col"
             >
               <div className="bg-[#1E3A32] text-white p-3 lg:p-4">
                 <h3 className="font-medium flex items-center gap-2 text-sm lg:text-base">
@@ -138,7 +138,7 @@ Provide a friendly, helpful answer (2-3 sentences). If you don't know something 
               </div>
 
               {/* Conversation */}
-              <div className="max-h-[calc(60vh-140px)] lg:h-96 overflow-y-auto p-3 lg:p-4 space-y-2 lg:space-y-3 bg-[#F9F5EF]">
+              <div className="flex-1 overflow-y-auto p-3 lg:p-4 space-y-2 lg:space-y-3 bg-[#F9F5EF]">
                 {conversation.length === 0 && (
                   <div>
                     <p className="text-sm text-[#2B2725]/70 mb-3">
