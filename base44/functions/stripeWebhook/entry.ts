@@ -244,7 +244,8 @@ Deno.serve(async (req) => {
                             if (product.related_course_id) courseIds.add(product.related_course_id);
                             if (product.access_grants?.length > 0) product.access_grants.forEach(id => courseIds.add(id));
                             
-                            // Grant course access to RECIPIENT (not payer)
+                            // ONLY grant course access to RECIPIENT, NOT to the payer
+                            // This ensures gifts don't show up in the purchaser's library
                             for (const courseId of courseIds) {
                                 const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
                                     user_id: recipientUserId,
@@ -260,7 +261,10 @@ Deno.serve(async (req) => {
                                 }
                             }
                         }
+                        // Deliberately skip creating payer enrollment for gifts
                     }
+                    // Return early to prevent further processing
+                    return Response.json({ received: true });
                 }
                 
                 // Handle Product Purchase (single product_id OR multi product_ids from cart)

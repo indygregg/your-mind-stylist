@@ -10,7 +10,7 @@ import CmsText from "../components/cms/CmsText";
 export default function PocketVisualizationPurchase() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedInterval, setSelectedInterval] = useState("monthly");
+  const [selectedInterval, setSelectedInterval] = useState("yearly");
   const [purchaseStatus, setPurchaseStatus] = useState(null);
   const [processingCheckout, setProcessingCheckout] = useState(false);
 
@@ -33,20 +33,10 @@ export default function PocketVisualizationPurchase() {
 
   const pricingOptions = [
     {
-      interval: "monthly",
-      price: 47,
-      label: "Monthly",
-      description: "Billed monthly • Cancel anytime",
-      totalPerYear: 564,
-      stripe_price_id: "price_monthly_pocket_viz"
-    },
-    {
       interval: "yearly",
       price: 470,
       label: "Annual",
-      description: "Billed yearly • Save $94",
-      savings: 94,
-      totalPerYear: 470,
+      description: "Billed yearly • Best value",
       recommended: true,
       stripe_price_id: "price_yearly_pocket_viz"
     }
@@ -207,39 +197,15 @@ export default function PocketVisualizationPurchase() {
               </h2>
 
               {/* Billing Toggle */}
-              <div className="flex gap-4 mb-8">
-                {pricingOptions.map((option) => (
-                  <button
-                    key={option.interval}
-                    onClick={() => setSelectedInterval(option.interval)}
-                    className={`flex-1 p-6 border-2 transition-all relative ${
-                      selectedInterval === option.interval
-                        ? "border-[#1E3A32] bg-[#F9F5EF]"
-                        : "border-[#E4D9C4] hover:border-[#D8B46B]"
-                    }`}
-                  >
-                    {option.recommended && (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D8B46B] text-[#1E3A32] px-3 py-1 text-xs tracking-wide uppercase">
-                        Best Value
-                      </span>
-                    )}
-                    <div className="text-center">
-                      <p className="font-medium text-[#1E3A32] mb-1">{option.label}</p>
-                      <p className="text-3xl font-serif text-[#1E3A32] mb-2">
-                        ${option.price}
-                        <span className="text-base text-[#2B2725]/60">
-                          /{option.interval === "monthly" ? "mo" : "yr"}
-                        </span>
-                      </p>
-                      <p className="text-sm text-[#2B2725]/70">{option.description}</p>
-                      {option.savings && (
-                        <p className="text-sm text-green-700 font-medium mt-2">
-                          Save ${option.savings}/year
-                        </p>
-                      )}
-                    </div>
-                  </button>
-                ))}
+              <div className="bg-[#F9F5EF] p-6 rounded-lg mb-8">
+                <div className="text-center">
+                  <p className="font-medium text-[#1E3A32] mb-1">Annual Plan</p>
+                  <p className="text-4xl font-serif text-[#1E3A32] mb-2">
+                    $470
+                    <span className="text-base text-[#2B2725]/60">/year</span>
+                  </p>
+                  <p className="text-sm text-[#2B2725]/70">Billed yearly • Full access</p>
+                </div>
               </div>
 
               {/* Selected Plan Summary */}
