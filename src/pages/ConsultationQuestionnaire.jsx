@@ -36,7 +36,12 @@ export default function ConsultationQuestionnaire() {
           const fields = await base44.entities.ConsultationForm.list();
           if (isMounted) {
             console.log('Fetched ConsultationForm fields:', fields);
-            setFormFields(fields || []);
+            // Extract data from entity wrapper if needed
+            const processedFields = fields.map(field => {
+              return field.data || field;
+            });
+            console.log('Processed fields:', processedFields);
+            setFormFields(processedFields || []);
             setLoading(false);
           }
         } catch (error) {
