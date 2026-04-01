@@ -389,16 +389,16 @@ export default function Dashboard() {
 
             {/* Smart Suggestions */}
             {suggestions.slice(0, 1).map((suggestion) => (
-            <SmartSuggestion
-              key={suggestion.id}
-              trigger={suggestion.trigger}
-              title={suggestion.title}
-              description={suggestion.description}
-              actionLabel={suggestion.actionLabel}
-              actionLink={suggestion.actionLink}
-            />
+              <SmartSuggestion
+                key={suggestion.id}
+                trigger={suggestion.trigger}
+                title={suggestion.title}
+                description={suggestion.description}
+                actionLabel={suggestion.actionLabel}
+                actionLink={suggestion.actionLink}
+              />
             ))}
             </motion.div>
             </div>
             );
-          }
+            }
