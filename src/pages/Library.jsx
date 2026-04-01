@@ -268,13 +268,6 @@ export default function Library() {
             </div>
           </div>
 
-          {/* AI Learning Path Recommender */}
-          {user && (
-            <div className="mb-8">
-              <AILearningPathRecommender />
-            </div>
-          )}
-
           {/* Student Dashboard View */}
           {showDashboard && userProgress.length > 0 && (
             <StudentDashboard
