@@ -188,23 +188,33 @@ export default function LessonArea({
               </div>
             )}
 
-        {/* Transcription */}
-        {lesson.transcription_url && (
+        {/* Attached Resources */}
+        {attachedResources.length > 0 && (
           <div className="bg-white p-6 rounded-lg mb-8">
-            <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">Transcript</h2>
-            <a
-              href={lesson.transcription_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-[#1E3A32] hover:text-[#D8B46B] transition-colors"
-            >
-              <span>Download Transcript</span>
-              <span>→</span>
-            </a>
+            <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">Resources</h2>
+            {loadingResources ? (
+              <p className="text-[#2B2725]/60">Loading resources...</p>
+            ) : (
+              <div className="space-y-3">
+                {attachedResources.map((resource) => (
+                  <a
+                    key={resource.id}
+                    href={resource.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 p-3 bg-[#F9F5EF] hover:bg-[#E4D9C4] transition-colors rounded"
+                  >
+                    <FileText size={16} className="text-[#D8B46B] flex-shrink-0" />
+                    <span className="text-[#2B2725] flex-1">{resource.title}</span>
+                    <span className="text-[#D8B46B]">↓</span>
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
-            {/* Lesson Comments/Q&A - Disabled */}
+        {/* Lesson Comments/Q&A - Disabled */}
             {/* <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
