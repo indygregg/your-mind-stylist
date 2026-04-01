@@ -263,18 +263,7 @@ export default function Dashboard() {
                 }}
               />
             </div>
-            </div>
-          )}
-
-          {/* Booking History */}
-          {pastBookings.length > 0 && (
-            <div className="mb-12">
-              <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">
-                <CmsText cmsKey="dashboard.history.title" defaultText="Booking History" />
-              </h2>
-              <BookingHistory bookings={pastBookings} />
-            </div>
-          )}
+          </div>
 
           {/* Your Purchased Products / Client Portal */}
           <div className="mb-12">
@@ -362,11 +351,11 @@ export default function Dashboard() {
           </div>
 
            {/* Quick Links */}
-             <div>
-            <h2 className="font-serif text-xl text-[#1E3A32] mb-6">
-              <CmsText cmsKey="dashboard.quicklinks.title" defaultText="Quick Links" />
-            </h2>
-            <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
+           <div>
+             <h2 className="font-serif text-xl text-[#1E3A32] mb-6">
+               <CmsText cmsKey="dashboard.quicklinks.title" defaultText="Quick Links" />
+             </h2>
+             <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
               {[
                 { label: "Client Portal", page: "ClientPortal", icon: ShoppingCart, descriptionKey: "dashboard.quicklinks.portal", fallback: "Your purchased products." },
                 { label: "Style Pauses™", page: "StylePauses", icon: Sparkles, descriptionKey: "dashboard.quicklinks.style_pauses", fallback: "1-3 minute resets." },
@@ -396,21 +385,20 @@ export default function Dashboard() {
                 </Link>
               ))}
             </div>
-          </div>
-          </motion.div>
+            </div>
 
-          {/* Smart Suggestions */}
-          {suggestions.slice(0, 1).map((suggestion) => (
-          <SmartSuggestion
-            key={suggestion.id}
-            trigger={suggestion.trigger}
-            title={suggestion.title}
-            description={suggestion.description}
-            actionLabel={suggestion.actionLabel}
-            actionLink={suggestion.actionLink}
-          />
-          ))}
-          </div>
-          </div>
-          );
+            {/* Smart Suggestions */}
+            {suggestions.slice(0, 1).map((suggestion) => (
+            <SmartSuggestion
+              key={suggestion.id}
+              trigger={suggestion.trigger}
+              title={suggestion.title}
+              description={suggestion.description}
+              actionLabel={suggestion.actionLabel}
+              actionLink={suggestion.actionLink}
+            />
+            ))}
+            </motion.div>
+            </div>
+            );
           }
