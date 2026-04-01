@@ -172,27 +172,30 @@ export default function NotesTimeline({ notes = [], onSpotlight }) {
                         />
                       </button>
 
-                      {/* Note Content */}
-                      <p className="text-[#2B2725] leading-relaxed mb-4 pr-8">{note.content}</p>
+                      {/* Source Context */}
+                       {note.source_type && note.source_type !== 'freeform' && (
+                         <div className="text-xs text-[#2B2725]/60 mb-2 italic">
+                           From: <span className="font-medium capitalize">{note.source_type}</span>
+                           {note.source_id && <span> (ID: {note.source_id})</span>}
+                         </div>
+                       )}
 
-                      {/* Tags & Emotion */}
-                      <div className="flex flex-wrap gap-2">
-                        {note.sentiment_primary && (
-                          <Badge className={emotionColors[note.sentiment_primary]}>
-                            {note.sentiment_primary}
-                          </Badge>
-                        )}
-                        {(note.tags || []).map(tag => (
-                          <Badge key={tag} variant="outline" className="border-[#D8B46B] text-[#2B2725]">
-                            {tag}
-                          </Badge>
-                        ))}
-                        {note.source_type && note.source_type !== 'freeform' && (
-                          <Badge variant="outline" className="text-[#2B2725]/60">
-                            from {note.source_type}
-                          </Badge>
-                        )}
-                      </div>
+                       {/* Note Content */}
+                       <p className="text-[#2B2725] leading-relaxed mb-4 pr-8">{note.content}</p>
+
+                       {/* Tags & Emotion */}
+                       <div className="flex flex-wrap gap-2">
+                         {note.sentiment_primary && (
+                           <Badge className={emotionColors[note.sentiment_primary]}>
+                             {note.sentiment_primary}
+                           </Badge>
+                         )}
+                         {(note.tags || []).map(tag => (
+                           <Badge key={tag} variant="outline" className="border-[#D8B46B] text-[#2B2725]">
+                             {tag}
+                           </Badge>
+                         ))}
+                       </div>
 
                       {/* Spotlight Indicator */}
                       {note.spotlight && (

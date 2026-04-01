@@ -6,22 +6,34 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function NotesDrawer({ isOpen, onClose, sourceType, sourceId, sourceTitle }) {
+export default function NotesDrawer({ isOpen, onClose, context }) {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
   const [customTag, setCustomTag] = useState("");
   const queryClient = useQueryClient();
+  const sourceType = context?.source_type || "freeform";
+  const sourceId = context?.source_id || null;
+  const sourceTitle = context?.source_title || null;
 
-  // Auto-save every 8 seconds
+  // Reset form when drawer opens
   useEffect(() => {
-    if (!content.trim()) return;
+    if (isOpen) {
+      setContent("");
+      setTags([]);
+      setCustomTag("");
+    }
+  }, [isOpen]);
+
+  // Auto-save every 8 seconds (only if content exists)
+  useEffect(() => {
+    if (!content.trim() || !isOpen) return;
     
     const timer = setTimeout(() => {
       handleSave();
     }, 8000);
 
     return () => clearTimeout(timer);
-  }, [content, tags]);
+  }, [content, tags, isOpen]);
 
   const createNoteMutation = useMutation({
     mutationFn: (data) => base44.entities.Note.create(data),

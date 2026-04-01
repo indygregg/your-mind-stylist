@@ -1,5 +1,5 @@
 import React from "react";
-import { Headphones, Video, FileText, CheckCircle2, Circle, PlayCircle, Lock, Clock } from "lucide-react";
+import { Headphones, Video, FileText, CheckCircle2, Circle, PlayCircle, Lock, Clock, StickyNote } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
@@ -74,6 +74,8 @@ export default function ModuleNavigator({ modules, lessons, userLessonProgress, 
                     const status = getLessonStatus(lesson.id);
                     const isActive = lesson.id === currentLessonId;
                     const locked = isLessonLocked(lesson);
+                    // Check if lesson has notes (indicated by presence in userLessonProgress)
+                    const hasNotes = userLessonProgress.some(p => p.lesson_id === lesson.id && p.notes_count > 0);
                     
                     return (
                       <button
@@ -97,26 +99,31 @@ export default function ModuleNavigator({ modules, lessons, userLessonProgress, 
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className={cn(
-                              "text-sm font-medium mb-1",
-                              isActive ? "text-[#1E3A32]" : "text-[#2B2725]/80"
-                            )}>
-                              {lesson.title}
-                            </p>
-                            <div className="flex items-center gap-2 text-xs text-[#2B2725]/60">
-                              {getTypeIcon(lesson.type)}
-                              {lesson.duration && <span>{lesson.duration}</span>}
-                              {lesson.estimated_time && (
-                                <>
-                                  <span>•</span>
-                                  <Clock size={12} />
-                                  <span>{lesson.estimated_time}m</span>
-                                </>
-                              )}
-                            </div>
-                            {locked && (
-                              <p className="text-xs text-[#2B2725]/60 mt-1">Complete prerequisites first</p>
-                            )}
+                           <div className="flex items-center gap-2 mb-1">
+                             <p className={cn(
+                               "text-sm font-medium",
+                               isActive ? "text-[#1E3A32]" : "text-[#2B2725]/80"
+                             )}>
+                               {lesson.title}
+                             </p>
+                             {hasNotes && (
+                               <StickyNote size={14} className="text-[#D8B46B] flex-shrink-0" title="Notes added" />
+                             )}
+                           </div>
+                           <div className="flex items-center gap-2 text-xs text-[#2B2725]/60">
+                             {getTypeIcon(lesson.type)}
+                             {lesson.duration && <span>{lesson.duration}</span>}
+                             {lesson.estimated_time && (
+                               <>
+                                 <span>•</span>
+                                 <Clock size={12} />
+                                 <span>{lesson.estimated_time}m</span>
+                               </>
+                             )}
+                           </div>
+                           {locked && (
+                             <p className="text-xs text-[#2B2725]/60 mt-1">Complete prerequisites first</p>
+                           )}
                           </div>
                         </div>
                       </button>

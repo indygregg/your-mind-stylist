@@ -323,6 +323,7 @@ export default function CoursePage() {
         context={{
           source_type: "lesson",
           source_id: currentLessonId,
+          source_title: currentLesson?.title,
         }}
       />
       {showEmotionalCheckIn && currentLesson && (
