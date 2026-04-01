@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, StickyNote, Download, FileText, Lock } from "lucide-react";
+import { CheckCircle, StickyNote, Download, FileText, Lock, Circle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
@@ -203,60 +203,6 @@ export default function LessonArea({
             </a>
           </div>
         )}
-
-            {/* Resources */}
-            {((lesson.resources && lesson.resources.length > 0) || (lesson.attached_resource_ids && lesson.attached_resource_ids.length > 0)) && (
-              <div className="mt-12">
-                <h2 className="font-serif text-2xl text-[#1E3A32] mb-6">Resources</h2>
-                <div className="grid gap-4">
-                  {/* Legacy inline resources */}
-                  {lesson.resources && lesson.resources.map((resource, index) => (
-                    <a
-                      key={`legacy-${index}`}
-                      href={resource.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between p-4 bg-white rounded-lg hover:shadow-md transition-shadow"
-                    >
-                      <div>
-                        <p className="font-medium text-[#1E3A32]">{resource.title}</p>
-                        <p className="text-sm text-[#2B2725]/60 capitalize">{resource.type}</p>
-                      </div>
-                      <Download size={18} className="text-[#D8B46B]" />
-                    </a>
-                  ))}
-                  {/* Attached resources from Resource entity */}
-                  {lesson.attached_resource_ids && lesson.attached_resource_ids.length > 0 && (
-                    <>
-                      {loadingResources ? (
-                        <p className="text-sm text-[#2B2725]/60 p-4 bg-white rounded-lg">Loading resources...</p>
-                      ) : attachedResources.length > 0 ? (
-                        attachedResources.map((resource) => (
-                          <a
-                            key={resource.id}
-                            href={resource.file_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-between p-4 bg-white rounded-lg hover:shadow-md transition-shadow"
-                          >
-                            <div className="flex-1">
-                              <p className="font-medium text-[#1E3A32]">{resource.title}</p>
-                              {resource.file_size && (
-                                <p className="text-sm text-[#2B2725]/60">{resource.file_size}</p>
-                              )}
-                              <p className="text-xs text-[#2B2725]/40 capitalize mt-1">{resource.resource_type}</p>
-                            </div>
-                            <Download size={18} className="text-[#D8B46B] flex-shrink-0 ml-4" />
-                          </a>
-                        ))
-                      ) : (
-                        <p className="text-sm text-[#2B2725]/60 p-4 bg-white rounded-lg">Resources unavailable</p>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
 
             {/* Lesson Comments/Q&A - Disabled */}
             {/* <motion.div
