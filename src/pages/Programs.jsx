@@ -28,7 +28,7 @@ const DEFAULT_BANDS = [
     key: "signature_services",
     title: "Signature Services",
     subtitle: "One-on-one hypnosis, coaching & private sessions with Roberta",
-    services: ["LENS™ Mind Styling Framework", "Cleaning Out Your Closet", "Private Hypnosis Sessions", "Pocket Mindset™", "Speaking & Organizational Training"],
+    services: ["Cleaning Out Your Closet™", "LENS™", "Salon", "Couture", "Pocket Mindset™"],
     bg: "bg-[#6E4F7D]",
     textColor: "text-white",
     subtitleColor: "text-white/80",
