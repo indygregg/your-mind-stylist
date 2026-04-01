@@ -24,31 +24,37 @@ export default function ConsultationQuestionnaire() {
   // Fetch form fields from ConsultationForm entity
   useEffect(() => {
     let isMounted = true;
-    let retries = 0;
-    const maxRetries = 3;
 
     const fetchFields = async () => {
-      try {
-        setLoading(true);
-        const fields = await base44.entities.ConsultationForm.list();
-        if (isMounted) {
-          console.log('Fetched ConsultationForm fields:', fields);
-          setFormFields(fields || []);
+      let retries = 0;
+      const maxRetries = 3;
+
+      const attemptFetch = async () => {
+        try {
+          const fields = await base44.entities.ConsultationForm.list();
+          if (isMounted) {
+            console.log('Fetched ConsultationForm fields:', fields);
+            setFormFields(fields || []);
+            setLoading(false);
+          }
+        } catch (error) {
+          console.error("Error fetching form fields:", error);
+          if (error.message?.includes('429') && retries < maxRetries) {
+            retries++;
+            const delay = Math.pow(2, retries) * 500;
+            await new Promise(resolve => setTimeout(resolve, delay));
+            return attemptFetch();
+          } else {
+            if (isMounted) {
+              setFormFields([]);
+              setLoading(false);
+            }
+          }
         }
-      } catch (error) {
-        console.error("Error fetching form fields:", error);
-        // Retry on rate limit with exponential backoff
-        if (error.message?.includes('429') && retries < maxRetries) {
-          retries++;
-          const delay = Math.pow(2, retries) * 1000;
-          setTimeout(() => {
-            if (isMounted) fetchFields();
-          }, delay);
-        } else if (isMounted) {
-          setFormFields([]);
-          setLoading(false);
-        }
-      }
+      };
+
+      setLoading(true);
+      await attemptFetch();
     };
 
     fetchFields();
@@ -57,9 +63,6 @@ export default function ConsultationQuestionnaire() {
       isMounted = false;
     };
   }, []);
-
-  const totalSteps = 5;
-  const progress = (step / totalSteps) * 100;
   
   // Get fields for current step
   const currentStepFields = formFields
