@@ -358,6 +358,14 @@ export default function BlogPost() {
           font-style: italic;
           color: rgba(43, 39, 37, 0.7);
         }
+        
+        .blog-content .blog-video {
+          width: 100%;
+          min-height: 400px;
+          border-radius: 0.5rem;
+          margin: 2rem 0;
+          border: none;
+        }
       `}</style>
     </div>
   );

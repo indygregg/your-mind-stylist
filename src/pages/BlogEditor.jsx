@@ -167,6 +167,11 @@ export default function BlogEditor() {
     setFormData(prev => ({ ...prev, featured_image: imageUrl }));
   };
 
+  const handleVideoInsert = (embedUrl) => {
+    const videoHtml = `<p><iframe class="blog-video" src="${embedUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>`;
+    setFormData(prev => ({ ...prev, content: prev.content + videoHtml }));
+  };
+
   const quillModules = {
     toolbar: [
       [{ 'header': [1, 2, 3, false] }],
@@ -175,7 +180,7 @@ export default function BlogEditor() {
       [{ 'indent': '-1'}, { 'indent': '+1' }],
       ['blockquote', 'code-block'],
       [{ 'align': [] }],
-      ['link', 'image'],
+      ['link', 'image', 'video'],
       ['clean']
     ],
   };
@@ -340,6 +345,32 @@ export default function BlogEditor() {
               <h3 className="font-serif text-lg text-[#1E3A32]">Insert Image</h3>
             </div>
             <ImageManager onInsert={handleImageInsert} mode="insert" />
+          </div>
+
+          {/* Insert Video */}
+          <div className="border border-[#6E4F7D]/20 rounded-lg p-6 bg-gradient-to-br from-[#6E4F7D]/5 to-[#D8B46B]/5">
+            <div className="flex items-center gap-2 mb-4">
+              <Sparkles size={20} className="text-[#6E4F7D]" />
+              <h3 className="font-serif text-lg text-[#1E3A32]">Insert Video</h3>
+            </div>
+            <div className="space-y-3">
+              <Input
+                placeholder="https://www.youtube.com/embed/... or https://player.vimeo.com/video/..."
+                onChange={(e) => setFormData(prev => ({ ...prev, _videoUrl: e.target.value }))}
+              />
+              <Button
+                onClick={() => {
+                  if (formData._videoUrl) {
+                    handleVideoInsert(formData._videoUrl);
+                    setFormData(prev => ({ ...prev, _videoUrl: "" }));
+                  }
+                }}
+                className="w-full bg-[#6E4F7D] hover:bg-[#5D4469]"
+              >
+                Insert Video
+              </Button>
+              <p className="text-xs text-[#2B2725]/60">Paste the embed URL from YouTube or Vimeo. Use the post type dropdown above for a full-width hero video.</p>
+            </div>
           </div>
 
           {/* Featured Image */}
