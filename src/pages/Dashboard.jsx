@@ -143,20 +143,18 @@ export default function Dashboard() {
     }
   };
   
-  const programs = useMemo(() => [
+  const buyLinks = useMemo(() => [
     {
-      icon: Layers,
-      title: "Cleaning Out Your Closet",
-      status: "Not Enrolled",
-      color: "#1E3A32",
-      page: "CleaningOutYourCloset",
+      label: "LENS™",
+      productId: "693d6b978867f6e147e25e91",
+      description: "Transform through a new lens",
+      color: "#6E4F7D",
     },
     {
-      icon: Sparkles,
-      title: "Pocket Mindset™",
-      status: "Not Enrolled",
-      color: "#A6B7A3",
-      page: "PocketMindset",
+      label: "Cleaning Out Your Closet™",
+      productId: "69a9b0ec1269644b5ea78346",
+      description: "Clear your emotional closet",
+      color: "#1E3A32",
     },
   ], []);
 
@@ -384,8 +382,30 @@ export default function Dashboard() {
             )}
           </div>
 
-          {/* Quick Links */}
-            <div>
+          {/* Links to Buy */}
+          <div className="mb-12">
+            <h2 className="font-serif text-xl text-[#1E3A32] mb-6">
+              <CmsText cmsKey="dashboard.buy.title" defaultText="Explore Transformational Offerings" />
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {buyLinks.map((link) => (
+                <Link
+                  key={link.productId}
+                  to={createPageUrl(`ProductPage?key=${encodeURIComponent(link.label.replace('™', ''))}`)}
+                  onClick={() => window.scrollTo(0, 0)}
+                  className="bg-white p-6 hover:shadow-lg transition-shadow border-l-4 active:scale-98 touch-manipulation"
+                  style={{ borderLeftColor: link.color }}
+                >
+                  <h3 className="font-serif text-lg text-[#1E3A32] mb-2">{link.label}</h3>
+                  <p className="text-[#2B2725]/60 text-sm">{link.description}</p>
+                  <div className="mt-4 text-sm text-[#D8B46B] font-medium">Learn More →</div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+           {/* Quick Links */}
+             <div>
             <h2 className="font-serif text-xl text-[#1E3A32] mb-6">
               <CmsText cmsKey="dashboard.quicklinks.title" defaultText="Quick Links" />
             </h2>
