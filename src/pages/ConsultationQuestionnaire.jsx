@@ -185,8 +185,14 @@ export default function ConsultationQuestionnaire() {
   };
 
   const isStepValid = () => {
-    // Always allow progression through all steps
-    return true;
+    const requiredFields = currentStepFields.filter(field => field.required);
+    if (requiredFields.length === 0) return true;
+    
+    return requiredFields.every(field => {
+      const value = formData[field.field_name];
+      if (field.field_type === 'checkbox') return value === true;
+      return value !== undefined && value !== null && String(value).trim().length > 0;
+    });
   };
   
   const renderField = (field) => {
