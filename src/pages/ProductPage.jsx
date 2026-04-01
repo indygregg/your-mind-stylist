@@ -146,6 +146,11 @@ export default function ProductPage() {
           </div>
         )}
         <div className="max-w-4xl mx-auto px-6">
+          {product.thumbnail && product.product_subtype === "book" && (
+            <div className="flex justify-center mb-8">
+              <img src={product.thumbnail} alt={product.name} className="w-48 h-auto rounded-lg shadow-md" />
+            </div>
+          )}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -417,7 +422,19 @@ export default function ProductPage() {
       )}
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-12 mb-16">
-          {/* Left: Details */}
+          {/* Left: Image (for books) */}
+          {product.thumbnail && product.product_subtype === "book" && (
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="flex items-center justify-center"
+            >
+              <img src={product.thumbnail} alt={product.name} className="w-full max-w-sm shadow-lg rounded-lg" />
+            </motion.div>
+          )}
+
+          {/* Left: Details (or full width if no image) */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
