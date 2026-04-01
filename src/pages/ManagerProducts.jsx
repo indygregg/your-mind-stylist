@@ -1055,7 +1055,14 @@ export default function ManagerProducts() {
                 <Input
                   type="number"
                   value={formData.display_order}
-                  onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) })}
+                  onChange={(e) => {
+                   const newOrder = parseInt(e.target.value) || 0;
+                   setFormData({ ...formData, display_order: newOrder });
+                   // Auto-save immediately if editing existing product
+                   if (editingProduct) {
+                     updateMutation.mutate({ id: editingProduct.id, data: { display_order: newOrder } });
+                   }
+                  }}
                 />
               </div>
             </div>
