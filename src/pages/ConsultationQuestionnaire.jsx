@@ -9,9 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, AlertCircle, Lock } from "lucide-react";
+import { CheckCircle2, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function ConsultationQuestionnaire() {
@@ -128,8 +127,17 @@ export default function ConsultationQuestionnaire() {
   };
 
   const isStepValid = () => {
+    // If no fields are configured for this step, allow progression
+    if (currentStepFields.length === 0) {
+      return true;
+    }
     // Check if all required fields for current step are filled
     const requiredFields = currentStepFields.filter(field => field.required);
+    // If no required fields, allow progression
+    if (requiredFields.length === 0) {
+      return true;
+    }
+    // Validate all required fields are filled
     return requiredFields.every(field => {
       const value = formData[field.field_name];
       if (field.field_type === 'checkbox') {
@@ -258,11 +266,6 @@ export default function ConsultationQuestionnaire() {
           <p className="text-[#2B2725]/70 max-w-2xl mx-auto">
             This form is completed online for your convenience and privacy. Information submitted is stored securely and accessed only for the purpose of your consultation.
           </p>
-          <Alert className="mt-6 bg-blue-50 border-blue-200">
-            <AlertDescription className="text-sm text-[#2B2725]/80">
-              Some questions are personal. You may skip any that feel uncomfortable and discuss them during your consultation.
-            </AlertDescription>
-          </Alert>
         </div>
 
         {/* Progress Bar */}
