@@ -231,71 +231,15 @@ export default function CoursePage() {
   };
 
   const handleMarkComplete = () => {
-    // Show emotional check-in after completion (only if enabled)
+    // Show emotional check-in after completion (only if enabled and not completed yet)
     const currentLesson = allLessons.find(l => l.id === currentLessonId);
     const lessonProgress = userLessonProgress.find(p => p.lesson_id === currentLessonId);
-    if (currentLesson?.enable_checkin && !lessonProgress?.mood_after) {
+    // Only show popup if lesson is enabled for check-in, NOT completed yet, and hasn't recorded mood_after
+    if (currentLesson?.enable_checkin && !lessonProgress?.completed && !lessonProgress?.mood_after) {
       setCheckInType("after");
       setShowEmotionalCheckIn(true);
     } else {
       lessonCompleteMutation.mutate(currentLessonId);
-    }
-  };
-
-  const handleEmotionalCheckInComplete = async ({ mood, energy }) => {
-    const lessonProgress = userLessonProgress.find(p => p.lesson_id === currentLessonId);
-    
-    if (checkInType === "before") {
-      if (lessonProgress) {
-        await base44.entities.UserLessonProgress.update(lessonProgress.id, {
-          mood_before: mood,
-          energy_before: energy
-        });
-      } else {
-        await base44.entities.UserLessonProgress.create({
-          user_id: user.id,
-          lesson_id: currentLessonId,
-          mood_before: mood,
-          energy_before: energy
-        });
-      }
-    } else {
-      // After - also mark as complete
-      if (lessonProgress) {
-        await base44.entities.UserLessonProgress.update(lessonProgress.id, {
-          mood_after: mood,
-          energy_after: energy,
-          completed: true,
-          completed_date: new Date().toISOString()
-        });
-      } else {
-        await base44.entities.UserLessonProgress.create({
-          user_id: user.id,
-          lesson_id: currentLessonId,
-          mood_after: mood,
-          energy_after: energy,
-          completed: true,
-          completed_date: new Date().toISOString()
-        });
-      }
-    }
-
-    queryClient.invalidateQueries({ queryKey: ["userLessonProgress"] });
-    setShowEmotionalCheckIn(false);
-
-    // If it was an after check-in, also trigger the completion logic
-    if (checkInType === "after") {
-      const completedCount = userLessonProgress.filter(p => p.completed).length + 1;
-      const percentage = (completedCount / allLessons.length) * 100;
-      const newStatus = percentage === 100 ? "completed" : "in_progress";
-      
-      if (progress) {
-        base44.entities.UserCourseProgress.update(progress.id, {
-          completion_percentage: percentage,
-          status: newStatus,
-          ...(newStatus === "completed" && { completed_date: new Date().toISOString() }),
-        });
-      }
     }
   };
 
