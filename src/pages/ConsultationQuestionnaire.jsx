@@ -23,32 +23,50 @@ export default function ConsultationQuestionnaire() {
   const [isSaving, setIsSaving] = useState(false);
   const autosaveTimeoutRef = useRef(null);
 
-  // Fetch form fields from ConsultationForm entity
+  // Fetch form fields from ConsultationForm entity with aggressive retry logic
   useEffect(() => {
     let isMounted = true;
 
     const fetchFields = async () => {
       let retries = 0;
-      const maxRetries = 3;
+      const maxRetries = 5;
 
       const attemptFetch = async () => {
         try {
-          const fields = await base44.entities.ConsultationForm.list();
-          if (isMounted) {
+          const fields = await base44.entities.ConsultationForm.list(undefined, 100);
+          if (isMounted && fields && fields.length > 0) {
             console.log('Fetched ConsultationForm fields:', fields);
             // Extract data from entity wrapper if needed
             const processedFields = fields.map(field => {
               return field.data || field;
-            });
-            console.log('Processed fields:', processedFields);
-            setFormFields(processedFields || []);
-            setLoading(false);
+            }).filter(f => f && f.field_name);
+            console.log('Processed fields count:', processedFields.length);
+            if (processedFields.length > 0) {
+              setFormFields(processedFields);
+              setLoading(false);
+              return;
+            }
+          }
+          // If no fields or incomplete, retry
+          if (retries < maxRetries) {
+            retries++;
+            const delay = Math.pow(2, retries) * 1000;
+            console.log(`Retrying fetch (attempt ${retries}/${maxRetries}) after ${delay}ms`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+            return attemptFetch();
+          } else {
+            if (isMounted) {
+              console.error('Failed to load form fields after max retries');
+              setFormFields([]);
+              setLoading(false);
+            }
           }
         } catch (error) {
           console.error("Error fetching form fields:", error);
-          if (error.message?.includes('429') && retries < maxRetries) {
+          if (retries < maxRetries) {
             retries++;
-            const delay = Math.pow(2, retries) * 500;
+            const delay = Math.pow(2, retries) * 1000;
+            console.log(`Retrying fetch (attempt ${retries}/${maxRetries}) after ${delay}ms`);
             await new Promise(resolve => setTimeout(resolve, delay));
             return attemptFetch();
           } else {
@@ -205,7 +223,9 @@ export default function ConsultationQuestionnaire() {
     
     return requiredFields.every(field => {
       const value = formData[field.field_name];
-      if (field.field_type === 'checkbox') return value === true;
+      if (field.field_type === 'checkbox' || field.field_type === 'radio') {
+        return value !== undefined && value !== null && value !== '';
+      }
       return value !== undefined && value !== null && String(value).trim().length > 0;
     });
   };
@@ -276,7 +296,7 @@ export default function ConsultationQuestionnaire() {
               <p className="text-xs text-[#2B2725]/60 mt-1">{field.help_text}</p>
             )}
             <RadioGroup
-              value={value}
+              value={value || ''}
               onValueChange={onChange}
               className="mt-2"
             >
