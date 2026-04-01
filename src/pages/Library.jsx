@@ -50,10 +50,15 @@ export default function Library() {
   const { data: courses = [], isLoading: coursesLoading } = useQuery({
     queryKey: ["enrolledCourses", user?.id],
     queryFn: async () => {
+      // Only show courses where user has enrollment records
       const enrolledCourseIds = userProgress.map(p => p.course_id);
       if (enrolledCourseIds.length === 0) return [];
-      const allCourses = await base44.entities.Course.filter({ status: "published" });
-      return allCourses.filter(c => enrolledCourseIds.includes(c.id));
+      // Fetch only the specific courses the user is enrolled in
+      const enrolledCourses = await Promise.all(
+        enrolledCourseIds.map(id => base44.entities.Course.get(id))
+      );
+      // Filter to only published courses
+      return enrolledCourses.filter(c => c && c.status === "published");
     },
     enabled: !!user?.id && !progressLoading,
     staleTime: 2 * 60 * 1000,
