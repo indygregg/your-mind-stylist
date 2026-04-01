@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, StickyNote, Download, FileText, Lock } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import VideoPlayer from "./VideoPlayer";
@@ -17,6 +18,28 @@ export default function LessonArea({
   isLocked = false,
   prerequisiteLessons = []
 }) {
+  const [attachedResources, setAttachedResources] = useState([]);
+  const [loadingResources, setLoadingResources] = useState(false);
+
+  // Fetch attached resources
+  useEffect(() => {
+    const fetchResources = async () => {
+      if (!lesson?.attached_resource_ids || lesson.attached_resource_ids.length === 0) return;
+      
+      setLoadingResources(true);
+      try {
+        const resources = await Promise.all(
+          lesson.attached_resource_ids.map(id => base44.entities.Resource.get(id))
+        );
+        setAttachedResources(resources.filter(r => r));
+      } catch (error) {
+        console.error("Error fetching resources:", error);
+      } finally {
+        setLoadingResources(false);
+      }
+    };
+    fetchResources();
+  }, [lesson?.attached_resource_ids]);
   const getTypeLabel = (type) => {
     const labels = {
       video: "Video Lesson",
@@ -202,11 +225,34 @@ export default function LessonArea({
                       <Download size={18} className="text-[#D8B46B]" />
                     </a>
                   ))}
-                  {/* Note: Attached resources from Resource entity need to be fetched separately */}
+                  {/* Attached resources from Resource entity */}
                   {lesson.attached_resource_ids && lesson.attached_resource_ids.length > 0 && (
-                    <p className="text-sm text-[#2B2725]/60 p-4 bg-white rounded-lg">
-                      {lesson.attached_resource_ids.length} resource(s) attached (fetching not implemented in preview)
-                    </p>
+                    <>
+                      {loadingResources ? (
+                        <p className="text-sm text-[#2B2725]/60 p-4 bg-white rounded-lg">Loading resources...</p>
+                      ) : attachedResources.length > 0 ? (
+                        attachedResources.map((resource) => (
+                          <a
+                            key={resource.id}
+                            href={resource.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between p-4 bg-white rounded-lg hover:shadow-md transition-shadow"
+                          >
+                            <div className="flex-1">
+                              <p className="font-medium text-[#1E3A32]">{resource.title}</p>
+                              {resource.file_size && (
+                                <p className="text-sm text-[#2B2725]/60">{resource.file_size}</p>
+                              )}
+                              <p className="text-xs text-[#2B2725]/40 capitalize mt-1">{resource.resource_type}</p>
+                            </div>
+                            <Download size={18} className="text-[#D8B46B] flex-shrink-0 ml-4" />
+                          </a>
+                        ))
+                      ) : (
+                        <p className="text-sm text-[#2B2725]/60 p-4 bg-white rounded-lg">Resources unavailable</p>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
