@@ -18,6 +18,7 @@ import ImageManager from "../components/blog/ImageManager";
 import SEOAnalyzer from "../components/blog/SEOAnalyzer";
 import BlogAnalyticsDashboard from "../components/blog/BlogAnalyticsDashboard";
 import BlogSummarizer from "../components/blog/BlogSummarizer";
+import VideoEmbedPreview from "../components/blog/VideoEmbedPreview";
 
 const EMPTY_FORM = {
   title: "",
@@ -47,6 +48,7 @@ export default function BlogEditor() {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [authors, setAuthors] = useState([]);
+  const [videoPreviewOpen, setVideoPreviewOpen] = useState(false);
   const initialized = useRef(false);
 
   // Load everything on mount
@@ -264,11 +266,20 @@ export default function BlogEditor() {
           {formData.post_type === "video" && (
             <div>
               <Label>Video Embed URL</Label>
-              <Input
-                value={formData.video_embed_url || ""}
-                onChange={(e) => setFormData(prev => ({ ...prev, video_embed_url: e.target.value }))}
-                placeholder="https://www.youtube.com/embed/... or https://player.vimeo.com/video/..."
-              />
+              <div className="flex gap-2">
+                <Input
+                  value={formData.video_embed_url || ""}
+                  onChange={(e) => setFormData(prev => ({ ...prev, video_embed_url: e.target.value }))}
+                  placeholder="https://www.youtube.com/embed/... or https://player.vimeo.com/video/..."
+                />
+                <Button
+                  variant="outline"
+                  onClick={() => setVideoPreviewOpen(true)}
+                  disabled={!formData.video_embed_url}
+                >
+                  Preview
+                </Button>
+              </div>
               <p className="text-xs text-[#2B2725]/60 mt-1">Paste the embed URL from YouTube or Vimeo</p>
             </div>
           )}
@@ -516,6 +527,12 @@ export default function BlogEditor() {
           meta_title: seoData.meta_title,
           meta_description: seoData.meta_description
         }))}
+      />
+
+      {/* Video Preview Modal */}
+      <VideoEmbedPreview
+        embedUrl={videoPreviewOpen ? formData.video_embed_url : null}
+        onClose={() => setVideoPreviewOpen(false)}
       />
     </div>
   );
