@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { createPageUrl } from "../utils";
@@ -20,6 +20,8 @@ export default function ConsultationQuestionnaire() {
   const [formFields, setFormFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
+  const autosaveTimeoutRef = useRef(null);
 
   // Fetch form fields from ConsultationForm entity
   useEffect(() => {
@@ -76,9 +78,34 @@ export default function ConsultationQuestionnaire() {
     })
     .sort((a, b) => (a.order || 0) - (b.order || 0));
   
+  // Load saved data from localStorage on mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('consultationFormData');
+    const savedStep = localStorage.getItem('consultationFormStep');
+    if (savedData) {
+      try {
+        setFormData(JSON.parse(savedData));
+      } catch (error) {
+        console.error('Failed to load saved form data:', error);
+      }
+    }
+    if (savedStep) {
+      setStep(parseInt(savedStep, 10));
+    }
+  }, []);
+
   // Initialize formData when fields are loaded
-  React.useEffect(() => {
+  useEffect(() => {
     if (formFields.length > 0 && Object.keys(formData).length === 0) {
+      const savedData = localStorage.getItem('consultationFormData');
+      if (savedData) {
+        try {
+          setFormData(JSON.parse(savedData));
+          return;
+        } catch (error) {
+          console.error('Failed to load saved form data:', error);
+        }
+      }
       const initialData = formFields.reduce((acc, field) => {
         acc[field.field_name] = field.field_type === 'checkbox' ? false : '';
         return acc;
@@ -86,6 +113,33 @@ export default function ConsultationQuestionnaire() {
       setFormData(initialData);
     }
   }, [formFields]);
+
+  // Autosave formData to localStorage with debounce
+  useEffect(() => {
+    if (Object.keys(formData).length === 0) return;
+    
+    setIsSaving(true);
+    if (autosaveTimeoutRef.current) {
+      clearTimeout(autosaveTimeoutRef.current);
+    }
+    
+    autosaveTimeoutRef.current = setTimeout(() => {
+      try {
+        localStorage.setItem('consultationFormData', JSON.stringify(formData));
+        localStorage.setItem('consultationFormStep', step.toString());
+        setIsSaving(false);
+      } catch (error) {
+        console.error('Failed to autosave form data:', error);
+        setIsSaving(false);
+      }
+    }, 1000);
+    
+    return () => {
+      if (autosaveTimeoutRef.current) {
+        clearTimeout(autosaveTimeoutRef.current);
+      }
+    };
+  }, [formData, step]);
   
   // Debug logging
   React.useEffect(() => {
@@ -360,7 +414,7 @@ export default function ConsultationQuestionnaire() {
 
         {/* Auto-save indicator */}
         <p className="text-center text-xs text-[#2B2725]/50 mt-4">
-          Your progress is automatically saved as you complete each step
+          {isSaving ? 'Saving...' : 'Your progress is automatically saved'}
         </p>
       </div>
     </div>
