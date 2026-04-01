@@ -10,7 +10,7 @@ import CmsText from "../components/cms/CmsText";
 export default function PocketVisualizationPurchase() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedInterval, setSelectedInterval] = useState("yearly");
+  const [selectedInterval, setSelectedInterval] = useState("monthly");
   const [purchaseStatus, setPurchaseStatus] = useState(null);
   const [processingCheckout, setProcessingCheckout] = useState(false);
 
@@ -33,12 +33,11 @@ export default function PocketVisualizationPurchase() {
 
   const pricingOptions = [
     {
-      interval: "yearly",
-      price: 470,
-      label: "Annual",
-      description: "Billed yearly • Best value",
-      recommended: true,
-      stripe_price_id: "price_yearly_pocket_viz"
+      interval: "monthly",
+      price: 7,
+      label: "Monthly",
+      description: "Billed monthly • Cancel anytime",
+      stripe_price_id: "price_monthly_pocket_viz"
     }
   ];
 
@@ -199,12 +198,12 @@ export default function PocketVisualizationPurchase() {
               {/* Billing Toggle */}
               <div className="bg-[#F9F5EF] p-6 rounded-lg mb-8">
                 <div className="text-center">
-                  <p className="font-medium text-[#1E3A32] mb-1">Annual Plan</p>
+                  <p className="font-medium text-[#1E3A32] mb-1">Monthly Subscription</p>
                   <p className="text-4xl font-serif text-[#1E3A32] mb-2">
-                    $470
-                    <span className="text-base text-[#2B2725]/60">/year</span>
+                    $7
+                    <span className="text-base text-[#2B2725]/60">/month</span>
                   </p>
-                  <p className="text-sm text-[#2B2725]/70">Billed yearly • Full access</p>
+                  <p className="text-sm text-[#2B2725]/70">Billed monthly • Cancel anytime</p>
                 </div>
               </div>
 
