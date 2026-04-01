@@ -96,21 +96,25 @@ export default function ConsultationQuestionnaire() {
 
   // Initialize formData when fields are loaded
   useEffect(() => {
-    if (formFields.length > 0 && Object.keys(formData).length === 0) {
-      const savedData = localStorage.getItem('consultationFormData');
-      if (savedData) {
-        try {
-          setFormData(JSON.parse(savedData));
-          return;
-        } catch (error) {
-          console.error('Failed to load saved form data:', error);
-        }
-      }
+    if (formFields.length > 0) {
       const initialData = formFields.reduce((acc, field) => {
         acc[field.field_name] = field.field_type === 'checkbox' ? false : '';
         return acc;
       }, {});
-      setFormData(initialData);
+      
+      const savedData = localStorage.getItem('consultationFormData');
+      if (savedData) {
+        try {
+          const parsedSaved = JSON.parse(savedData);
+          // Merge saved data with newly initialized fields
+          setFormData({ ...initialData, ...parsedSaved });
+        } catch (error) {
+          console.error('Failed to load saved form data:', error);
+          setFormData(initialData);
+        }
+      } else {
+        setFormData(initialData);
+      }
     }
   }, [formFields]);
 
