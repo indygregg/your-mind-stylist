@@ -195,7 +195,7 @@ export default function ConsultationQuestionnaire() {
       return null;
     }
     
-    const value = formData[field.field_name] || '';
+    const value = formData[field.field_name];
     const onChange = (newValue) => {
       setFormData(prev => ({...prev, [field.field_name]: newValue}));
     };
