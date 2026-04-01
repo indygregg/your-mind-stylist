@@ -101,6 +101,9 @@ Deno.serve(async (req) => {
 
         const origin = req.headers.get('origin') || 'https://yourmindstylist.com';
 
+        // Check if any product is a physical book (requires shipping address)
+        const hasPhysicalBook = products.some(p => p.product_subtype === 'book');
+
         // Create checkout session
         const sessionConfig = {
             customer: customer.id,
@@ -108,6 +111,7 @@ Deno.serve(async (req) => {
             line_items: line_items,
             success_url: `${origin}/PurchaseSuccess?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${origin}/Cart`,
+            ...(hasPhysicalBook && { billing_address_collection: 'required', shipping_address_collection: { allowed_countries: ['US', 'CA', 'GB', 'AU', 'DE', 'FR', 'ES', 'IT', 'MX'] } }),
             metadata: {
                 user_id: user.id,
                 product_ids: products.map(p => p.id).join(','),
