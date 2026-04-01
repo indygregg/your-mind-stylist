@@ -1,34 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { X, Tag, Save } from "lucide-react";
+import { X, Tag, Save, CheckCircle, AlertCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function NotesDrawer({ isOpen, onClose, context }) {
+export default function NotesDrawer({ isOpen, onClose, context = {} }) {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState([]);
   const [customTag, setCustomTag] = useState("");
+  const [saveStatus, setSaveStatus] = useState(null); // null, 'saving', 'saved', 'error'
   const queryClient = useQueryClient();
   const sourceType = context?.source_type || "freeform";
   const sourceId = context?.source_id || null;
   const sourceTitle = context?.source_title || null;
 
-  // Reset form when drawer opens (unless there's initial context content)
+  // Reset form when drawer opens
   useEffect(() => {
     if (isOpen) {
-      if (context?.prompt_text) {
-        setContent(context.prompt_text);
-      } else {
-        setContent("");
-      }
+      setContent(context?.prompt_text || "");
       setTags([]);
       setCustomTag("");
+      setSaveStatus(null);
     }
   }, [isOpen, context?.prompt_text]);
 
-  // Auto-save every 8 seconds (only if content exists)
+  // Auto-save every 8 seconds (only if content exists and changed)
   useEffect(() => {
     if (!content.trim() || !isOpen) return;
     
@@ -42,6 +40,7 @@ export default function NotesDrawer({ isOpen, onClose, context }) {
   const createNoteMutation = useMutation({
     mutationFn: (data) => base44.entities.Note.create(data),
     onMutate: async (newNote) => {
+      setSaveStatus('saving');
       // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["notes"] });
       
@@ -58,14 +57,20 @@ export default function NotesDrawer({ isOpen, onClose, context }) {
       return { previousNotes };
     },
     onError: (err, newNote, context) => {
+      setSaveStatus('error');
       // Rollback on error
       queryClient.setQueryData(["notes"], context.previousNotes);
+      setTimeout(() => setSaveStatus(null), 2000);
     },
     onSuccess: () => {
+      setSaveStatus('saved');
       queryClient.invalidateQueries({ queryKey: ["notes"] });
-      setContent("");
-      setTags([]);
-      onClose();
+      // Clear form after successful save
+      setTimeout(() => {
+        setContent("");
+        setTags([]);
+        setSaveStatus(null);
+      }, 1500);
     },
   });
 
@@ -73,10 +78,11 @@ export default function NotesDrawer({ isOpen, onClose, context }) {
     if (!content.trim()) return;
 
     createNoteMutation.mutate({
-      source_type: sourceType || "freeform",
-      source_id: sourceId || null,
+      source_type: sourceType,
+      source_id: sourceId,
+      source_title: sourceTitle,
       content: content.trim(),
-      tags,
+      tags: tags.length > 0 ? tags : undefined,
     });
   };
 
@@ -203,18 +209,38 @@ export default function NotesDrawer({ isOpen, onClose, context }) {
                   )}
                 </div>
 
+                {/* Save Status Messages */}
+                {saveStatus === 'saving' && (
+                  <div className="flex items-center gap-2 p-3 bg-blue-50 rounded text-blue-700 text-sm">
+                    <div className="animate-spin">⟳</div>
+                    Saving your note...
+                  </div>
+                )}
+                {saveStatus === 'saved' && (
+                  <div className="flex items-center gap-2 p-3 bg-green-50 rounded text-green-700 text-sm">
+                    <CheckCircle size={16} />
+                    Note saved successfully!
+                  </div>
+                )}
+                {saveStatus === 'error' && (
+                  <div className="flex items-center gap-2 p-3 bg-red-50 rounded text-red-700 text-sm">
+                    <AlertCircle size={16} />
+                    Failed to save. Please try again.
+                  </div>
+                )}
+
                 {/* Save Button */}
                 <Button
                   onClick={handleSave}
-                  disabled={!content.trim()}
+                  disabled={!content.trim() || saveStatus === 'saving'}
                   className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]"
                 >
                   <Save size={16} className="mr-2" />
-                  Save Note
+                  {saveStatus === 'saving' ? 'Saving...' : 'Save Note'}
                 </Button>
 
                 <p className="text-xs text-[#2B2725]/50 text-center">
-                  Your notes auto-save every 8 seconds
+                  {saveStatus ? '' : 'Your notes auto-save every 8 seconds'}
                 </p>
               </div>
             </div>

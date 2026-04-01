@@ -37,6 +37,7 @@ export default function Dashboard() {
   const [studioStats, setStudioStats] = useState(null);
   const [dailyPrompt, setDailyPrompt] = useState(null);
   const [notesDrawerOpen, setNotesDrawerOpen] = useState(false);
+  const [notesContext, setNotesContext] = useState({});
   const [showStyleCheck, setShowStyleCheck] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
   const [upcomingBookings, setUpcomingBookings] = useState([]);
@@ -169,7 +170,7 @@ export default function Dashboard() {
       <NotesDrawer
         isOpen={notesDrawerOpen}
         onClose={() => setNotesDrawerOpen(false)}
-        sourceType="freeform"
+        context={notesContext}
       />
       
       {showStyleCheck && (
@@ -202,8 +203,11 @@ export default function Dashboard() {
                 <h3 className="font-serif text-xl mb-2">
                   <CmsText cmsKey="dashboard.style_check.title" defaultText="Daily Style Check™" />
                 </h3>
-                <p className="text-white/90 text-sm">
+                <p className="text-white/90 text-sm mb-2">
                   <CmsText cmsKey="dashboard.style_check.subtitle" defaultText="Quick check-in • Everything optional" />
+                </p>
+                <p className="text-white/80 text-xs">
+                  Track your emotional state, inner voice tone, and identity. This is a personal tool to develop self-awareness and choose which "outfit" (identity) you want to wear each day.
                 </p>
               </div>
               <Button
@@ -258,7 +262,7 @@ export default function Dashboard() {
               <DailyPocketPrompt 
                 prompt={dailyPrompt?.prompt_text}
                 onCreateNote={(promptData) => {
-                  setDailyPrompt(promptData);
+                  setNotesContext(promptData);
                   setNotesDrawerOpen(true);
                 }}
               />
