@@ -193,7 +193,7 @@ export default function PocketMindset() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to={createPageUrl("PurchaseCenter")}
+                to={createPageUrl("PocketVisualizationPurchase")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
                 Buy Here
@@ -207,7 +207,7 @@ export default function PocketMindset() {
         </div>
       </section>
 
-      {/* What Inner Rehearsal Is */}
+      {/* What Is Pocket Mindset */}
       <section className="py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div
@@ -563,7 +563,7 @@ export default function PocketMindset() {
 
             <div className="text-center">
               <Link
-                to={createPageUrl("PurchaseCenter")}
+                to={createPageUrl("PocketVisualizationPurchase")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-all duration-300"
               >
                 Buy Here
@@ -658,7 +658,7 @@ export default function PocketMindset() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to={createPageUrl("PurchaseCenter")}
+                to={createPageUrl("PocketVisualizationPurchase")}
                 className="group inline-flex items-center justify-center gap-3 px-8 py-4 bg-[#D8B46B] text-[#1E3A32] text-sm tracking-wide hover:bg-[#F9F5EF] transition-all duration-300"
               >
                 Buy Here
