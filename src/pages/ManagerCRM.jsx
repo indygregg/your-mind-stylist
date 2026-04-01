@@ -25,6 +25,7 @@ export default function ManagerCRM() {
   const [searchQuery, setSearchQuery] = useState("");
   const [stageFilter, setStageFilter] = useState("all");
   const [sourceFilter, setSourceFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("created_date"); // 'name' or 'created_date'
   const [selectedLead, setSelectedLead] = useState(null);
   const [editingLead, setEditingLead] = useState(null);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
@@ -103,19 +104,26 @@ export default function ManagerCRM() {
     },
   });
 
-  // Filter leads
-  const filteredLeads = leads.filter((lead) => {
-    const query = searchQuery.toLowerCase();
-    const matchesSearch =
-      lead.email?.toLowerCase().includes(query) ||
-      lead.full_name?.toLowerCase().includes(query) ||
-      lead.phone?.includes(query);
+  // Filter and sort leads
+  const filteredLeads = leads
+    .filter((lead) => {
+      const query = searchQuery.toLowerCase();
+      const matchesSearch =
+        lead.email?.toLowerCase().includes(query) ||
+        lead.full_name?.toLowerCase().includes(query) ||
+        lead.phone?.includes(query);
 
-    const matchesStage = stageFilter === "all" || lead.stage === stageFilter;
-    const matchesSource = sourceFilter === "all" || lead.source === sourceFilter;
+      const matchesStage = stageFilter === "all" || lead.stage === stageFilter;
+      const matchesSource = sourceFilter === "all" || lead.source === sourceFilter;
 
-    return matchesSearch && matchesStage && matchesSource;
-  });
+      return matchesSearch && matchesStage && matchesSource;
+    })
+    .sort((a, b) => {
+      if (sortBy === "name") {
+        return (a.full_name || "").localeCompare(b.full_name || "");
+      }
+      return new Date(b.created_date) - new Date(a.created_date);
+    });
 
   // Group by stage for pipeline view — includes all stages that leads can be in
   const stages = ["new", "contacted", "booked", "qualified", "proposal", "negotiation", "won", "lost"];
@@ -324,6 +332,15 @@ export default function ManagerCRM() {
                       <SelectItem value="organic_search">Organic Search</SelectItem>
                     </SelectContent>
                   </Select>
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="Sort" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="created_date">Recent</SelectItem>
+                      <SelectItem value="name">Name (A-Z)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </CardContent>
             </Card>
@@ -432,6 +449,15 @@ export default function ManagerCRM() {
                       <SelectItem value="masterclass">Masterclass</SelectItem>
                       <SelectItem value="referral">Referral</SelectItem>
                       <SelectItem value="social_media">Social Media</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="Sort" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="created_date">Recent</SelectItem>
+                      <SelectItem value="name">Name (A-Z)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
