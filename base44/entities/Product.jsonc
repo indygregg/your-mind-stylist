@@ -1,0 +1,225 @@
+{
+  "name": "Product",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "Unique product identifier (e.g., 'certification', 'inner-rehearsal')"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-friendly slug for product page"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name"
+    },
+    "tagline": {
+      "type": "string",
+      "description": "Short catchy tagline"
+    },
+    "short_description": {
+      "type": "string",
+      "description": "Brief description for cards"
+    },
+    "long_description": {
+      "type": "string",
+      "description": "Full description with HTML"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "one_time",
+        "subscription",
+        "payment_plan",
+        "consultation",
+        "bundle"
+      ],
+      "description": "Product type"
+    },
+    "is_bundle": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if this product is a bundle of other products"
+    },
+    "bundled_product_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of products included in this bundle"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "foundation",
+        "mid_level",
+        "high_touch",
+        "advanced"
+      ],
+      "description": "Product tier/category"
+    },
+    "product_subtype": {
+      "type": "string",
+      "enum": [
+        "book",
+        "webinar",
+        "course",
+        "digital_service",
+        "physical_product",
+        "other"
+      ],
+      "description": "Product subtype for tax and organizational purposes"
+    },
+    "price": {
+      "type": "number",
+      "description": "Price in cents"
+    },
+    "currency": {
+      "type": "string",
+      "default": "usd",
+      "description": "Currency code"
+    },
+    "billing_interval": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "yearly",
+        "one_time"
+      ],
+      "description": "Billing frequency"
+    },
+    "payment_plan_options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "months": {
+            "type": "number"
+          },
+          "monthly_price": {
+            "type": "number"
+          }
+        }
+      },
+      "description": "Payment plan options (for payment_plan type)"
+    },
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Key features/benefits"
+    },
+    "thumbnail": {
+      "type": "string",
+      "description": "Product image URL"
+    },
+    "book_cover_image": {
+      "type": "string",
+      "description": "Book cover image URL (for book products)"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Icon name for display"
+    },
+    "color": {
+      "type": "string",
+      "description": "Brand color hex code"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "draft",
+      "description": "Publication status"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Is product available for purchase"
+    },
+    "display_order": {
+      "type": "number",
+      "description": "Display order on pricing pages"
+    },
+    "ui_group": {
+      "type": "string",
+      "enum": [
+        "hero",
+        "featured",
+        "standard",
+        "hidden"
+      ],
+      "default": "standard",
+      "description": "How to display this product"
+    },
+    "template_choice": {
+      "type": "string",
+      "enum": [
+        "minimal",
+        "detailed",
+        "immersive"
+      ],
+      "default": "detailed",
+      "description": "Product page template style"
+    },
+    "related_course_id": {
+      "type": "string",
+      "description": "Link to Course entity if applicable"
+    },
+    "related_webinar_id": {
+      "type": "string",
+      "description": "Link to Webinar entity if applicable"
+    },
+    "access_grants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What this product unlocks (course IDs, resource IDs, etc.)"
+    },
+    "show_on_pages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "programs",
+        "buy_programs"
+      ],
+      "description": "Which public pages this bundle appears on (programs, buy_programs, courses, webinars, books, other)"
+    },
+    "stripe_product_id": {
+      "type": "string",
+      "description": "Stripe product ID"
+    },
+    "stripe_price_id": {
+      "type": "string",
+      "description": "Stripe price ID (primary)"
+    },
+    "stripe_price_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "All Stripe price IDs (for multiple billing options)"
+    },
+    "tax_code": {
+      "type": "string",
+      "description": "Stripe tax code (e.g., txcd_100000000 for physical goods, txcd_110000000 for digital services)"
+    }
+  },
+  "required": [
+    "key",
+    "name",
+    "type",
+    "category"
+  ]
+}

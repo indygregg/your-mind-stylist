@@ -27,6 +27,7 @@ export default function ManagerProducts() {
   const [syncing, setSyncing] = useState(false);
   const [importing, setImporting] = useState(false);
   const fileInputRef = React.useRef(null);
+  const bookCoverInputRef = React.useRef(null);
 
   const [formData, setFormData] = useState({
     key: "",
@@ -51,6 +52,7 @@ export default function ManagerProducts() {
     related_course_id: "",
     access_grants: [],
     payment_plan_options: [],
+    book_cover_image: "",
   });
   const [enablePaymentPlans, setEnablePaymentPlans] = useState(false);
 
@@ -222,6 +224,7 @@ export default function ManagerProducts() {
       related_course_id: "",
       access_grants: [],
       payment_plan_options: [],
+      book_cover_image: "",
     });
     setEditingProduct(null);
     setEnablePaymentPlans(false);
@@ -749,6 +752,57 @@ export default function ManagerProducts() {
                 className="bg-white"
               />
             </div>
+
+            {/* Book Cover Image (for book products) */}
+            {formData.product_subtype === "book" && (
+              <div>
+                <Label>📖 Book Cover Image</Label>
+                <div className="flex gap-2">
+                  <Input
+                    type="text"
+                    value={formData.book_cover_image || ""}
+                    onChange={(e) => setFormData({ ...formData, book_cover_image: e.target.value })}
+                    placeholder="https://example.com/book-cover.jpg"
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => bookCoverInputRef.current?.click()}
+                  >
+                    <Upload size={14} className="mr-1" />
+                    Upload
+                  </Button>
+                </div>
+                <input
+                  ref={bookCoverInputRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      try {
+                        const result = await base44.integrations.Core.UploadFile({ file });
+                        setFormData({ ...formData, book_cover_image: result.file_url });
+                        toast.success('Book cover uploaded!');
+                      } catch (error) {
+                        toast.error('Failed to upload cover image');
+                      }
+                    }
+                  }}
+                />
+                {formData.book_cover_image && (
+                  <div className="mt-3 p-3 bg-[#F9F5EF] rounded-lg border border-[#E4D9C4]">
+                    <img
+                      src={formData.book_cover_image}
+                      alt="Book cover preview"
+                      className="w-24 h-32 object-cover rounded"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Pricing */}
             <div className="grid md:grid-cols-3 gap-4">
