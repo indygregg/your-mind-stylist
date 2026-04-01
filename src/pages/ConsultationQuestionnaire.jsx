@@ -190,19 +190,34 @@ export default function ConsultationQuestionnaire() {
     if (requiredFields.length === 0) {
       return true;
     }
+    
     // Validate all required fields are filled
-    return requiredFields.every(field => {
+    const isValid = requiredFields.every(field => {
       const value = formData[field.field_name];
+      
       if (field.field_type === 'checkbox') {
         return value === true;
       }
+      
       if (field.field_type === 'radio') {
-        // Radio button is valid if any value is selected (including 'yes', 'no', etc.)
+        // Radio button is valid if any value is selected
         return value && value.toString().trim().length > 0;
       }
+      
       // For text, email, tel, date, number, textarea, etc.
-      return value && value.toString().trim().length > 0;
+      return value !== undefined && value !== null && value !== '' && value.toString().trim().length > 0;
     });
+    
+    // Debug log
+    if (!isValid) {
+      console.log('Validation failed for step', step);
+      requiredFields.forEach(field => {
+        const value = formData[field.field_name];
+        console.log(`Field: ${field.field_name}, Required: ${field.required}, Value: "${value}", Type: ${field.field_type}`);
+      });
+    }
+    
+    return isValid;
   };
   
   const renderField = (field) => {
