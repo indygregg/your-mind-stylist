@@ -64,6 +64,9 @@ export default function ConsultationQuestionnaire() {
     };
   }, []);
   
+  const totalSteps = 5;
+  const progress = (step / totalSteps) * 100;
+  
   // Get fields for current step
   const currentStepFields = formFields
     .filter(field => field.step === step)
