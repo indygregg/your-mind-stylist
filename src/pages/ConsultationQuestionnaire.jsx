@@ -69,8 +69,19 @@ export default function ConsultationQuestionnaire() {
   
   // Get fields for current step
   const currentStepFields = formFields
-    .filter(field => field.step === step)
-    .sort((a, b) => a.order - b.order);
+    .filter(field => {
+      // Handle both string and number step values
+      const fieldStep = parseInt(field.step, 10);
+      return fieldStep === step;
+    })
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
+  
+  // Debug logging
+  React.useEffect(() => {
+    console.log('Current step:', step);
+    console.log('All form fields:', formFields);
+    console.log('Filtered fields for step:', currentStepFields);
+  }, [step, formFields, currentStepFields]);
 
   const handleCheckboxChange = (field, value) => {
     setFormData(prev => ({
