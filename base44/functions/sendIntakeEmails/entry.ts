@@ -109,6 +109,38 @@ Deno.serve(async (req) => {
     const clientName = data.name || 'New Client';
     const clientEmail = data.email;
 
+    // 3. Upsert lead in CRM
+    const intakeLink = `https://yourmindstylist.com/ConsultationQuestionnaire`;
+    const existingLeads = clientEmail
+      ? await base44.asServiceRole.entities.Lead.filter({ email: clientEmail })
+      : [];
+
+    if (existingLeads && existingLeads.length > 0) {
+      // Update existing lead
+      await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, {
+        first_name: data.name ? data.name.split(' ')[0] : existingLeads[0].first_name,
+        last_name: data.name && data.name.split(' ').length > 1 ? data.name.split(' ').slice(1).join(' ') : existingLeads[0].last_name,
+        phone: data.phone || existingLeads[0].phone,
+        notes: (existingLeads[0].notes ? existingLeads[0].notes + '\n\n' : '') + `Intake form submitted on ${new Date().toLocaleDateString()}. View intake: ${intakeLink}`,
+        what_inquired_about: 'Initial Consultation Intake Form',
+        last_contact_date: new Date().toISOString(),
+      });
+    } else {
+      // Create new lead
+      const nameParts = (data.name || '').split(' ');
+      await base44.asServiceRole.entities.Lead.create({
+        email: clientEmail || '',
+        first_name: nameParts[0] || '',
+        last_name: nameParts.slice(1).join(' ') || '',
+        phone: data.phone || '',
+        source: 'website',
+        stage: 'new',
+        what_inquired_about: 'Initial Consultation Intake Form',
+        notes: `Intake form submitted on ${new Date().toLocaleDateString()}. View intake: ${intakeLink}`,
+        last_contact_date: new Date().toISOString(),
+      });
+    }
+
     // 1. Confirmation email to client
     if (clientEmail) {
       await resend.emails.send({
