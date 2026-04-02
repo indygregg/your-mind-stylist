@@ -1,17 +1,11 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 import { jsPDF } from 'npm:jspdf@2.5.1';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const { intake_id } = await req.json();
-    const intake = await base44.entities.ConsultationIntake.filter({ id: intake_id });
+    const intake = await base44.asServiceRole.entities.ConsultationIntake.filter({ id: intake_id });
 
     if (!intake || intake.length === 0) {
       return Response.json({ error: 'Intake not found' }, { status: 404 });
