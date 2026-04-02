@@ -34,7 +34,10 @@ export default function ManagerIntakeReview() {
 
   const { data: intakes = [], isLoading } = useQuery({
     queryKey: ['consultation-intakes'],
-    queryFn: () => base44.entities.ConsultationIntake.list('-submitted_date')
+    queryFn: async () => {
+      const res = await base44.functions.invoke('getIntakeForms', {});
+      return res.data?.intakes || [];
+    }
   });
 
   const filteredIntakes = intakes.filter(intake => {
