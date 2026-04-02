@@ -186,13 +186,18 @@ export default function ConsultationQuestionnaire() {
     console.log('Form data:', formData);
   }, [step, formFields, currentStepFields, formData]);
 
-  const handleCheckboxChange = (field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].includes(value)
-        ? prev[field].filter(v => v !== value)
-        : [...prev[field], value]
-    }));
+  const WELCOME_LETTER_URL = "https://media.base44.com/files/public/693a98b3e154ab3b36c88ebb/6abd9ef03_Welcome-letter.pdf";
+
+  const handleCheckboxChange = (fieldName, value) => {
+    setFormData(prev => {
+      const current = Array.isArray(prev[fieldName]) ? prev[fieldName] : [];
+      return {
+        ...prev,
+        [fieldName]: current.includes(value)
+          ? current.filter(v => v !== value)
+          : [...current, value]
+      };
+    });
   };
 
   const handleSubmit = async () => {
@@ -220,14 +225,16 @@ export default function ConsultationQuestionnaire() {
   const isStepValid = () => {
     const requiredFields = currentStepFields.filter(field => {
       if (!field.required) return false;
-      // Skip hidden conditional fields
       if (field.conditional_field && formData[field.conditional_field] !== field.conditional_value) return false;
       return true;
     });
     if (requiredFields.length === 0) return true;
     return requiredFields.every(field => {
       const value = formData[field.field_name];
-      if (field.field_type === 'checkbox' || field.field_type === 'radio') {
+      if (field.field_type === 'checkbox' && field.options && field.options.length > 0) {
+        return Array.isArray(value) && value.length > 0;
+      }
+      if (field.field_type === 'radio') {
         return value !== undefined && value !== null && value !== '';
       }
       return value !== undefined && value !== null && String(value).trim().length > 0;
@@ -317,6 +324,40 @@ export default function ConsultationQuestionnaire() {
         );
         
       case 'checkbox':
+        // Multi-option checkbox (array of options)
+        if (field.options && field.options.length > 0) {
+          const checked = Array.isArray(value) ? value : [];
+          return (
+            <div key={field.field_name}>
+              <Label className="font-medium">
+                {field.label} {field.required && '*'}
+              </Label>
+              {field.help_text && (
+                <p className="text-xs text-[#2B2725]/60 mt-1 mb-2">{field.help_text}</p>
+              )}
+              <div className="mt-2 space-y-2">
+                {field.options.map((option) => {
+                  const optionLabel = field.field_name === 'disclosure_forms' && option.toLowerCase().includes('welcome letter')
+                    ? <span>{option} — <a href={WELCOME_LETTER_URL} target="_blank" rel="noopener noreferrer" className="text-[#D8B46B] underline hover:text-[#1E3A32] transition-colors">Download PDF</a></span>
+                    : option;
+                  return (
+                    <div key={option} className="flex items-center gap-3">
+                      <Checkbox
+                        id={`${field.field_name}-${option}`}
+                        checked={checked.includes(option)}
+                        onCheckedChange={() => handleCheckboxChange(field.field_name, option)}
+                      />
+                      <Label htmlFor={`${field.field_name}-${option}`} className="cursor-pointer leading-relaxed font-normal">
+                        {optionLabel}
+                      </Label>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        }
+        // Single boolean checkbox
         return (
           <div key={field.field_name} className="flex items-start gap-3">
             <Checkbox
