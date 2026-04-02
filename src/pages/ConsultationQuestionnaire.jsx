@@ -218,9 +218,13 @@ export default function ConsultationQuestionnaire() {
   };
 
   const isStepValid = () => {
-    const requiredFields = currentStepFields.filter(field => field.required);
+    const requiredFields = currentStepFields.filter(field => {
+      if (!field.required) return false;
+      // Skip hidden conditional fields
+      if (field.conditional_field && formData[field.conditional_field] !== field.conditional_value) return false;
+      return true;
+    });
     if (requiredFields.length === 0) return true;
-    
     return requiredFields.every(field => {
       const value = formData[field.field_name];
       if (field.field_type === 'checkbox' || field.field_type === 'radio') {
