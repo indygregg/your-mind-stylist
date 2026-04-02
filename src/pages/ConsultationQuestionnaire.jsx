@@ -209,8 +209,8 @@ export default function ConsultationQuestionnaire() {
         submitted_date: new Date().toISOString()
       });
 
-      // Generate PDF
-      await base44.functions.invoke('generateIntakePDF', { intake_id: intake.id });
+      // Send confirmation + notification emails with PDF
+      await base44.functions.invoke('sendIntakeEmails', { intake_id: intake.id });
 
       // Navigate to confirmation
       navigate(createPageUrl('ConsultationSubmitted'));
