@@ -54,8 +54,10 @@ const SERVICES = [
 export default function SignatureServices() {
   const { data: products = [] } = useQuery({
     queryKey: ["signature-products"],
-    queryFn: () =>
-      base44.entities.Product.filter({ status: "published", active: true }, "display_order"),
+    queryFn: async () => {
+      const res = await base44.functions.invoke('getPublishedProducts', {});
+      return res.data?.products || [];
+    },
   });
 
   // Signature services = non-course, non-bundle products
