@@ -77,6 +77,17 @@ export default function SignatureServices() {
         canonical="/signature-services"
       />
 
+      {/* Back Button */}
+      <div className="fixed top-20 left-6 z-40">
+        <Link
+          to={createPageUrl("Programs")}
+          className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm border border-[#6E4F7D]/20 text-[#6E4F7D] text-sm font-medium hover:bg-white transition-colors shadow-sm"
+        >
+          <ArrowRight size={14} className="rotate-180" />
+          Back to Services
+        </Link>
+      </div>
+
       {/* Hero */}
       <section className="pt-32 pb-20 bg-[#6E4F7D]">
         <div className="max-w-5xl mx-auto px-6 text-center">
@@ -112,7 +123,44 @@ export default function SignatureServices() {
         </div>
       </section>
 
-      {/* Services from DB */}
+      {/* Signature Services — Static */}
+      <section className="py-16 bg-[#F9F5EF]">
+        <div className="max-w-5xl mx-auto px-6">
+          <h2 className="font-serif text-3xl text-[#1E3A32] text-center mb-12">Signature Services</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {SERVICES.map((service, i) => (
+              <motion.div
+                key={service.key}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className={`bg-white border-l-4 ${service.color} p-8 flex flex-col`}
+              >
+                <h3 className={`font-serif text-2xl mb-2 ${service.accentColor}`}>{service.name}</h3>
+                <p className="text-[#2B2725]/60 text-sm italic mb-4">{service.tagline}</p>
+                <p className="text-[#2B2725]/80 text-sm leading-relaxed mb-6 flex-1">{service.description}</p>
+                <ul className="space-y-2 mb-6">
+                  {service.details.map((d, di) => (
+                    <li key={di} className="flex items-start gap-2 text-sm text-[#2B2725]/70">
+                      <CheckCircle size={14} className="text-[#A6B7A3] flex-shrink-0 mt-0.5" />
+                      {d}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to={createPageUrl(service.linkPage)}
+                  className={`inline-flex items-center gap-2 text-sm font-medium ${service.accentColor} hover:opacity-75 transition-opacity`}
+                >
+                  Learn More <ArrowRight size={14} />
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Additional products from DB if any */}
       {signatureProducts.length > 0 && (
         <section className="py-16 bg-[#F9F5EF]">
           <div className="max-w-5xl mx-auto px-6">
