@@ -60,11 +60,11 @@ export default function SignatureServices() {
     },
   });
 
-  // Signature services = non-course, non-bundle products
+  // Signature services = high_touch or consultation-type products only
   const signatureProducts = products.filter(
     (p) =>
       p.ui_group !== "hidden" &&
-      p.product_subtype !== "course" &&
+      (p.category === "high_touch" || p.type === "consultation") &&
       !p.is_bundle &&
       p.type !== "bundle"
   );
