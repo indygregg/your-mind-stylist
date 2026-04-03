@@ -170,56 +170,6 @@ export default function SignatureServices() {
         </div>
       </section>
 
-      {/* Additional products from DB if any */}
-      {signatureProducts.length > 0 && (
-        <section className="py-16 bg-[#F9F5EF]">
-          <div className="max-w-5xl mx-auto px-6">
-            <h2 className="font-serif text-3xl text-[#1E3A32] text-center mb-12">Available Services</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {signatureProducts.map((product, i) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.07 }}
-                  className="bg-white border border-[#E4D9C4] hover:border-[#6E4F7D] hover:shadow-md transition-all flex flex-col"
-                >
-                  <div className="p-6 flex flex-col flex-1">
-                    {product.tagline && (
-                      <p className="text-[#6E4F7D] text-xs tracking-wider uppercase mb-2">{product.tagline}</p>
-                    )}
-                    <h3 className="font-serif text-xl text-[#1E3A32] mb-3 leading-snug">{product.name}</h3>
-                    <p className="text-[#2B2725]/60 text-sm mb-4 flex-1">{product.short_description}</p>
-                    {product.features?.length > 0 && (
-                      <ul className="space-y-1.5 mb-5">
-                        {product.features.slice(0, 3).map((f, fi) => (
-                          <li key={fi} className="flex items-start gap-2 text-xs text-[#2B2725]/70">
-                            <CheckCircle size={13} className="text-[#A6B7A3] flex-shrink-0 mt-0.5" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    <div className="flex items-center justify-between pt-4 border-t border-[#E4D9C4] mt-auto">
-                      <span className="font-serif text-xl text-[#1E3A32]">
-                        {product.price > 0 ? `$${(product.price / 100).toFixed(0)}` : "Free Consult"}
-                      </span>
-                      <Link
-                        to={createPageUrl(product.slug ? `ProductPage?slug=${product.slug}` : "Consultations")}
-                        className="flex items-center gap-1.5 px-4 py-2 bg-[#6E4F7D] text-white text-sm hover:bg-[#5a3f68] transition-colors"
-                      >
-                        Learn More <ArrowRight size={14} />
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* Why Work With Roberta */}
       <section className="py-20 bg-[#1E3A32] text-white">
         <div className="max-w-5xl mx-auto px-6">
