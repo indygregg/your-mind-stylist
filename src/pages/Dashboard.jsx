@@ -161,7 +161,7 @@ export default function Dashboard() {
 
   return (
     <div className="bg-[#F9F5EF] min-h-screen pt-32 pb-24">
-      <AIClientAssistant variant="widget" />
+      <div className="hidden md:block"><AIClientAssistant variant="widget" /></div>
       {/* PostMasterclassOnboarding is a modal overlay - does not render inline content */}
       <PostMasterclassOnboarding />
       <MilestoneChecker />
