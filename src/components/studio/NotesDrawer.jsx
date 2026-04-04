@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X, Tag, Save, CheckCircle, AlertCircle, BookOpen } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,6 +14,7 @@ export default function NotesDrawer({ isOpen, onClose, context = {} }) {
   const [saveStatus, setSaveStatus] = useState(null); // null, 'saving', 'saved', 'error'
   const [currentUser, setCurrentUser] = useState(null);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   useEffect(() => {
     base44.auth.me().then(setCurrentUser).catch(() => {});
@@ -220,14 +221,13 @@ export default function NotesDrawer({ isOpen, onClose, context = {} }) {
                       <CheckCircle size={16} />
                       Note saved successfully!
                     </div>
-                    <Link
-                      to="/StudioNotes"
-                      onClick={onClose}
+                    <button
+                      onClick={() => { onClose(); navigate('/StudioNotes'); }}
                       className="flex items-center gap-1.5 text-xs text-[#1E3A32] font-medium underline underline-offset-2 hover:text-[#D8B46B] transition-colors"
                     >
                       <BookOpen size={13} />
                       See your notes
-                    </Link>
+                    </button>
                   </div>
                 )}
                 {saveStatus === 'error' && (
