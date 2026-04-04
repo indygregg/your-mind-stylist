@@ -2,15 +2,23 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle, Sparkles, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
+import { X, CheckCircle, Sparkles, ArrowRight, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+const STARTER_IDENTITIES = [
+  { name: "The Grounded One", description: "Calm, clear, connected to yourself. You're leading from intention, not reaction.", is_default: true },
+  { name: "The Performer", description: "You're showing up, but it's costing you. Powering through, people-pleasing, or masking.", is_default: true },
+  { name: "The Old Pattern", description: "The default autopilot. Reactive, contracted, running familiar survival scripts.", is_default: true }
+];
 
 export default function DailyStyleCheck({ onClose, onComplete }) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [step, setStep] = useState(1); // 1: state, 2: voice, 3: identity, 4: done
+  const [showAddIdentity, setShowAddIdentity] = useState(false);
+  const [newIdentityName, setNewIdentityName] = useState("");
+  const [newIdentityDesc, setNewIdentityDesc] = useState("");
   const [checkInData, setCheckInData] = useState({
     state_key: "calm_activated",
     state_value: 50,
@@ -25,7 +33,25 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
     queryKey: ["identity-wardrobe"],
     queryFn: async () => {
       const user = await base44.auth.me();
-      return base44.entities.IdentityWardrobe.filter({ created_by: user.email });
+      const existing = await base44.entities.IdentityWardrobe.filter({ created_by: user.email });
+      if (existing.length === 0) {
+        // Auto-seed starter identities for new users
+        await Promise.all(STARTER_IDENTITIES.map(i => base44.entities.IdentityWardrobe.create(i)));
+        return base44.entities.IdentityWardrobe.filter({ created_by: user.email });
+      }
+      return existing;
+    }
+  });
+
+  // Add custom identity mutation
+  const addIdentityMutation = useMutation({
+    mutationFn: (data) => base44.entities.IdentityWardrobe.create(data),
+    onSuccess: (newIdentity) => {
+      queryClient.invalidateQueries({ queryKey: ["identity-wardrobe"] });
+      handleIdentitySelect(newIdentity);
+      setShowAddIdentity(false);
+      setNewIdentityName("");
+      setNewIdentityDesc("");
     }
   });
 
@@ -229,21 +255,9 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                   className="space-y-4 lg:space-y-6"
                 >
                   <div>
-                    <h3 className="font-medium text-[#1E3A32] text-sm lg:text-base mb-3 lg:mb-4">Which outfit are you wearing?</h3>
+                    <h3 className="font-medium text-[#1E3A32] text-sm lg:text-base mb-1">Which outfit are you wearing?</h3>
+                    <p className="text-xs text-[#2B2725]/60 mb-3">Which version of you showed up today?</p>
                     <div className="space-y-2 max-h-64 overflow-y-auto">
-                      {/* Old Default Pattern */}
-                      <button
-                        onClick={() => handleIdentitySelect(null)}
-                        className={`w-full p-3 rounded-lg border-2 text-left transition-all ${
-                          checkInData.identity_id === null && checkInData.identity_name === null
-                            ? "border-[#2B2725]/30 bg-[#2B2725]/5"
-                            : "border-[#E4D9C4] hover:border-[#2B2725]/20"
-                        }`}
-                      >
-                        <div className="text-sm font-medium text-[#2B2725]/70">Old Default Pattern</div>
-                      </button>
-
-                      {/* User Identities */}
                       {identities.map((identity) => (
                         <button
                           key={identity.id}
@@ -260,13 +274,47 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                           )}
                         </button>
                       ))}
-
-                      {identities.length === 0 && (
-                        <div className="text-center py-6 text-[#2B2725]/50 text-sm">
-                          No identities yet. You can create them later.
-                        </div>
-                      )}
                     </div>
+
+                    {/* Add custom identity */}
+                    {!showAddIdentity ? (
+                      <button
+                        onClick={() => setShowAddIdentity(true)}
+                        className="mt-3 flex items-center gap-1.5 text-xs text-[#1E3A32]/60 hover:text-[#1E3A32] transition-colors"
+                      >
+                        <Plus size={13} /> Add your own identity
+                      </button>
+                    ) : (
+                      <div className="mt-3 p-3 bg-[#F9F5EF] rounded-lg border border-[#E4D9C4] space-y-2">
+                        <input
+                          type="text"
+                          placeholder="Identity name (e.g. 'The Nurturer')"
+                          value={newIdentityName}
+                          onChange={(e) => setNewIdentityName(e.target.value)}
+                          className="w-full text-sm px-3 py-2 border border-[#E4D9C4] rounded bg-white focus:outline-none focus:border-[#D8B46B]"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Short description (optional)"
+                          value={newIdentityDesc}
+                          onChange={(e) => setNewIdentityDesc(e.target.value)}
+                          className="w-full text-sm px-3 py-2 border border-[#E4D9C4] rounded bg-white focus:outline-none focus:border-[#D8B46B]"
+                        />
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            disabled={!newIdentityName.trim() || addIdentityMutation.isPending}
+                            onClick={() => addIdentityMutation.mutate({ name: newIdentityName.trim(), description: newIdentityDesc.trim(), is_default: false })}
+                            className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725] text-xs"
+                          >
+                            Save Identity
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => setShowAddIdentity(false)} className="text-xs">
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex gap-2 lg:gap-3 pt-4 flex-col lg:flex-row">
@@ -301,9 +349,12 @@ export default function DailyStyleCheck({ onClose, onComplete }) {
                   </div>
 
                   <div className="space-y-3">
-                    <Button onClick={() => { onComplete?.(); onClose(); }} className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-sm lg:text-base">
-                      Back to Studio
+                    <Button onClick={() => { onComplete?.(); onClose(); navigate('/StyleJournal'); }} className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-sm lg:text-base">
+                      See My Patterns →
                     </Button>
+                    <button onClick={() => { onComplete?.(); onClose(); }} className="w-full text-xs text-[#2B2725]/50 hover:text-[#2B2725] transition-colors py-1">
+                      Back to Studio
+                    </button>
 
                      <div className="pt-4 border-t border-[#E4D9C4] bg-[#D8B46B]/5 -mx-3 lg:-mx-6 px-3 lg:px-6 py-4">
                       <div className="flex items-start gap-2 mb-3">
