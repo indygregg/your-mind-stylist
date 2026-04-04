@@ -8,6 +8,7 @@ import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import StyleJournalPage from './pages/StyleJournal';
+import MyIdentitiesPage from './pages/MyIdentities';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -62,6 +63,7 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="/StyleJournal" element={<LayoutWrapper currentPageName="StyleJournal"><StyleJournalPage /></LayoutWrapper>} />
+      <Route path="/MyIdentities" element={<LayoutWrapper currentPageName="MyIdentities"><MyIdentitiesPage /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

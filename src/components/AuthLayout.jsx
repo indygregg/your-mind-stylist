@@ -112,6 +112,7 @@ export default function AuthLayout({ children, currentPageName }) {
     // Regular user
     return [
       { name: "Studio", page: "Dashboard" },
+      { name: "Style Journal", page: "StyleJournal" },
       { name: "Audio", page: "StudioAudio" },
       { name: "Style Pauses", page: "StylePauses" },
       { name: "Book", page: "ClientBookings" },

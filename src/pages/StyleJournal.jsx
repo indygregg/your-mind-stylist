@@ -6,7 +6,7 @@ import StyleCalendar from "@/components/stylecheck/StyleCalendar";
 import StateTrendsChart from "@/components/stylecheck/StateTrendsChart";
 import IdentityFrequency from "@/components/stylecheck/IdentityFrequency";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Settings } from "lucide-react";
 
 export default function StyleJournal() {
   const navigate = useNavigate();
@@ -38,8 +38,18 @@ export default function StyleJournal() {
           >
             <ArrowLeft size={16} /> Back
           </button>
-          <h1 className="font-serif text-3xl text-[#1E3A32] mb-1">Style Journal</h1>
-          <p className="text-sm text-[#2B2725]/60">Your check-in patterns over time</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-serif text-3xl text-[#1E3A32] mb-1">Style Journal</h1>
+              <p className="text-sm text-[#2B2725]/60">Your check-in patterns over time</p>
+            </div>
+            <button
+              onClick={() => navigate('/MyIdentities')}
+              className="flex items-center gap-1.5 text-xs text-[#1E3A32]/60 hover:text-[#1E3A32] transition-colors border border-[#E4D9C4] rounded-lg px-3 py-2"
+            >
+              <Settings size={13} /> Manage Identities
+            </button>
+          </div>
         </div>
 
         {loadingCheckIns ? (
