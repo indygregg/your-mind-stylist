@@ -1,16 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 
+// Single shared query — fetches ALL CMS content once, all CmsText components share it
 export function useCmsText(key, fallback = "") {
-  const { data: blocks = [] } = useQuery({
-    queryKey: ["cms-content", key],
-    queryFn: () => base44.entities.CmsContent.filter({ key }),
-    staleTime: 60 * 60 * 1000, // Cache for 1 hour
-    gcTime: 60 * 60 * 1000, // Keep in memory for 1 hour
+  const { data: allBlocks = [] } = useQuery({
+    queryKey: ["cms-content-all"],
+    queryFn: () => base44.entities.CmsContent.list(),
+    staleTime: 60 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
   });
 
-  const block = blocks[0];
-  
+  const block = allBlocks.find(b => b.key === key);
+
   if (!block) {
     return { content: fallback, block: null };
   }
