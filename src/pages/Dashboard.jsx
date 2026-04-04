@@ -363,7 +363,7 @@ export default function Dashboard() {
               {[
                 { label: "Client Portal", page: "ClientPortal", icon: ShoppingCart, descriptionKey: "dashboard.quicklinks.portal", fallback: "Your purchased products." },
                 { label: "Style Pauses™", page: "StylePauses", icon: Sparkles, descriptionKey: "dashboard.quicklinks.style_pauses", fallback: "1-3 minute resets." },
-                { label: "My Identities", page: "IdentityWardrobe", icon: User, descriptionKey: "dashboard.quicklinks.identities", fallback: "Create outfit personas for style checks." },
+                { label: "My Identities", page: "StudioDashboard", icon: User, descriptionKey: "dashboard.quicklinks.identities", fallback: "Create outfit personas for style checks." },
                 { label: "My Library", page: "ClientPortal", icon: Layers, descriptionKey: "dashboard.quicklinks.library", fallback: "Course progress & learning." },
                 { label: "Pocket Mindset™", page: "PocketMindset", icon: Sparkles, descriptionKey: "dashboard.quicklinks.pocket_mindset", fallback: "Enter your favorite sessions in the notes section of your dashboard." },
                 { label: "Notes", page: "StudioNotes", icon: Edit3, descriptionKey: "dashboard.quicklinks.notes", fallback: "Capture insights as you learn." },
