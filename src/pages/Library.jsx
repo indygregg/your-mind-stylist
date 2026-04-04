@@ -1,16 +1,13 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { createPageUrl } from "../utils";
-import { motion } from "framer-motion";
-import { Layers, Sparkles, Play, Headphones, Users, Award, ChevronDown, ChevronUp, FileText } from "lucide-react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import ProgramCard from "../components/library/ProgramCard";
-import StudentDashboard from "../components/library/StudentDashboard";
-import AILearningPathRecommender from "../components/library/AILearningPathRecommender";
-import { base44 } from "@/api/base44Client";
-import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
 
 export default function Library() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate(createPageUrl("ClientPortal"), { replace: true });
+  }, []);
+  return null;
   const queryClient = useQueryClient();
   const [showDashboard, setShowDashboard] = useState(true);
   const [expandedSections, setExpandedSections] = useState({

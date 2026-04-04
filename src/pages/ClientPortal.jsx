@@ -12,20 +12,28 @@ import {
   FileText, 
   BookOpen, 
   Video,
-  Download,
   Lock,
   CheckCircle,
   DollarSign,
-  ExternalLink
+  ExternalLink,
+  Layers,
+  Headphones,
+  Award,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import StudentDashboard from "../components/library/StudentDashboard";
 
 export default function ClientPortal() {
   if (typeof window !== 'undefined') {
     window.__USE_AUTH_LAYOUT = true;
   }
+
+  const [expandedSections, setExpandedSections] = useState({ toolkit: true, webinars: true, audio: true, training: true });
+  const toggleSection = (key) => setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }));
 
   const { data: user } = useQuery({
     queryKey: ["currentUser"],
@@ -47,56 +55,130 @@ export default function ClientPortal() {
     staleTime: 2 * 60 * 1000,
   });
 
+  const { data: userLessonProgress = [] } = useQuery({
+    queryKey: ["userLessonProgress", user?.id],
+    queryFn: () => base44.entities.UserLessonProgress.filter({ user_id: user.id }),
+    enabled: !!user?.id,
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const { data: allModules = [] } = useQuery({
+    queryKey: ["allModules"],
+    queryFn: () => base44.entities.Module.list(),
+    staleTime: 10 * 60 * 1000,
+  });
+
+  const { data: allLessons = [] } = useQuery({
+    queryKey: ["allLessons"],
+    queryFn: () => base44.entities.Lesson.list(),
+    staleTime: 10 * 60 * 1000,
+  });
+
   const { data: courses = [] } = useQuery({
     queryKey: ["enrolledCourses", user?.id],
     queryFn: async () => {
       const courseIds = userProgress.map(p => p.course_id);
       if (courseIds.length === 0) return [];
-      const allCourses = await base44.entities.Course.list('-created_date', 200);
-      const uniqueCourseIds = [...new Set(courseIds)];
-      return allCourses.filter(c => uniqueCourseIds.includes(c.id));
+      const enrolled = await Promise.all(courseIds.map(id => base44.entities.Course.get(id)));
+      return enrolled.filter(c => c && c.status === "published");
     },
     enabled: !!user?.id && userProgress.length > 0,
     staleTime: 2 * 60 * 1000,
   });
 
-  const { data: webinars = [] } = useQuery({
-    queryKey: ["myWebinars", user?.id],
+  const { data: upcomingBookings = [] } = useQuery({
+    queryKey: ["upcomingBookings", user?.id],
     queryFn: async () => {
-      const access = await base44.entities.UserWebinarAccess.filter({ user_id: user.id });
-      const webinarIds = access.map(a => a.webinar_id);
-      if (webinarIds.length === 0) return [];
-      const allWebinars = await base44.entities.Webinar.list();
-      return allWebinars.filter(w => webinarIds.includes(w.id));
+      const all = await base44.entities.Booking.filter({ user_email: user.email, booking_status: "confirmed" });
+      return all.filter(b => new Date(b.scheduled_date) > new Date()).sort((a, b) => new Date(a.scheduled_date) - new Date(b.scheduled_date));
     },
-    enabled: !!user?.id,
+    enabled: !!user?.email,
     staleTime: 2 * 60 * 1000,
   });
 
-  const { data: purchases = [] } = useQuery({
-    queryKey: ["myPurchases", user?.email],
-    queryFn: async () => {
-      return [];
-    },
-    enabled: !!user?.email,
+  const { data: resources = [] } = useQuery({
+    queryKey: ["publishedResources"],
+    queryFn: () => base44.entities.Resource.filter({ status: "published" }),
+    staleTime: 5 * 60 * 1000,
   });
 
-  const completedBookings = bookings.filter(b => 
+  const completedBookings = bookings.filter(b =>
     b.booking_status === 'completed' && b.session_notes
   );
 
-  const paidBookings = bookings.filter(b => 
+  const paidBookings = bookings.filter(b =>
     b.payment_status === 'paid'
   ).sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
 
-  const formatAmount = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount / 100);
-  };
+  const formatAmount = (amount) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(amount / 100);
 
   const totalSpent = paidBookings.reduce((sum, b) => sum + (b.amount || 0), 0);
+
+  const getCourseProgress = (courseId) => userProgress.find(p => p.course_id === courseId)?.completion_percentage || 0;
+  const getCourseStatus = (courseId) => {
+    const p = userProgress.find(pr => pr.course_id === courseId);
+    if (!p || p.status === "not_started") return "Not Started";
+    if (p.status === "completed") return "Completed";
+    return "In Progress";
+  };
+
+  const coursesByType = {
+    toolkit: courses.filter(c => c.type === "Toolkit Module"),
+    webinar: courses.filter(c => c.type === "Webinar"),
+    audio: courses.filter(c => c.type === "Audio-Based Program"),
+    training: courses.filter(c => c.type === "Training Program"),
+  };
+
+  const CourseSection = ({ title, icon: Icon, sectionKey, items, color }) => {
+    if (items.length === 0) return null;
+    const isExpanded = expandedSections[sectionKey];
+    return (
+      <div className="mb-8">
+        <button onClick={() => toggleSection(sectionKey)} className="w-full flex items-center justify-between mb-4 group">
+          <div className="flex items-center gap-2">
+            <Icon size={20} style={{ color }} />
+            <h2 className="font-serif text-xl text-[#1E3A32]">{title}</h2>
+          </div>
+          {isExpanded ? <ChevronUp className="text-[#D8B46B]" /> : <ChevronDown className="text-[#D8B46B]" />}
+        </button>
+        {isExpanded && (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {items.map((course) => {
+              const progress = getCourseProgress(course.id);
+              const status = getCourseStatus(course.id);
+              return (
+                <Card key={course.id} className="p-5 hover:shadow-lg transition-shadow">
+                  <div className="flex items-start justify-between mb-3">
+                    <Icon size={28} style={{ color }} />
+                    <Badge className={status === "Completed" ? "bg-green-100 text-green-800" : status === "In Progress" ? "bg-blue-100 text-blue-800" : "bg-gray-100 text-gray-600"}>
+                      {status}
+                    </Badge>
+                  </div>
+                  <h3 className="font-serif text-lg text-[#1E3A32] mb-1">{course.title}</h3>
+                  <p className="text-xs text-[#2B2725]/60 mb-3 line-clamp-2">{course.short_description}</p>
+                  {progress > 0 && (
+                    <div className="mb-3">
+                      <div className="flex justify-between text-xs text-[#2B2725]/60 mb-1">
+                        <span>Progress</span><span>{progress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-1.5">
+                        <div className="h-1.5 rounded-full bg-[#D8B46B]" style={{ width: `${progress}%` }} />
+                      </div>
+                    </div>
+                  )}
+                  <Link to={createPageUrl(`CoursePage?slug=${course.slug}`)}>
+                    <Button className="w-full text-sm" style={{ backgroundColor: color }}>
+                      {status === "Not Started" ? "Start" : status === "Completed" ? "Revisit" : "Continue"}
+                    </Button>
+                  </Link>
+                </Card>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
@@ -114,7 +196,7 @@ export default function ClientPortal() {
           <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="materials">
               <BookOpen size={16} className="mr-2" />
-              My Materials
+              My Library
             </TabsTrigger>
             <TabsTrigger value="sessions">
               <FileText size={16} className="mr-2" />
@@ -130,88 +212,64 @@ export default function ClientPortal() {
             </TabsTrigger>
           </TabsList>
 
-          {/* Materials Tab */}
+          {/* Materials / Library Tab */}
           <TabsContent value="materials">
-            <div className="space-y-8">
-              {/* Courses */}
-              {courses.length > 0 && (
-                <div>
-                  <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">Your Courses</h2>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {courses.map((course) => (
-                      <Card key={course.id} className="p-6 hover:shadow-lg transition-shadow">
-                        <div className="flex items-start justify-between mb-4">
-                          <BookOpen size={32} className="text-[#1E3A32]" />
-                          <Badge className="bg-green-100 text-green-800">
-                            <CheckCircle size={12} className="mr-1" />
-                            Enrolled
-                          </Badge>
-                        </div>
-                        <h3 className="font-serif text-xl text-[#1E3A32] mb-2">
-                          {course.title}
-                        </h3>
-                        <p className="text-sm text-[#2B2725]/70 mb-4 line-clamp-2">
-                          {course.short_description}
-                        </p>
-                        <Link to={createPageUrl(`CoursePage?slug=${course.slug}`)}>
-                          <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
-                            Continue Learning
-                          </Button>
-                        </Link>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Webinars */}
-              {webinars.length > 0 && (
-                <div>
-                  <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">Your Webinars</h2>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {webinars.map((webinar) => (
-                      <Card key={webinar.id} className="p-6 hover:shadow-lg transition-shadow">
-                        <div className="flex items-start justify-between mb-4">
-                          <Video size={32} className="text-[#6E4F7D]" />
-                          <Badge className="bg-purple-100 text-purple-800">
-                            Full Access
-                          </Badge>
-                        </div>
-                        <h3 className="font-serif text-xl text-[#1E3A32] mb-2">
-                          {webinar.title}
-                        </h3>
-                        <p className="text-sm text-[#2B2725]/70 mb-4 line-clamp-2">
-                          {webinar.short_description}
-                        </p>
-                        <Link to={createPageUrl(`WebinarPage?slug=${webinar.slug}`)}>
-                          <Button className="w-full bg-[#6E4F7D] hover:bg-[#5a3f66]">
-                            Watch Now
-                          </Button>
-                        </Link>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Empty State */}
-              {courses.length === 0 && webinars.length === 0 && (
-                <Card className="p-12 text-center">
-                  <Lock size={48} className="mx-auto mb-4 text-[#2B2725]/30" />
-                  <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">
-                    No Materials Yet
-                  </h3>
-                  <p className="text-[#2B2725]/70 mb-6">
-                    Explore our programs and unlock transformational content
-                  </p>
+            {courses.length === 0 ? (
+              <Card className="p-12 text-center">
+                <Lock size={48} className="mx-auto mb-4 text-[#2B2725]/30" />
+                <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">Your Library is Empty (For Now)</h3>
+                <p className="text-[#2B2725]/70 mb-6">You can start anytime. Pocket Visualization™ is a gentle place to begin, or explore all programs to see what resonates.</p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link to={createPageUrl("Programs")}>
-                    <Button className="bg-[#1E3A32] hover:bg-[#2B2725]">
-                      Browse Programs
-                    </Button>
+                    <Button className="bg-[#1E3A32] hover:bg-[#2B2725]">Explore Programs</Button>
                   </Link>
-                </Card>
-              )}
-            </div>
+                  <Link to={createPageUrl("PocketMindset")}>
+                    <Button variant="outline">Explore Pocket Mindset™</Button>
+                  </Link>
+                </div>
+              </Card>
+            ) : (
+              <div>
+                {/* Student Dashboard Summary */}
+                {userProgress.length > 0 && (
+                  <div className="mb-8">
+                    <StudentDashboard
+                      courses={courses}
+                      userProgress={userProgress}
+                      userLessonProgress={userLessonProgress}
+                      allLessons={allLessons}
+                      modules={allModules}
+                      upcomingBookings={upcomingBookings}
+                    />
+                  </div>
+                )}
+
+                {/* Resources Banner */}
+                <Link to={createPageUrl("Resources")}>
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    className="bg-gradient-to-br from-[#D8B46B] to-[#C9A55B] p-6 mb-8 cursor-pointer shadow-md hover:shadow-lg transition-all rounded-sm"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <FileText size={24} className="text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-serif text-xl text-white mb-1">Resource Library</h3>
+                        <p className="text-white/90 text-sm">Access worksheets, guides, audio sessions, and tools to support your journey. {resources.length > 0 && `${resources.length} resources available.`}</p>
+                      </div>
+                      <ChevronDown size={20} className="text-white/60 rotate-[-90deg]" />
+                    </div>
+                  </motion.div>
+                </Link>
+
+                {/* Courses by Type */}
+                <CourseSection title="Mind Style Toolkit" icon={Layers} sectionKey="toolkit" items={coursesByType.toolkit} color="#1E3A32" />
+                <CourseSection title="Webinars" icon={Video} sectionKey="webinars" items={coursesByType.webinar} color="#6E4F7D" />
+                <CourseSection title="Audio Programs" icon={Headphones} sectionKey="audio" items={coursesByType.audio} color="#D8B46B" />
+                <CourseSection title="Training & Certification" icon={Award} sectionKey="training" items={coursesByType.training} color="#1E3A32" />
+              </div>
+            )}
           </TabsContent>
 
           {/* Session Notes Tab */}
