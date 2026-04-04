@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { X, Tag, Save, CheckCircle, AlertCircle } from "lucide-react";
+import { X, Tag, Save, CheckCircle, AlertCircle, BookOpen } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -214,9 +215,19 @@ export default function NotesDrawer({ isOpen, onClose, context = {} }) {
                   </div>
                 )}
                 {saveStatus === 'saved' && (
-                  <div className="flex items-center gap-2 p-3 bg-green-50 rounded text-green-700 text-sm">
-                    <CheckCircle size={16} />
-                    Note saved successfully!
+                  <div className="flex flex-col gap-2 p-3 bg-green-50 rounded text-green-700 text-sm">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle size={16} />
+                      Note saved successfully!
+                    </div>
+                    <Link
+                      to="/StudioNotes"
+                      onClick={onClose}
+                      className="flex items-center gap-1.5 text-xs text-[#1E3A32] font-medium underline underline-offset-2 hover:text-[#D8B46B] transition-colors"
+                    >
+                      <BookOpen size={13} />
+                      See your notes
+                    </Link>
                   </div>
                 )}
                 {saveStatus === 'error' && (
