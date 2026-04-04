@@ -10,7 +10,7 @@ export default function DailyPocketPrompt({ prompt, onCreateNote, className = ""
     if (onCreateNote) {
       onCreateNote({
         prompt_text: prompt,
-        source_type: 'pocket_prompt',
+        source_type: 'freeform',
         source_title: 'Today\'s Pocket Prompt',
       });
     }
