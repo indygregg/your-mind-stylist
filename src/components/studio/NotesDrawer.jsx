@@ -11,7 +11,12 @@ export default function NotesDrawer({ isOpen, onClose, context = {} }) {
   const [tags, setTags] = useState([]);
   const [customTag, setCustomTag] = useState("");
   const [saveStatus, setSaveStatus] = useState(null); // null, 'saving', 'saved', 'error'
+  const [currentUser, setCurrentUser] = useState(null);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
   const sourceType = context?.source_type || "freeform";
   const sourceId = context?.source_id || null;
   const sourceTitle = context?.source_title || null;
@@ -69,6 +74,7 @@ export default function NotesDrawer({ isOpen, onClose, context = {} }) {
     if (!content.trim()) return;
 
     createNoteMutation.mutate({
+      user_id: currentUser?.id || currentUser?.email || 'unknown',
       source_type: sourceType,
       source_id: sourceId,
       source_title: sourceTitle,
