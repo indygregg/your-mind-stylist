@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 const SERVICES = [
   {
     key: "closet",
+    nameMatch: "Cleaning Out Your Closet",
     name: "Cleaning Out Your Closet™",
     tagline: "One-on-one hypnosis work tailored to suit your needs",
     description: "Spend 10-12 hours with Roberta to clear your emotional closet of things that no longer fit. This transformational process edits outdated beliefs and unresolved emotions that keep you stuck, so you can Restyle your future.",
@@ -21,6 +22,7 @@ const SERVICES = [
   },
   {
     key: "lens",
+    nameMatch: "LENS",
     name: "LENS™",
     tagline: "Roberta's flagship Mind Styling framework",
     description: "The LENS™ framework guides you through Language, Emotions, Nervous System, and Style — a structured approach to understanding and reshaping how you think, feel, and respond.",
@@ -31,6 +33,7 @@ const SERVICES = [
   },
   {
     key: "salon",
+    nameMatch: "Salon",
     name: "Salon",
     tagline: "Small-group coaching with Roberta",
     description: "An intimate group experience where Roberta works with a small cohort to guide deep personal and professional transformation. You get personalized attention within a community of like-minded individuals.",
@@ -41,6 +44,7 @@ const SERVICES = [
   },
   {
     key: "couture",
+    nameMatch: "Couture",
     name: "Couture",
     tagline: "The most bespoke, high-touch offering",
     description: "Roberta's most exclusive service — a fully customized, ongoing private coaching relationship built entirely around you. For those who want the deepest, most personalized transformation experience available.",
@@ -51,6 +55,7 @@ const SERVICES = [
   },
   {
     key: "pocket-mindset",
+    nameMatch: "Pocket Mindset",
     name: "Pocket Mindset™",
     tagline: "Daily guided experiences for ongoing transformation",
     description: "A guided audio-based daily practice that keeps you in the Mind Styling mindset. Perfect for anyone who wants consistent, accessible support between sessions or as a standalone daily tool.",
@@ -70,14 +75,17 @@ export default function SignatureServices() {
     },
   });
 
-  // Signature services = high_touch or consultation-type products only
-  const signatureProducts = products.filter(
-    (p) =>
-      p.ui_group !== "hidden" &&
-      (p.category === "high_touch" || p.type === "consultation") &&
-      !p.is_bundle &&
-      p.type !== "bundle"
-  );
+  // Merge DB product data (description, tagline) into each service config
+  const servicesWithDbData = SERVICES.map((service) => {
+    const match = products.find((p) =>
+      p.name?.toLowerCase().includes(service.nameMatch.toLowerCase())
+    );
+    return {
+      ...service,
+      tagline: match?.tagline || service.tagline,
+      description: match?.short_description || service.description,
+    };
+  });
 
   return (
     <div className="bg-[#F9F5EF] min-h-screen">
@@ -138,7 +146,7 @@ export default function SignatureServices() {
         <div className="max-w-5xl mx-auto px-6">
           <h2 className="font-serif text-3xl text-[#1E3A32] text-center mb-12">Signature Services</h2>
           <div className="grid md:grid-cols-2 gap-8">
-            {SERVICES.map((service, i) => (
+            {servicesWithDbData.map((service, i) => (
               <motion.div
                 key={service.key}
                 initial={{ opacity: 0, y: 20 }}
