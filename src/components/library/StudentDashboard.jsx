@@ -170,7 +170,7 @@ export default function StudentDashboard({
                     <div className="mb-4">
                       <div className="flex items-center justify-between text-sm text-[#2B2725]/70 mb-2">
                         <span>{stats.completed} of {stats.total} lessons</span>
-                        <span>{course.progress.completion_percentage}%</span>
+                        <span>{Math.round(course.progress.completion_percentage)}%</span>
                       </div>
                       <Progress value={course.progress.completion_percentage} className="h-2" />
                     </div>
@@ -246,7 +246,7 @@ export default function StudentDashboard({
                   <div className="mb-3">
                     <div className="flex items-center justify-between text-xs text-[#2B2725]/70 mb-1">
                       <span>{stats.completed}/{stats.total} lessons</span>
-                      <span>{progress.completion_percentage}%</span>
+                      <span>{Math.round(progress.completion_percentage)}%</span>
                     </div>
                     <Progress value={progress.completion_percentage} className="h-1.5" />
                   </div>
