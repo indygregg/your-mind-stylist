@@ -86,6 +86,7 @@ export default function AuthLayout({ children, currentPageName }) {
         { name: "Staff", page: "StaffManagement" },
         { name: "Library", page: "Library" },
         { name: "Clients", page: "ClientsHub" },
+        { name: "Style Insights", page: "ManagerStyleInsights" },
         { name: "Studio", page: "StudioDashboard" },
         { name: "Roadmap", page: "AdminRoadmap" },
         { name: "Settings", page: "StudioSettings" },

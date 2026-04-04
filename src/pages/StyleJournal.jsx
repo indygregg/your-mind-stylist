@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
+import PatternInsights from "@/components/stylecheck/PatternInsights";
+import { format } from "date-fns";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import StyleCalendar from "@/components/stylecheck/StyleCalendar";
 import StateTrendsChart from "@/components/stylecheck/StateTrendsChart";
 import IdentityFrequency from "@/components/stylecheck/IdentityFrequency";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Settings } from "lucide-react";
+import { ArrowLeft, Settings, Download } from "lucide-react";
 
 export default function StyleJournal() {
   const navigate = useNavigate();
@@ -43,12 +45,37 @@ export default function StyleJournal() {
               <h1 className="font-serif text-3xl text-[#1E3A32] mb-1">Style Journal</h1>
               <p className="text-sm text-[#2B2725]/60">Your check-in patterns over time</p>
             </div>
+            <div className="flex items-center gap-2">
+            <button
+              onClick={async () => {
+                const { default: jsPDF } = await import('jspdf');
+                const doc = new jsPDF();
+                doc.setFontSize(18);
+                doc.text('Style Journal Export', 20, 20);
+                doc.setFontSize(10);
+                doc.text(`Generated: ${format(new Date(), 'MMM d, yyyy')}`, 20, 30);
+                doc.setFontSize(11);
+                doc.text('Check-in History', 20, 45);
+                doc.setFontSize(9);
+                let y = 55;
+                checkIns.forEach(ci => {
+                  if (y > 270) { doc.addPage(); y = 20; }
+                  doc.text(`${format(new Date(ci.created_date), 'MMM d, yyyy')} — ${ci.identity_name || 'N/A'} | State: ${ci.state_value || 'N/A'} | Voice: ${ci.inner_voice_tone || 'N/A'}`, 20, y);
+                  y += 8;
+                });
+                doc.save('style-journal.pdf');
+              }}
+              className="flex items-center gap-1.5 text-xs text-[#1E3A32]/60 hover:text-[#1E3A32] transition-colors border border-[#E4D9C4] rounded-lg px-3 py-2"
+            >
+              <Download size={13} /> Export PDF
+            </button>
             <button
               onClick={() => navigate('/MyIdentities')}
               className="flex items-center gap-1.5 text-xs text-[#1E3A32]/60 hover:text-[#1E3A32] transition-colors border border-[#E4D9C4] rounded-lg px-3 py-2"
             >
               <Settings size={13} /> Manage Identities
             </button>
+            </div>
           </div>
         </div>
 
@@ -60,12 +87,17 @@ export default function StyleJournal() {
             <p className="text-[#2B2725]/40 text-xs">Complete your first Daily Style Check to start seeing your patterns here.</p>
           </div>
         ) : (
-          <Tabs defaultValue="calendar">
+          <Tabs defaultValue="insights">
             <TabsList className="mb-6 bg-[#E4D9C4]/50">
+              <TabsTrigger value="insights">Insights</TabsTrigger>
               <TabsTrigger value="calendar">Calendar</TabsTrigger>
               <TabsTrigger value="trends">State Trends</TabsTrigger>
               <TabsTrigger value="identities">Identities</TabsTrigger>
             </TabsList>
+
+            <TabsContent value="insights">
+              <PatternInsights checkIns={checkIns} />
+            </TabsContent>
 
             <TabsContent value="calendar">
               <StyleCalendar checkIns={checkIns} identities={identities} />
