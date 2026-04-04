@@ -4,7 +4,8 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle, Sparkles, ArrowRight, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { createPageUrl } from "../../utils";
 
 const STARTER_IDENTITIES = [
   { name: "The Grounded One", description: "Calm, clear, connected to yourself. You're leading from intention, not reaction.", is_default: true },
