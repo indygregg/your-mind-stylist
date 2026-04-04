@@ -96,6 +96,16 @@ Deno.serve(async (req) => {
     // Build new blocked rules from events
     const newRules = [];
     for (const event of uniqueEvents) {
+      // Skip events created by our own booking system (they have 'Booking ID:' in description)
+      if (event.description && event.description.includes('Booking ID:')) {
+        console.log(`Skipping own booking event: ${event.summary}`);
+        continue;
+      }
+      // Skip if summary ends with ' - Session' (our booking event pattern)
+      if (event.summary && event.summary.match(/ - Session$/)) {
+        console.log(`Skipping own session event: ${event.summary}`);
+        continue;
+      }
       // Skip events the user declined
       if (event.attendees) {
         const self = event.attendees.find(a => a.self);
