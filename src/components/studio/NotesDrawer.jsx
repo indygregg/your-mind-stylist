@@ -26,16 +26,7 @@ export default function NotesDrawer({ isOpen, onClose, context = {} }) {
     }
   }, [isOpen, context?.prompt_text]);
 
-  // Auto-save every 8 seconds (only if content exists and changed)
-  useEffect(() => {
-    if (!content.trim() || !isOpen) return;
-    
-    const timer = setTimeout(() => {
-      handleSave();
-    }, 8000);
 
-    return () => clearTimeout(timer);
-  }, [content, tags, isOpen]);
 
   const createNoteMutation = useMutation({
     mutationFn: (data) => base44.entities.Note.create(data),
@@ -240,7 +231,7 @@ export default function NotesDrawer({ isOpen, onClose, context = {} }) {
                 </Button>
 
                 <p className="text-xs text-[#2B2725]/50 text-center">
-                  {saveStatus ? '' : 'Your notes auto-save every 8 seconds'}
+                  {saveStatus ? '' : ''}
                 </p>
               </div>
             </div>
