@@ -47,10 +47,10 @@ export default function NotesDrawer({ isOpen, onClose, context = {} }) {
       
       return { previousNotes };
     },
-    onError: (err, newNote, context) => {
+    onError: (err, newNote, mutationCtx) => {
       setSaveStatus('error');
       // Rollback on error
-      queryClient.setQueryData(["notes"], context.previousNotes);
+      queryClient.setQueryData(["notes"], mutationCtx?.previousNotes);
       setTimeout(() => setSaveStatus(null), 2000);
     },
     onSuccess: () => {
