@@ -41,7 +41,7 @@ export function useSmartSuggestions() {
             title: "Daily Style Check™",
             description: "Take a moment to check in with yourself",
             actionLabel: "Check In Now",
-            actionLink: "Dashboard",
+            actionLink: "Dashboard?open_check_in=1",
             icon: "Sparkles",
           });
         }

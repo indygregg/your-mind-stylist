@@ -38,7 +38,10 @@ export default function Dashboard() {
   const [dailyPrompt, setDailyPrompt] = useState(null);
   const [notesDrawerOpen, setNotesDrawerOpen] = useState(false);
   const [notesContext, setNotesContext] = useState({});
-  const [showStyleCheck, setShowStyleCheck] = useState(false);
+  const [showStyleCheck, setShowStyleCheck] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('open_check_in') === '1';
+  });
   const [recommendations, setRecommendations] = useState([]);
   const [upcomingBookings, setUpcomingBookings] = useState([]);
   const [pastBookings, setPastBookings] = useState([]);
