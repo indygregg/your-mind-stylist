@@ -184,6 +184,23 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
             </div>
           </div>
 
+          {option.type === 'bundle' && (
+            <div>
+              <Label className="text-xs">Bundle Price (in cents) *</Label>
+              <Input
+                type="number"
+                size="sm"
+                value={option.bundle_price ?? ""}
+                onChange={(e) => handleUpdateOption(index, "bundle_price", e.target.value ? parseInt(e.target.value) : "")}
+                placeholder="e.g., 2999 for $29.99"
+                className="h-9 text-sm"
+              />
+              <p className="text-xs text-[#2B2725]/60 mt-1">
+                {option.bundle_price ? `Displays as €${(option.bundle_price / 100).toFixed(2)}` : 'Set a custom price for this bundle'}
+              </p>
+            </div>
+          )}
+
           <div className="md:col-span-2">
             <Label className="text-xs">Display Label</Label>
             <Input

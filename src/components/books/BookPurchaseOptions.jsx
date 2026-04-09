@@ -128,8 +128,9 @@ export default function BookPurchaseOptions({
   // If only one option, show simplified display
   if (enabledOptions.length === 1) {
     const option = enabledOptions[0];
-    const variant = variantProducts[option.product_id];
-    const price = variant?.price ? (variant.price / 100).toFixed(2) : "0.00";
+    const variant = Array.isArray(option.product_id) ? variantProducts[option.product_id[0]] : variantProducts[option.product_id];
+    const rawPrice = (option.type === 'bundle' && option.bundle_price) ? option.bundle_price : variant?.price;
+    const price = rawPrice ? (rawPrice / 100).toFixed(2) : "0.00";
     const comparePrice = variant?.compare_at_price
       ? (variant.compare_at_price / 100).toFixed(2)
       : null;
@@ -195,7 +196,8 @@ export default function BookPurchaseOptions({
         {enabledOptions.map((option) => {
           const productIds = Array.isArray(option.product_id) ? option.product_id : [option.product_id];
           const variant = variantProducts[productIds[0]];
-          const price = variant?.price ? (variant.price / 100).toFixed(2) : "0.00";
+          const rawPrice = (option.type === 'bundle' && option.bundle_price) ? option.bundle_price : variant?.price;
+          const price = rawPrice ? (rawPrice / 100).toFixed(2) : "0.00";
           const comparePrice = variant?.compare_at_price ? (variant.compare_at_price / 100).toFixed(2) : null;
           const isSelected = selectedProductId === productIds[0];
           
