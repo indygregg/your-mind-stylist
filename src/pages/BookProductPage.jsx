@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Loader2, Star, ShoppingCart, ArrowLeft, Play } from "lucide-react";
@@ -28,8 +29,7 @@ function StarRating({ stars }) {
 export default function BookProductPage() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const slug = urlParams.get("slug");
+  const { slug } = useParams();
 
   const { data: book, isLoading } = useQuery({
     queryKey: ["book-product", slug],
@@ -88,7 +88,7 @@ export default function BookProductPage() {
       <section className="pt-28 pb-20 bg-gradient-to-br from-[#1E3A32] to-[#2B4A3A] text-white">
         <div className="max-w-6xl mx-auto px-6">
           <Link
-            to={createPageUrl("ProgramsBooks")}
+            to="/Books"
             className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-10 transition-colors text-sm"
           >
             <ArrowLeft size={16} /> Back to Books

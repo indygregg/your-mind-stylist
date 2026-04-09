@@ -13,6 +13,7 @@ import { EditModeProvider } from "./components/cms/EditModeProvider";
 import ManagerBar from "./components/cms/ManagerBar";
 import haptics from "./components/utils/haptics";
 import AffiliateTracker from "./components/affiliate/AffiliateTracker";
+import BooksMegaMenu from "./components/nav/BooksMegaMenu";
 import { PageTransition } from "./components/ui/PageTransition";
 import { CartProvider } from "./components/shop/CartContext";
 import CartIcon from "./components/shop/CartIcon";
@@ -46,6 +47,7 @@ export default function Layout({ children, currentPageName }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [booksOpen, setBooksOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -352,9 +354,9 @@ export default function Layout({ children, currentPageName }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full right-0 mt-4 bg-white shadow-2xl border border-[#E4D9C4] min-w-[700px] z-50"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-white shadow-2xl border-t border-b border-[#E4D9C4] w-[100vw] z-50"
                   >
-                    <div className="grid grid-cols-3 gap-6 p-8">
+                    <div className="max-w-7xl mx-auto grid grid-cols-3 gap-6 p-8">
                       {servicesMenu.map((section) => (
                         <div key={section.category}>
                           <h3 className="font-serif text-sm text-[#D8B46B] tracking-wider uppercase mb-4">
@@ -383,6 +385,27 @@ export default function Layout({ children, currentPageName }) {
                 )}
                 </AnimatePresence>
                 </div>
+
+            {/* Books Mega Menu */}
+            <div
+              className="relative"
+              onMouseEnter={() => setBooksOpen(true)}
+              onMouseLeave={() => setBooksOpen(false)}
+            >
+              <button
+                className={`text-sm tracking-wide transition-all duration-300 relative group ${
+                  hasDarkHero ? "text-white/80 hover:text-white" : "text-[#2B2725]/70 hover:text-[#1E3A32]"
+                }`}
+              >
+                Books
+                <span
+                  className={`absolute -bottom-1 left-0 h-[1px] bg-[#D8B46B] transition-all duration-300 ${
+                    booksOpen ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+              </button>
+              <BooksMegaMenu isOpen={booksOpen} hasDarkHero={hasDarkHero} />
+            </div>
 
                 {navLinks.slice(1).map((link) => (
                 <Link

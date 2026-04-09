@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import StyleJournalPage from './pages/StyleJournal';
 import BookProductPage from './pages/BookProductPage';
+import BooksPage from './pages/ProgramsBooks';
 import MyIdentitiesPage from './pages/MyIdentities';
 import ManagerStyleInsightsPage from './pages/ManagerStyleInsights';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
@@ -65,7 +66,8 @@ const AuthenticatedApp = () => {
         />
       ))}
       <Route path="/StyleJournal" element={<LayoutWrapper currentPageName="StyleJournal"><StyleJournalPage /></LayoutWrapper>} />
-      <Route path="/BookProductPage" element={<LayoutWrapper currentPageName="BookProductPage"><BookProductPage /></LayoutWrapper>} />
+      <Route path="/book/:slug" element={<LayoutWrapper currentPageName="BookProductPage"><BookProductPage /></LayoutWrapper>} />
+      <Route path="/Books" element={<LayoutWrapper currentPageName="ProgramsBooks"><BooksPage /></LayoutWrapper>} />
       <Route path="/MyIdentities" element={<LayoutWrapper currentPageName="MyIdentities"><MyIdentitiesPage /></LayoutWrapper>} />
       <Route path="/ManagerStyleInsights" element={<LayoutWrapper currentPageName="ManagerStyleInsights"><ManagerStyleInsightsPage /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
