@@ -204,7 +204,7 @@ export default function BookPurchaseOptions({
         onChange={(e) => setSelectedProductId(e.target.value)}
         className="w-full px-4 py-3 border border-[#E4D9C4] rounded-lg bg-white text-[#1E3A32] font-medium hover:border-[#D8B46B] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D8B46B] focus:ring-offset-2"
       >
-        <option value="">Select Format</option>
+        <option value="" disabled>Select Format</option>
         {enabledOptions.map((option) => {
           const productIds = Array.isArray(option.product_id) ? option.product_id : [option.product_id];
           const variant = variantProducts[productIds[0]];
