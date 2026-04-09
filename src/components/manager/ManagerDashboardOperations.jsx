@@ -29,6 +29,7 @@ const operationsGroups = [
     title: "Products & Offers",
     items: [
       { icon: Package, label: "Product Manager", link: "ManagerProducts" },
+      { icon: HelpCircle, label: "Landing Page Quizzes", link: "ManagerQuizEditor" },
       { icon: ShoppingCart, label: "Funnels", link: "ManagerMasterclass" },
       { icon: TrendingUp, label: "Payment Plans", link: "ManagerPaymentPlans" },
       { icon: CreditCard, label: "Subscriptions & Refunds", link: "ManagerSubscriptions" },
