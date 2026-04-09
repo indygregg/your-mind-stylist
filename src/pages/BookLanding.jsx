@@ -7,6 +7,7 @@ import { ArrowRight, ShoppingCart, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BookCover3D from "../components/books/BookCover3D";
 import SEO from "../components/SEO";
+import BookPurchaseOptions from "../components/books/BookPurchaseOptions";
 
 const formatPrice = (price) => `$${(price / 100).toFixed(2)}`;
 
@@ -22,7 +23,10 @@ export default function BookLanding() {
     enabled: !!slug,
   });
 
-  const handlePurchase = async () => {
+  // Check if book has purchase options configured
+  const hasPurchaseOptions = book?.purchase_options && book.purchase_options.length > 0;
+
+  const handleDefaultPurchase = async () => {
     if (!book) return;
     const response = await base44.functions.invoke("createProductCheckout", { product_id: book.id });
     if (response.data?.url) window.location.href = response.data.url;
@@ -103,13 +107,17 @@ export default function BookLanding() {
                 </div>
               )}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  onClick={handlePurchase}
-                  className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-8 py-6 text-base"
-                >
-                  <ShoppingCart size={18} className="mr-2" />
-                  Buy the Book
-                </Button>
+                {hasPurchaseOptions ? (
+                  <BookPurchaseOptions productId={book.id} />
+                ) : (
+                  <Button
+                    onClick={handleDefaultPurchase}
+                    className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-8 py-6 text-base"
+                  >
+                    <ShoppingCart size={18} className="mr-2" />
+                    Buy the Book
+                  </Button>
+                )}
                 <Link to={`/quiz/${quizSlug}`}>
                   <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10 px-8 py-6 text-base w-full">
                     Take the Quiz
@@ -218,13 +226,17 @@ export default function BookLanding() {
             Read the book. Discover your archetype. Restyle your mindset.
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-            <Button
-              onClick={handlePurchase}
-              className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-10 py-6 text-base"
-            >
-              <ShoppingCart size={18} className="mr-2" />
-              Buy the Book{book.price ? ` — ${formatPrice(book.price)}` : ""}
-            </Button>
+           {hasPurchaseOptions ? (
+             <BookPurchaseOptions productId={book.id} />
+           ) : (
+             <Button
+               onClick={handleDefaultPurchase}
+               className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-10 py-6 text-base"
+             >
+               <ShoppingCart size={18} className="mr-2" />
+               Buy the Book{book.price ? ` — ${formatPrice(book.price)}` : ""}
+             </Button>
+           )}
             <Link to={`/quiz/${quizSlug}`}>
               <Button variant="outline" className="border-[#1E3A32] text-[#1E3A32] px-10 py-6 text-base w-full">
                 Take the Quiz
