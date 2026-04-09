@@ -275,16 +275,28 @@ export default function ManagerProducts() {
       book_hero_layout: product.book_hero_layout || "book_left",
       book_video_embed: product.book_video_embed || "",
       book_reviews: product.book_reviews || [],
-      purchase_options: product.purchase_options || [],
+      purchase_options: (product.purchase_options || []).map(opt => {
+        // Parse JSON-encoded product_id arrays back for the editor UI
+        if (opt.product_id && typeof opt.product_id === 'string' && opt.product_id.startsWith('[')) {
+          try { return { ...opt, product_id: JSON.parse(opt.product_id) }; } catch (e) { /* keep as-is */ }
+        }
+        return opt;
+      }),
     });
     setEnablePaymentPlans(hasPlan);
     setDialogOpen(true);
   };
 
   const handleSubmit = () => {
-    // Clean up purchase_options: strip inline-creation temp fields, keep product_id as-is (array for bundles)
+    // Clean up purchase_options: strip inline-creation temp fields
+    // For bundle-type options, product_id may be an array — store as JSON string
+    // since the API requires product_id to be a string
     const cleanedOptions = (formData.purchase_options || []).map(opt => {
       const { _inline, _variant_name, _variant_price, ...clean } = opt;
+      // Convert array product_id to JSON string for storage
+      if (Array.isArray(clean.product_id)) {
+        clean.product_id = JSON.stringify(clean.product_id);
+      }
       return clean;
     });
 

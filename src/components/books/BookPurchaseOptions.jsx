@@ -4,6 +4,16 @@ import { base44 } from "@/api/base44Client";
 import { ShoppingCart, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// Parse product_id which can be: a string ID, a JSON-encoded array string, or an actual array
+function parseProductIds(productId) {
+  if (!productId) return [];
+  if (Array.isArray(productId)) return productId;
+  if (typeof productId === 'string' && productId.startsWith('[')) {
+    try { return JSON.parse(productId); } catch (e) { return [productId]; }
+  }
+  return [productId];
+}
+
 export default function BookPurchaseOptions({
   product,
   productId,
@@ -42,12 +52,16 @@ export default function BookPurchaseOptions({
       if (parentProduct?.purchase_options && parentProduct.purchase_options.length > 0) {
         const variants = {};
         for (const option of parentProduct.purchase_options) {
-          // Handle both single product_id and arrays (for bundles)
-          const productIds = Array.isArray(option.product_id) ? option.product_id : (option.product_id ? [option.product_id] : []);
-          for (const productId of productIds) {
-            const prods = await base44.entities.Product.filter({ id: productId });
+          // Handle product_id: could be a string ID, a JSON-encoded array, or already an array
+          const productIds = parseProductIds(option.product_id);
+          // Also fetch the bundle product if it exists
+          const allIds = [...productIds];
+          if (option.bundle_product_id) allIds.push(option.bundle_product_id);
+          for (const pid of allIds) {
+            if (!pid) continue;
+            const prods = await base44.entities.Product.filter({ id: pid });
             if (prods[0]) {
-              variants[productId] = prods[0];
+              variants[pid] = prods[0];
             }
           }
         }
@@ -65,12 +79,17 @@ export default function BookPurchaseOptions({
   const enabledOptions = (parentProduct?.purchase_options || [])
     .filter((opt) => {
       if (opt.enabled === false) return false;
-      // For arrays (bundles), check if all products are loaded
-      if (Array.isArray(opt.product_id)) {
-        return opt.product_id.length > 0 && opt.product_id.every(id => variantProducts[id]);
+      // For bundle options with a bundle_product_id, check that
+      if (opt.type === 'bundle' && opt.bundle_product_id) {
+        return !!variantProducts[opt.bundle_product_id];
+      }
+      // For arrays (bundles without bundle_product_id), check if products are loaded
+      const ids = parseProductIds(opt.product_id);
+      if (ids.length > 1) {
+        return ids.every(id => variantProducts[id]);
       }
       // For single products, check if it's loaded
-      return variantProducts[opt.product_id];
+      return ids.length > 0 && variantProducts[ids[0]];
     })
     .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
 
@@ -128,7 +147,10 @@ export default function BookPurchaseOptions({
   // If only one option, show simplified display
   if (enabledOptions.length === 1) {
     const option = enabledOptions[0];
-    const variant = Array.isArray(option.product_id) ? variantProducts[option.product_id[0]] : variantProducts[option.product_id];
+    const ids = parseProductIds(option.product_id);
+    const variant = (option.type === 'bundle' && option.bundle_product_id)
+      ? variantProducts[option.bundle_product_id]
+      : variantProducts[ids[0]];
     const rawPrice = (option.type === 'bundle' && option.bundle_price) ? option.bundle_price : variant?.price;
     const price = rawPrice ? (rawPrice / 100).toFixed(2) : "0.00";
     const comparePrice = variant?.compare_at_price
@@ -175,12 +197,15 @@ export default function BookPurchaseOptions({
     );
   }
 
-  // Multiple options: show as dropdown
+  // Multiple options: show as radio list
   const selectedOption = enabledOptions.find(opt => {
-    const productIds = Array.isArray(opt.product_id) ? opt.product_id : [opt.product_id];
-    return selectedProductId === productIds[0];
+    if (opt.type === 'bundle' && opt.bundle_product_id) return selectedProductId === opt.bundle_product_id;
+    const pids = parseProductIds(opt.product_id);
+    return selectedProductId === pids[0];
   });
-  const selectedProductIds = selectedOption ? (Array.isArray(selectedOption.product_id) ? selectedOption.product_id : [selectedOption.product_id]) : [];
+  const selectedProductIds = selectedOption
+    ? (selectedOption.type === 'bundle' && selectedOption.bundle_product_id ? [selectedOption.bundle_product_id] : parseProductIds(selectedOption.product_id))
+    : [];
   const selectedVariantForDropdown = selectedProductIds[0] ? variantProducts[selectedProductIds[0]] : null;
   const selectedPrice = selectedVariantForDropdown?.price ? (selectedVariantForDropdown.price / 100).toFixed(2) : "0.00";
 
@@ -194,7 +219,9 @@ export default function BookPurchaseOptions({
     <div className="space-y-4">
       <div className="space-y-3">
         {enabledOptions.map((option) => {
-          const productIds = Array.isArray(option.product_id) ? option.product_id : [option.product_id];
+          const productIds = (option.type === 'bundle' && option.bundle_product_id)
+            ? [option.bundle_product_id]
+            : parseProductIds(option.product_id);
           const variant = variantProducts[productIds[0]];
           const rawPrice = (option.type === 'bundle' && option.bundle_price) ? option.bundle_price : variant?.price;
           const price = rawPrice ? (rawPrice / 100).toFixed(2) : "0.00";
