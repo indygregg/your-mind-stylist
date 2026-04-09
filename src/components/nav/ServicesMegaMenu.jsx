@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../../utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { base44 } from "@/api/base44Client";
 
-const serviceColumns = [
+const staticColumns = [
   {
     heading: "Transformational Programs",
     items: [
@@ -19,15 +21,7 @@ const serviceColumns = [
       { name: "Hypnosis Training", page: "LearnHypnosis", description: "Become a certified hypnotist", icon: "🎓" },
       { name: "Speaking & Training", page: "SpeakingTraining", description: "Mind Styling for Organizations", icon: "🎤" },
       { name: "Signature Services", page: "SignatureServices", description: "Premium transformational packages", icon: "✨" },
-    ],
-  },
-  {
-    heading: "Webinars & Live Events",
-    items: [
       { name: "Free Masterclass", page: "FreeMasterclass", description: "Start your transformation journey", icon: "🎬" },
-      { name: "Upcoming Webinars", page: "ProgramsWebinars", description: "Live interactive sessions", icon: "📺" },
-      { name: "Book a Session", page: "Bookings", description: "Private or group sessions", icon: "📅" },
-      { name: "Initial Consultation", page: "Consultations", description: "Complimentary intake session", icon: "💬" },
     ],
   },
 ];
@@ -35,8 +29,28 @@ const serviceColumns = [
 export default function ServicesMegaMenu({ isOpen }) {
   const [hoveredItem, setHoveredItem] = useState(null);
 
-  // Default to first item of first column
-  const allItems = serviceColumns.flatMap(col => col.items);
+  const { data: webinars = [] } = useQuery({
+    queryKey: ["webinar-products-menu"],
+    queryFn: () => base44.entities.Product.filter(
+      { status: "published", product_subtype: "webinar" },
+      "display_order",
+      4
+    ),
+    enabled: isOpen,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  const webinarItems = webinars.map((w) => ({
+    name: w.name,
+    page: `ProductPage?key=${w.key}`,
+    description: w.tagline || w.short_description,
+    icon: "📺",
+  }));
+
+  const allItems = [
+    ...staticColumns.flatMap((col) => col.items),
+    ...webinarItems,
+  ];
   const displayItem = hoveredItem || allItems[0];
 
   return (
@@ -51,8 +65,8 @@ export default function ServicesMegaMenu({ isOpen }) {
         >
           <div className="max-w-7xl mx-auto px-8 py-8">
             <div className="grid grid-cols-4 gap-8">
-              {/* Columns 1-3: Service links */}
-              {serviceColumns.map((col, colIdx) => (
+              {/* Column 1 & 2: Static service links */}
+              {staticColumns.map((col, colIdx) => (
                 <div key={colIdx} className="space-y-3">
                   <h3 className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-4">
                     {col.heading}
@@ -76,7 +90,40 @@ export default function ServicesMegaMenu({ isOpen }) {
                 </div>
               ))}
 
-              {/* Column 4: Preview card */}
+              {/* Column 3: Webinars & Live Events (dynamic) */}
+              <div className="space-y-3">
+                <h3 className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-4">
+                  Webinars & Live Events
+                </h3>
+                {webinarItems.length > 0 ? (
+                  webinarItems.map((item) => (
+                    <Link
+                      key={item.page}
+                      to={createPageUrl(item.page)}
+                      onMouseEnter={() => setHoveredItem(item)}
+                      onMouseLeave={() => setHoveredItem(null)}
+                      className="block group py-1"
+                    >
+                      <p className="text-[#1E3A32] font-medium text-sm group-hover:text-[#D8B46B] transition-colors leading-snug">
+                        {item.name}
+                      </p>
+                      <p className="text-[#2B2725]/50 text-xs mt-0.5 line-clamp-1">
+                        {item.description}
+                      </p>
+                    </Link>
+                  ))
+                ) : (
+                  <p className="text-[#2B2725]/40 text-xs">Loading...</p>
+                )}
+                <Link
+                  to={createPageUrl("ProgramsWebinars")}
+                  className="inline-block text-xs text-[#D8B46B] hover:text-[#1E3A32] transition-colors border-b border-[#D8B46B] pb-0.5 mt-2"
+                >
+                  View All Webinars →
+                </Link>
+              </div>
+
+              {/* Column 4: Hover preview card + View All */}
               <div className="flex flex-col items-center justify-center gap-4">
                 <AnimatePresence mode="wait">
                   {displayItem && (
@@ -94,7 +141,7 @@ export default function ServicesMegaMenu({ isOpen }) {
                       <p className="text-[#1E3A32] text-xs font-medium text-center max-w-[140px] leading-snug">
                         {displayItem.name}
                       </p>
-                      <p className="text-[#2B2725]/50 text-[10px] text-center max-w-[140px] leading-snug">
+                      <p className="text-[#2B2725]/50 text-[10px] text-center max-w-[140px] leading-snug line-clamp-2">
                         {displayItem.description}
                       </p>
                     </motion.div>
