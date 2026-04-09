@@ -176,14 +176,15 @@ Deno.serve(async (req) => {
       };
     }
 
-    // Create checkout session
+    // Create checkout session — always collect phone + billing address for CRM
     const sessionConfig = {
       ...customerConfig,
       mode: mode,
       line_items: line_items,
       success_url: `${origin}/PurchaseSuccess?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/Cart`,
-      billing_address_collection: hasPhysicalProduct ? 'required' : 'auto',
+      billing_address_collection: 'required',
+      phone_number_collection: { enabled: true },
       ...shippingConfig,
       metadata: {
         user_id: user?.id || '',

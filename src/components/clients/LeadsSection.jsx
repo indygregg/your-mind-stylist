@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Mail, Filter, Plus, Trash2, Upload } from "lucide-react";
+import LeadsDatabaseTable from "./LeadsDatabaseTable";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import LeadImport from "../manager/LeadImport";
@@ -190,80 +191,48 @@ export default function LeadsSection({ leads, isLoading }) {
           </div>
         </TabsContent>
 
-        {/* List View */}
+        {/* Database View */}
         <TabsContent value="list">
-          <Card>
-            <CardHeader>
-              <div className="flex gap-4 items-center">
-                <div className="flex-1 relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" size={16} />
-                  <Input
-                    placeholder="Search leads..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9"
-                  />
-                </div>
-                <Select value={stageFilter} onValueChange={setStageFilter}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="All Stages" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Stages</SelectItem>
-                    {stages.map((stage) => (
-                      <SelectItem key={stage} value={stage}>
-                        {stageLabels[stage]}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          <div className="space-y-4">
+            <div className="flex gap-4 items-center bg-white rounded-lg border border-[#E4D9C4] p-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" size={16} />
+                <Input
+                  placeholder="Search by name, email, or phone..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
               </div>
-            </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <p className="text-center py-8 text-[#2B2725]/60">Loading...</p>
-              ) : filteredLeads.length === 0 ? (
-                <p className="text-center py-8 text-[#2B2725]/60">No leads found</p>
-              ) : (
-                <div className="space-y-3">
-                  {filteredLeads.map((lead) => (
-                    <motion.div
-                      key={lead.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="border border-[#E4D9C4] rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
-                      onClick={() => {
-                        setSelectedLead(lead);
-                        setDetailsDialogOpen(true);
-                      }}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="font-medium text-[#1E3A32]">{getFullName(lead)}</h3>
-                            <Badge className={stageColors[lead.stage]}>{stageLabels[lead.stage]}</Badge>
-                          </div>
-                          <p className="text-sm text-[#2B2725]/70">{lead.email}</p>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteLeadMutation.mutate(lead.id);
-                            }}
-                          >
-                            <Trash2 size={14} />
-                          </Button>
-                        </div>
-                      </div>
-                    </motion.div>
+              <Select value={stageFilter} onValueChange={setStageFilter}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="All Stages" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Stages</SelectItem>
+                  {stages.map((stage) => (
+                    <SelectItem key={stage} value={stage}>
+                      {stageLabels[stage]}
+                    </SelectItem>
                   ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                </SelectContent>
+              </Select>
+            </div>
+            {isLoading ? (
+              <p className="text-center py-8 text-[#2B2725]/60">Loading...</p>
+            ) : (
+              <LeadsDatabaseTable
+                leads={filteredLeads}
+                onSelectLead={(lead) => {
+                  setSelectedLead(lead);
+                  setDetailsDialogOpen(true);
+                }}
+              />
+            )}
+            <div className="text-center text-sm text-[#2B2725]/60">
+              Showing {filteredLeads.length} of {leads.length} leads
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
 
