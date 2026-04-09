@@ -63,17 +63,22 @@ export default function BookLanding() {
       />
 
       {/* Section 1 — Hero */}
-      <section className="pt-28 pb-20 bg-[#F9F5EF]">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+      <section className="pt-40 pb-12 bg-[#F9F5EF]">
+        <div className="w-full px-6 md:px-12 lg:px-20 xl:px-28">
+          <div className="flex flex-col md:flex-row gap-8 lg:gap-14 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7 }}
-              className="flex justify-center"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="flex-shrink-0"
             >
               {coverImage ? (
-                <BookCover3D imageUrl={coverImage} title={book.name} size="lg" />
+                <img
+                  src={coverImage}
+                  alt={book.name}
+                  className="w-[200px] md:w-[240px] lg:w-[280px] h-auto rounded shadow-2xl"
+                  style={{ boxShadow: '8px 8px 30px rgba(0,0,0,0.2), -2px -2px 8px rgba(0,0,0,0.05)' }}
+                />
               ) : (
                 <div className="w-[240px] h-[320px] bg-[#E4D9C4] rounded flex items-center justify-center text-[#2B2725]/40 text-sm">
                   No cover image
@@ -82,50 +87,46 @@ export default function BookLanding() {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="flex-1 min-w-0"
             >
               {book.tagline && (
-                <p className="text-[#D8B46B] text-sm tracking-[0.2em] uppercase mb-3 font-medium">
+                <p className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-2 font-medium">
                   {book.tagline}
                 </p>
               )}
-              <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-4 leading-tight">
+              <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-3 leading-tight">
                 {book.name}
               </h1>
               {book.short_description && (
-                <p className="text-[#1E3A32]/80 text-xl leading-relaxed mb-8 font-serif italic">
+                <p className="text-[#1E3A32]/70 text-base lg:text-lg leading-relaxed mb-6 max-w-xl font-serif italic">
                   {book.short_description}
                 </p>
               )}
-              {book.price && (
-                <div className="mb-8">
-                  <span className="font-serif text-4xl text-[#D8B46B] font-bold">
-                    {formatPrice(book.price)}
-                  </span>
-                </div>
-              )}
-              <div className="flex flex-col sm:flex-row gap-4">
-               {hasPurchaseOptions ? (
-                 <BookPurchaseOptions product={book} />
-               ) : (
+
+              {hasPurchaseOptions ? (
+                <BookPurchaseOptions product={book} />
+              ) : (
+                <div className="flex flex-col sm:flex-row gap-4">
                   <Button
                     onClick={handleDefaultPurchase}
-                    className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-8 py-6 text-base"
+                    className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-8 py-5 text-base"
                   >
                     <ShoppingCart size={18} className="mr-2" />
-                    Buy the Book
+                    Buy the Book{book.price ? ` — ${formatPrice(book.price)}` : ""}
                   </Button>
-                )}
+                </div>
+              )}
+              <div className="mt-4">
                 <Link to={`/quiz/${quizSlug}`}>
-                  <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10 px-8 py-6 text-base w-full">
+                  <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10 px-8 py-5 text-base">
                     Take the Quiz
                     <ArrowRight size={16} className="ml-2" />
                   </Button>
                 </Link>
               </div>
-
             </motion.div>
           </div>
         </div>
