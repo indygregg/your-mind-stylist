@@ -330,6 +330,7 @@ export default function ManagerCRM() {
                       <SelectItem value="social_media">Social Media</SelectItem>
                       <SelectItem value="paid_ad">Paid Ad</SelectItem>
                       <SelectItem value="organic_search">Organic Search</SelectItem>
+                      <SelectItem value="networking">Networking</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select value={sortBy} onValueChange={setSortBy}>
@@ -449,6 +450,7 @@ export default function ManagerCRM() {
                       <SelectItem value="masterclass">Masterclass</SelectItem>
                       <SelectItem value="referral">Referral</SelectItem>
                       <SelectItem value="social_media">Social Media</SelectItem>
+                      <SelectItem value="networking">Networking</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select value={sortBy} onValueChange={setSortBy}>
