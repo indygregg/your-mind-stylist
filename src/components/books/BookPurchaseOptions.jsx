@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
-import { ShoppingCart, Loader2, LogIn } from "lucide-react";
+import { ShoppingCart, Loader2, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "../shop/CartContext";
 
 // Parse product_id which can be: a string ID, a JSON-encoded array string, or an actual array
 function parseProductIds(productId) {
@@ -22,6 +23,8 @@ export default function BookPurchaseOptions({
   defaultSelected = null,
   quiz = null,
 }) {
+  const { addItem } = useCart();
+
   // Fetch the parent product if only productId is provided
   const { data: fetchedProduct } = useQuery({
     queryKey: ["book-product", productId],
@@ -39,18 +42,15 @@ export default function BookPurchaseOptions({
   const [isAdding, setIsAdding] = useState(false);
 
   // Load all variant products
-  const { data: variantProducts = {}, isLoading: variantsLoading } = useQuery({
+  const { data: variantProducts = {} } = useQuery({
     queryKey: ["book-variants", parentProduct?.id],
     queryFn: async () => {
       if (!parentProduct?.id) return {};
       
-      // If purchase_options are configured, fetch those variants
       if (parentProduct?.purchase_options && parentProduct.purchase_options.length > 0) {
         const variants = {};
         for (const option of parentProduct.purchase_options) {
-          // Handle product_id: could be a string ID, a JSON-encoded array, or already an array
           const productIds = parseProductIds(option.product_id);
-          // Also fetch the bundle product if it exists
           const allIds = [...productIds];
           if (option.bundle_product_id) allIds.push(option.bundle_product_id);
           for (const pid of allIds) {
@@ -64,8 +64,6 @@ export default function BookPurchaseOptions({
         return variants;
       }
       
-      // Fallback: If no purchase_options, try to fetch products with same slug
-      // This is for products that have variants but haven't configured purchase_options
       return {};
     },
     enabled: !!parentProduct?.id,
@@ -75,16 +73,13 @@ export default function BookPurchaseOptions({
   const enabledOptions = (parentProduct?.purchase_options || [])
     .filter((opt) => {
       if (opt.enabled === false) return false;
-      // For bundle options with a bundle_product_id, check that
       if (opt.type === 'bundle' && opt.bundle_product_id) {
         return !!variantProducts[opt.bundle_product_id];
       }
-      // For arrays (bundles without bundle_product_id), check if products are loaded
       const ids = parseProductIds(opt.product_id);
       if (ids.length > 1) {
         return ids.every(id => variantProducts[id]);
       }
-      // For single products, check if it's loaded
       return ids.length > 0 && variantProducts[ids[0]];
     })
     .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
@@ -104,30 +99,31 @@ export default function BookPurchaseOptions({
 
   const selectedVariant = selectedProductId ? variantProducts[selectedProductId] : null;
 
-  // Find the selected purchase option and its display price
+  // Find selected option for display price
   const selectedOption = enabledOptions.find(opt => {
     if (opt.type === 'bundle' && opt.bundle_product_id) return opt.bundle_product_id === selectedProductId;
     const ids = parseProductIds(opt.product_id);
     return ids[0] === selectedProductId;
   });
-  const selectedRawPrice = selectedOption?.type === 'bundle' && selectedOption?.bundle_price
-    ? selectedOption.bundle_price
-    : selectedVariant?.price;
-  const selectedPrice = selectedRawPrice ? (selectedRawPrice / 100).toFixed(2) : '0.00';
 
-  const handleAddToCart = async () => {
+  const getOptionPrice = (option) => {
+    const productIds = (option.type === 'bundle' && option.bundle_product_id)
+      ? [option.bundle_product_id]
+      : parseProductIds(option.product_id);
+    const variant = variantProducts[productIds[0]];
+    const rawPrice = (option.type === 'bundle' && option.bundle_price) ? option.bundle_price : variant?.price;
+    return rawPrice ? (rawPrice / 100).toFixed(2) : "0.00";
+  };
+
+  const handleBuyNow = async () => {
     if (!selectedVariant) return;
     setIsAdding(true);
     try {
-      if (onAddToCart) {
-        await onAddToCart(selectedVariant);
-      } else {
-        const response = await base44.functions.invoke("createProductCheckout", {
-          product_id: selectedVariant.id,
-        });
-        if (response.data?.url) {
-          window.location.href = response.data.url;
-        }
+      const response = await base44.functions.invoke("createProductCheckout", {
+        product_id: selectedVariant.id,
+      });
+      if (response.data?.url) {
+        window.location.href = response.data.url;
       }
     } catch (err) {
       console.error("Checkout error:", err);
@@ -137,21 +133,38 @@ export default function BookPurchaseOptions({
     }
   };
 
+  const handleAddToCart = () => {
+    if (!selectedVariant || !selectedOption) return;
+    addItem({
+      id: selectedVariant.id,
+      name: selectedOption.display_label || selectedVariant.name,
+      price: selectedVariant.price,
+      thumbnail: parentProduct?.book_cover_image || parentProduct?.thumbnail,
+    });
+  };
+
   return (
     <div className="space-y-4">
+      {/* Purchase option radio buttons */}
       <div className="space-y-3">
         {enabledOptions.map((option) => {
           const productIds = (option.type === 'bundle' && option.bundle_product_id)
             ? [option.bundle_product_id]
             : parseProductIds(option.product_id);
           const variant = variantProducts[productIds[0]];
-          const rawPrice = (option.type === 'bundle' && option.bundle_price) ? option.bundle_price : variant?.price;
-          const price = rawPrice ? (rawPrice / 100).toFixed(2) : "0.00";
+          const price = getOptionPrice(option);
           const comparePrice = variant?.compare_at_price ? (variant.compare_at_price / 100).toFixed(2) : null;
           const isSelected = selectedProductId === productIds[0];
           
           return (
-            <label key={productIds[0]} className="flex items-center gap-3 p-4 border border-[#E4D9C4] rounded-lg cursor-pointer hover:border-[#D8B46B] hover:bg-[#F9F5EF]/50 transition-all" style={{ borderColor: isSelected ? '#D8B46B' : '#E4D9C4', backgroundColor: isSelected ? '#1E3A32/5' : 'white' }}>
+            <label
+              key={productIds[0]}
+              className="flex items-center gap-3 p-4 border rounded-lg cursor-pointer hover:border-[#D8B46B] hover:bg-[#F9F5EF]/50 transition-all"
+              style={{
+                borderColor: isSelected ? '#D8B46B' : '#E4D9C4',
+                backgroundColor: isSelected ? 'rgba(30,58,50,0.03)' : 'white'
+              }}
+            >
               <input
                 type="radio"
                 name="format"
@@ -179,6 +192,7 @@ export default function BookPurchaseOptions({
         })}
       </div>
 
+      {/* Selected summary */}
       {selectedOption && (
         <div className="bg-white border border-[#E4D9C4] p-4 rounded-lg">
           <div className="flex justify-between items-center">
@@ -191,32 +205,39 @@ export default function BookPurchaseOptions({
               )}
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-[#1E3A32]">${selectedPrice}</div>
+              <div className="text-2xl font-bold text-[#1E3A32]">${getOptionPrice(selectedOption)}</div>
             </div>
           </div>
         </div>
       )}
 
+      {/* Action buttons */}
       <div className="flex gap-3">
         <Button
-          onClick={handleAddToCart}
+          onClick={handleBuyNow}
           disabled={isAdding || !selectedVariant}
           className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725] text-white py-6"
         >
-          {isAdding ? <Loader2 size={18} className="animate-spin mr-2" /> : null}
-          <ShoppingCart size={18} className="mr-2" />
+          {isAdding ? <Loader2 size={18} className="animate-spin mr-2" /> : <ShoppingCart size={18} className="mr-2" />}
           {ctaLabel}
         </Button>
-        {quiz && (
-          <Button
-            onClick={() => window.location.href = `/quiz/${quiz.slug}`}
-            variant="outline"
-            className="px-8 py-6 border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32]/5"
-          >
-            Take the Quiz →
-          </Button>
-        )}
+        <Button
+          onClick={handleAddToCart}
+          disabled={!selectedVariant}
+          variant="outline"
+          className="py-6 px-5 border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32]/5"
+          title="Add to Cart"
+        >
+          <Plus size={18} className="mr-1" />
+          Add to Cart
+        </Button>
       </div>
+
+      {quiz && (
+        <a href={`/quiz/${quiz.slug}`} className="block text-center text-sm text-[#D8B46B] hover:text-[#C5A35B] transition-colors mt-2">
+          Take the Quiz →
+        </a>
+      )}
     </div>
   );
 }
