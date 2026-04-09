@@ -10,6 +10,7 @@ export default function BookPurchaseOptions({
   ctaLabel = "Buy Now",
   onAddToCart,
   defaultSelected = null,
+  quiz = null,
 }) {
   // Fetch the parent product if only productId is provided
   const { data: fetchedProduct } = useQuery({
@@ -190,28 +191,32 @@ export default function BookPurchaseOptions({
   const selectedVariantForDropdown = selectedProductIds[0] ? variantProducts[selectedProductIds[0]] : null;
   const selectedPrice = selectedVariantForDropdown?.price ? (selectedVariantForDropdown.price / 100).toFixed(2) : "0.00";
 
+  const handleTakeQuiz = () => {
+    if (quiz?.slug) {
+      window.location.href = `/quiz/${quiz.slug}`;
+    }
+  };
+
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-[#1E3A32]">Select Format</label>
-        <select
-          value={selectedProductId || ""}
-          onChange={(e) => setSelectedProductId(e.target.value)}
-          className="w-full px-4 py-3 border border-[#E4D9C4] rounded-lg bg-white text-[#1E3A32] font-medium hover:border-[#D8B46B] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D8B46B] focus:ring-offset-2"
-        >
-          <option value="">Choose a format...</option>
-          {enabledOptions.map((option) => {
-            const productIds = Array.isArray(option.product_id) ? option.product_id : [option.product_id];
-            const variant = variantProducts[productIds[0]];
-            const price = variant?.price ? (variant.price / 100).toFixed(2) : "0.00";
-            return (
-              <option key={productIds[0]} value={productIds[0]}>
-                {option.display_label} — €{price}
-              </option>
-            );
-          })}
-        </select>
-      </div>
+      <select
+        value={selectedProductId || ""}
+        onChange={(e) => setSelectedProductId(e.target.value)}
+        className="w-full px-4 py-3 border border-[#E4D9C4] rounded-lg bg-white text-[#1E3A32] font-medium hover:border-[#D8B46B] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D8B46B] focus:ring-offset-2"
+      >
+        <option value="">Select Format</option>
+        {enabledOptions.map((option) => {
+          const productIds = Array.isArray(option.product_id) ? option.product_id : [option.product_id];
+          const variant = variantProducts[productIds[0]];
+          const price = variant?.price ? (variant.price / 100).toFixed(2) : "0.00";
+          return (
+            <option key={productIds[0]} value={productIds[0]}>
+              {option.display_label} — €{price}
+            </option>
+          );
+        })}
+      </select>
+
       {selectedOption && (
         <div className="bg-white border border-[#E4D9C4] p-4 rounded-lg">
           <div className="flex justify-between items-center">
@@ -230,15 +235,26 @@ export default function BookPurchaseOptions({
         </div>
       )}
 
-      <Button
-        onClick={handleAddToCart}
-        disabled={isAdding || !selectedVariant}
-        className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-white py-6"
-      >
-        {isAdding ? <Loader2 size={18} className="animate-spin mr-2" /> : null}
-        <ShoppingCart size={18} className="mr-2" />
-        {ctaLabel}
-      </Button>
+      <div className="flex gap-3">
+        <Button
+          onClick={handleAddToCart}
+          disabled={isAdding || !selectedVariant}
+          className="flex-1 bg-[#1E3A32] hover:bg-[#2B2725] text-white py-6"
+        >
+          {isAdding ? <Loader2 size={18} className="animate-spin mr-2" /> : null}
+          <ShoppingCart size={18} className="mr-2" />
+          {ctaLabel}
+        </Button>
+        {quiz && (
+          <Button
+            onClick={handleTakeQuiz}
+            variant="outline"
+            className="px-8 py-6 border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32]/5"
+          >
+            Take the Quiz →
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Star, ShoppingCart, ArrowLeft } from "lucide-react";
+import { Star, ShoppingCart, ArrowLeft, Loader2 } from "lucide-react";
 import { createPageUrl } from "../utils";
 import SEO from "../components/SEO";
 import BookCover3D from "../components/books/BookCover3D";
@@ -42,6 +42,16 @@ export default function BookProductPage() {
       return products[0] || null;
     },
     enabled: !!slug,
+  });
+
+  const { data: quiz } = useQuery({
+    queryKey: ["book-quiz", book?.id],
+    queryFn: async () => {
+      if (!book?.id) return null;
+      const quizzes = await base44.entities.Quiz.filter({ related_product_id: book.id });
+      return quizzes[0] || null;
+    },
+    enabled: !!book?.id,
   });
 
   const handleAddToCart = async (product) => {
@@ -85,9 +95,9 @@ export default function BookProductPage() {
       />
 
       {/* Hero */}
-      <section className="bg-[#F9F5EF] min-h-screen flex items-center py-20 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
-        <div className="w-full px-6">
-          <div className="max-w-6xl mx-auto">
+      <section className="bg-[#F9F5EF] min-h-screen flex items-center py-20">
+        <div className="w-full max-w-full px-6">
+          <div className="max-w-6xl mx-auto w-full">
             <Link
               to="/Books"
               className="inline-flex items-center gap-2 text-[#1E3A32]/60 hover:text-[#1E3A32] mb-10 transition-colors text-sm"
@@ -137,6 +147,7 @@ export default function BookProductPage() {
                   product={book}
                   ctaLabel="Get Your Copy"
                   onAddToCart={handleAddToCart}
+                  quiz={quiz}
                 />
               ) : (
                 <div className="bg-white border border-[#E4D9C4] p-6 mb-8">
