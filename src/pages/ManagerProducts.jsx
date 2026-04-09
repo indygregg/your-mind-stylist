@@ -112,26 +112,33 @@ export default function ManagerProducts() {
 
   const updateMutation = useMutation({
     mutationFn: async ({ id, data }) => {
+      console.log('[updateMutation] saving product', id, JSON.stringify(data).slice(0, 500));
       const updated = await base44.entities.Product.update(id, data);
+      console.log('[updateMutation] product saved, syncing to Stripe...');
       
-      // Auto-sync with Stripe
-      const syncResult = await base44.functions.invoke('syncProductStripe', {
-        product_id: id,
-        key: data.key,
-        name: data.name,
-        description: data.short_description,
-        price: parseInt(data.price) || 0,
-        currency: data.currency,
-        billing_interval: data.billing_interval,
-        type: data.type,
-      });
-
-      if (syncResult.data.success) {
-        await base44.entities.Product.update(id, {
-          stripe_product_id: syncResult.data.stripe_product_id,
-          stripe_price_id: syncResult.data.stripe_price_id,
-          stripe_price_ids: syncResult.data.stripe_price_ids,
+      // Auto-sync with Stripe (non-blocking — don't let Stripe failures prevent save)
+      try {
+        const syncResult = await base44.functions.invoke('syncProductStripe', {
+          product_id: id,
+          key: data.key,
+          name: data.name,
+          description: data.short_description,
+          price: parseInt(data.price) || 0,
+          currency: data.currency,
+          billing_interval: data.billing_interval,
+          type: data.type,
         });
+
+        if (syncResult.data?.success) {
+          await base44.entities.Product.update(id, {
+            stripe_product_id: syncResult.data.stripe_product_id,
+            stripe_price_id: syncResult.data.stripe_price_id,
+            stripe_price_ids: syncResult.data.stripe_price_ids,
+          });
+        }
+      } catch (stripeErr) {
+        console.warn('[updateMutation] Stripe sync failed (product still saved):', stripeErr);
+        toast.error('Product saved but Stripe sync failed — you can retry via Sync All.');
       }
 
       return updated;
@@ -143,6 +150,7 @@ export default function ManagerProducts() {
       resetForm();
     },
     onError: (error) => {
+      console.error('[updateMutation] error:', error);
       toast.error(`Failed to update product: ${error.message}`);
     },
   });
@@ -281,7 +289,12 @@ export default function ManagerProducts() {
     });
 
     // Strip read-only / built-in fields that the API rejects on update
-    const { id, created_date, created_by, updated_date, ...writableFields } = formData;
+    // Also strip Stripe fields — those are managed by the sync step, not the form
+    const {
+      id, created_date, created_by, updated_date,
+      stripe_product_id, stripe_price_id, stripe_price_ids,
+      ...writableFields
+    } = formData;
 
     const dataToSave = {
       ...writableFields,
