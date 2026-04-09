@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 import Stripe from 'npm:stripe@17.5.0';
 
 const stripe = new Stripe(Deno.env.get("STRIPE_API_KEY"));
@@ -16,6 +16,34 @@ Deno.serve(async (req) => {
 
         // Initialize base44 AFTER getting the body
         const base44 = createClientFromRequest(req);
+
+        // Helper to extract customer details (phone + address) from Stripe session
+        const extractCustomerDetails = (session) => {
+            const details = {};
+            const cd = session.customer_details;
+            if (cd) {
+                if (cd.phone) details.phone = cd.phone;
+                if (cd.address) {
+                    if (cd.address.line1) details.address_line1 = cd.address.line1;
+                    if (cd.address.line2) details.address_line2 = cd.address.line2;
+                    if (cd.address.city) details.city = cd.address.city;
+                    if (cd.address.state) details.state = cd.address.state;
+                    if (cd.address.postal_code) details.zip = cd.address.postal_code;
+                    if (cd.address.country) details.country = cd.address.country;
+                }
+            }
+            // Also check shipping details
+            const sd = session.shipping_details;
+            if (sd?.address) {
+                if (!details.address_line1 && sd.address.line1) details.address_line1 = sd.address.line1;
+                if (!details.address_line2 && sd.address.line2) details.address_line2 = sd.address.line2;
+                if (!details.city && sd.address.city) details.city = sd.address.city;
+                if (!details.state && sd.address.state) details.state = sd.address.state;
+                if (!details.zip && sd.address.postal_code) details.zip = sd.address.postal_code;
+                if (!details.country && sd.address.country) details.country = sd.address.country;
+            }
+            return details;
+        };
 
         // Helper to track affiliate referral
         const trackAffiliate = async (session) => {
@@ -72,11 +100,12 @@ Deno.serve(async (req) => {
                         const bookings = await base44.asServiceRole.entities.Booking.filter({ id: session.metadata.booking_id });
                         if (bookings.length > 0) {
                             const booking = bookings[0];
+                            const customerInfo = extractCustomerDetails(session);
                             const existingLeads = await base44.asServiceRole.entities.Lead.filter({ email: booking.user_email });
                             const bookingDate = new Date().toISOString().split('T')[0];
                             if (existingLeads.length > 0) {
                                 const existing = existingLeads[0];
-                                const updates = { last_activity_date: new Date().toISOString() };
+                                const updates = { last_activity_date: new Date().toISOString(), ...customerInfo };
                                 if (!existing.full_name && booking.user_name) updates.full_name = booking.user_name;
                                 if (!existing.phone && booking.client_phone) updates.phone = booking.client_phone;
                                 const boughtHistory = existing.what_they_bought
@@ -101,7 +130,8 @@ Deno.serve(async (req) => {
                                     lead_score: 75,
                                     what_they_bought: booking.service_type,
                                     date_of_purchase: bookingDate,
-                                    notes: `Initial booking: ${booking.service_type} - ${booking.scheduled_date ? new Date(booking.scheduled_date).toLocaleString() : 'date TBD'}`
+                                    notes: `Initial booking: ${booking.service_type} - ${booking.scheduled_date ? new Date(booking.scheduled_date).toLocaleString() : 'date TBD'}`,
+                                    ...customerInfo,
                                 });
                             }
                         }
@@ -128,25 +158,20 @@ Deno.serve(async (req) => {
                         });
                     } catch (zoomError) {
                         console.error('Zoom meeting creation failed:', zoomError);
-                        // Continue even if Zoom fails
                     }
 
                     // Send professional booking confirmation emails
                     try {
-                        // Send client confirmation
                         await base44.asServiceRole.functions.invoke('sendBookingNotifications', {
                             booking_id: session.metadata.booking_id,
                             notification_type: 'booking_confirmation_client'
                         });
-
-                        // Send manager notification
                         await base44.asServiceRole.functions.invoke('sendBookingNotifications', {
                             booking_id: session.metadata.booking_id,
                             notification_type: 'booking_confirmation_manager'
                         });
                     } catch (emailError) {
                         console.error('Email send failed:', emailError);
-                        // Don't fail the webhook if emails fail
                     }
                 }
                 
@@ -173,6 +198,7 @@ Deno.serve(async (req) => {
 
                     // Add to CRM
                     try {
+                        const customerInfo = extractCustomerDetails(session);
                         const webinarLeads = await base44.asServiceRole.entities.Lead.filter({ email: session.customer_email });
                         const webinarName = session.metadata.webinar_slug || 'Webinar';
                         const today = new Date().toISOString().split('T')[0];
@@ -184,7 +210,8 @@ Deno.serve(async (req) => {
                                 date_of_purchase: today,
                                 stage: 'won',
                                 converted_to_client: true,
-                                notes: `${existing.notes || ''}\n[${new Date().toLocaleDateString()}] Purchased webinar: ${webinarName}`.trim()
+                                notes: `${existing.notes || ''}\n[${new Date().toLocaleDateString()}] Purchased webinar: ${webinarName}`.trim(),
+                                ...customerInfo,
                             });
                         } else {
                             const nameParts = (session.customer_details?.name || '').split(' ');
@@ -201,7 +228,8 @@ Deno.serve(async (req) => {
                                 converted_date: new Date().toISOString(),
                                 what_they_bought: webinarName,
                                 date_of_purchase: today,
-                                notes: `Purchased webinar: ${webinarName}`
+                                notes: `Purchased webinar: ${webinarName}`,
+                                ...customerInfo,
                             });
                         }
                     } catch (crmErr) {
@@ -227,25 +255,20 @@ Deno.serve(async (req) => {
                     const recipientUserId = session.metadata.recipient_user_id;
                     const productId = session.metadata.product_id;
                     
-                    // Find the gift code record to get product details
                     const giftCodes = await base44.asServiceRole.entities.GiftCode.filter({ code: giftCode });
                     const giftCodeRecord = giftCodes[0];
                     
                     if (giftCodeRecord) {
-                        // Update gift code usage
                         await base44.asServiceRole.entities.GiftCode.update(giftCodeRecord.id, {
                             times_used: (giftCodeRecord.times_used || 0) + 1
                         });
                         
-                        // Get product to find access grants
                         const product = await base44.asServiceRole.entities.Product.get(productId);
                         if (product) {
                             const courseIds = new Set();
                             if (product.related_course_id) courseIds.add(product.related_course_id);
                             if (product.access_grants?.length > 0) product.access_grants.forEach(id => courseIds.add(id));
                             
-                            // ONLY grant course access to RECIPIENT, NOT to the payer
-                            // This ensures gifts don't show up in the purchaser's library
                             for (const courseId of courseIds) {
                                 const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
                                     user_id: recipientUserId,
@@ -261,15 +284,12 @@ Deno.serve(async (req) => {
                                 }
                             }
                         }
-                        // Deliberately skip creating payer enrollment for gifts
                     }
-                    // Return early to prevent further processing
                     return Response.json({ received: true });
                 }
                 
                 // Handle Product Purchase (single product_id OR multi product_ids from cart)
                 else if ((session.metadata.product_id || session.metadata.product_ids) && session.metadata.user_id) {
-                    // Support both single and multiple product IDs
                     const productIdList = session.metadata.product_ids
                         ? session.metadata.product_ids.split(',').map(id => id.trim()).filter(Boolean)
                         : [session.metadata.product_id];
@@ -283,11 +303,9 @@ Deno.serve(async (req) => {
                     for (const product of purchasedProducts) {
                         productNames.push(product.name);
 
-                        // Collect course access from this product
                         if (product.related_course_id) allCourseIds.add(product.related_course_id);
                         if (product.access_grants?.length > 0) product.access_grants.forEach(id => allCourseIds.add(id));
 
-                        // For bundles, also look at bundled products' access grants
                         if (product.is_bundle && product.bundled_product_ids?.length > 0) {
                             const bundledProducts = allProducts.filter(p => product.bundled_product_ids.includes(p.id));
                             for (const bp of bundledProducts) {
@@ -296,7 +314,6 @@ Deno.serve(async (req) => {
                             }
                         }
 
-                        // Auto-tag user based on purchase
                         try {
                             await base44.asServiceRole.functions.invoke('autoTagUser', {
                                 user_id: session.metadata.user_id,
@@ -307,7 +324,6 @@ Deno.serve(async (req) => {
                         }
                     }
 
-                    // Grant course access for all collected course IDs
                     for (const courseId of allCourseIds) {
                         const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
                             user_id: session.metadata.user_id,
@@ -326,8 +342,9 @@ Deno.serve(async (req) => {
                     const combinedProductName = productNames.join(', ');
                     const today = new Date().toISOString().split('T')[0];
 
-                    // Add to CRM as lead
+                    // Add to CRM as lead with customer details
                     try {
+                        const customerInfo = extractCustomerDetails(session);
                         const existingLeads = await base44.asServiceRole.entities.Lead.filter({ email: session.customer_email });
                         if (existingLeads.length > 0) {
                             const existing = existingLeads[0];
@@ -341,7 +358,8 @@ Deno.serve(async (req) => {
                                 stage: 'won',
                                 converted_to_client: true,
                                 converted_date: new Date().toISOString(),
-                                notes: `${existing.notes || ''}\n[${new Date().toLocaleDateString()}] Purchased: ${combinedProductName}`.trim()
+                                notes: `${existing.notes || ''}\n[${new Date().toLocaleDateString()}] Purchased: ${combinedProductName}`.trim(),
+                                ...customerInfo,
                             });
                         } else {
                             const nameParts = (session.customer_details?.name || '').split(' ');
@@ -359,7 +377,8 @@ Deno.serve(async (req) => {
                                 what_they_bought: combinedProductName,
                                 date_of_purchase: today,
                                 last_activity_date: new Date().toISOString(),
-                                notes: `Purchased: ${combinedProductName}`
+                                notes: `Purchased: ${combinedProductName}`,
+                                ...customerInfo,
                             });
                         }
                     } catch (crmError) {
@@ -396,7 +415,6 @@ Deno.serve(async (req) => {
                 
                 // Handle Subscription Start (e.g., Pocket Visualization)
                 else if (session.mode === 'subscription' && session.subscription) {
-                    // Update user subscription info
                     const userId = session.metadata.user_id;
                     if (userId) {
                         await base44.asServiceRole.entities.User.update(userId, {
@@ -405,11 +423,10 @@ Deno.serve(async (req) => {
                             subscription_status: 'active'
                         });
 
-                        // Auto-tag for subscription (e.g., Pocket Visualization)
                         try {
                             await base44.asServiceRole.functions.invoke('autoTagUser', {
                                 user_id: userId,
-                                product_key: 'pocket-visualization' // Default to PV
+                                product_key: 'pocket-visualization'
                             });
                         } catch (tagError) {
                             console.error('Auto-tagging failed:', tagError);
@@ -431,13 +448,11 @@ Deno.serve(async (req) => {
                 
                 // Handle Masterclass Signup (free access)
                 else if (session.metadata.type === 'masterclass_signup' && session.metadata.user_id) {
-                    // Mark user as needing onboarding
                     await base44.asServiceRole.entities.User.update(session.metadata.user_id, {
                         needs_masterclass_onboarding: true,
                         masterclass_signup_date: new Date().toISOString()
                     });
 
-                    // Auto-tag masterclass lead and trigger email sequence
                     try {
                         await base44.asServiceRole.functions.invoke('autoTagUser', {
                             user_id: session.metadata.user_id,
@@ -527,7 +542,6 @@ Deno.serve(async (req) => {
 
             case 'payment_intent.payment_failed': {
                 const paymentIntent = event.data.object;
-                // Log failed payment
                 console.error('Payment failed:', paymentIntent.id, paymentIntent.last_payment_error);
                 break;
             }
@@ -535,7 +549,6 @@ Deno.serve(async (req) => {
             case 'customer.subscription.updated': {
                 const subscription = event.data.object;
                 
-                // Update user subscription status
                 const users = await base44.asServiceRole.entities.User.filter({ 
                     stripe_subscription_id: subscription.id 
                 });
@@ -545,7 +558,6 @@ Deno.serve(async (req) => {
                         subscription_status: subscription.status
                     });
                     
-                    // If payment plan completed, notify user
                     if (subscription.metadata.payment_plan === 'true' && subscription.cancel_at) {
                         const monthsRemaining = Math.ceil((subscription.cancel_at * 1000 - Date.now()) / (30 * 24 * 60 * 60 * 1000));
                         
@@ -570,7 +582,6 @@ Deno.serve(async (req) => {
             case 'customer.subscription.deleted': {
                 const subscription = event.data.object;
                 
-                // Mark subscription as cancelled
                 const users = await base44.asServiceRole.entities.User.filter({ 
                     stripe_subscription_id: subscription.id 
                 });
@@ -580,7 +591,6 @@ Deno.serve(async (req) => {
                         subscription_status: 'cancelled'
                     });
 
-                    // Different message for payment plan completion vs cancellation
                     if (subscription.metadata.payment_plan === 'true') {
                         await base44.asServiceRole.integrations.Core.SendEmail({
                             to: users[0].email,
@@ -613,14 +623,12 @@ Deno.serve(async (req) => {
 
             case 'invoice.payment_succeeded': {
                 const invoice = event.data.object;
-                // Subscription renewal successful
                 console.log('Invoice paid:', invoice.id);
                 break;
             }
 
             case 'invoice.payment_failed': {
                 const invoice = event.data.object;
-                // Notify user of failed payment
                 const users = await base44.asServiceRole.entities.User.filter({ 
                     stripe_customer_id: invoice.customer 
                 });
