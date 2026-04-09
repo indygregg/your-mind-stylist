@@ -175,11 +175,12 @@ export default function CleaningOutYourCloset() {
             <div className="mb-10 max-w-3xl mx-auto">
               <div className="aspect-video rounded-lg overflow-hidden shadow-2xl">
                 <iframe
-                  src="https://player.vimeo.com/video/1158916467?badge=0&autopause=0&player_id=0&app_id=58479"
-                  className="w-full h-full"
-                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
-                  title="Cleaning Out Your Closet"
-                />
+                   src="https://player.vimeo.com/video/1158916467?h=407d24c1d1&badge=0&autopause=0&player_id=0&app_id=58479"
+                   className="w-full h-full"
+                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                   referrerPolicy="strict-origin-when-cross-origin"
+                   title="Cleaning Out Your Closet"
+                 />
               </div>
             </div>
 

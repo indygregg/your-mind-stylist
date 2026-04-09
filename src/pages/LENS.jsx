@@ -106,7 +106,7 @@ export default function LENS() {
                     contentKey="lens.hero.video_embed"
                     page="LENS"
                     blockTitle="Hero Video (Paste Vimeo or YouTube URL)"
-                    fallback=""
+                    fallback="https://player.vimeo.com/video/1153705585?h=934d469d3f&badge=0&autopause=0&player_id=0&app_id=58479"
                   />
                 </div>
               </div>

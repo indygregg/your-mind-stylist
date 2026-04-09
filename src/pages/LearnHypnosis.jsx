@@ -101,8 +101,9 @@ export default function LearnHypnosis() {
             className="aspect-video bg-[#2B2725] mt-12 relative overflow-hidden rounded-lg"
           >
             <iframe
-              src="https://player.vimeo.com/video/1153704942?badge=0&autopause=0&player_id=0&app_id=58479"
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+              src="https://player.vimeo.com/video/1153704942?h=183f62a38d&badge=0&autopause=0&player_id=0&app_id=58479"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+              referrerPolicy="strict-origin-when-cross-origin"
               style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
               title="Hypnosis Training Introduction"
             />

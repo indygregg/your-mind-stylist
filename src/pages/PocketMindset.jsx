@@ -183,11 +183,12 @@ export default function PocketMindset() {
             <div className="mb-10 max-w-3xl mx-auto">
               <div className="aspect-video rounded-lg overflow-hidden shadow-2xl">
                 <iframe
-                  src="https://player.vimeo.com/video/1158920818?badge=0&autopause=0&player_id=0&app_id=58479"
-                  className="w-full h-full"
-                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
-                  title="Pocket Mindset"
-                />
+                   src="https://player.vimeo.com/video/1158920818?h=b90f971f48&badge=0&autopause=0&player_id=0&app_id=58479"
+                   className="w-full h-full"
+                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                   referrerPolicy="strict-origin-when-cross-origin"
+                   title="Pocket Mindset"
+                 />
               </div>
             </div>
 

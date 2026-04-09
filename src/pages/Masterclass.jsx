@@ -185,7 +185,7 @@ export default function Masterclass() {
               contentKey="masterclass.video.embed"
               page="Masterclass"
               blockTitle="Masterclass Video - Paste Vimeo embed code here"
-              fallback="https://player.vimeo.com/video/1153727233?badge=0&autopause=0&player_id=0&app_id=58479"
+              fallback="https://player.vimeo.com/video/1153727233?h=adce72b087&badge=0&autopause=0&player_id=0&app_id=58479"
             />
           </div>
 
