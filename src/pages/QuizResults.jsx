@@ -7,6 +7,7 @@ import { ShoppingCart, ArrowRight, Loader2, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SEO from "../components/SEO";
+import QuizShareButtons from "../components/quiz/QuizShareButtons";
 
 export default function QuizResults() {
   const { slug } = useParams();
@@ -225,6 +226,11 @@ export default function QuizResults() {
                     <p className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-3">Your Restyle Prompt</p>
                     <p className="font-serif text-xl text-white italic">"{archetype.restyle}"</p>
                   </div>
+                )}
+
+                {/* Share buttons */}
+                {quiz.share_enabled !== false && (
+                  <QuizShareButtons archetype={archetype} quiz={quiz} quizSlug={slug} />
                 )}
 
                 {/* Book CTA */}
