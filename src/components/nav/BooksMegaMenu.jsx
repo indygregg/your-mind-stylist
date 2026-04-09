@@ -31,8 +31,7 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
-          className="absolute top-full left-0 w-[100vw] bg-white shadow-2xl border-t border-b border-[#E4D9C4] z-50"
-          style={{ marginLeft: 'calc(50% - 50vw)' }}
+          className="absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-b border-[#E4D9C4] z-50"
         >
           <div className="max-w-7xl mx-auto px-8 py-8">
             {books.length === 0 ? (

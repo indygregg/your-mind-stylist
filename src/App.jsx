@@ -8,9 +8,9 @@ import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import StyleJournalPage from './pages/StyleJournal';
-import BookProductPage from './pages/BookProductPage';
-import BooksPage from './pages/ProgramsBooks';
-import MyIdentitiesPage from './pages/MyIdentities';
+import BookLandingPage from './pages/BookLanding';
+import QuizPage from './pages/QuizPage';
+import QuizResults from './pages/QuizResults';
 import ManagerStyleInsightsPage from './pages/ManagerStyleInsights';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -70,6 +70,9 @@ const AuthenticatedApp = () => {
       <Route path="/Books" element={<LayoutWrapper currentPageName="ProgramsBooks"><BooksPage /></LayoutWrapper>} />
       <Route path="/MyIdentities" element={<LayoutWrapper currentPageName="MyIdentities"><MyIdentitiesPage /></LayoutWrapper>} />
       <Route path="/ManagerStyleInsights" element={<LayoutWrapper currentPageName="ManagerStyleInsights"><ManagerStyleInsightsPage /></LayoutWrapper>} />
+      <Route path="/books/:slug" element={<LayoutWrapper currentPageName="BookLanding"><BookLandingPage /></LayoutWrapper>} />
+      <Route path="/quiz/:slug" element={<LayoutWrapper currentPageName="QuizPage"><QuizPage /></LayoutWrapper>} />
+      <Route path="/quiz/:slug/results" element={<LayoutWrapper currentPageName="QuizResults"><QuizResults /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

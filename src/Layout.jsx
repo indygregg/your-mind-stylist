@@ -220,16 +220,11 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Header */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 safe-area-top ${
-          isScrolled
-            ? "bg-[#F9F5EF]/95 backdrop-blur-md shadow-sm"
-            : "bg-transparent"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 safe-area-top relative ${isScrolled ? 'bg-[#F9F5EF]/95 backdrop-blur-md shadow-sm' : 'bg-transparent'}`}
       >
         {/* Determine if page has dark hero */}
         {(() => {
           const darkHeroPages = ['LearnHypnosis', 'Consultations', 'ProgramsCourses', 'ProgramsWebinars', 'SignatureServices'];
-          // For Bookings: only use dark hero style on step 1 (signalled via body attribute)
           const isBookingsDarkHero = currentPageName === 'Bookings' && document.body.hasAttribute('data-dark-hero');
           const hasDarkHero = (darkHeroPages.includes(currentPageName) || isBookingsDarkHero) && !isScrolled;
           const textColorClass = hasDarkHero ? 'text-white' : 'text-[#2B2725]';
@@ -264,7 +259,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         {/* Main Nav */}
-        <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
+        <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           {/* Back Button for child routes on mobile */}
           {currentPageName !== 'Home' && (
             <button
@@ -286,7 +281,7 @@ export default function Layout({ children, currentPageName }) {
           {isManager && !useAuthLayout && (
             <Link
               to={createPageUrl('ManagerDashboard')}
-              className={`absolute left-6 top-1/2 -translate-y-1/2 px-3 py-2 ${hasDarkHero ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-[#D8B46B]/20 text-[#1E3A32] hover:bg-[#D8B46B]/30'} text-xs font-medium transition-all duration-300 rounded backdrop-blur-sm z-10 hidden lg:block`}
+              className={`px-3 py-2 ${hasDarkHero ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-[#D8B46B]/20 text-[#1E3A32] hover:bg-[#D8B46B]/30'} text-xs font-medium transition-all duration-300 rounded backdrop-blur-sm hidden lg:block`}
             >
               Dashboard
             </Link>
@@ -330,7 +325,6 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Services Mega Menu */}
             <div 
-              className="relative"
               onMouseEnter={() => setServicesOpen(true)}
               onMouseLeave={() => setServicesOpen(false)}
             >
@@ -354,7 +348,7 @@ export default function Layout({ children, currentPageName }) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-white shadow-2xl border-t border-b border-[#E4D9C4] w-[100vw] z-50"
+                    className="absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-b border-[#E4D9C4] z-50"
                   >
                     <div className="max-w-7xl mx-auto grid grid-cols-3 gap-6 p-8">
                       {servicesMenu.map((section) => (
@@ -388,7 +382,6 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Books Mega Menu */}
             <div
-              className="relative"
               onMouseEnter={() => setBooksOpen(true)}
               onMouseLeave={() => setBooksOpen(false)}
             >
