@@ -85,9 +85,9 @@ export default function BookProductPage() {
       />
 
       {/* Hero */}
-      <section className="bg-[#F9F5EF] min-h-screen flex items-center py-20">
+      <section className="bg-[#F9F5EF] min-h-screen flex items-center py-20 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw]">
         <div className="w-full px-6">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <Link
               to="/Books"
               className="inline-flex items-center gap-2 text-[#1E3A32]/60 hover:text-[#1E3A32] mb-10 transition-colors text-sm"

@@ -181,53 +181,54 @@ export default function BookPurchaseOptions({
     );
   }
 
-  // Multiple options: show as selectable cards
+  // Multiple options: show as dropdown
+  const selectedOption = enabledOptions.find(opt => {
+    const productIds = Array.isArray(opt.product_id) ? opt.product_id : [opt.product_id];
+    return selectedProductId === productIds[0];
+  });
+  const selectedProductIds = selectedOption ? (Array.isArray(selectedOption.product_id) ? selectedOption.product_id : [selectedOption.product_id]) : [];
+  const selectedVariantForDropdown = selectedProductIds[0] ? variantProducts[selectedProductIds[0]] : null;
+  const selectedPrice = selectedVariantForDropdown?.price ? (selectedVariantForDropdown.price / 100).toFixed(2) : "0.00";
+
   return (
     <div className="space-y-4">
-      <div className="space-y-3">
-        {enabledOptions.map((option) => {
-            // Handle both single and multiple products in an option
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-[#1E3A32]">Select Format</label>
+        <select
+          value={selectedProductId || ""}
+          onChange={(e) => setSelectedProductId(e.target.value)}
+          className="w-full px-4 py-3 border border-[#E4D9C4] rounded-lg bg-white text-[#1E3A32] font-medium hover:border-[#D8B46B] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D8B46B] focus:ring-offset-2"
+        >
+          <option value="">Choose a format...</option>
+          {enabledOptions.map((option) => {
             const productIds = Array.isArray(option.product_id) ? option.product_id : [option.product_id];
-            const primaryVariant = variantProducts[productIds[0]];
-            const price = primaryVariant?.price ? (primaryVariant.price / 100).toFixed(2) : "0.00";
-            const comparePrice = primaryVariant?.compare_at_price
-              ? (primaryVariant.compare_at_price / 100).toFixed(2)
-              : null;
-            const isSelected = selectedProductId === productIds[0];
-
-          return (
-            <button
-              key={productIds[0]}
-              onClick={() => setSelectedProductId(productIds[0])}
-              className={`w-full text-left border-2 p-4 rounded-lg transition-all ${
-                isSelected
-                  ? "border-[#1E3A32] bg-[#1E3A32]/5"
-                  : "border-[#E4D9C4] bg-white hover:border-[#D8B46B]"
-              }`}
-            >
-              <div className="flex justify-between items-start gap-4">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-[#1E3A32]">{option.display_label}</h3>
-                  {option.badge && (
-                    <span className="text-xs bg-[#D8B46B]/20 text-[#D8B46B] px-2 py-1 rounded mt-1 inline-block">
-                      {option.badge}
-                    </span>
-                  )}
-                </div>
-                <div className="text-right flex-shrink-0">
-                  <div className="text-lg font-bold text-[#1E3A32]">€{price}</div>
-                  {comparePrice && comparePrice !== price && (
-                    <div className="text-sm text-gray-500 line-through">€{comparePrice}</div>
-                  )}
-                </div>
-              </div>
-              {isSelected && (
-                <div className="mt-2 text-xs text-[#D8B46B] font-medium">✓ Selected</div>
-              )}
-            </button>
-          );
-        })}
+            const variant = variantProducts[productIds[0]];
+            const price = variant?.price ? (variant.price / 100).toFixed(2) : "0.00";
+            return (
+              <option key={productIds[0]} value={productIds[0]}>
+                {option.display_label} — €{price}
+              </option>
+            );
+          })}
+        </select>
       </div>
+      {selectedOption && (
+        <div className="bg-white border border-[#E4D9C4] p-4 rounded-lg">
+          <div className="flex justify-between items-center">
+            <div>
+              <h3 className="font-semibold text-[#1E3A32]">{selectedOption.display_label}</h3>
+              {selectedOption.badge && (
+                <span className="text-xs bg-[#D8B46B]/20 text-[#D8B46B] px-2 py-1 rounded mt-1 inline-block">
+                  {selectedOption.badge}
+                </span>
+              )}
+            </div>
+            <div className="text-right">
+              <div className="text-2xl font-bold text-[#1E3A32]">€{selectedPrice}</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Button
         onClick={handleAddToCart}

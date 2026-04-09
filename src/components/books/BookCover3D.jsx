@@ -5,7 +5,7 @@ const sizeMap = {
   sm: { width: 160, height: 220 },
   md: { width: 200, height: 300 },
   lg: { width: 260, height: 380 },
-  xl: { width: 340, height: 500 },
+  xl: { width: 420, height: 620 },
 };
 
 export default function BookCover3D({ imageUrl, title, size = "md" }) {
