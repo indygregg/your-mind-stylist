@@ -25,10 +25,11 @@ export default function ProgramsCourses() {
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["course-products"],
     queryFn: async () => {
-      return await base44.entities.Product.filter({ 
+      const all = await base44.entities.Product.filter({ 
         status: "published",
         product_subtype: "course"
       });
+      return all.sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
     },
   });
 

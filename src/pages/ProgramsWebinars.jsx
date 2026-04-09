@@ -29,7 +29,7 @@ export default function ProgramsWebinars() {
         status: "published",
         product_subtype: "webinar"
       });
-      return all;
+      return all.sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
     },
   });
 

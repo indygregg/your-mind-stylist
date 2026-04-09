@@ -28,7 +28,7 @@ export default function ProgramsBooks() {
         status: "published",
         product_subtype: "book"
       });
-      return all;
+      return all.sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
     },
   });
 
