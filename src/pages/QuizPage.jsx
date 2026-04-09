@@ -30,7 +30,8 @@ export default function QuizPage() {
     queryKey: ["quiz-questions", quiz?.id],
     queryFn: async () => {
       if (!quiz?.id) return [];
-      return await base44.entities.QuizQuestion.filter({ quiz_id: quiz.id });
+      const qs = await base44.entities.QuizQuestion.filter({ quiz_id: quiz.id }, 'order');
+      return qs;
     },
     enabled: !!quiz?.id,
   });
@@ -149,17 +150,17 @@ export default function QuizPage() {
                   </h2>
 
                   <div className="space-y-3 mb-10">
-                    {currentQuestion?.answers?.map((answer, i) => (
+                    {currentQuestion?.options?.map((option, i) => (
                       <button
                         key={i}
-                        onClick={() => handleAnswer(answer.archetype)}
+                        onClick={() => handleAnswer(option.archetype || option.text)}
                         className={`w-full text-left px-6 py-4 border transition-all duration-200 ${
-                          selected === answer.archetype
+                          selected === (option.archetype || option.text)
                             ? "border-[#1E3A32] bg-[#1E3A32] text-white"
                             : "border-[#E4D9C4] bg-white text-[#2B2725] hover:border-[#D8B46B] hover:bg-[#D8B46B]/5"
                         }`}
                       >
-                        {answer.text}
+                        {option.text}
                       </button>
                     ))}
                   </div>
