@@ -114,7 +114,7 @@ export default function BookPurchaseOptions({
         >
           {isAdding ? <Loader2 size={18} className="animate-spin mr-2" /> : null}
           <ShoppingCart size={18} className="mr-2" />
-          {ctaLabel} — €{price}
+          {ctaLabel} — ${price}
         </Button>
       );
     }
@@ -153,9 +153,9 @@ export default function BookPurchaseOptions({
               )}
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-[#1E3A32]">€{price}</div>
+              <div className="text-2xl font-bold text-[#1E3A32]">${price}</div>
               {comparePrice && comparePrice !== price && (
-                <div className="text-sm text-gray-500 line-through">€{comparePrice}</div>
+                <div className="text-sm text-gray-500 line-through">${comparePrice}</div>
               )}
             </div>
           </div>
@@ -220,9 +220,9 @@ export default function BookPurchaseOptions({
                 )}
               </div>
               <div className="text-right flex-shrink-0">
-                <div className="font-bold text-[#1E3A32]">€{price}</div>
+                <div className="font-bold text-[#1E3A32]">${price}</div>
                 {comparePrice && comparePrice !== price && (
-                  <div className="text-xs text-gray-500 line-through">€{comparePrice}</div>
+                  <div className="text-xs text-gray-500 line-through">${comparePrice}</div>
                 )}
               </div>
             </label>
@@ -242,7 +242,7 @@ export default function BookPurchaseOptions({
               )}
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-[#1E3A32]">€{selectedPrice}</div>
+              <div className="text-2xl font-bold text-[#1E3A32]">${selectedPrice}</div>
             </div>
           </div>
         </div>
