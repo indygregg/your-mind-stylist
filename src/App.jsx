@@ -8,6 +8,9 @@ import { pagesConfig } from './pages.config'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import StyleJournalPage from './pages/StyleJournal';
+import BookProductPage from './pages/BookProductPage';
+import BooksPage from './pages/ProgramsBooks';
+import MyIdentitiesPage from './pages/MyIdentities';
 import BookLandingPage from './pages/BookLanding';
 import QuizPage from './pages/QuizPage';
 import QuizResults from './pages/QuizResults';
