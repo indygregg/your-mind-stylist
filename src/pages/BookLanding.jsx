@@ -87,11 +87,11 @@ export default function BookLanding() {
                   {book.tagline}
                 </p>
               )}
-              <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-6 leading-tight">
+              <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-4 leading-tight">
                 {book.name}
               </h1>
               {book.short_description && (
-                <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
+                <p className="text-[#1E3A32]/80 text-xl leading-relaxed mb-8 font-serif italic">
                   {book.short_description}
                 </p>
               )}
@@ -117,35 +117,49 @@ export default function BookLanding() {
                   </Button>
                 </Link>
               </div>
-              {book.features && book.features.length > 0 && (
-                <ul className="mt-8 space-y-2">
-                  {book.features.map((f, i) => (
-                    <li key={i} className="flex items-center gap-2 text-[#2B2725]/80 text-sm">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#D8B46B] flex-shrink-0" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-              )}
+
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Section 2 — Emotional Hook */}
+      {/* Section 2 — About & Walk Away With */}
       {book.long_description && (
         <section className="py-20 bg-white">
           <div className="max-w-3xl mx-auto px-6">
-            <h2 className="font-serif text-3xl text-[#1E3A32] mb-8 text-center">About the Book</h2>
             <div
-              className="prose prose-lg max-w-none text-[#2B2725]/80 leading-relaxed"
+              className="prose prose-lg max-w-none text-[#2B2725]/80 leading-relaxed [&_h2]:font-serif [&_h2]:text-[#1E3A32] [&_h2]:text-3xl [&_h2]:mt-12 [&_h2]:mb-6 [&_blockquote]:border-l-4 [&_blockquote]:border-[#D8B46B] [&_blockquote]:pl-6 [&_blockquote]:italic [&_blockquote]:text-[#1E3A32] [&_li]:mb-2"
               dangerouslySetInnerHTML={{ __html: book.long_description }}
             />
           </div>
         </section>
       )}
 
-      {/* Section 3 — Quiz CTA Block */}
+      {/* Walk Away With — features */}
+      {book.features && book.features.length > 0 && (
+        <section className="py-20 bg-[#F9F5EF]">
+          <div className="max-w-4xl mx-auto px-6">
+            <h2 className="font-serif text-3xl text-[#1E3A32] mb-4 text-center">What You'll Walk Away With</h2>
+            <p className="text-center text-[#2B2725]/60 mb-12 italic">This isn't a book you power through. It's a book you sit with.</p>
+            <div className="grid md:grid-cols-2 gap-6">
+              {book.features.map((f, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="bg-white border border-[#E4D9C4] p-6"
+                >
+                  <p className="text-[#2B2725]/80 leading-relaxed">{f}</p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+
       <section className="py-20 bg-[#1E3A32]">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <motion.div
