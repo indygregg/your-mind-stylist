@@ -1,9 +1,9 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
-import { ArrowRight, ShoppingCart, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, ShoppingCart, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BookCover3D from "../components/books/BookCover3D";
 import SEO from "../components/SEO";
@@ -13,6 +13,7 @@ const formatPrice = (price) => `$${(price / 100).toFixed(2)}`;
 
 export default function BookLanding() {
   const { slug } = useParams();
+  const navigate = useNavigate();
 
   const { data: book, isLoading } = useQuery({
     queryKey: ["book-landing", slug],
@@ -79,8 +80,25 @@ export default function BookLanding() {
         image={coverImage}
       />
 
+      {/* Back Navigation */}
+      <div className="pt-24 pb-2 px-6 md:px-12 lg:px-20 xl:px-28">
+        <button
+          onClick={() => {
+            if (window.history.length > 1) {
+              navigate(-1);
+            } else {
+              navigate('/Books');
+            }
+          }}
+          className="inline-flex items-center gap-2 text-sm text-[#2B2725]/60 hover:text-[#1E3A32] transition-colors"
+        >
+          <ArrowLeft size={16} />
+          Back
+        </button>
+      </div>
+
       {/* Section 1 — Hero */}
-      <section className="pt-28 pb-12 bg-[#F9F5EF]">
+      <section className="pb-12 bg-[#F9F5EF]">
         <div className="w-full px-6 md:px-12 lg:px-20 xl:px-28">
           <div className="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
             <motion.div
