@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Loader2, Star, ShoppingCart, ArrowLeft, Play } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Loader2, Star, ShoppingCart, ArrowLeft } from "lucide-react";
 import { createPageUrl } from "../utils";
 import SEO from "../components/SEO";
 import BookCover3D from "../components/books/BookCover3D";
