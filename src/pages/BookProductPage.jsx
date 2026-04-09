@@ -84,11 +84,11 @@ export default function BookProductPage() {
       />
 
       {/* Hero */}
-      <section className="pt-28 pb-20 bg-gradient-to-br from-[#1E3A32] to-[#2B4A3A] text-white">
+      <section className="pt-28 pb-20 bg-[#F9F5EF]">
         <div className="max-w-6xl mx-auto px-6">
           <Link
             to="/Books"
-            className="inline-flex items-center gap-2 text-white/60 hover:text-white mb-10 transition-colors text-sm"
+            className="inline-flex items-center gap-2 text-[#1E3A32]/60 hover:text-[#1E3A32] mb-10 transition-colors text-sm"
           >
             <ArrowLeft size={16} /> Back to Books
           </Link>
@@ -104,7 +104,7 @@ export default function BookProductPage() {
               {coverImage ? (
                 <BookCover3D imageUrl={coverImage} title={book.name} size="lg" />
               ) : (
-                <div className="w-[240px] h-[320px] bg-white/10 rounded flex items-center justify-center text-white/40 text-sm">
+                <div className="w-[240px] h-[320px] bg-[#E4D9C4] rounded flex items-center justify-center text-[#2B2725]/40 text-sm">
                   No cover image
                 </div>
               )}
@@ -121,11 +121,11 @@ export default function BookProductPage() {
                   {book.tagline}
                 </p>
               )}
-              <h1 className="font-serif text-4xl md:text-5xl text-white mb-6 leading-tight">
+              <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-6 leading-tight">
                 {book.name}
               </h1>
               {book.short_description && (
-                <p className="text-white/80 text-lg leading-relaxed mb-8">
+                <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
                   {book.short_description}
                 </p>
               )}
@@ -154,7 +154,7 @@ export default function BookProductPage() {
               {book.features && book.features.length > 0 && (
                 <ul className="mt-8 space-y-2">
                   {book.features.map((f, i) => (
-                    <li key={i} className="flex items-center gap-2 text-white/80 text-sm">
+                    <li key={i} className="flex items-center gap-2 text-[#2B2725]/80 text-sm">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#D8B46B] flex-shrink-0" />
                       {f}
                     </li>
