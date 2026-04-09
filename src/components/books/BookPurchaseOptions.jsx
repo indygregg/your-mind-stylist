@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
-import { ShoppingCart, Loader2 } from "lucide-react";
+import { ShoppingCart, Loader2, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Parse product_id which can be: a string ID, a JSON-encoded array string, or an actual array
@@ -89,7 +89,18 @@ export default function BookPurchaseOptions({
     })
     .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
 
-  // Don't auto-select - let user choose
+  // Auto-select first option if none selected
+  useEffect(() => {
+    if (!selectedProductId && enabledOptions.length > 0) {
+      const firstOpt = enabledOptions[0];
+      if (firstOpt.type === 'bundle' && firstOpt.bundle_product_id) {
+        setSelectedProductId(firstOpt.bundle_product_id);
+      } else {
+        const ids = parseProductIds(firstOpt.product_id);
+        if (ids[0]) setSelectedProductId(ids[0]);
+      }
+    }
+  }, [enabledOptions.length, selectedProductId]);
 
   const selectedVariant = selectedProductId ? variantProducts[selectedProductId] : null;
 
@@ -100,7 +111,14 @@ export default function BookPurchaseOptions({
       if (onAddToCart) {
         await onAddToCart(selectedVariant);
       } else {
-        // Default: trigger checkout
+        // Check if user is logged in first — checkout requires auth
+        const isAuth = await base44.auth.isAuthenticated();
+        if (!isAuth) {
+          // Redirect to login, then back to this page
+          base44.auth.redirectToLogin(window.location.pathname);
+          return;
+        }
+        // Trigger checkout
         const response = await base44.functions.invoke("createProductCheckout", {
           product_id: selectedVariant.id,
         });
