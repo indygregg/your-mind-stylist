@@ -115,10 +115,12 @@ export default function BundleCreator({ open, onClose, existingBundle = null }) 
   const createBundleMutation = useMutation({
     mutationFn: async (data) => {
       const priceInCents = data.price ? parseInt(parseFloat(data.price) * 100) : 0;
+      // Strip read-only built-in fields that the API rejects on update
+      const { id, created_date, created_by, updated_date, ...writableFields } = data;
       const dataToSave = {
-        ...data,
+        ...writableFields,
         price: priceInCents,
-        features: data.features.filter(f => f.trim() !== ""),
+        features: (data.features || []).filter(f => f.trim() !== ""),
       };
 
       let savedId;
