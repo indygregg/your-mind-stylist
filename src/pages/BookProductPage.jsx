@@ -95,51 +95,57 @@ export default function BookProductPage() {
       />
 
       {/* Hero */}
-      <section className="bg-[#F9F5EF] pt-44 pb-16">
-        <div className="w-full px-6 md:px-12 lg:px-20 xl:px-28">
-            <Link
-              to="/Books"
-              className="inline-flex items-center gap-2 text-[#1E3A32]/60 hover:text-[#1E3A32] mb-8 transition-colors text-sm"
+      <section className="bg-[#F9F5EF]">
+        <div className="w-full pt-36 md:pt-40 pb-10 md:pb-16 px-6 md:px-12 lg:px-20 xl:px-28">
+          <Link
+            to="/Books"
+            className="inline-flex items-center gap-2 text-[#1E3A32]/60 hover:text-[#1E3A32] mb-6 transition-colors text-sm"
+          >
+            <ArrowLeft size={16} /> Back to Books
+          </Link>
+
+          <div className={`flex flex-col ${bookOnLeft ? 'md:flex-row' : 'md:flex-row-reverse'} gap-8 lg:gap-14 items-center`}>
+            {/* Book Cover */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              className="flex-shrink-0"
             >
-              <ArrowLeft size={16} /> Back to Books
-            </Link>
+              {coverImage ? (
+                <img
+                  src={coverImage}
+                  alt={book.name}
+                  className="w-[220px] md:w-[260px] lg:w-[300px] h-auto rounded shadow-2xl"
+                  style={{ boxShadow: '8px 8px 30px rgba(0,0,0,0.2), -2px -2px 8px rgba(0,0,0,0.05)' }}
+                />
+              ) : (
+                <div className="w-[260px] h-[380px] bg-[#E4D9C4] rounded flex items-center justify-center text-[#2B2725]/40 text-sm">
+                  No cover image
+                </div>
+              )}
+            </motion.div>
 
-            <div className={`grid md:grid-cols-[auto_1fr] gap-8 lg:gap-14 items-start ${!bookOnLeft ? "md:grid-cols-[1fr_auto] md:[&>*:first-child]:order-last" : ""}`}>
-              {/* Book Cover */}
-              <motion.div
-                initial={{ opacity: 0, x: bookOnLeft ? -40 : 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7 }}
-                className="flex justify-center"
-              >
-                {coverImage ? (
-                  <BookCover3D imageUrl={coverImage} title={book.name} size="xl" />
-                ) : (
-                  <div className="w-[320px] h-[480px] bg-[#E4D9C4] rounded flex items-center justify-center text-[#2B2725]/40 text-sm">
-                    No cover image
-                  </div>
-                )}
-              </motion.div>
-
-              {/* Book Info */}
-              <motion.div
-                initial={{ opacity: 0, x: bookOnLeft ? 40 : -40 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, delay: 0.1 }}
-              >
-                {book.tagline && (
-                  <p className="text-[#D8B46B] text-sm tracking-[0.2em] uppercase mb-3 font-medium">
-                    {book.tagline}
-                  </p>
-                )}
-                <h1 className="font-serif text-5xl md:text-6xl text-[#1E3A32] mb-8 leading-tight">
-                  {book.name}
-                </h1>
-                {book.short_description && (
-                  <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10">
-                    {book.short_description}
-                  </p>
-                )}
+            {/* Book Info */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="flex-1 min-w-0"
+            >
+              {book.tagline && (
+                <p className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-2 font-medium">
+                  {book.tagline}
+                </p>
+              )}
+              <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl text-[#1E3A32] mb-4 leading-tight">
+                {book.name}
+              </h1>
+              {book.short_description && (
+                <p className="text-[#2B2725]/70 text-base leading-relaxed mb-6 max-w-xl">
+                  {book.short_description}
+                </p>
+              )}
 
               {book.purchase_options && book.purchase_options.length > 0 ? (
                 <BookPurchaseOptions
@@ -149,14 +155,14 @@ export default function BookProductPage() {
                   quiz={quiz}
                 />
               ) : (
-                <div className="bg-white border border-[#E4D9C4] p-6 mb-8">
-                  <div className="flex items-center justify-between mb-4">
+                <div className="bg-white border border-[#E4D9C4] p-5 mb-6 max-w-md">
+                  <div className="flex items-center justify-between mb-3">
                     <h3 className="font-semibold text-[#1E3A32]">{book.name}</h3>
-                    <div className="text-2xl font-bold text-[#1E3A32]">{formatPrice(book.price)}</div>
+                    <div className="text-xl font-bold text-[#1E3A32]">{formatPrice(book.price)}</div>
                   </div>
                   <Button
                     onClick={() => handleAddToCart(book)}
-                    className="w-full bg-[#D8B46B] hover:bg-[#C5A35B] text-[#1E3A32] font-semibold py-6"
+                    className="w-full bg-[#D8B46B] hover:bg-[#C5A35B] text-[#1E3A32] font-semibold py-5"
                   >
                     <ShoppingCart size={18} className="mr-2" />
                     Get Your Copy
@@ -165,17 +171,17 @@ export default function BookProductPage() {
               )}
 
               {book.features && book.features.length > 0 && (
-                <ul className="mt-8 space-y-2">
+                <ul className="mt-4 space-y-1.5">
                   {book.features.map((f, i) => (
-                    <li key={i} className="flex items-center gap-2 text-[#2B2725]/80 text-sm">
+                    <li key={i} className="flex items-center gap-2 text-[#2B2725]/70 text-sm">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#D8B46B] flex-shrink-0" />
                       {f}
                     </li>
                   ))}
                 </ul>
               )}
-              </motion.div>
-            </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
