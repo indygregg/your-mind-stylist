@@ -104,7 +104,7 @@ export default function BookProductPage() {
               <ArrowLeft size={16} /> Back to Books
             </Link>
 
-            <div className={`grid md:grid-cols-[1fr_1fr] gap-8 lg:gap-12 items-center ${!bookOnLeft ? "md:[&>*:first-child]:order-last" : ""}`}>
+            <div className={`grid md:grid-cols-[2fr_3fr] gap-8 lg:gap-12 items-center ${!bookOnLeft ? "md:grid-cols-[3fr_2fr] md:[&>*:first-child]:order-last" : ""}`}>
               {/* Book Cover */}
               <motion.div
                 initial={{ opacity: 0, x: bookOnLeft ? -40 : 40 }}
