@@ -46,7 +46,7 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
                     )}
                     {colIdx !== 0 && <div className="h-[20px]" />}
                     {col.map((book) => {
-                      const slugPath = book.slug ? `/book/${book.slug}` : `/Books`;
+                       const slugPath = book.slug ? `/books/${book.slug}` : `/Books`;
                       return (
                         <Link
                           key={book.id}
