@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
-import { ShoppingCart, ArrowRight, Loader2 } from "lucide-react";
+import { ShoppingCart, ArrowRight, Loader2, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SEO from "../components/SEO";
@@ -42,15 +42,16 @@ export default function QuizResults() {
     enabled: !!quiz?.id,
   });
 
-  // Fetch book product
+  // Fetch book product — use cta_product_id first, fall back to related_product_id
+  const bookProductId = quiz?.cta_product_id || quiz?.related_product_id;
   const { data: book } = useQuery({
-    queryKey: ["book-for-quiz", quiz?.cta_product_id],
+    queryKey: ["book-for-quiz", bookProductId],
     queryFn: async () => {
-      if (!quiz?.cta_product_id) return null;
-      const prods = await base44.entities.Product.filter({ id: quiz.cta_product_id });
+      if (!bookProductId) return null;
+      const prods = await base44.entities.Product.filter({ id: bookProductId });
       return prods[0] || null;
     },
-    enabled: !!quiz?.cta_product_id,
+    enabled: !!bookProductId,
   });
 
   // Default to not showing email gate if disabled
@@ -229,17 +230,38 @@ export default function QuizResults() {
                 {/* Book CTA */}
                 {book && (
                   <div className="bg-[#D8B46B]/10 border border-[#D8B46B]/30 p-8 text-center">
-                    <h3 className="font-serif text-2xl text-[#1E3A32] mb-3">Ready to understand your archetype more deeply?</h3>
-                    <p className="text-[#2B2725]/70 mb-6">
-                      {quiz.cta_text || "Read the book and explore your archetype in depth"}
+                    {book.book_cover_image && (
+                      <img
+                        src={book.book_cover_image}
+                        alt={book.name}
+                        className="w-32 h-auto mx-auto mb-6 rounded shadow-lg"
+                      />
+                    )}
+                    <h3 className="font-serif text-2xl text-[#1E3A32] mb-3">
+                      {quiz.results_intro_text || "Ready to understand your archetype more deeply?"}
+                    </h3>
+                    <p className="text-[#2B2725]/70 mb-6 max-w-md mx-auto">
+                      {book.short_description || "Discover practical tools and deeper insights in the book."}
                     </p>
-                    <Button
-                      onClick={handlePurchase}
-                      className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-10 py-6 text-base"
-                    >
-                      <ShoppingCart size={18} className="mr-2" />
-                      {quiz.cta_text || "Get the Book"}{book.price ? ` — $${(book.price / 100).toFixed(2)}` : ""}
-                    </Button>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      {book.slug && (
+                        <Link
+                          to={`/books/${book.slug}`}
+                          className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#1E3A32] hover:bg-[#2B2725] text-white text-base transition-colors"
+                        >
+                          <BookOpen size={18} />
+                          {quiz.cta_text || "Learn More About the Book"}
+                        </Link>
+                      )}
+                      <Button
+                        onClick={handlePurchase}
+                        variant={book.slug ? "outline" : "default"}
+                        className={book.slug ? "border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32] hover:text-white px-8 py-4 text-base" : "bg-[#1E3A32] hover:bg-[#2B2725] text-white px-8 py-4 text-base"}
+                      >
+                        <ShoppingCart size={18} className="mr-2" />
+                        Buy Now{book.price ? ` — $${(book.price / 100).toFixed(2)}` : ""}
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>

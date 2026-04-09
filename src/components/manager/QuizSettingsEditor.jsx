@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -46,6 +46,11 @@ export default function QuizSettingsEditor({ quiz }) {
     setSaving(false);
     toast.success("Quiz settings saved!");
   };
+
+  const { data: products = [] } = useQuery({
+    queryKey: ["products-for-quiz-settings"],
+    queryFn: () => base44.entities.Product.filter({ product_subtype: "book" }),
+  });
 
   return (
     <div className="bg-white border border-[#E4D9C4] p-6 space-y-6">
@@ -102,18 +107,38 @@ export default function QuizSettingsEditor({ quiz }) {
 
       <div className="border-t border-[#E4D9C4] pt-6">
         <h3 className="font-serif text-lg text-[#1E3A32] mb-4">CTA & Product Link</h3>
+        <p className="text-xs text-[#2B2725]/50 mb-4">Link this quiz to a book so a call-to-action appears after results.</p>
         <div className="grid md:grid-cols-2 gap-4">
           <div>
             <label className="text-sm text-[#2B2725]/70 mb-1 block">CTA Button Text</label>
             <Input value={form.cta_text || ""} onChange={e => update("cta_text", e.target.value)} className="border-[#E4D9C4]" placeholder="e.g., Read Go Fetch Your Self" />
+            <p className="text-xs text-[#2B2725]/40 mt-1">Text shown on the buy button at the end of results</p>
           </div>
           <div>
-            <label className="text-sm text-[#2B2725]/70 mb-1 block">CTA Product ID/Key</label>
-            <Input value={form.cta_product_id || ""} onChange={e => update("cta_product_id", e.target.value)} className="border-[#E4D9C4]" placeholder="e.g., go-fetch" />
+            <label className="text-sm text-[#2B2725]/70 mb-1 block">CTA Product (Book)</label>
+            <Select value={form.cta_product_id || ""} onValueChange={v => update("cta_product_id", v)}>
+              <SelectTrigger className="border-[#E4D9C4]"><SelectValue placeholder="Select a book..." /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value={null}>None</SelectItem>
+                {products.map(p => (
+                  <SelectItem key={p.id} value={p.id}>{p.name} {p.price ? `($${(p.price / 100).toFixed(2)})` : ''}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-[#2B2725]/40 mt-1">The book shown in the CTA after quiz results</p>
           </div>
-          <div>
-            <label className="text-sm text-[#2B2725]/70 mb-1 block">Related Product ID/Key</label>
-            <Input value={form.related_product_id || ""} onChange={e => update("related_product_id", e.target.value)} className="border-[#E4D9C4]" />
+          <div className="md:col-span-2">
+            <label className="text-sm text-[#2B2725]/70 mb-1 block">Related Product (Fallback)</label>
+            <Select value={form.related_product_id || ""} onValueChange={v => update("related_product_id", v)}>
+              <SelectTrigger className="border-[#E4D9C4]"><SelectValue placeholder="Select a book..." /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value={null}>None</SelectItem>
+                {products.map(p => (
+                  <SelectItem key={p.id} value={p.id}>{p.name} {p.price ? `($${(p.price / 100).toFixed(2)})` : ''}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-[#2B2725]/40 mt-1">Used if no CTA product is set above. Also used on quiz intro screens.</p>
           </div>
         </div>
       </div>
