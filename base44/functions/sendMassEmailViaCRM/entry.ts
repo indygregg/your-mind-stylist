@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 Deno.serve(async (req) => {
   try {
@@ -13,11 +13,6 @@ Deno.serve(async (req) => {
 
     if (!subject || !body) {
       return Response.json({ error: 'Subject and body are required' }, { status: 400 });
-    }
-
-    const MAILERLITE_API_KEY = Deno.env.get('MAILERLITE_API_KEY');
-    if (!MAILERLITE_API_KEY) {
-      return Response.json({ error: 'MailerLite API key not configured' }, { status: 500 });
     }
 
     // Fetch leads with applied filters
@@ -36,72 +31,98 @@ Deno.serve(async (req) => {
 
     if (filters?.courses && filters.courses.length > 0) {
       leads = leads.filter(lead => {
-        const userProgress = lead.course_ids || [];
-        return filters.courses.some(course => userProgress.includes(course));
+        const userCourses = lead.course_ids || [];
+        return filters.courses.some(course => userCourses.includes(course));
       });
     }
 
-    const validEmails = leads.filter(l => l.email).map(l => l.email);
+    const validLeads = leads.filter(l => l.email);
 
-    if (validEmails.length === 0) {
+    if (validLeads.length === 0) {
       return Response.json({ error: 'No leads match the selected filters' }, { status: 400 });
     }
 
-    // Build campaign payload
-    const campaignPayload = {
-      name: `CRM Campaign - ${new Date().toISOString()}`,
-      subject,
-      from_name: 'Roberta Fernandez',
-      from: 'roberta@yourmindstylist.com',
-      content: body,
-      recipients: {
-        emails: validEmails,
-      },
-    };
+    // Build the full HTML email body with Roberta's branding
+    const fullHtml = `
+      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #2B2725;">
+        <div style="background: #1E3A32; padding: 24px; text-align: center;">
+          <h2 style="color: #D8B46B; margin: 0; font-size: 18px; letter-spacing: 2px;">YOUR MIND STYLIST</h2>
+          <p style="color: #F9F5EF; margin: 4px 0 0; font-size: 12px;">Roberta Fernandez</p>
+        </div>
+        <div style="padding: 32px 24px; background: #F9F5EF;">
+          ${body}
+        </div>
+        ${attachments.length > 0 ? `
+          <div style="padding: 16px 24px; background: #F9F5EF; border-top: 1px solid #E4D9C4;">
+            <p style="font-size: 14px; color: #2B2725; margin: 0 0 8px;"><strong>Attachments:</strong></p>
+            ${attachments.map(att => `<p style="margin: 4px 0;"><a href="${att.url}" style="color: #1E3A32;">${att.name}</a></p>`).join('')}
+          </div>
+        ` : ''}
+        <div style="background: #1E3A32; padding: 16px 24px; text-align: center;">
+          <p style="color: #F9F5EF; font-size: 11px; margin: 0;">© ${new Date().getFullYear()} Your Mind Stylist. All rights reserved.</p>
+          <p style="color: #F9F5EF; font-size: 11px; margin: 4px 0 0;">8724 Spanish Ridge Ave #B, Las Vegas, NV 89148</p>
+        </div>
+      </div>
+    `;
 
-    // Add attachments if provided
-    if (attachments.length > 0) {
-      campaignPayload.attachments = attachments.map(att => ({
-        filename: att.name,
-        url: att.url,
-      }));
+    // Send individual emails using the built-in SendEmail integration
+    let successCount = 0;
+    let failCount = 0;
+    const errors = [];
+
+    // Send in batches of 5 to avoid rate limits
+    const batchSize = 5;
+    for (let i = 0; i < validLeads.length; i += batchSize) {
+      const batch = validLeads.slice(i, i + batchSize);
+      const results = await Promise.allSettled(
+        batch.map(lead =>
+          base44.asServiceRole.integrations.Core.SendEmail({
+            to: lead.email,
+            subject: subject,
+            body: fullHtml,
+            from_name: 'Roberta Fernandez',
+          })
+        )
+      );
+
+      for (let j = 0; j < results.length; j++) {
+        if (results[j].status === 'fulfilled') {
+          successCount++;
+        } else {
+          failCount++;
+          errors.push({ email: batch[j].email, error: results[j].reason?.message });
+        }
+      }
+
+      // Small delay between batches
+      if (i + batchSize < validLeads.length) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
     }
 
-    // Send via MailerLite API - create a campaign and send
-    const campaignResponse = await fetch('https://connect.mailerlite.com/api/campaigns', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${MAILERLITE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(campaignPayload),
-    });
-
-    if (!campaignResponse.ok) {
-      const error = await campaignResponse.json();
-      return Response.json({ error: 'Failed to create campaign in MailerLite', details: error }, { status: 500 });
-    }
-
-    const campaign = await campaignResponse.json();
-
-    // Log activity for each lead
-    for (const lead of leads) {
-      if (lead.email) {
+    // Log activity for successfully sent leads
+    for (const lead of validLeads) {
+      try {
         await base44.asServiceRole.entities.LeadActivity.create({
           lead_id: lead.id,
           activity_type: 'mass_email_sent',
-          description: `Mass email sent: "${subject}" (Campaign: ${campaign.id})`,
+          description: `Mass email sent: "${subject}"`,
         });
+      } catch (e) {
+        // Don't fail the whole operation for activity logging
+        console.warn(`Failed to log activity for lead ${lead.id}:`, e.message);
       }
     }
 
     return Response.json({
       success: true,
-      recipientCount: validEmails.length,
-      campaignId: campaign.id,
-      message: `Campaign sent to ${validEmails.length} leads via MailerLite`,
+      recipientCount: successCount,
+      failedCount: failCount,
+      errors: errors.length > 0 ? errors : undefined,
+      message: `Email sent to ${successCount} lead(s)${failCount > 0 ? `, ${failCount} failed` : ''}`,
     });
   } catch (error) {
+    console.error('sendMassEmailViaCRM error:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
