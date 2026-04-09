@@ -33,8 +33,10 @@ export default function Shop() {
 
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["shop-products"],
-    queryFn: () =>
-      base44.entities.Product.filter({ status: "published", active: true }, "display_order"),
+    queryFn: async () => {
+      const all = await base44.entities.Product.filter({ status: "published", active: true }, "display_order");
+      return all.filter(p => p.ui_group !== "hidden");
+    },
   });
 
 
