@@ -182,6 +182,10 @@
           "product_id": {
             "description": "Reference to Product entity \u2014 a single ID (string) or multiple IDs (array) for bundle variants"
           },
+          "bundle_product_id": {
+            "type": "string",
+            "description": "ID of the auto-created bundle Product record (with Stripe sync) for bundle-type purchase options"
+          },
           "bundle_price": {
             "type": "number",
             "description": "Custom bundle price in cents (for bundle-type purchase options)"

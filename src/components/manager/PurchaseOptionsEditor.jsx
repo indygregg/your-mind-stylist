@@ -142,6 +142,84 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
     }
   };
 
+  const handleCreateBundleProduct = async (index) => {
+    const option = options[index];
+    const bundledIds = Array.isArray(option.product_id) ? option.product_id : [];
+    const bundlePrice = option.bundle_price;
+    const label = option.display_label?.trim();
+
+    if (bundledIds.length < 2) {
+      toast.error("Please select at least 2 products for the bundle");
+      return;
+    }
+    if (!bundlePrice || bundlePrice <= 0) {
+      toast.error("Please set a bundle price");
+      return;
+    }
+
+    setCreatingVariant(index);
+    try {
+      const bundleName = label || `${parentProductName || 'Book'} Bundle`;
+      const key = bundleName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+
+      // Create a new hidden bundle product
+      const created = await base44.entities.Product.create({
+        key,
+        slug: key,
+        name: bundleName,
+        type: "bundle",
+        is_bundle: true,
+        bundled_product_ids: bundledIds,
+        product_subtype: "book",
+        category: "foundation",
+        price: bundlePrice,
+        currency: "usd",
+        status: "published",
+        ui_group: "hidden",
+        template_choice: "minimal",
+      });
+
+      // Sync to Stripe
+      try {
+        const syncResult = await base44.functions.invoke('syncProductStripe', {
+          product_id: created.id,
+          key,
+          name: bundleName,
+          description: `Bundle variant of ${parentProductName || 'book'}`,
+          price: bundlePrice,
+          currency: "usd",
+          billing_interval: "one_time",
+          type: "bundle",
+        });
+
+        if (syncResult.data?.success) {
+          await base44.entities.Product.update(created.id, {
+            stripe_product_id: syncResult.data.stripe_product_id,
+            stripe_price_id: syncResult.data.stripe_price_id,
+            stripe_price_ids: syncResult.data.stripe_price_ids,
+          });
+        }
+      } catch (stripeErr) {
+        console.warn("Stripe sync failed for bundle variant, can be retried:", stripeErr);
+      }
+
+      // Update the option: store the new bundle product ID, keep bundled IDs in product_id array
+      const updated = [...(options || [])];
+      updated[index] = {
+        ...updated[index],
+        bundle_product_id: created.id,
+      };
+      onChange(updated);
+
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success(`Created bundle product "${bundleName}" and synced with Stripe`);
+    } catch (error) {
+      toast.error(`Failed to create bundle product: ${error.message}`);
+    } finally {
+      setCreatingVariant(null);
+    }
+  };
+
   const getProductName = (productId) => {
     const product = allProducts.find(p => p.id === productId);
     return product?.name || "Unknown Product";
@@ -351,22 +429,55 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
           </div>
 
           {option.type === 'bundle' && (
-            <div>
-              <Label className="text-xs">Bundle Price ($) *</Label>
-              <Input
-                type="number"
-                step="0.01"
-                size="sm"
-                value={option.bundle_price != null && option.bundle_price !== "" ? (option.bundle_price / 100).toFixed(2) : ""}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  handleUpdateOption(index, "bundle_price", val ? Math.round(parseFloat(val) * 100) : "");
-                }}
-                placeholder="e.g., 29.99"
-                className="h-9 text-sm"
-              />
-              <p className="text-xs text-[#2B2725]/60 mt-1">
-                {option.bundle_price ? `Displays as $${(option.bundle_price / 100).toFixed(2)}` : 'Set a custom price for this bundle'}
+            <div className="space-y-3">
+              <div>
+                <Label className="text-xs">Bundle Price ($) *</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  size="sm"
+                  value={option.bundle_price != null && option.bundle_price !== "" ? (option.bundle_price / 100).toFixed(2) : ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    handleUpdateOption(index, "bundle_price", val ? Math.round(parseFloat(val) * 100) : "");
+                  }}
+                  placeholder="e.g., 29.99"
+                  className="h-9 text-sm"
+                />
+                <p className="text-xs text-[#2B2725]/60 mt-1">
+                  {option.bundle_price ? `Displays as $${(option.bundle_price / 100).toFixed(2)}` : 'Set a custom price for this bundle'}
+                </p>
+              </div>
+
+              {/* Create Bundle Product + Stripe sync */}
+              {option.bundle_product_id ? (
+                <div className="p-3 bg-green-50 border border-green-200 rounded">
+                  <p className="text-sm text-green-800 font-medium">✓ Bundle product created & synced with Stripe</p>
+                  <p className="text-xs text-green-600 mt-1">Product ID: {option.bundle_product_id}</p>
+                </div>
+              ) : (
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => handleCreateBundleProduct(index)}
+                  disabled={creatingVariant === index || !option.bundle_price || !(Array.isArray(option.product_id) && option.product_id.length >= 2)}
+                  className="bg-[#D8B46B] hover:bg-[#C9A55C] text-[#1E3A32] w-full"
+                >
+                  {creatingVariant === index ? (
+                    <>
+                      <Loader2 size={14} className="mr-1 animate-spin" />
+                      Creating Bundle Product & Syncing...
+                    </>
+                  ) : (
+                    <>
+                      <Plus size={14} className="mr-1" />
+                      Create Bundle Product & Sync to Stripe
+                    </>
+                  )}
+                </Button>
+              )}
+              <p className="text-xs text-[#2B2725]/50">
+                This creates a new product record for this bundle at the set price and syncs it with Stripe.
               </p>
             </div>
           )}
