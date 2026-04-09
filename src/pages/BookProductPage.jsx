@@ -95,9 +95,8 @@ export default function BookProductPage() {
       />
 
       {/* Hero */}
-      <section className="bg-[#F9F5EF] min-h-screen flex items-center py-20">
-        <div className="w-full px-4 md:px-12 lg:px-16">
-          <div>
+      <section className="bg-[#F9F5EF] min-h-screen flex items-center py-20 pt-40">
+        <div className="w-full px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24">
             <Link
               to="/Books"
               className="inline-flex items-center gap-2 text-[#1E3A32]/60 hover:text-[#1E3A32] mb-10 transition-colors text-sm"
@@ -105,7 +104,7 @@ export default function BookProductPage() {
               <ArrowLeft size={16} /> Back to Books
             </Link>
 
-            <div className={`grid md:grid-cols-2 gap-10 lg:gap-16 items-center ${!bookOnLeft ? "md:[&>*:first-child]:order-last" : ""}`}>
+            <div className={`grid md:grid-cols-[1fr_1fr] gap-8 lg:gap-12 items-center ${!bookOnLeft ? "md:[&>*:first-child]:order-last" : ""}`}>
               {/* Book Cover */}
               <motion.div
                 initial={{ opacity: 0, x: bookOnLeft ? -40 : 40 }}
@@ -177,7 +176,6 @@ export default function BookProductPage() {
               )}
               </motion.div>
             </div>
-          </div>
         </div>
       </section>
 
