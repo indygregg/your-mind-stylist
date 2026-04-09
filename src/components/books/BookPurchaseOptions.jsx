@@ -111,14 +111,6 @@ export default function BookPurchaseOptions({
       if (onAddToCart) {
         await onAddToCart(selectedVariant);
       } else {
-        // Check if user is logged in first — checkout requires auth
-        const isAuth = await base44.auth.isAuthenticated();
-        if (!isAuth) {
-          // Redirect to login, then back to this page
-          base44.auth.redirectToLogin(window.location.pathname);
-          return;
-        }
-        // Trigger checkout
         const response = await base44.functions.invoke("createProductCheckout", {
           product_id: selectedVariant.id,
         });
@@ -126,111 +118,11 @@ export default function BookPurchaseOptions({
           window.location.href = response.data.url;
         }
       }
+    } catch (err) {
+      console.error("Checkout error:", err);
+      alert("Something went wrong starting checkout. Please try again.");
     } finally {
       setIsAdding(false);
-    }
-  };
-
-  // If no parent product yet, show loading
-  if (!parentProduct) {
-    return <div className="py-4 text-sm text-gray-500">Loading...</div>;
-  }
-
-  if (variantsLoading) {
-    return <div className="py-4 text-sm text-gray-500">Loading options...</div>;
-  }
-
-  if (enabledOptions.length === 0) {
-    // Fallback: if no options configured, show simple button for the product itself
-    if (parentProduct?.price) {
-      const price = (parentProduct.price / 100).toFixed(2);
-      return (
-        <Button
-          onClick={handleAddToCart}
-          disabled={isAdding}
-          className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-white py-6"
-        >
-          {isAdding ? <Loader2 size={18} className="animate-spin mr-2" /> : null}
-          <ShoppingCart size={18} className="mr-2" />
-          {ctaLabel} — ${price}
-        </Button>
-      );
-    }
-    return (
-      <div className="py-8 text-center text-gray-500">
-        No purchase options available.
-      </div>
-    );
-  }
-
-  // If only one option, show simplified display
-  if (enabledOptions.length === 1) {
-    const option = enabledOptions[0];
-    const ids = parseProductIds(option.product_id);
-    const variant = (option.type === 'bundle' && option.bundle_product_id)
-      ? variantProducts[option.bundle_product_id]
-      : variantProducts[ids[0]];
-    const rawPrice = (option.type === 'bundle' && option.bundle_price) ? option.bundle_price : variant?.price;
-    const price = rawPrice ? (rawPrice / 100).toFixed(2) : "0.00";
-    const comparePrice = variant?.compare_at_price
-      ? (variant.compare_at_price / 100).toFixed(2)
-      : null;
-    const savings = comparePrice ? (
-      <span className="text-sm text-green-600">
-        Save €{(comparePrice - price).toFixed(2)}
-      </span>
-    ) : null;
-
-    return (
-      <div className="space-y-4">
-        <div className="bg-white border border-[#E4D9C4] p-6">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h3 className="font-semibold text-[#1E3A32]">{option.display_label}</h3>
-              {option.badge && (
-                <span className="text-xs bg-[#D8B46B]/20 text-[#D8B46B] px-2 py-1 rounded mt-1 inline-block">
-                  {option.badge}
-                </span>
-              )}
-            </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-[#1E3A32]">${price}</div>
-              {comparePrice && comparePrice !== price && (
-                <div className="text-sm text-gray-500 line-through">${comparePrice}</div>
-              )}
-            </div>
-          </div>
-          {savings}
-        </div>
-
-        <Button
-          onClick={handleAddToCart}
-          disabled={isAdding}
-          className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-white py-6"
-        >
-          {isAdding ? <Loader2 size={18} className="animate-spin mr-2" /> : null}
-          <ShoppingCart size={18} className="mr-2" />
-          {ctaLabel}
-        </Button>
-      </div>
-    );
-  }
-
-  // Multiple options: show as radio list
-  const selectedOption = enabledOptions.find(opt => {
-    if (opt.type === 'bundle' && opt.bundle_product_id) return selectedProductId === opt.bundle_product_id;
-    const pids = parseProductIds(opt.product_id);
-    return selectedProductId === pids[0];
-  });
-  const selectedProductIds = selectedOption
-    ? (selectedOption.type === 'bundle' && selectedOption.bundle_product_id ? [selectedOption.bundle_product_id] : parseProductIds(selectedOption.product_id))
-    : [];
-  const selectedVariantForDropdown = selectedProductIds[0] ? variantProducts[selectedProductIds[0]] : null;
-  const selectedPrice = selectedVariantForDropdown?.price ? (selectedVariantForDropdown.price / 100).toFixed(2) : "0.00";
-
-  const handleTakeQuiz = () => {
-    if (quiz?.slug) {
-      window.location.href = `/quiz/${quiz.slug}`;
     }
   };
 
