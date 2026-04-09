@@ -35,27 +35,32 @@ export default function BookPurchaseOptions({
   const { data: variantProducts = {}, isLoading: variantsLoading } = useQuery({
     queryKey: ["book-variants", parentProduct?.id],
     queryFn: async () => {
-      if (!parentProduct?.purchase_options || parentProduct.purchase_options.length === 0) {
-        return {};
-      }
-
-      const variants = {};
-      for (const option of parentProduct.purchase_options) {
-        if (option.product_id) {
-          const prods = await base44.entities.Product.filter({ id: option.product_id });
-          if (prods[0]) {
-            variants[option.product_id] = prods[0];
+      if (!parentProduct?.id) return {};
+      
+      // If purchase_options are configured, fetch those variants
+      if (parentProduct?.purchase_options && parentProduct.purchase_options.length > 0) {
+        const variants = {};
+        for (const option of parentProduct.purchase_options) {
+          if (option.product_id) {
+            const prods = await base44.entities.Product.filter({ id: option.product_id });
+            if (prods[0]) {
+              variants[option.product_id] = prods[0];
+            }
           }
         }
+        return variants;
       }
-      return variants;
+      
+      // Fallback: If no purchase_options, try to fetch products with same slug
+      // This is for products that have variants but haven't configured purchase_options
+      return {};
     },
     enabled: !!parentProduct?.id,
   });
 
   // Filter enabled options and sort
   const enabledOptions = (parentProduct?.purchase_options || [])
-    .filter((opt) => opt.enabled && variantProducts[opt.product_id])
+    .filter((opt) => (opt.enabled !== false) && variantProducts[opt.product_id])
     .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
 
   // Set default selection if not already set
@@ -92,6 +97,21 @@ export default function BookPurchaseOptions({
   }
 
   if (enabledOptions.length === 0) {
+    // Fallback: if no options configured, show simple button for the product itself
+    if (parentProduct?.price) {
+      const price = (parentProduct.price / 100).toFixed(2);
+      return (
+        <Button
+          onClick={handleAddToCart}
+          disabled={isAdding}
+          className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-white py-6"
+        >
+          {isAdding ? <Loader2 size={18} className="animate-spin mr-2" /> : null}
+          <ShoppingCart size={18} className="mr-2" />
+          {ctaLabel} — €{price}
+        </Button>
+      );
+    }
     return (
       <div className="py-8 text-center text-gray-500">
         No purchase options available.
