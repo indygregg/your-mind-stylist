@@ -309,30 +309,15 @@ export default function Dashboard() {
 
           {/* Explore More Programs */}
           <div className="mb-12">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="font-serif text-xl text-[#1E3A32]">
-                <CmsText contentKey="dashboard.want_more.title" page="Dashboard" blockTitle="Want More Title" fallback="Explore Programs" contentType="short_text" />
-              </h2>
-              <Link to={createPageUrl("Programs")} className="text-sm text-[#D8B46B] hover:underline">
-                View all →
+            <div className="bg-white p-8 text-center border border-[#E4D9C4]">
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-3">Explore All Tools & Programs</h2>
+              <p className="text-[#2B2725]/70 leading-relaxed mb-6">
+                Discover the full range of transformational offerings — from introductory tools to deep transformation coaching.
+              </p>
+              <Link to={createPageUrl("Programs")} className="inline-flex items-center gap-2 px-8 py-3 bg-[#1E3A32] text-white text-sm hover:bg-[#2B2725] transition-colors">
+                View All Programs →
               </Link>
             </div>
-            {publishedProducts.length === 0 ? (
-              <div className="bg-white p-8 text-center">
-                <p className="text-[#2B2725]/70 leading-relaxed">
-                  You're not enrolled in any programs yet. Book a consultation with Roberta to explore programs tailored to your transformation journey.
-                </p>
-                <Link to={createPageUrl("Bookings")} className="inline-block mt-4 px-6 py-3 bg-[#1E3A32] text-white text-sm hover:bg-[#2B2725] transition-colors">
-                  Book a Consultation
-                </Link>
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {publishedProducts.slice(0, 6).map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            )}
           </div>
 
           {/* Links to Buy */}
@@ -344,7 +329,7 @@ export default function Dashboard() {
               {buyLinks.map((link) => (
                 <Link
                   key={link.productId}
-                  to={createPageUrl(`ProductPage?key=${encodeURIComponent(link.label.replace('™', ''))}`)}
+                  to={createPageUrl(`ProductPage?id=${link.productId}`)}
                   onClick={() => window.scrollTo(0, 0)}
                   className="bg-white p-6 hover:shadow-lg transition-shadow border-l-4 active:scale-98 touch-manipulation"
                   style={{ borderLeftColor: link.color }}

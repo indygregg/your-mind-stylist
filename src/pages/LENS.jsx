@@ -75,9 +75,9 @@ export default function LENS() {
 
               {/* CTAs */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link to={createPageUrl("Shop?category=lens")}>
+                <Link to={createPageUrl("ProductPage?id=693d6b978867f6e147e25e91")}>
                   <Button className="bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] px-8 py-6 text-lg font-semibold">
-                    Explore All LENS™ Options
+                    Buy Online LENS™
                   </Button>
                 </Link>
                 <Link to={createPageUrl("Bookings")}>

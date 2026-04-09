@@ -10,7 +10,7 @@ export default function ProductCard({ product }) {
   const { addItem } = useCart();
 
   const formatPrice = (price, interval) => {
-    if (!price) return "Free";
+    if (!price) return null;
     const d = (price / 100).toFixed(2);
     if (interval === "monthly") return `$${d}/mo`;
     if (interval === "yearly") return `$${d}/yr`;
@@ -34,7 +34,9 @@ export default function ProductCard({ product }) {
         <h3 className="font-serif text-base text-[#1E3A32] mb-1">{product.name}</h3>
       {product.tagline && <p className="text-xs text-[#D8B46B] mb-2">{product.tagline}</p>}
       <p className="text-xs text-[#2B2725]/70 mb-3 flex-1 line-clamp-2">{product.short_description}</p>
-        <p className="text-lg font-bold text-[#1E3A32] mb-3">{formatPrice(product.price, product.billing_interval)}</p>
+        {formatPrice(product.price, product.billing_interval) && (
+          <p className="text-lg font-bold text-[#1E3A32] mb-3">{formatPrice(product.price, product.billing_interval)}</p>
+        )}
         <Link
           to={createPageUrl(product.slug ? `ProductPage?slug=${product.slug}` : `Programs`)}
           className="block text-center text-xs py-2 bg-[#1E3A32] text-white hover:bg-[#2B2725] transition-colors"
