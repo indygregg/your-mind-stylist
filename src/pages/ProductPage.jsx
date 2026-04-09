@@ -87,7 +87,7 @@ export default function ProductPage() {
   };
 
   const formatPrice = (price, billing_interval) => {
-    if (!price) return "Free";
+    if (!price) return null;
     const dollars = (price / 100).toFixed(2);
     if (billing_interval === "monthly") return `$${dollars}/mo`;
     if (billing_interval === "yearly") return `$${dollars}/yr`;
