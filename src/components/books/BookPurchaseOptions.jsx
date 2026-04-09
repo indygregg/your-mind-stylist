@@ -41,10 +41,12 @@ export default function BookPurchaseOptions({
       if (parentProduct?.purchase_options && parentProduct.purchase_options.length > 0) {
         const variants = {};
         for (const option of parentProduct.purchase_options) {
-          if (option.product_id) {
-            const prods = await base44.entities.Product.filter({ id: option.product_id });
+          // Handle both single product_id and arrays (for bundles)
+          const productIds = Array.isArray(option.product_id) ? option.product_id : (option.product_id ? [option.product_id] : []);
+          for (const productId of productIds) {
+            const prods = await base44.entities.Product.filter({ id: productId });
             if (prods[0]) {
-              variants[option.product_id] = prods[0];
+              variants[productId] = prods[0];
             }
           }
         }
@@ -60,13 +62,24 @@ export default function BookPurchaseOptions({
 
   // Filter enabled options and sort
   const enabledOptions = (parentProduct?.purchase_options || [])
-    .filter((opt) => (opt.enabled !== false) && variantProducts[opt.product_id])
+    .filter((opt) => {
+      if (opt.enabled === false) return false;
+      // For arrays (bundles), check if all products are loaded
+      if (Array.isArray(opt.product_id)) {
+        return opt.product_id.length > 0 && opt.product_id.every(id => variantProducts[id]);
+      }
+      // For single products, check if it's loaded
+      return variantProducts[opt.product_id];
+    })
     .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
 
   // Set default selection if not already set
   React.useEffect(() => {
     if (!selectedProductId && enabledOptions.length > 0) {
-      setSelectedProductId(enabledOptions[0].product_id);
+      const firstOption = enabledOptions[0];
+      // For arrays (bundles), use the first product ID; for single, use the product_id
+      const defaultId = Array.isArray(firstOption.product_id) ? firstOption.product_id[0] : firstOption.product_id;
+      setSelectedProductId(defaultId);
     }
   }, [enabledOptions, selectedProductId]);
 
@@ -173,17 +186,19 @@ export default function BookPurchaseOptions({
     <div className="space-y-4">
       <div className="space-y-3">
         {enabledOptions.map((option) => {
-          const variant = variantProducts[option.product_id];
-          const price = variant?.price ? (variant.price / 100).toFixed(2) : "0.00";
-          const comparePrice = variant?.compare_at_price
-            ? (variant.compare_at_price / 100).toFixed(2)
-            : null;
-          const isSelected = selectedProductId === option.product_id;
+            // Handle both single and multiple products in an option
+            const productIds = Array.isArray(option.product_id) ? option.product_id : [option.product_id];
+            const primaryVariant = variantProducts[productIds[0]];
+            const price = primaryVariant?.price ? (primaryVariant.price / 100).toFixed(2) : "0.00";
+            const comparePrice = primaryVariant?.compare_at_price
+              ? (primaryVariant.compare_at_price / 100).toFixed(2)
+              : null;
+            const isSelected = selectedProductId === productIds[0];
 
           return (
             <button
-              key={option.product_id}
-              onClick={() => setSelectedProductId(option.product_id)}
+              key={productIds[0]}
+              onClick={() => setSelectedProductId(productIds[0])}
               className={`w-full text-left border-2 p-4 rounded-lg transition-all ${
                 isSelected
                   ? "border-[#1E3A32] bg-[#1E3A32]/5"

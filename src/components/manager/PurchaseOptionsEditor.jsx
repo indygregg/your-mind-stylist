@@ -111,38 +111,86 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
               </Select>
             </div>
 
-            <div>
-              <Label className="text-xs">Related Product *</Label>
-              <Select
-                value={option.product_id || ""}
-                onValueChange={(value) => handleUpdateOption(index, "product_id", value)}
-              >
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="Select a book variant..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableProducts.map((product) => (
-                    <SelectItem key={product.id} value={product.id}>
-                      {product.name} (${(product.price / 100).toFixed(2)})
-                    </SelectItem>
+            <div className="md:col-span-2">
+              <Label className="text-xs">Related Product{option.type === 'bundle' ? '(s)' : ''} *</Label>
+              {option.type === 'bundle' ? (
+                // Multi-select for bundles
+                <div className="space-y-2 mt-2 max-h-48 overflow-y-auto border border-[#E4D9C4] rounded p-3 bg-white">
+                  {availableProducts.length === 0 ? (
+                    <p className="text-xs text-[#2B2725]/60">No other book products available</p>
+                  ) : (
+                    availableProducts.map((product) => {
+                      const productIds = Array.isArray(option.product_id) ? option.product_id : (option.product_id ? [option.product_id] : []);
+                      const isSelected = productIds.includes(product.id);
+                      return (
+                        <label key={product.id} className="flex items-center gap-2 cursor-pointer hover:bg-[#F9F5EF] p-2 rounded">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={(e) => {
+                              let newIds = Array.isArray(option.product_id) ? [...option.product_id] : [];
+                              if (e.target.checked) {
+                                newIds.push(product.id);
+                              } else {
+                                newIds = newIds.filter(id => id !== product.id);
+                              }
+                              handleUpdateOption(index, "product_id", newIds);
+                            }}
+                            className="w-4 h-4"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm text-[#1E3A32] truncate">{product.name}</p>
+                            <p className="text-xs text-[#2B2725]/60">${(product.price / 100).toFixed(2)}</p>
+                          </div>
+                        </label>
+                      );
+                    })
+                  )}
+                </div>
+              ) : (
+                // Single select for non-bundles
+                <>
+                  <Select
+                    value={option.product_id || ""}
+                    onValueChange={(value) => handleUpdateOption(index, "product_id", value)}
+                  >
+                    <SelectTrigger className="h-9">
+                      <SelectValue placeholder="Select a book variant..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {availableProducts.map((product) => (
+                        <SelectItem key={product.id} value={product.id}>
+                          {product.name} (${(product.price / 100).toFixed(2)})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {option.product_id && !Array.isArray(option.product_id) && (
+                    <p className="text-xs text-[#2B2725]/60 mt-1">
+                      Selected: {getProductName(option.product_id)}
+                    </p>
+                  )}
+                </>
+              )}
+              {option.product_id && Array.isArray(option.product_id) && option.product_id.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  {option.product_id.map((productId) => (
+                    <p key={productId} className="text-xs text-[#2B2725]/60">
+                      ✓ {getProductName(productId)}
+                    </p>
                   ))}
-                </SelectContent>
-              </Select>
-              {option.product_id && (
-                <p className="text-xs text-[#2B2725]/60 mt-1">
-                  Selected: {getProductName(option.product_id)}
-                </p>
+                </div>
               )}
             </div>
           </div>
 
-          <div>
+          <div className="md:col-span-2">
             <Label className="text-xs">Display Label</Label>
             <Input
               size="sm"
               value={option.display_label || ""}
               onChange={(e) => handleUpdateOption(index, "display_label", e.target.value)}
-              placeholder="e.g., 'Digital Book', 'Paperback', 'Bundle Deal'"
+              placeholder={option.type === 'bundle' ? "e.g., 'Complete Bundle', 'The Full Collection'" : "e.g., 'Digital Book', 'Paperback'"}
               className="h-9 text-sm"
             />
             <p className="text-xs text-[#2B2725]/60 mt-1">How this option appears to customers</p>
