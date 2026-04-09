@@ -63,7 +63,7 @@ export default function BookLanding() {
       />
 
       {/* Section 1 — Hero */}
-      <section className="pt-40 pb-12 bg-[#F9F5EF]">
+      <section className="pt-28 pb-12 bg-[#F9F5EF]">
         <div className="w-full px-6 md:px-12 lg:px-20 xl:px-28">
           <div className="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
             <motion.div
@@ -73,7 +73,7 @@ export default function BookLanding() {
               className="flex-shrink-0"
             >
               {coverImage ? (
-                <BookCover3D imageUrl={coverImage} title={book.name} size="lg" />
+                <BookCover3D imageUrl={coverImage} title={book.name} size="xl" />
               ) : (
                 <div className="w-[240px] h-[320px] bg-[#E4D9C4] rounded flex items-center justify-center text-[#2B2725]/40 text-sm">
                   No cover image
