@@ -35,10 +35,6 @@ export default function BookPurchaseOptions({
 
   const parentProduct = product || fetchedProduct;
 
-  // If no parent product yet, show loading
-  if (!parentProduct) {
-    return <div className="py-4 text-sm text-gray-500">Loading...</div>;
-  }
   const [selectedProductId, setSelectedProductId] = useState(defaultSelected);
   const [isAdding, setIsAdding] = useState(false);
 
@@ -116,6 +112,11 @@ export default function BookPurchaseOptions({
       setIsAdding(false);
     }
   };
+
+  // If no parent product yet, show loading
+  if (!parentProduct) {
+    return <div className="py-4 text-sm text-gray-500">Loading...</div>;
+  }
 
   if (variantsLoading) {
     return <div className="py-4 text-sm text-gray-500">Loading options...</div>;
