@@ -1,24 +1,51 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowRight, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
-import { getFunnel } from "../lib/bookFunnels";
 
 export default function QuizPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const funnel = getFunnel(slug);
-  const quiz = funnel?.quiz;
 
   const [started, setStarted] = useState(false);
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState({});
   const [selected, setSelected] = useState(null);
 
-  if (!funnel || !quiz) {
+  // Fetch quiz
+  const { data: quiz, isLoading: quizLoading } = useQuery({
+    queryKey: ["quiz", slug],
+    queryFn: async () => {
+      const q = await base44.entities.Quiz.filter({ slug });
+      return q[0] || null;
+    },
+  });
+
+  // Fetch questions
+  const { data: questions = [] } = useQuery({
+    queryKey: ["quiz-questions", quiz?.id],
+    queryFn: async () => {
+      if (!quiz?.id) return [];
+      return await base44.entities.QuizQuestion.filter({ quiz_id: quiz.id });
+    },
+    enabled: !!quiz?.id,
+  });
+
+  if (quizLoading) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">Loading...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  if (!quiz) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
         <div className="text-center">
@@ -29,7 +56,8 @@ export default function QuizPage() {
     );
   }
 
-  const totalQuestions = quiz.questions.length;
+  const totalQuestions = questions.length;
+  const currentQuestion = questions[currentQ];
 
   const handleAnswer = (archetype) => {
     setSelected(archetype);
@@ -41,9 +69,8 @@ export default function QuizPage() {
     setAnswers(newAnswers);
     setSelected(null);
     if (currentQ + 1 >= totalQuestions) {
-      // Calculate result dynamically from all archetype keys in the funnel
+      // Calculate result
       const counts = {};
-      Object.keys(funnel.archetypes).forEach((k) => { counts[k] = 0; });
       Object.values(newAnswers).forEach((a) => { counts[a] = (counts[a] || 0) + 1; });
       const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
       navigate(`/quiz/${slug}/results?archetype=${top}`);
@@ -118,11 +145,11 @@ export default function QuizPage() {
                   transition={{ duration: 0.25 }}
                 >
                   <h2 className="font-serif text-2xl md:text-3xl text-[#1E3A32] mb-8 leading-snug">
-                    {quiz.questions[currentQ].q}
+                    {currentQuestion?.question_text}
                   </h2>
 
                   <div className="space-y-3 mb-10">
-                    {quiz.questions[currentQ].answers.map((answer, i) => (
+                    {currentQuestion?.answers?.map((answer, i) => (
                       <button
                         key={i}
                         onClick={() => handleAnswer(answer.archetype)}

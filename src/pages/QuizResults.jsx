@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getFunnel } from "../lib/bookFunnels";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
@@ -12,11 +11,7 @@ import SEO from "../components/SEO";
 export default function QuizResults() {
   const { slug } = useParams();
   const urlParams = new URLSearchParams(window.location.search);
-  const archetype = urlParams.get("archetype");
-  const funnel = getFunnel(slug);
-  const archetypes = funnel?.archetypes || {};
-  const firstKey = Object.keys(archetypes)[0];
-  const result = archetypes[archetype] || archetypes[firstKey] || {};
+  const archetypeKey = urlParams.get("archetype");
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -24,38 +19,90 @@ export default function QuizResults() {
   const [submitting, setSubmitting] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
-  // Find the book to link to purchase
-  const { data: book } = useQuery({
-    queryKey: ["book-for-quiz", slug],
+  // Fetch quiz
+  const { data: quiz, isLoading: quizLoading } = useQuery({
+    queryKey: ["quiz", slug],
     queryFn: async () => {
-      const products = await base44.entities.Product.filter({ slug, product_subtype: "book" });
-      return products[0] || null;
+      const q = await base44.entities.Quiz.filter({ slug });
+      return q[0] || null;
     },
-    enabled: !!slug,
   });
+
+  // Fetch archetype
+  const { data: archetype } = useQuery({
+    queryKey: ["archetype", quiz?.id, archetypeKey],
+    queryFn: async () => {
+      if (!quiz?.id) return null;
+      const archs = await base44.entities.QuizArchetype.filter({
+        quiz_id: quiz.id,
+        key: archetypeKey,
+      });
+      return archs[0] || null;
+    },
+    enabled: !!quiz?.id,
+  });
+
+  // Fetch book product
+  const { data: book } = useQuery({
+    queryKey: ["book-for-quiz", quiz?.cta_product_id],
+    queryFn: async () => {
+      if (!quiz?.cta_product_id) return null;
+      const prods = await base44.entities.Product.filter({ id: quiz.cta_product_id });
+      return prods[0] || null;
+    },
+    enabled: !!quiz?.cta_product_id,
+  });
+
+  // Default to not showing email gate if disabled
+  React.useEffect(() => {
+    if (quiz && !quiz.email_gate_enabled) {
+      setRevealed(true);
+    }
+  }, [quiz]);
+
+  if (quizLoading) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!quiz || !archetype) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="font-serif text-2xl text-[#1E3A32]">Result not found</h2>
+        </div>
+      </div>
+    );
+  }
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
     setSubmitting(true);
-    // Create lead record
-    await base44.entities.Lead.create({
-      email,
-      first_name: name,
-      source: "website",
-      what_inquired_about: `Dog Archetype Quiz — Result: ${result.title}`,
-      tags: [`archetype:${archetype}`, "quiz-funnel", `book:${slug}`],
-    });
-    // Add to MailerLite
-    await base44.functions.invoke("mailerLiteAddSubscriber", {
-      email,
-      name,
-      groups: [],
-      fields: { dog_archetype: archetype, quiz_source: slug },
-    }).catch(() => {}); // non-blocking
-    setSubmitting(false);
-    setSubmitted(true);
-    setRevealed(true);
+    try {
+      // Create lead record
+      await base44.entities.Lead.create({
+        email,
+        first_name: name,
+        source: "website",
+        what_inquired_about: `Dog Archetype Quiz — Result: ${archetype.title}`,
+        tags: [`archetype:${archetypeKey}`, "quiz-funnel", `book:${slug}`],
+      });
+      // Add to MailerLite
+      await base44.functions.invoke("mailerLiteAddSubscriber", {
+        email,
+        name,
+        groups: [],
+        fields: { dog_archetype: archetypeKey, quiz_source: slug },
+      }).catch(() => {});
+    } finally {
+      setSubmitting(false);
+      setSubmitted(true);
+      setRevealed(true);
+    }
   };
 
   const handlePurchase = async () => {
@@ -66,7 +113,7 @@ export default function QuizResults() {
 
   return (
     <div className="min-h-screen bg-[#F9F5EF]">
-      <SEO title={`Your Dog Archetype Result | Your Mind Stylist`} description={result.title} />
+      <SEO title={`Your Dog Archetype Result | Your Mind Stylist`} description={archetype.title} />
 
       <div className="pt-28 pb-20 px-6">
         <div className="max-w-2xl mx-auto">
@@ -81,7 +128,7 @@ export default function QuizResults() {
               <p className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-4">Your Result is Ready</p>
               <h1 className="font-serif text-3xl md:text-4xl text-[#1E3A32] mb-4">Want your results?</h1>
               <p className="text-[#2B2725]/70 mb-8 leading-relaxed">
-                Enter your email to reveal your dog archetype, get your personalized insight, and receive practical next steps inspired by <em>Go Fetch Your Self</em>.
+                {quiz.results_email_copy || "Enter your email to reveal your personalized insights and receive practical next steps."}
               </p>
               <form onSubmit={handleEmailSubmit} className="bg-white border border-[#E4D9C4] p-8 text-left space-y-4">
                 <div>
@@ -125,65 +172,76 @@ export default function QuizResults() {
               animate={{ opacity: 1, y: 0 }}
             >
               <div className="text-center mb-10">
-                <div className="text-6xl mb-4">{result.emoji}</div>
+                <div className="text-6xl mb-4">{archetype.emoji}</div>
                 <p className="text-[#D8B46B] text-xs tracking-[0.3em] uppercase mb-3">Your Archetype</p>
-                <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-6">{result.title}</h1>
-                <p className="text-[#2B2725]/80 text-lg leading-relaxed">{result.summary}</p>
+                <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-6">{archetype.title}</h1>
+                <p className="text-[#2B2725]/80 text-lg leading-relaxed">{archetype.summary}</p>
               </div>
 
               <div className="space-y-6">
                 {/* Strengths */}
-                <div className="bg-white border border-[#E4D9C4] p-6">
-                  <h3 className="font-serif text-xl text-[#1E3A32] mb-4">Your Strengths</h3>
-                  <ul className="space-y-2">
-                    {result.strengths.map((s, i) => (
-                      <li key={i} className="flex items-center gap-3 text-[#2B2725]/80">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#D8B46B] flex-shrink-0" />
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {archetype.strengths && archetype.strengths.length > 0 && (
+                  <div className="bg-white border border-[#E4D9C4] p-6">
+                    <h3 className="font-serif text-xl text-[#1E3A32] mb-4">Your Strengths</h3>
+                    <ul className="space-y-2">
+                      {archetype.strengths.map((s, i) => (
+                        <li key={i} className="flex items-center gap-3 text-[#2B2725]/80">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#D8B46B] flex-shrink-0" />
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 {/* Growth edge */}
-                <div className="bg-[#F9F5EF] border border-[#E4D9C4] p-6">
-                  <h3 className="font-serif text-xl text-[#1E3A32] mb-3">Your Growth Edge</h3>
-                  <p className="text-[#2B2725]/80 leading-relaxed">{result.growth}</p>
-                </div>
+                {archetype.growth && (
+                  <div className="bg-[#F9F5EF] border border-[#E4D9C4] p-6">
+                    <h3 className="font-serif text-xl text-[#1E3A32] mb-3">Your Growth Edge</h3>
+                    <p className="text-[#2B2725]/80 leading-relaxed">{archetype.growth}</p>
+                  </div>
+                )}
 
                 {/* Relationships */}
-                <div className="bg-white border border-[#E4D9C4] p-6">
-                  <h3 className="font-serif text-xl text-[#1E3A32] mb-3">In Relationships</h3>
-                  <p className="text-[#2B2725]/80 leading-relaxed">{result.relationships}</p>
-                </div>
+                {archetype.relationships && (
+                  <div className="bg-white border border-[#E4D9C4] p-6">
+                    <h3 className="font-serif text-xl text-[#1E3A32] mb-3">In Relationships</h3>
+                    <p className="text-[#2B2725]/80 leading-relaxed">{archetype.relationships}</p>
+                  </div>
+                )}
 
                 {/* Stress */}
-                <div className="bg-[#F9F5EF] border border-[#E4D9C4] p-6">
-                  <h3 className="font-serif text-xl text-[#1E3A32] mb-3">Under Stress</h3>
-                  <p className="text-[#2B2725]/80 leading-relaxed">{result.stress}</p>
-                </div>
+                {archetype.stress && (
+                  <div className="bg-[#F9F5EF] border border-[#E4D9C4] p-6">
+                    <h3 className="font-serif text-xl text-[#1E3A32] mb-3">Under Stress</h3>
+                    <p className="text-[#2B2725]/80 leading-relaxed">{archetype.stress}</p>
+                  </div>
+                )}
 
                 {/* Restyle prompt */}
-                <div className="bg-[#1E3A32] p-6 text-center">
-                  <p className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-3">Your Restyle Prompt</p>
-                  <p className="font-serif text-xl text-white italic">"{result.restyle}"</p>
-                </div>
+                {archetype.restyle && (
+                  <div className="bg-[#1E3A32] p-6 text-center">
+                    <p className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-3">Your Restyle Prompt</p>
+                    <p className="font-serif text-xl text-white italic">"{archetype.restyle}"</p>
+                  </div>
+                )}
 
                 {/* Book CTA */}
-                <div className="bg-[#D8B46B]/10 border border-[#D8B46B]/30 p-8 text-center">
-                  <h3 className="font-serif text-2xl text-[#1E3A32] mb-3">Ready to understand your archetype more deeply?</h3>
-                  <p className="text-[#2B2725]/70 mb-6">
-                    Read <em>Go Fetch Your Self</em> and explore how your archetype shows up in emotional intelligence, change, and relationships.
-                  </p>
-                  <Button
-                    onClick={handlePurchase}
-                    disabled={!book}
-                    className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-10 py-6 text-base"
-                  >
-                    <ShoppingCart size={18} className="mr-2" />
-                    Get the Book{book?.price ? ` — $${(book.price / 100).toFixed(2)}` : ""}
-                  </Button>
-                </div>
+                {book && (
+                  <div className="bg-[#D8B46B]/10 border border-[#D8B46B]/30 p-8 text-center">
+                    <h3 className="font-serif text-2xl text-[#1E3A32] mb-3">Ready to understand your archetype more deeply?</h3>
+                    <p className="text-[#2B2725]/70 mb-6">
+                      {quiz.cta_text || "Read the book and explore your archetype in depth"}
+                    </p>
+                    <Button
+                      onClick={handlePurchase}
+                      className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-10 py-6 text-base"
+                    >
+                      <ShoppingCart size={18} className="mr-2" />
+                      {quiz.cta_text || "Get the Book"}{book.price ? ` — $${(book.price / 100).toFixed(2)}` : ""}
+                    </Button>
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
