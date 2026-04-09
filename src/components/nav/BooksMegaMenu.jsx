@@ -10,7 +10,8 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
     queryKey: ["nav-books"],
     queryFn: async () => {
       const all = await base44.entities.Product.filter({ status: "published", product_subtype: "book" });
-      return all.sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
+      // Exclude hidden variant products (e.g. digital/physical editions created via PurchaseOptionsEditor)
+      return all.filter(b => b.ui_group !== "hidden").sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
     },
     staleTime: 5 * 60 * 1000,
   });
