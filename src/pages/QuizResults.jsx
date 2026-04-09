@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import { getFunnel } from "../lib/bookFunnels";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
@@ -8,54 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SEO from "../components/SEO";
 
-const RESULTS = {
-  leader: {
-    title: "You're the Leader Dog",
-    emoji: "🐕",
-    summary: "You tend to move toward action, clarity, and forward motion. You're often the one who steps up, decides, organizes, and carries responsibility. You value momentum, competence, and progress.",
-    strengths: ["Decisive", "Capable under pressure", "Courageous", "Naturally directive", "Able to move things forward"],
-    growth: "Your challenge is not strength — it's softness. You may move so quickly toward solutions that you miss what needs to be felt, not fixed.",
-    relationships: "You often show love through action, protection, and problem-solving. You may need reminders that presence, patience, and listening can be just as powerful as solutions.",
-    stress: "You may become more controlling, impatient, blunt, or over-responsible. Stress can make everything feel like a problem to solve immediately.",
-    restyle: "Am I leading right now — or protecting myself from discomfort?",
-  },
-  connector: {
-    title: "You're the Connector Dog",
-    emoji: "🐶",
-    summary: "You lead with energy, expression, and connection. You're often the emotional bridge in a room — sensing people quickly, bringing warmth, and helping others feel included.",
-    strengths: ["Expressive", "Intuitive with people", "Encouraging", "Relationally aware", "Emotionally vibrant"],
-    growth: "You may spend so much energy reading, managing, or supporting others that you lose contact with your own emotional center.",
-    relationships: "You bond quickly and bring warmth, enthusiasm, and emotional presence. Your deeper growth comes through consistency, grounding, and letting connection deepen beyond chemistry.",
-    stress: "You may become scattered, overextended, reactive, or overly dependent on outside reassurance.",
-    restyle: "What am I actually feeling before I reach outward for connection?",
-  },
-  steady: {
-    title: "You're the Steady Companion Dog",
-    emoji: "🐾",
-    summary: "You bring calm, trust, and consistency. You're often the grounded one — the safe presence, the dependable heart, the person people lean on when life feels unstable.",
-    strengths: ["Loyal", "Calming", "Patient", "Emotionally attuned", "Deeply trustworthy"],
-    growth: "You may suppress your own needs to keep the peace. Your strength is steadiness — but your growth lies in letting your voice matter too.",
-    relationships: "You love through presence, reliability, and care. You remember what matters. You stay. But staying connected should not require self-silencing.",
-    stress: "You may withdraw, become passive, go quiet, or carry resentment internally instead of expressing what you need.",
-    restyle: "What need have I not said out loud yet?",
-  },
-  thoughtful: {
-    title: "You're the Thoughtful Observer Dog",
-    emoji: "🦮",
-    summary: "You lead with insight, pattern recognition, and careful awareness. You often notice what others miss and prefer to understand before you act.",
-    strengths: ["Perceptive", "Thoughtful", "Precise", "Dependable", "Reflective"],
-    growth: "You may overanalyze, hesitate, or wait for certainty that never fully comes. Your growth lies in trusting that clarity often arrives through movement, not before it.",
-    relationships: "You show care through reliability, thoughtfulness, and depth. But others may not always see how much you feel unless you let more of yourself be visible.",
-    stress: "You may retreat inward, become overly critical, freeze, delay action, or try to think your way out of emotion.",
-    restyle: "Is my analysis helping me move — or helping me avoid?",
-  },
-};
-
 export default function QuizResults() {
   const { slug } = useParams();
   const urlParams = new URLSearchParams(window.location.search);
-  const archetype = urlParams.get("archetype") || "leader";
-  const result = RESULTS[archetype] || RESULTS.leader;
+  const archetype = urlParams.get("archetype");
+  const funnel = getFunnel(slug);
+  const archetypes = funnel?.archetypes || {};
+  const firstKey = Object.keys(archetypes)[0];
+  const result = archetypes[archetype] || archetypes[firstKey] || {};
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");

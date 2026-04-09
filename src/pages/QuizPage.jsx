@@ -1,46 +1,35 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
-
-// Hardcoded Go Fetch Your Self quiz data (expandable via CMS later)
-const GO_FETCH_QUIZ = {
-  slug: "go-fetch-yourself",
-  title: "Which Dog Archetype Are You?",
-  subtitle: "A quick self-discovery quiz inspired by Go Fetch Your Self",
-  intro: "You have access to all four archetypes — but one usually leads. This quick quiz will help you discover your dominant dog pattern and how it shows up in emotional intelligence, relationships, change, stress, and work.",
-  questions: [
-    { q: "When you walk into a new situation, you usually:", answers: [{ text: "Take charge and figure out what needs to happen", archetype: "leader" }, { text: "Start engaging and reading the room", archetype: "connector" }, { text: "Observe quietly and settle in gently", archetype: "steady" }, { text: "Watch carefully before deciding what to do", archetype: "thoughtful" }] },
-    { q: "When something goes wrong, your first instinct is to:", answers: [{ text: "Fix it quickly", archetype: "leader" }, { text: "Talk it through", archetype: "connector" }, { text: "Keep things calm", archetype: "steady" }, { text: "Understand exactly what happened", archetype: "thoughtful" }] },
-    { q: "People often describe you as:", answers: [{ text: "Decisive", archetype: "leader" }, { text: "Expressive", archetype: "connector" }, { text: "Dependable", archetype: "steady" }, { text: "Thoughtful", archetype: "thoughtful" }] },
-    { q: "In a group, your natural role is:", answers: [{ text: "The driver", archetype: "leader" }, { text: "The encourager", archetype: "connector" }, { text: "The stabilizer", archetype: "steady" }, { text: "The strategist", archetype: "thoughtful" }] },
-    { q: "When emotions run high, you tend to:", answers: [{ text: "Push forward", archetype: "leader" }, { text: "Express what you feel", archetype: "connector" }, { text: "Stay steady and supportive", archetype: "steady" }, { text: "Pull back and analyze", archetype: "thoughtful" }] },
-    { q: "Change feels:", answers: [{ text: "Exciting if it moves things forward", archetype: "leader" }, { text: "Energizing if people are involved", archetype: "connector" }, { text: "Stressful unless it's gradual", archetype: "steady" }, { text: "Unsettling unless it makes sense", archetype: "thoughtful" }] },
-    { q: "Under pressure, your biggest strength is:", answers: [{ text: "Courage", archetype: "leader" }, { text: "Optimism", archetype: "connector" }, { text: "Patience", archetype: "steady" }, { text: "Precision", archetype: "thoughtful" }] },
-    { q: "Your biggest challenge is:", answers: [{ text: "Slowing down", archetype: "leader" }, { text: "Staying focused", archetype: "connector" }, { text: "Speaking up", archetype: "steady" }, { text: "Letting go", archetype: "thoughtful" }] },
-    { q: "You feel most fulfilled when:", answers: [{ text: "You make progress", archetype: "leader" }, { text: "You inspire or connect", archetype: "connector" }, { text: "People feel safe and supported", archetype: "steady" }, { text: "Things are clear and well done", archetype: "thoughtful" }] },
-    { q: "In relationships, you value most:", answers: [{ text: "Respect", archetype: "leader" }, { text: "Fun and connection", archetype: "connector" }, { text: "Trust", archetype: "steady" }, { text: "Integrity", archetype: "thoughtful" }] },
-    { q: "When facing uncertainty, you usually:", answers: [{ text: "Move forward anyway", archetype: "leader" }, { text: "Reach out and process aloud", archetype: "connector" }, { text: "Stay with what feels familiar", archetype: "steady" }, { text: "Gather more information", archetype: "thoughtful" }] },
-    { q: "People rely on you to:", answers: [{ text: "Lead", archetype: "leader" }, { text: "Energize", archetype: "connector" }, { text: "Support", archetype: "steady" }, { text: "Protect and think ahead", archetype: "thoughtful" }] },
-  ],
-};
+import { getFunnel } from "../lib/bookFunnels";
 
 export default function QuizPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const quiz = GO_FETCH_QUIZ; // future: load from CMS by slug
+  const funnel = getFunnel(slug);
+  const quiz = funnel?.quiz;
 
   const [started, setStarted] = useState(false);
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState({});
   const [selected, setSelected] = useState(null);
 
+  if (!funnel || !quiz) {
+    return (
+      <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="font-serif text-2xl text-[#1E3A32] mb-4">Quiz not found</h2>
+          <a href="/Books" className="text-[#D8B46B] underline">Back to Books</a>
+        </div>
+      </div>
+    );
+  }
+
   const totalQuestions = quiz.questions.length;
-  const progress = ((currentQ) / totalQuestions) * 100;
 
   const handleAnswer = (archetype) => {
     setSelected(archetype);
@@ -52,8 +41,9 @@ export default function QuizPage() {
     setAnswers(newAnswers);
     setSelected(null);
     if (currentQ + 1 >= totalQuestions) {
-      // Calculate result
-      const counts = { leader: 0, connector: 0, steady: 0, thoughtful: 0 };
+      // Calculate result dynamically from all archetype keys in the funnel
+      const counts = {};
+      Object.keys(funnel.archetypes).forEach((k) => { counts[k] = 0; });
       Object.values(newAnswers).forEach((a) => { counts[a] = (counts[a] || 0) + 1; });
       const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
       navigate(`/quiz/${slug}/results?archetype=${top}`);
