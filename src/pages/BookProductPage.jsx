@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Loader2, Star, ShoppingCart, ArrowLeft } from "lucide-react";
+import { Loader2, Star, ShoppingCart, ArrowLeft, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import SEO from "../components/SEO";
@@ -130,23 +130,27 @@ export default function BookProductPage() {
                   {book.short_description}
                 </p>
               )}
+
               <div className="flex items-center gap-6 mb-8">
                 <span className="font-serif text-4xl text-[#D8B46B] font-bold">
                   {formatPrice(book.price)}
                 </span>
               </div>
-              <Button
-                onClick={handlePurchase}
-                disabled={checkoutLoading}
-                className="bg-[#D8B46B] hover:bg-[#C5A35B] text-[#1E3A32] font-semibold px-8 py-6 text-base"
-              >
-                {checkoutLoading ? (
-                  <Loader2 size={18} className="animate-spin mr-2" />
-                ) : (
-                  <ShoppingCart size={18} className="mr-2" />
-                )}
-                Get Your Copy
-              </Button>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button
+                  onClick={handlePurchase}
+                  disabled={checkoutLoading}
+                  className="bg-[#D8B46B] hover:bg-[#C5A35B] text-[#1E3A32] font-semibold px-8 py-6 text-base"
+                >
+                  {checkoutLoading ? (
+                    <Loader2 size={18} className="animate-spin mr-2" />
+                  ) : (
+                    <ShoppingCart size={18} className="mr-2" />
+                  )}
+                  Get Your Copy
+                </Button>
+              </div>
 
               {book.features && book.features.length > 0 && (
                 <ul className="mt-8 space-y-2">
@@ -229,9 +233,7 @@ export default function BookProductPage() {
       <section className="py-20 bg-[#D8B46B]/10 border-t border-[#D8B46B]/20">
         <div className="max-w-2xl mx-auto px-6 text-center">
           <h2 className="font-serif text-3xl text-[#1E3A32] mb-4">Ready to Begin?</h2>
-          {book.short_description && (
-            <p className="text-[#2B2725]/70 mb-8">{book.short_description}</p>
-          )}
+          <p className="text-[#2B2725]/70 mb-8">{book.short_description}</p>
           <Button
             onClick={handlePurchase}
             disabled={checkoutLoading}
