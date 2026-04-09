@@ -85,51 +85,52 @@ export default function BookProductPage() {
       />
 
       {/* Hero */}
-      <section className="pt-28 pb-20 bg-[#F9F5EF]">
-        <div className="max-w-6xl mx-auto px-6">
-          <Link
-            to="/Books"
-            className="inline-flex items-center gap-2 text-[#1E3A32]/60 hover:text-[#1E3A32] mb-10 transition-colors text-sm"
-          >
-            <ArrowLeft size={16} /> Back to Books
-          </Link>
-
-          <div className={`grid md:grid-cols-2 gap-16 items-center ${!bookOnLeft ? "md:[&>*:first-child]:order-last" : ""}`}>
-            {/* Book Cover */}
-            <motion.div
-              initial={{ opacity: 0, x: bookOnLeft ? -40 : 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7 }}
-              className="flex justify-center"
+      <section className="bg-[#F9F5EF] min-h-screen flex items-center py-20">
+        <div className="w-full px-6">
+          <div className="max-w-7xl mx-auto">
+            <Link
+              to="/Books"
+              className="inline-flex items-center gap-2 text-[#1E3A32]/60 hover:text-[#1E3A32] mb-10 transition-colors text-sm"
             >
-              {coverImage ? (
-                <BookCover3D imageUrl={coverImage} title={book.name} size="lg" />
-              ) : (
-                <div className="w-[240px] h-[320px] bg-[#E4D9C4] rounded flex items-center justify-center text-[#2B2725]/40 text-sm">
-                  No cover image
-                </div>
-              )}
-            </motion.div>
+              <ArrowLeft size={16} /> Back to Books
+            </Link>
 
-            {/* Book Info */}
-            <motion.div
-              initial={{ opacity: 0, x: bookOnLeft ? 40 : -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-            >
-              {book.tagline && (
-                <p className="text-[#D8B46B] text-sm tracking-[0.2em] uppercase mb-3 font-medium">
-                  {book.tagline}
-                </p>
-              )}
-              <h1 className="font-serif text-4xl md:text-5xl text-[#1E3A32] mb-6 leading-tight">
-                {book.name}
-              </h1>
-              {book.short_description && (
-                <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-8">
-                  {book.short_description}
-                </p>
-              )}
+            <div className={`grid md:grid-cols-2 gap-20 items-center ${!bookOnLeft ? "md:[&>*:first-child]:order-last" : ""}`}>
+              {/* Book Cover */}
+              <motion.div
+                initial={{ opacity: 0, x: bookOnLeft ? -40 : 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7 }}
+                className="flex justify-center"
+              >
+                {coverImage ? (
+                  <BookCover3D imageUrl={coverImage} title={book.name} size="xl" />
+                ) : (
+                  <div className="w-[320px] h-[480px] bg-[#E4D9C4] rounded flex items-center justify-center text-[#2B2725]/40 text-sm">
+                    No cover image
+                  </div>
+                )}
+              </motion.div>
+
+              {/* Book Info */}
+              <motion.div
+                initial={{ opacity: 0, x: bookOnLeft ? 40 : -40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+              >
+                {book.tagline && (
+                  <p className="text-[#D8B46B] text-sm tracking-[0.2em] uppercase mb-3 font-medium">
+                    {book.tagline}
+                  </p>
+                )}
+                <h1 className="font-serif text-5xl md:text-6xl text-[#1E3A32] mb-8 leading-tight">
+                  {book.name}
+                </h1>
+                {book.short_description && (
+                  <p className="text-[#2B2725]/80 text-lg leading-relaxed mb-10">
+                    {book.short_description}
+                  </p>
+                )}
 
               {book.purchase_options && book.purchase_options.length > 0 ? (
                 <BookPurchaseOptions
@@ -163,7 +164,8 @@ export default function BookProductPage() {
                   ))}
                 </ul>
               )}
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
