@@ -181,6 +181,21 @@ export default function SpeakingTraining() {
         </div>
       </section>
 
+      {/* Video Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+            <iframe
+              src="https://player.vimeo.com/video/1153706531?h=b90f971f48"
+              className="absolute inset-0 w-full h-full"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              title="Organizational Mind Styling"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Why Organizational Mind Styling */}
       <section className="py-24 bg-white">
         <div className="max-w-4xl mx-auto px-6">
