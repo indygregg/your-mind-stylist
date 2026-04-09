@@ -50,12 +50,6 @@ export default function Cart() {
     setCheckoutLoading(true);
 
     try {
-      // Check if user is authenticated
-      const isAuth = await base44.auth.isAuthenticated();
-      if (!isAuth) {
-        base44.auth.redirectToLogin(window.location.pathname);
-        return;
-      }
 
       const affiliateCode = localStorage.getItem("affiliate_code");
       const timestamp = localStorage.getItem("affiliate_code_timestamp");
