@@ -65,7 +65,7 @@ export default function BookLanding() {
       {/* Section 1 — Hero */}
       <section className="pt-40 pb-12 bg-[#F9F5EF]">
         <div className="w-full px-6 md:px-12 lg:px-20 xl:px-28">
-          <div className="flex flex-col md:flex-row gap-8 lg:gap-14 items-center">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -96,32 +96,31 @@ export default function BookLanding() {
                 {book.name}
               </h1>
               {book.short_description && (
-                <p className="text-[#1E3A32]/70 text-base lg:text-lg leading-relaxed mb-6 max-w-xl font-serif italic">
+                <p className="text-[#1E3A32]/70 text-base lg:text-lg leading-relaxed mb-4 font-serif italic">
                   {book.short_description}
                 </p>
               )}
 
-              <div className="max-w-md">
-                {hasPurchaseOptions ? (
-                  <BookPurchaseOptions product={book} quiz={{ slug: quizSlug }} />
-                ) : (
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <Button
-                      onClick={handleDefaultPurchase}
-                      className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-8 py-5 text-base"
-                    >
-                      <ShoppingCart size={18} className="mr-2" />
-                      Buy the Book{book.price ? ` — ${formatPrice(book.price)}` : ""}
-                    </Button>
-                    <Link to={`/quiz/${quizSlug}`}>
-                      <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10 px-8 py-5 text-base">
-                        Take the Quiz
-                        <ArrowRight size={16} className="ml-2" />
-                      </Button>
-                    </Link>
-                  </div>
-                )}
+              <div className="mb-6">
+                <Link to={`/quiz/${quizSlug}`}>
+                  <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10 px-6 py-4 text-sm">
+                    Take the Quiz
+                    <ArrowRight size={16} className="ml-2" />
+                  </Button>
+                </Link>
               </div>
+
+              {hasPurchaseOptions ? (
+                <BookPurchaseOptions product={book} />
+              ) : (
+                <Button
+                  onClick={handleDefaultPurchase}
+                  className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-8 py-5 text-base"
+                >
+                  <ShoppingCart size={18} className="mr-2" />
+                  Buy the Book{book.price ? ` — ${formatPrice(book.price)}` : ""}
+                </Button>
+              )}
             </motion.div>
           </div>
         </div>
