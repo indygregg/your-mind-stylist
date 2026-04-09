@@ -73,12 +73,7 @@ export default function BookLanding() {
               className="flex-shrink-0"
             >
               {coverImage ? (
-                <img
-                  src={coverImage}
-                  alt={book.name}
-                  className="w-[200px] md:w-[240px] lg:w-[280px] h-auto rounded shadow-2xl"
-                  style={{ boxShadow: '8px 8px 30px rgba(0,0,0,0.2), -2px -2px 8px rgba(0,0,0,0.05)' }}
-                />
+                <BookCover3D imageUrl={coverImage} title={book.name} size="lg" />
               ) : (
                 <div className="w-[240px] h-[320px] bg-[#E4D9C4] rounded flex items-center justify-center text-[#2B2725]/40 text-sm">
                   No cover image
