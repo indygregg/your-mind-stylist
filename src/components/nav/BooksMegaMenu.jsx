@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
+  const [hoveredBook, setHoveredBook] = useState(null);
   const { data: books = [] } = useQuery({
     queryKey: ["nav-books"],
     queryFn: async () => {
@@ -14,6 +15,14 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
     staleTime: 5 * 60 * 1000,
   });
 
+  // Distribute books across 3 columns
+  const col1 = books.filter((_, i) => i % 3 === 0);
+  const col2 = books.filter((_, i) => i % 3 === 1);
+  const col3 = books.filter((_, i) => i % 3 === 2);
+
+  const displayBook = hoveredBook || books[0];
+  const displayCover = displayBook?.book_cover_image || displayBook?.thumbnail;
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -22,53 +31,83 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ duration: 0.2 }}
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-0 bg-white shadow-2xl border-t border-b border-[#E4D9C4] w-[100vw] z-50"
+          className="absolute top-full left-0 w-[100vw] bg-white shadow-2xl border-t border-b border-[#E4D9C4] z-50"
+          style={{ marginLeft: 'calc(50% - 50vw)' }}
         >
           <div className="max-w-7xl mx-auto px-8 py-8">
-            <div className="flex items-start gap-10">
-              {books.length === 0 ? (
-                <p className="text-[#2B2725]/60 text-sm">No books available yet.</p>
-              ) : (
-                books.map((book) => {
-                  const cover = book.book_cover_image || book.thumbnail;
-                  const slugPath = book.slug ? `/book/${book.slug}` : `/Books`;
-                  return (
-                    <Link key={book.id} to={slugPath} className="group flex flex-col items-center gap-3 max-w-[140px]">
-                      {cover ? (
-                        <div className="w-[100px] h-[140px] shadow-lg overflow-hidden rounded-sm group-hover:shadow-xl transition-shadow duration-300">
-                          <img
-                            src={cover}
-                            alt={book.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-[100px] h-[140px] bg-[#E4D9C4] rounded-sm flex items-center justify-center">
-                          <span className="text-xs text-[#2B2725]/40">No cover</span>
-                        </div>
-                      )}
-                      <div className="text-center">
-                        <p className="text-[#1E3A32] font-medium text-sm group-hover:text-[#D8B46B] transition-colors leading-snug">
-                          {book.name}
-                        </p>
-                        {book.tagline && (
-                          <p className="text-[#2B2725]/50 text-xs mt-0.5">{book.tagline}</p>
+            {books.length === 0 ? (
+              <p className="text-[#2B2725]/60 text-sm">No books available yet.</p>
+            ) : (
+              <div className="grid grid-cols-4 gap-8">
+                {/* Columns 1-3: Book titles */}
+                {[col1, col2, col3].map((col, colIdx) => (
+                  <div key={colIdx} className="space-y-3">
+                    {colIdx === 0 && (
+                      <h3 className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-4">Our Books</h3>
+                    )}
+                    {colIdx !== 0 && <div className="h-[20px]" />}
+                    {col.map((book) => {
+                      const slugPath = book.slug ? `/book/${book.slug}` : `/Books`;
+                      return (
+                        <Link
+                          key={book.id}
+                          to={slugPath}
+                          onMouseEnter={() => setHoveredBook(book)}
+                          onMouseLeave={() => setHoveredBook(null)}
+                          className="block group py-1"
+                        >
+                          <p className="text-[#1E3A32] font-medium text-sm group-hover:text-[#D8B46B] transition-colors leading-snug">
+                            {book.name}
+                          </p>
+                          {book.tagline && (
+                            <p className="text-[#2B2725]/50 text-xs mt-0.5">{book.tagline}</p>
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ))}
+
+                {/* Column 4: Cover preview */}
+                <div className="flex flex-col items-center justify-center gap-4">
+                  <AnimatePresence mode="wait">
+                    {displayBook && (
+                      <motion.div
+                        key={displayBook.id}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.2 }}
+                        className="flex flex-col items-center gap-3"
+                      >
+                        {displayCover ? (
+                          <div className="w-[100px] h-[140px] shadow-xl overflow-hidden rounded-sm">
+                            <img
+                              src={displayCover}
+                              alt={displayBook.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-[100px] h-[140px] bg-[#E4D9C4] rounded-sm flex items-center justify-center">
+                            <span className="text-xs text-[#2B2725]/40">No cover</span>
+                          </div>
                         )}
-                      </div>
-                    </Link>
-                  );
-                })
-              )}
-              {/* View All */}
-              <div className="ml-auto flex items-center self-center">
-                <Link
-                  to="/Books"
-                  className="text-sm text-[#D8B46B] hover:text-[#1E3A32] transition-colors border-b border-[#D8B46B] pb-0.5 whitespace-nowrap"
-                >
-                  View All Books →
-                </Link>
+                        <p className="text-[#1E3A32] text-xs font-medium text-center max-w-[120px] leading-snug">
+                          {displayBook.name}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <Link
+                    to="/Books"
+                    className="text-xs text-[#D8B46B] hover:text-[#1E3A32] transition-colors border-b border-[#D8B46B] pb-0.5 whitespace-nowrap mt-2"
+                  >
+                    View All Books →
+                  </Link>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </motion.div>
       )}
