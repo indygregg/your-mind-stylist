@@ -14,6 +14,7 @@ import ReactQuill from "react-quill";
 import BundleCreator from "../components/manager/BundleCreator";
 import ProductCard from "../components/manager/ProductCard";
 import GiftCodeGenerator from "../components/manager/GiftCodeGenerator";
+import PurchaseOptionsEditor from "../components/manager/PurchaseOptionsEditor";
 import { Dialog as GiftDialog, DialogContent as GiftDialogContent, DialogHeader as GiftDialogHeader, DialogTitle as GiftDialogTitle } from "@/components/ui/dialog";
 
 export default function ManagerProducts() {
@@ -56,6 +57,7 @@ export default function ManagerProducts() {
     book_hero_layout: "book_left",
     book_video_embed: "",
     book_reviews: [],
+    purchase_options: [],
   });
   const [enablePaymentPlans, setEnablePaymentPlans] = useState(false);
 
@@ -231,6 +233,7 @@ export default function ManagerProducts() {
       book_hero_layout: "book_left",
       book_video_embed: "",
       book_reviews: [],
+      purchase_options: [],
     });
     setEditingProduct(null);
     setEnablePaymentPlans(false);
@@ -260,6 +263,7 @@ export default function ManagerProducts() {
       book_hero_layout: product.book_hero_layout || "book_left",
       book_video_embed: product.book_video_embed || "",
       book_reviews: product.book_reviews || [],
+      purchase_options: product.purchase_options || [],
     });
     setEnablePaymentPlans(hasPlan);
     setDialogOpen(true);
@@ -847,6 +851,13 @@ export default function ManagerProducts() {
                     placeholder="https://www.youtube.com/embed/..."
                   />
                 </div>
+
+                {/* Purchase Options */}
+                <PurchaseOptionsEditor
+                  options={formData.purchase_options || []}
+                  onChange={(options) => setFormData({ ...formData, purchase_options: options })}
+                  currentProductId={editingProduct?.id}
+                />
 
                 {/* Reviews */}
                 <div>
