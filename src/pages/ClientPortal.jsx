@@ -62,6 +62,18 @@ export default function ClientPortal() {
     staleTime: 2 * 60 * 1000,
   });
 
+  const { data: courses = [] } = useQuery({
+    queryKey: ["enrolledCourses", user?.id],
+    queryFn: async () => {
+      const courseIds = userProgress.map(p => p.course_id);
+      if (courseIds.length === 0) return [];
+      const enrolled = await Promise.all(courseIds.map(id => base44.entities.Course.get(id)));
+      return enrolled.filter(c => c && c.status === "published");
+    },
+    enabled: !!user?.id && userProgress.length > 0,
+    staleTime: 2 * 60 * 1000,
+  });
+
   const { data: allModules = [] } = useQuery({
     queryKey: ["enrolledModules", courses.map(c => c.id).join(",")],
     queryFn: async () => {
@@ -82,18 +94,6 @@ export default function ClientPortal() {
     },
     enabled: allModules.length > 0,
     staleTime: 10 * 60 * 1000,
-  });
-
-  const { data: courses = [] } = useQuery({
-    queryKey: ["enrolledCourses", user?.id],
-    queryFn: async () => {
-      const courseIds = userProgress.map(p => p.course_id);
-      if (courseIds.length === 0) return [];
-      const enrolled = await Promise.all(courseIds.map(id => base44.entities.Course.get(id)));
-      return enrolled.filter(c => c && c.status === "published");
-    },
-    enabled: !!user?.id && userProgress.length > 0,
-    staleTime: 2 * 60 * 1000,
   });
 
   const { data: upcomingBookings = [] } = useQuery({
