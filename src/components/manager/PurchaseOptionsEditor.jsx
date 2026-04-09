@@ -2,18 +2,21 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Copy } from "lucide-react";
+import { Plus, Trash2, Loader2 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
 
-export default function PurchaseOptionsEditor({ options = [], onChange, currentProductId }) {
+export default function PurchaseOptionsEditor({ options = [], onChange, currentProductId, parentProductName }) {
+  const queryClient = useQueryClient();
+  const [creatingVariant, setCreatingVariant] = useState(null); // index of option being created
+
   const { data: allProducts = [] } = useQuery({
     queryKey: ["products"],
     queryFn: () => base44.entities.Product.list("-created_date"),
   });
 
-  // Filter out current product from available variants
   const availableProducts = allProducts.filter(p => p.id !== currentProductId && p.product_subtype === 'book');
 
   const handleAddOption = () => {
@@ -24,6 +27,10 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
       display_label: "",
       badge: "",
       sort_order: (options?.length || 0),
+      // Inline creation fields (not saved to DB — used only in this editor)
+      _inline: true,
+      _variant_name: "",
+      _variant_price: "",
     };
     onChange([...(options || []), newOption]);
   };
@@ -39,9 +46,105 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
     onChange(updated);
   };
 
+  const handleSwitchToExisting = (index) => {
+    const updated = [...(options || [])];
+    updated[index] = { ...updated[index], _inline: false, _variant_name: "", _variant_price: "" };
+    onChange(updated);
+  };
+
+  const handleSwitchToInline = (index) => {
+    const updated = [...(options || [])];
+    updated[index] = { ...updated[index], _inline: true, product_id: "" };
+    onChange(updated);
+  };
+
+  const handleCreateVariantProduct = async (index) => {
+    const option = options[index];
+    const variantName = option._variant_name?.trim();
+    const variantPrice = parseFloat(option._variant_price);
+
+    if (!variantName) {
+      toast.error("Please enter a name for the variant");
+      return;
+    }
+    if (!variantPrice || variantPrice <= 0) {
+      toast.error("Please enter a valid price");
+      return;
+    }
+
+    setCreatingVariant(index);
+    try {
+      const priceInCents = Math.round(variantPrice * 100);
+      const key = variantName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+      const slug = key;
+
+      // Create the variant product
+      const created = await base44.entities.Product.create({
+        key,
+        slug,
+        name: variantName,
+        type: "one_time",
+        product_subtype: "book",
+        category: "foundation",
+        price: priceInCents,
+        currency: "usd",
+        status: "published",
+        ui_group: "hidden",
+        template_choice: "minimal",
+      });
+
+      // Sync to Stripe
+      try {
+        const syncResult = await base44.functions.invoke('syncProductStripe', {
+          product_id: created.id,
+          key,
+          name: variantName,
+          description: `Variant of ${parentProductName || 'book'}`,
+          price: priceInCents,
+          currency: "usd",
+          billing_interval: "one_time",
+          type: "one_time",
+        });
+
+        if (syncResult.data?.success) {
+          await base44.entities.Product.update(created.id, {
+            stripe_product_id: syncResult.data.stripe_product_id,
+            stripe_price_id: syncResult.data.stripe_price_id,
+            stripe_price_ids: syncResult.data.stripe_price_ids,
+          });
+        }
+      } catch (stripeErr) {
+        console.warn("Stripe sync failed for variant, can be retried:", stripeErr);
+      }
+
+      // Update the option to point to the new product
+      const updated = [...(options || [])];
+      updated[index] = {
+        ...updated[index],
+        product_id: created.id,
+        _inline: false,
+        _variant_name: "",
+        _variant_price: "",
+      };
+      onChange(updated);
+
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success(`Created "${variantName}" and synced with Stripe`);
+    } catch (error) {
+      toast.error(`Failed to create variant: ${error.message}`);
+    } finally {
+      setCreatingVariant(null);
+    }
+  };
+
   const getProductName = (productId) => {
     const product = allProducts.find(p => p.id === productId);
     return product?.name || "Unknown Product";
+  };
+
+  const getProductPrice = (productId) => {
+    const product = allProducts.find(p => p.id === productId);
+    return product?.price ? `$${(product.price / 100).toFixed(2)}` : "";
   };
 
   return (
@@ -111,74 +214,132 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
               </Select>
             </div>
 
+            {/* Product Selection / Creation */}
             <div className="md:col-span-2">
-              <Label className="text-xs">Related Product{option.type === 'bundle' ? '(s)' : ''} *</Label>
               {option.type === 'bundle' ? (
-                // Multi-select for bundles
-                <div className="space-y-2 mt-2 max-h-48 overflow-y-auto border border-[#E4D9C4] rounded p-3 bg-white">
-                  {availableProducts.length === 0 ? (
-                    <p className="text-xs text-[#2B2725]/60">No other book products available</p>
-                  ) : (
-                    availableProducts.map((product) => {
-                      const productIds = Array.isArray(option.product_id) ? option.product_id : (option.product_id ? [option.product_id] : []);
-                      const isSelected = productIds.includes(product.id);
-                      return (
-                        <label key={product.id} className="flex items-center gap-2 cursor-pointer hover:bg-[#F9F5EF] p-2 rounded">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={(e) => {
-                              let newIds = Array.isArray(option.product_id) ? [...option.product_id] : [];
-                              if (e.target.checked) {
-                                newIds.push(product.id);
-                              } else {
-                                newIds = newIds.filter(id => id !== product.id);
-                              }
-                              handleUpdateOption(index, "product_id", newIds);
-                            }}
-                            className="w-4 h-4"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm text-[#1E3A32] truncate">{product.name}</p>
-                            <p className="text-xs text-[#2B2725]/60">${(product.price / 100).toFixed(2)}</p>
-                          </div>
-                        </label>
-                      );
-                    })
-                  )}
+                <BundleProductSelector
+                  option={option}
+                  index={index}
+                  availableProducts={availableProducts}
+                  handleUpdateOption={handleUpdateOption}
+                  getProductName={getProductName}
+                />
+              ) : option.product_id && !option._inline ? (
+                // Already linked to an existing product — show it
+                <div>
+                  <Label className="text-xs">Linked Product</Label>
+                  <div className="mt-1 p-3 bg-[#F9F5EF] rounded border border-[#E4D9C4] flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-[#1E3A32]">{getProductName(option.product_id)}</p>
+                      <p className="text-xs text-[#2B2725]/60">{getProductPrice(option.product_id)}</p>
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleUpdateOption(index, "product_id", "")}
+                      className="text-xs"
+                    >
+                      Change
+                    </Button>
+                  </div>
                 </div>
               ) : (
-                // Single select for non-bundles
-                <>
-                  <Select
-                    value={option.product_id || ""}
-                    onValueChange={(value) => handleUpdateOption(index, "product_id", value)}
-                  >
-                    <SelectTrigger className="h-9">
-                      <SelectValue placeholder="Select a book variant..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availableProducts.map((product) => (
-                        <SelectItem key={product.id} value={product.id}>
-                          {product.name} (${(product.price / 100).toFixed(2)})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {option.product_id && !Array.isArray(option.product_id) && (
-                    <p className="text-xs text-[#2B2725]/60 mt-1">
-                      Selected: {getProductName(option.product_id)}
-                    </p>
+                // Choose: create new or select existing
+                <div>
+                  <Label className="text-xs">Product *</Label>
+                  <div className="mt-1 flex gap-2 mb-3">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={option._inline !== false ? "default" : "outline"}
+                      onClick={() => handleSwitchToInline(index)}
+                      className={option._inline !== false ? "bg-[#1E3A32] hover:bg-[#2B2725]" : ""}
+                    >
+                      Create New
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant={option._inline === false ? "default" : "outline"}
+                      onClick={() => handleSwitchToExisting(index)}
+                      className={option._inline === false ? "bg-[#1E3A32] hover:bg-[#2B2725]" : ""}
+                    >
+                      Select Existing
+                    </Button>
+                  </div>
+
+                  {option._inline !== false ? (
+                    // Inline creation form
+                    <div className="p-3 bg-[#D8B46B]/10 border border-[#D8B46B]/30 rounded space-y-3">
+                      <div>
+                        <Label className="text-xs">Variant Name *</Label>
+                        <Input
+                          size="sm"
+                          value={option._variant_name || ""}
+                          onChange={(e) => handleUpdateOption(index, "_variant_name", e.target.value)}
+                          placeholder={`e.g., ${parentProductName || 'Book Title'} - ${option.type === 'digital' ? 'Digital' : option.type === 'physical' ? 'Paperback' : 'Edition'}`}
+                          className="h-9 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-xs">Price (USD) *</Label>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          size="sm"
+                          value={option._variant_price || ""}
+                          onChange={(e) => handleUpdateOption(index, "_variant_price", e.target.value)}
+                          placeholder="e.g., 16.99"
+                          className="h-9 text-sm"
+                        />
+                        {option._variant_price && (
+                          <p className="text-xs text-[#2B2725]/60 mt-1">
+                            Displays as ${parseFloat(option._variant_price || 0).toFixed(2)}
+                          </p>
+                        )}
+                      </div>
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={() => handleCreateVariantProduct(index)}
+                        disabled={creatingVariant === index}
+                        className="bg-[#D8B46B] hover:bg-[#C9A55C] text-[#1E3A32] w-full"
+                      >
+                        {creatingVariant === index ? (
+                          <>
+                            <Loader2 size={14} className="mr-1 animate-spin" />
+                            Creating & Syncing...
+                          </>
+                        ) : (
+                          <>
+                            <Plus size={14} className="mr-1" />
+                            Create Variant Product
+                          </>
+                        )}
+                      </Button>
+                      <p className="text-xs text-[#2B2725]/50">
+                        This creates a new product record and syncs it with Stripe automatically.
+                      </p>
+                    </div>
+                  ) : (
+                    // Select existing product
+                    <Select
+                      value={option.product_id || ""}
+                      onValueChange={(value) => handleUpdateOption(index, "product_id", value)}
+                    >
+                      <SelectTrigger className="h-9">
+                        <SelectValue placeholder="Select an existing product..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {availableProducts.map((product) => (
+                          <SelectItem key={product.id} value={product.id}>
+                            {product.name} (${(product.price / 100).toFixed(2)})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   )}
-                </>
-              )}
-              {option.product_id && Array.isArray(option.product_id) && option.product_id.length > 0 && (
-                <div className="mt-2 space-y-1">
-                  {option.product_id.map((productId) => (
-                    <p key={productId} className="text-xs text-[#2B2725]/60">
-                      ✓ {getProductName(productId)}
-                    </p>
-                  ))}
                 </div>
               )}
             </div>
@@ -252,6 +413,55 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
           </label>
         </div>
       ))}
+    </div>
+  );
+}
+
+function BundleProductSelector({ option, index, availableProducts, handleUpdateOption, getProductName }) {
+  return (
+    <div>
+      <Label className="text-xs">Related Product(s) *</Label>
+      <div className="space-y-2 mt-2 max-h-48 overflow-y-auto border border-[#E4D9C4] rounded p-3 bg-white">
+        {availableProducts.length === 0 ? (
+          <p className="text-xs text-[#2B2725]/60">No other book products available</p>
+        ) : (
+          availableProducts.map((product) => {
+            const productIds = Array.isArray(option.product_id) ? option.product_id : (option.product_id ? [option.product_id] : []);
+            const isSelected = productIds.includes(product.id);
+            return (
+              <label key={product.id} className="flex items-center gap-2 cursor-pointer hover:bg-[#F9F5EF] p-2 rounded">
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={(e) => {
+                    let newIds = Array.isArray(option.product_id) ? [...option.product_id] : [];
+                    if (e.target.checked) {
+                      newIds.push(product.id);
+                    } else {
+                      newIds = newIds.filter(id => id !== product.id);
+                    }
+                    handleUpdateOption(index, "product_id", newIds);
+                  }}
+                  className="w-4 h-4"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-[#1E3A32] truncate">{product.name}</p>
+                  <p className="text-xs text-[#2B2725]/60">${(product.price / 100).toFixed(2)}</p>
+                </div>
+              </label>
+            );
+          })
+        )}
+      </div>
+      {option.product_id && Array.isArray(option.product_id) && option.product_id.length > 0 && (
+        <div className="mt-2 space-y-1">
+          {option.product_id.map((productId) => (
+            <p key={productId} className="text-xs text-[#2B2725]/60">
+              ✓ {getProductName(productId)}
+            </p>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -875,6 +875,7 @@ export default function ManagerProducts() {
                   options={formData.purchase_options || []}
                   onChange={(options) => setFormData({ ...formData, purchase_options: options })}
                   currentProductId={editingProduct?.id}
+                  parentProductName={formData.name}
                 />
 
                 {/* Reviews */}
