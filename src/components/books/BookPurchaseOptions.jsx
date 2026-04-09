@@ -104,6 +104,17 @@ export default function BookPurchaseOptions({
 
   const selectedVariant = selectedProductId ? variantProducts[selectedProductId] : null;
 
+  // Find the selected purchase option and its display price
+  const selectedOption = enabledOptions.find(opt => {
+    if (opt.type === 'bundle' && opt.bundle_product_id) return opt.bundle_product_id === selectedProductId;
+    const ids = parseProductIds(opt.product_id);
+    return ids[0] === selectedProductId;
+  });
+  const selectedRawPrice = selectedOption?.type === 'bundle' && selectedOption?.bundle_price
+    ? selectedOption.bundle_price
+    : selectedVariant?.price;
+  const selectedPrice = selectedRawPrice ? (selectedRawPrice / 100).toFixed(2) : '0.00';
+
   const handleAddToCart = async () => {
     if (!selectedVariant) return;
     setIsAdding(true);
@@ -198,7 +209,7 @@ export default function BookPurchaseOptions({
         </Button>
         {quiz && (
           <Button
-            onClick={handleTakeQuiz}
+            onClick={() => window.location.href = `/quiz/${quiz.slug}`}
             variant="outline"
             className="px-8 py-6 border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32]/5"
           >
