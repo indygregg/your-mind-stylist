@@ -95,16 +95,16 @@ export default function BookProductPage() {
       />
 
       {/* Hero */}
-      <section className="bg-[#F9F5EF] min-h-screen flex items-center py-20 pt-40">
-        <div className="w-full px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24">
+      <section className="bg-[#F9F5EF] min-h-[calc(100vh-80px)] flex items-center pt-32 pb-12">
+        <div className="w-full px-6 md:px-12 lg:px-20 xl:px-28">
             <Link
               to="/Books"
-              className="inline-flex items-center gap-2 text-[#1E3A32]/60 hover:text-[#1E3A32] mb-10 transition-colors text-sm"
+              className="inline-flex items-center gap-2 text-[#1E3A32]/60 hover:text-[#1E3A32] mb-6 transition-colors text-sm"
             >
               <ArrowLeft size={16} /> Back to Books
             </Link>
 
-            <div className={`grid md:grid-cols-[2fr_3fr] gap-8 lg:gap-12 items-center ${!bookOnLeft ? "md:grid-cols-[3fr_2fr] md:[&>*:first-child]:order-last" : ""}`}>
+            <div className={`grid md:grid-cols-[auto_1fr] gap-8 lg:gap-14 items-center ${!bookOnLeft ? "md:grid-cols-[1fr_auto] md:[&>*:first-child]:order-last" : ""}`}>
               {/* Book Cover */}
               <motion.div
                 initial={{ opacity: 0, x: bookOnLeft ? -40 : 40 }}
