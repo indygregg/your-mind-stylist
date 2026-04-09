@@ -71,6 +71,11 @@ export default function ManagerProducts() {
     queryFn: () => base44.entities.Course.list("title"),
   });
 
+  const { data: webinars = [] } = useQuery({
+    queryKey: ["webinars"],
+    queryFn: () => base44.entities.Webinar.list("title"),
+  });
+
   const createMutation = useMutation({
     mutationFn: async (productData) => {
       const created = await base44.entities.Product.create(productData);
@@ -227,6 +232,7 @@ export default function ManagerProducts() {
       display_order: 0,
       template_choice: "detailed",
       related_course_id: "",
+      related_webinar_id: "",
       access_grants: [],
       payment_plan_options: [],
       book_cover_image: "",
@@ -257,6 +263,7 @@ export default function ManagerProducts() {
       template_choice: product.template_choice || "detailed",
       product_subtype: product.product_subtype || "",
       related_course_id: product.related_course_id || "",
+      related_webinar_id: product.related_webinar_id || "",
       access_grants: product.access_grants || [],
       payment_plan_options: product.payment_plan_options || [],
       book_cover_image: product.book_cover_image || "",
@@ -1177,6 +1184,34 @@ export default function ManagerProducts() {
               )}
               <p className="text-xs text-[#2B2725]/60 mt-1">
                 Link this product to a single course (for simple products)
+              </p>
+            </div>
+
+            <div>
+              <Label>Related Webinar / Live Event (optional)</Label>
+              <Select
+                value={formData.related_webinar_id || ""}
+                onValueChange={(value) => setFormData({ ...formData, related_webinar_id: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a webinar or live event" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={null}>None</SelectItem>
+                  {webinars.map((w) => (
+                    <SelectItem key={w.id} value={w.id}>
+                      {w.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {formData.related_webinar_id && (
+                <div className="mt-2 p-2 bg-[#1E3A32]/5 border border-[#1E3A32]/20 rounded text-xs">
+                  <p className="font-mono text-[#1E3A32]">ID: {formData.related_webinar_id}</p>
+                </div>
+              )}
+              <p className="text-xs text-[#2B2725]/60 mt-1">
+                Link to a webinar or live event
               </p>
             </div>
 
