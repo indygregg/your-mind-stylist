@@ -63,14 +63,24 @@ export default function ClientPortal() {
   });
 
   const { data: allModules = [] } = useQuery({
-    queryKey: ["allModules"],
-    queryFn: () => base44.entities.Module.list(),
+    queryKey: ["enrolledModules", courses.map(c => c.id).join(",")],
+    queryFn: async () => {
+      if (courses.length === 0) return [];
+      const results = await Promise.all(courses.map(c => base44.entities.Module.filter({ course_id: c.id })));
+      return results.flat();
+    },
+    enabled: courses.length > 0,
     staleTime: 10 * 60 * 1000,
   });
 
   const { data: allLessons = [] } = useQuery({
-    queryKey: ["allLessons"],
-    queryFn: () => base44.entities.Lesson.list(),
+    queryKey: ["enrolledLessons", allModules.map(m => m.id).join(",")],
+    queryFn: async () => {
+      if (allModules.length === 0) return [];
+      const results = await Promise.all(allModules.map(m => base44.entities.Lesson.filter({ module_id: m.id })));
+      return results.flat();
+    },
+    enabled: allModules.length > 0,
     staleTime: 10 * 60 * 1000,
   });
 
@@ -243,25 +253,6 @@ export default function ClientPortal() {
                     />
                   </div>
                 )}
-
-                {/* Resources Banner */}
-                <Link to={createPageUrl("Resources")}>
-                  <motion.div
-                    whileHover={{ scale: 1.01 }}
-                    className="bg-gradient-to-br from-[#D8B46B] to-[#C9A55B] p-6 mb-8 cursor-pointer shadow-md hover:shadow-lg transition-all rounded-sm"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <FileText size={24} className="text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-serif text-xl text-white mb-1">Resource Library</h3>
-                        <p className="text-white/90 text-sm">Access worksheets, guides, audio sessions, and tools to support your journey. {resources.length > 0 && `${resources.length} resources available.`}</p>
-                      </div>
-                      <ChevronDown size={20} className="text-white/60 rotate-[-90deg]" />
-                    </div>
-                  </motion.div>
-                </Link>
 
                 {/* Courses by Type */}
                 <CourseSection title="Mind Style Toolkit" icon={Layers} sectionKey="toolkit" items={coursesByType.toolkit} color="#1E3A32" />
