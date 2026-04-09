@@ -6,23 +6,36 @@ import { Button } from "@/components/ui/button";
 
 export default function BookPurchaseOptions({
   product,
-  ctaLabel = "Add to Cart",
+  productId,
+  ctaLabel = "Buy Now",
   onAddToCart,
   defaultSelected = null,
 }) {
+  // Fetch the parent product if only productId is provided
+  const { data: fetchedProduct } = useQuery({
+    queryKey: ["book-product", productId],
+    queryFn: async () => {
+      if (!productId) return null;
+      const prods = await base44.entities.Product.filter({ id: productId });
+      return prods[0] || null;
+    },
+    enabled: !!productId && !product,
+  });
+
+  const parentProduct = product || fetchedProduct;
   const [selectedProductId, setSelectedProductId] = useState(defaultSelected);
   const [isAdding, setIsAdding] = useState(false);
 
   // Load all variant products
   const { data: variantProducts = {}, isLoading: variantsLoading } = useQuery({
-    queryKey: ["book-variants", product?.id],
+    queryKey: ["book-variants", parentProduct?.id],
     queryFn: async () => {
-      if (!product?.purchase_options || product.purchase_options.length === 0) {
+      if (!parentProduct?.purchase_options || parentProduct.purchase_options.length === 0) {
         return {};
       }
 
       const variants = {};
-      for (const option of product.purchase_options) {
+      for (const option of parentProduct.purchase_options) {
         if (option.product_id) {
           const prods = await base44.entities.Product.filter({ id: option.product_id });
           if (prods[0]) {
@@ -32,11 +45,11 @@ export default function BookPurchaseOptions({
       }
       return variants;
     },
-    enabled: !!product?.id,
+    enabled: !!parentProduct?.id,
   });
 
   // Filter enabled options and sort
-  const enabledOptions = (product?.purchase_options || [])
+  const enabledOptions = (parentProduct?.purchase_options || [])
     .filter((opt) => opt.enabled && variantProducts[opt.product_id])
     .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
 
@@ -55,6 +68,14 @@ export default function BookPurchaseOptions({
     try {
       if (onAddToCart) {
         await onAddToCart(selectedVariant);
+      } else {
+        // Default: trigger checkout
+        const response = await base44.functions.invoke("createProductCheckout", {
+          product_id: selectedVariant.id,
+        });
+        if (response.data?.url) {
+          window.location.href = response.data.url;
+        }
       }
     } finally {
       setIsAdding(false);
