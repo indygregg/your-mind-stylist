@@ -14,6 +14,7 @@ import ManagerBar from "./components/cms/ManagerBar";
 import haptics from "./components/utils/haptics";
 import AffiliateTracker from "./components/affiliate/AffiliateTracker";
 import BooksMegaMenu from "./components/nav/BooksMegaMenu";
+import ServicesMegaMenu from "./components/nav/ServicesMegaMenu";
 import { PageTransition } from "./components/ui/PageTransition";
 import { CartProvider } from "./components/shop/CartContext";
 import CartIcon from "./components/shop/CartIcon";
@@ -340,45 +341,8 @@ export default function Layout({ children, currentPageName }) {
                   }`}
                 />
               </button>
-
-              <AnimatePresence>
-                {servicesOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-b border-[#E4D9C4] z-50"
-                  >
-                    <div className="w-full grid grid-cols-3 gap-6 p-8 px-12">
-                      {servicesMenu.map((section) => (
-                        <div key={section.category}>
-                          <h3 className="font-serif text-sm text-[#D8B46B] tracking-wider uppercase mb-4">
-                            {section.category}
-                          </h3>
-                          <div className="space-y-3">
-                            {section.items.map((item) => (
-                              <Link
-                                key={item.page}
-                                to={createPageUrl(item.page)}
-                                className="block group"
-                              >
-                                <p className="text-[#1E3A32] font-medium mb-1 group-hover:text-[#D8B46B] transition-colors">
-                                  {item.name}
-                                </p>
-                                <p className="text-xs text-[#2B2725]/60">
-                                  {item.description}
-                                </p>
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-                </AnimatePresence>
-                </div>
+              <ServicesMegaMenu isOpen={servicesOpen} />
+            </div>
 
             {/* Books Mega Menu */}
             <div
