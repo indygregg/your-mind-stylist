@@ -130,12 +130,12 @@ export default function ProgramsBooks() {
                         </div>
                         <div className="flex gap-2">
                           {book.slug && (
-                            <Link
-                              to={createPageUrl(`ProductPage?slug=${book.slug}`)}
-                              className="flex-1 text-center text-sm py-2.5 border border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32] transition-colors"
-                            >
-                              Details
-                            </Link>
+                             <Link
+                               to={createPageUrl(`BookProductPage?slug=${book.slug}`)}
+                               className="flex-1 text-center text-sm py-2.5 border border-[#D8B46B] text-[#D8B46B] hover:bg-[#D8B46B] hover:text-[#1E3A32] transition-colors"
+                             >
+                               Details
+                             </Link>
                           )}
                           <button
                             onClick={() => handlePurchase(book.id)}

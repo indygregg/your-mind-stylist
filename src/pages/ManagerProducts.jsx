@@ -53,6 +53,9 @@ export default function ManagerProducts() {
     access_grants: [],
     payment_plan_options: [],
     book_cover_image: "",
+    book_hero_layout: "book_left",
+    book_video_embed: "",
+    book_reviews: [],
   });
   const [enablePaymentPlans, setEnablePaymentPlans] = useState(false);
 
@@ -225,6 +228,9 @@ export default function ManagerProducts() {
       access_grants: [],
       payment_plan_options: [],
       book_cover_image: "",
+      book_hero_layout: "book_left",
+      book_video_embed: "",
+      book_reviews: [],
     });
     setEditingProduct(null);
     setEnablePaymentPlans(false);
@@ -250,6 +256,10 @@ export default function ManagerProducts() {
       related_course_id: product.related_course_id || "",
       access_grants: product.access_grants || [],
       payment_plan_options: product.payment_plan_options || [],
+      book_cover_image: product.book_cover_image || "",
+      book_hero_layout: product.book_hero_layout || "book_left",
+      book_video_embed: product.book_video_embed || "",
+      book_reviews: product.book_reviews || [],
     });
     setEnablePaymentPlans(hasPlan);
     setDialogOpen(true);
@@ -755,52 +765,166 @@ export default function ManagerProducts() {
 
             {/* Book Cover Image (for book products) */}
             {formData.product_subtype === "book" && (
-              <div>
-                <Label>📖 Book Cover Image</Label>
-                <div className="flex gap-2">
-                  <Input
-                    type="text"
-                    value={formData.book_cover_image || ""}
-                    onChange={(e) => setFormData({ ...formData, book_cover_image: e.target.value })}
-                    placeholder="https://example.com/book-cover.jpg"
-                    className="flex-1"
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => bookCoverInputRef.current?.click()}
-                  >
-                    <Upload size={14} className="mr-1" />
-                    Upload
-                  </Button>
-                </div>
-                <input
-                  ref={bookCoverInputRef}
-                  type="file"
-                  accept="image/*"
-                  style={{ display: 'none' }}
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      try {
-                        const result = await base44.integrations.Core.UploadFile({ file });
-                        setFormData({ ...formData, book_cover_image: result.file_url });
-                        toast.success('Book cover uploaded!');
-                      } catch (error) {
-                        toast.error('Failed to upload cover image');
-                      }
-                    }
-                  }}
-                />
-                {formData.book_cover_image && (
-                  <div className="mt-3 p-3 bg-[#F9F5EF] rounded-lg border border-[#E4D9C4]">
-                    <img
-                      src={formData.book_cover_image}
-                      alt="Book cover preview"
-                      className="w-24 h-32 object-cover rounded"
+              <div className="space-y-4 p-4 bg-[#D8B46B]/5 border border-[#D8B46B]/30 rounded-lg">
+                <h3 className="font-serif text-lg text-[#1E3A32]">📖 Book Settings</h3>
+
+                {/* Cover Image */}
+                <div>
+                  <Label>Book Cover Image</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="text"
+                      value={formData.book_cover_image || ""}
+                      onChange={(e) => setFormData({ ...formData, book_cover_image: e.target.value })}
+                      placeholder="https://example.com/book-cover.jpg"
+                      className="flex-1"
                     />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => bookCoverInputRef.current?.click()}
+                    >
+                      <Upload size={14} className="mr-1" />
+                      Upload
+                    </Button>
                   </div>
-                )}
+                  <input
+                    ref={bookCoverInputRef}
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        try {
+                          const result = await base44.integrations.Core.UploadFile({ file });
+                          setFormData({ ...formData, book_cover_image: result.file_url });
+                          toast.success('Book cover uploaded!');
+                        } catch (error) {
+                          toast.error('Failed to upload cover image');
+                        }
+                      }
+                    }}
+                  />
+                  {formData.book_cover_image && (
+                    <div className="mt-3 p-3 bg-[#F9F5EF] rounded-lg border border-[#E4D9C4]">
+                      <img src={formData.book_cover_image} alt="Book cover preview" className="w-24 h-32 object-cover rounded" />
+                    </div>
+                  )}
+                </div>
+
+                {/* Hero Layout */}
+                <div>
+                  <Label>Book Position in Hero</Label>
+                  <div className="flex gap-3 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, book_hero_layout: "book_left" })}
+                      className={`flex-1 py-3 px-4 rounded border text-sm font-medium transition-all ${
+                        formData.book_hero_layout !== "book_right" ? "border-[#1E3A32] bg-[#1E3A32] text-white" : "border-[#D8B46B] hover:bg-[#D8B46B]/10"
+                      }`}
+                    >
+                      📖 ← Book on Left
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, book_hero_layout: "book_right" })}
+                      className={`flex-1 py-3 px-4 rounded border text-sm font-medium transition-all ${
+                        formData.book_hero_layout === "book_right" ? "border-[#1E3A32] bg-[#1E3A32] text-white" : "border-[#D8B46B] hover:bg-[#D8B46B]/10"
+                      }`}
+                    >
+                      Book on Right → 📖
+                    </button>
+                  </div>
+                </div>
+
+                {/* Video Embed */}
+                <div>
+                  <Label>Author Video Embed URL <span className="text-xs font-normal text-[#2B2725]/50">(YouTube or Vimeo)</span></Label>
+                  <Input
+                    value={formData.book_video_embed || ""}
+                    onChange={(e) => setFormData({ ...formData, book_video_embed: e.target.value })}
+                    placeholder="https://www.youtube.com/embed/..."
+                  />
+                </div>
+
+                {/* Reviews */}
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <Label>Reader Reviews</Label>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setFormData({
+                        ...formData,
+                        book_reviews: [...(formData.book_reviews || []), { quote: "", reviewer: "", reviewer_title: "", stars: 5 }]
+                      })}
+                    >
+                      <Plus size={14} className="mr-1" /> Add Review
+                    </Button>
+                  </div>
+                  {(formData.book_reviews || []).map((review, idx) => (
+                    <div key={idx} className="bg-white border border-[#E4D9C4] rounded-lg p-4 mb-3 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex gap-1">
+                          {[1,2,3,4,5].map(s => (
+                            <button
+                              key={s}
+                              type="button"
+                              onClick={() => {
+                                const updated = [...formData.book_reviews];
+                                updated[idx] = { ...updated[idx], stars: s };
+                                setFormData({ ...formData, book_reviews: updated });
+                              }}
+                              className={`text-xl transition-colors ${ s <= (review.stars || 5) ? "text-[#D8B46B]" : "text-gray-200" }`}
+                            >★</button>
+                          ))}
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const updated = formData.book_reviews.filter((_, i) => i !== idx);
+                            setFormData({ ...formData, book_reviews: updated });
+                          }}
+                        >
+                          <Trash2 size={14} />
+                        </Button>
+                      </div>
+                      <Textarea
+                        value={review.quote}
+                        onChange={(e) => {
+                          const updated = [...formData.book_reviews];
+                          updated[idx] = { ...updated[idx], quote: e.target.value };
+                          setFormData({ ...formData, book_reviews: updated });
+                        }}
+                        placeholder="What the reader said..."
+                        rows={3}
+                      />
+                      <div className="grid grid-cols-2 gap-2">
+                        <Input
+                          value={review.reviewer}
+                          onChange={(e) => {
+                            const updated = [...formData.book_reviews];
+                            updated[idx] = { ...updated[idx], reviewer: e.target.value };
+                            setFormData({ ...formData, book_reviews: updated });
+                          }}
+                          placeholder="Reviewer name"
+                        />
+                        <Input
+                          value={review.reviewer_title || ""}
+                          onChange={(e) => {
+                            const updated = [...formData.book_reviews];
+                            updated[idx] = { ...updated[idx], reviewer_title: e.target.value };
+                            setFormData({ ...formData, book_reviews: updated });
+                          }}
+                          placeholder="Title / descriptor (optional)"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
