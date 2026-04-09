@@ -270,10 +270,24 @@ export default function ManagerProducts() {
   };
 
   const handleSubmit = () => {
+    // Normalize purchase_options: if product_id is an array, expand into separate options
+    let normalizedOptions = (formData.purchase_options || []).map(opt => {
+      if (Array.isArray(opt.product_id)) {
+        // For bundles with multiple products, create separate options for each
+        return opt.product_id.map((pid, idx) => ({
+          ...opt,
+          product_id: pid,
+          sort_order: (opt.sort_order || 0) + idx * 0.1, // Slight offset to maintain order
+        }));
+      }
+      return [opt];
+    }).flat();
+
     const dataToSave = {
       ...formData,
       price: formData.price ? parseInt(parseFloat(formData.price) * 100) : 0,
       features: formData.features.filter(f => f.trim() !== ""),
+      purchase_options: normalizedOptions,
     };
 
     if (editingProduct) {
