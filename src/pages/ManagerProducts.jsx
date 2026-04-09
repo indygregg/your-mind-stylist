@@ -274,24 +274,17 @@ export default function ManagerProducts() {
   };
 
   const handleSubmit = () => {
-    // Normalize purchase_options: if product_id is an array, expand into separate options
-    let normalizedOptions = (formData.purchase_options || []).map(opt => {
-      if (Array.isArray(opt.product_id)) {
-        // For bundles with multiple products, create separate options for each
-        return opt.product_id.map((pid, idx) => ({
-          ...opt,
-          product_id: pid,
-          sort_order: (opt.sort_order || 0) + idx * 0.1, // Slight offset to maintain order
-        }));
-      }
-      return [opt];
-    }).flat();
+    // Clean up purchase_options: strip inline-creation temp fields, keep product_id as-is (array for bundles)
+    const cleanedOptions = (formData.purchase_options || []).map(opt => {
+      const { _inline, _variant_name, _variant_price, ...clean } = opt;
+      return clean;
+    });
 
     const dataToSave = {
       ...formData,
       price: formData.price ? parseInt(parseFloat(formData.price) * 100) : 0,
       features: formData.features.filter(f => f.trim() !== ""),
-      purchase_options: normalizedOptions,
+      purchase_options: cleanedOptions,
     };
 
     if (editingProduct) {
