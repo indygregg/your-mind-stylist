@@ -4,12 +4,19 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
-import { Loader2, Star, ShoppingCart, ArrowLeft } from "lucide-react";
+import { Star, ShoppingCart, ArrowLeft } from "lucide-react";
 import { createPageUrl } from "../utils";
 import SEO from "../components/SEO";
 import BookCover3D from "../components/books/BookCover3D";
+import BookPurchaseOptions from "../components/books/BookPurchaseOptions";
 
-const formatPrice = (price) => `$${(price / 100).toFixed(2)}`;
+const formatPrice = (price) => {
+  const curr = new Intl.NumberFormat('en-EU', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(price / 100);
+  return curr;
+};
 
 function StarRating({ stars }) {
   return (
@@ -26,8 +33,6 @@ function StarRating({ stars }) {
 }
 
 export default function BookProductPage() {
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
-
   const { slug } = useParams();
 
   const { data: book, isLoading } = useQuery({
@@ -39,14 +44,10 @@ export default function BookProductPage() {
     enabled: !!slug,
   });
 
-  const handlePurchase = async () => {
-    if (!book) return;
-    setCheckoutLoading(true);
-    const response = await base44.functions.invoke("createProductCheckout", { product_id: book.id });
+  const handleAddToCart = async (product) => {
+    const response = await base44.functions.invoke("createProductCheckout", { product_id: product.id });
     if (response.data?.url) {
       window.location.href = response.data.url;
-    } else {
-      setCheckoutLoading(false);
     }
   };
 
@@ -130,26 +131,27 @@ export default function BookProductPage() {
                 </p>
               )}
 
-              <div className="flex items-center gap-6 mb-8">
-                <span className="font-serif text-4xl text-[#D8B46B] font-bold">
-                  {formatPrice(book.price)}
-                </span>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  onClick={handlePurchase}
-                  disabled={checkoutLoading}
-                  className="bg-[#D8B46B] hover:bg-[#C5A35B] text-[#1E3A32] font-semibold px-8 py-6 text-base"
-                >
-                  {checkoutLoading ? (
-                    <Loader2 size={18} className="animate-spin mr-2" />
-                  ) : (
+              {book.purchase_options && book.purchase_options.length > 0 ? (
+                <BookPurchaseOptions
+                  product={book}
+                  ctaLabel="Get Your Copy"
+                  onAddToCart={handleAddToCart}
+                />
+              ) : (
+                <div className="bg-white border border-[#E4D9C4] p-6 mb-8">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold text-[#1E3A32]">{book.name}</h3>
+                    <div className="text-2xl font-bold text-[#1E3A32]">{formatPrice(book.price)}</div>
+                  </div>
+                  <Button
+                    onClick={() => handleAddToCart(book)}
+                    className="w-full bg-[#D8B46B] hover:bg-[#C5A35B] text-[#1E3A32] font-semibold py-6"
+                  >
                     <ShoppingCart size={18} className="mr-2" />
-                  )}
-                  Get Your Copy
-                </Button>
-              </div>
+                    Get Your Copy
+                  </Button>
+                </div>
+              )}
 
               {book.features && book.features.length > 0 && (
                 <ul className="mt-8 space-y-2">
@@ -229,24 +231,34 @@ export default function BookProductPage() {
       )}
 
       {/* CTA */}
-      <section className="py-20 bg-[#D8B46B]/10 border-t border-[#D8B46B]/20">
-        <div className="max-w-2xl mx-auto px-6 text-center">
-          <h2 className="font-serif text-3xl text-[#1E3A32] mb-4">Ready to Begin?</h2>
-          <p className="text-[#2B2725]/70 mb-8">{book.short_description}</p>
-          <Button
-            onClick={handlePurchase}
-            disabled={checkoutLoading}
-            className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-10 py-6 text-base"
-          >
-            {checkoutLoading ? (
-              <Loader2 size={18} className="animate-spin mr-2" />
-            ) : (
+      {book.purchase_options && book.purchase_options.length > 0 && (
+        <section className="py-20 bg-[#D8B46B]/10 border-t border-[#D8B46B]/20">
+          <div className="max-w-2xl mx-auto px-6">
+            <h2 className="font-serif text-3xl text-[#1E3A32] mb-4 text-center">Ready to Begin?</h2>
+            <p className="text-[#2B2725]/70 mb-8 text-center">{book.short_description}</p>
+            <BookPurchaseOptions
+              product={book}
+              ctaLabel="Get Your Copy"
+              onAddToCart={handleAddToCart}
+            />
+          </div>
+        </section>
+      )}
+      {!book.purchase_options || book.purchase_options.length === 0 && (
+        <section className="py-20 bg-[#D8B46B]/10 border-t border-[#D8B46B]/20">
+          <div className="max-w-2xl mx-auto px-6 text-center">
+            <h2 className="font-serif text-3xl text-[#1E3A32] mb-4">Ready to Begin?</h2>
+            <p className="text-[#2B2725]/70 mb-8">{book.short_description}</p>
+            <Button
+              onClick={() => handleAddToCart(book)}
+              className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-10 py-6 text-base"
+            >
               <ShoppingCart size={18} className="mr-2" />
-            )}
-            Get Your Copy — {formatPrice(book.price)}
-          </Button>
-        </div>
-      </section>
+              Get Your Copy — {formatPrice(book.price)}
+            </Button>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

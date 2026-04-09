@@ -75,6 +75,10 @@
       "type": "number",
       "description": "Price in cents"
     },
+    "compare_at_price": {
+      "type": "number",
+      "description": "Original/compare-at price in cents (for showing savings)"
+    },
     "currency": {
       "type": "string",
       "default": "usd",
@@ -121,6 +125,88 @@
     "book_cover_image": {
       "type": "string",
       "description": "Book cover image URL (for book products)"
+    },
+    "book_hero_layout": {
+      "type": "string",
+      "enum": [
+        "book_left",
+        "book_right"
+      ],
+      "default": "book_left",
+      "description": "Which side the 3D book cover appears in the hero (book_left or book_right)"
+    },
+    "book_video_embed": {
+      "type": "string",
+      "description": "Optional YouTube/Vimeo embed URL for book product page"
+    },
+    "book_reviews": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "quote": {
+            "type": "string",
+            "description": "Review text"
+          },
+          "reviewer": {
+            "type": "string",
+            "description": "Reviewer name"
+          },
+          "reviewer_title": {
+            "type": "string",
+            "description": "Reviewer title or descriptor"
+          },
+          "stars": {
+            "type": "number",
+            "description": "Star rating 1-5"
+          }
+        }
+      },
+      "description": "Reader reviews (for book products)"
+    },
+    "purchase_options": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "digital",
+              "physical",
+              "bundle",
+              "custom"
+            ],
+            "description": "Format type"
+          },
+          "product_id": {
+            "type": "string",
+            "description": "Reference to the Product entity for this format variant"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "description": "Is this purchase option available"
+          },
+          "display_label": {
+            "type": "string",
+            "description": "Custom label (e.g., 'Digital Book', 'Paperback', 'Bundle')"
+          },
+          "badge": {
+            "type": "string",
+            "description": "Optional badge text (e.g., 'Best Value', 'Most Popular')"
+          },
+          "sort_order": {
+            "type": "number",
+            "description": "Display order among purchase options"
+          }
+        },
+        "required": [
+          "type",
+          "product_id"
+        ]
+      },
+      "description": "Available purchase format options for books"
     },
     "icon": {
       "type": "string",
@@ -194,7 +280,7 @@
         "programs",
         "buy_programs"
       ],
-      "description": "Which public pages this bundle appears on (programs, buy_programs, courses, webinars, books, other)"
+      "description": "Which public pages this bundle appears on"
     },
     "stripe_product_id": {
       "type": "string",
@@ -213,7 +299,7 @@
     },
     "tax_code": {
       "type": "string",
-      "description": "Stripe tax code (e.g., txcd_100000000 for physical goods, txcd_110000000 for digital services)"
+      "description": "Stripe tax code"
     }
   },
   "required": [
