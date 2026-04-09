@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Loader2 } from "lucide-react";
+import { Plus, Trash2, Loader2, Upload, FileText, Link as LinkIcon } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -15,6 +15,11 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
   const { data: allProducts = [] } = useQuery({
     queryKey: ["products"],
     queryFn: () => base44.entities.Product.list("-created_date"),
+  });
+
+  const { data: allResources = [] } = useQuery({
+    queryKey: ["resources-for-variants"],
+    queryFn: () => base44.entities.Resource.filter({ status: "published" }),
   });
 
   const availableProducts = allProducts.filter(p => p.id !== currentProductId && p.product_subtype === 'book');
@@ -402,6 +407,17 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
             </div>
           </div>
 
+          {/* Digital Resource Attachment */}
+          {option.type === 'digital' && option.product_id && !option._inline && (
+            <DigitalResourcePicker
+              option={option}
+              index={index}
+              allResources={allResources}
+              handleUpdateOption={handleUpdateOption}
+              queryClient={queryClient}
+            />
+          )}
+
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
@@ -413,6 +429,116 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
           </label>
         </div>
       ))}
+    </div>
+  );
+}
+
+function DigitalResourcePicker({ option, index, allResources, handleUpdateOption, queryClient }) {
+  const fileInputRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
+
+  const linkedResource = option.digital_resource_id
+    ? allResources.find(r => r.id === option.digital_resource_id)
+    : null;
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const resource = await base44.entities.Resource.create({
+        title: file.name.replace(/\.[^.]+$/, ''),
+        resource_type: file.type.includes('pdf') ? 'pdf' : file.type.includes('audio') ? 'audio' : file.type.includes('video') ? 'video' : 'link',
+        file_url,
+        file_size: file.size > 1048576 ? `${(file.size / 1048576).toFixed(1)} MB` : `${(file.size / 1024).toFixed(0)} KB`,
+        access_level: 'product_gated',
+        status: 'published',
+        category: 'Other',
+      });
+      handleUpdateOption(index, 'digital_resource_id', resource.id);
+      queryClient.invalidateQueries({ queryKey: ['resources-for-variants'] });
+      toast.success(`Uploaded and linked "${resource.title}"`);
+    } catch (err) {
+      toast.error(`Upload failed: ${err.message}`);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  if (linkedResource) {
+    return (
+      <div className="mt-2 border border-[#D8B46B]/30 bg-[#D8B46B]/5 rounded p-3">
+        <Label className="text-xs">Digital Resource</Label>
+        <div className="flex items-center justify-between mt-1">
+          <div className="flex items-center gap-2 min-w-0">
+            <FileText size={16} className="text-[#D8B46B] flex-shrink-0" />
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-[#1E3A32] truncate">{linkedResource.title}</p>
+              <p className="text-xs text-[#2B2725]/60">{linkedResource.resource_type} {linkedResource.file_size ? `• ${linkedResource.file_size}` : ''}</p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => handleUpdateOption(index, 'digital_resource_id', '')}
+            className="text-xs flex-shrink-0"
+          >
+            Change
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-2 border border-[#E4D9C4] bg-[#F9F5EF] rounded p-3 space-y-3">
+      <Label className="text-xs">Attach Digital Resource</Label>
+      <p className="text-xs text-[#2B2725]/50">Upload a file or select an existing resource that buyers will receive.</p>
+      <div className="flex gap-2">
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+          className="flex-1"
+        >
+          {uploading ? (
+            <><Loader2 size={14} className="mr-1 animate-spin" /> Uploading...</>
+          ) : (
+            <><Upload size={14} className="mr-1" /> Upload File</>
+          )}
+        </Button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          className="hidden"
+          onChange={handleFileUpload}
+          accept=".pdf,.epub,.mobi,.mp3,.mp4,.zip,.docx"
+        />
+      </div>
+      {allResources.length > 0 && (
+        <div>
+          <Label className="text-xs mb-1 block">Or select existing resource</Label>
+          <Select
+            value={option.digital_resource_id || ''}
+            onValueChange={(v) => handleUpdateOption(index, 'digital_resource_id', v)}
+          >
+            <SelectTrigger className="h-9">
+              <SelectValue placeholder="Choose a resource..." />
+            </SelectTrigger>
+            <SelectContent>
+              {allResources.map((r) => (
+                <SelectItem key={r.id} value={r.id}>
+                  {r.title} ({r.resource_type}{r.file_size ? ` • ${r.file_size}` : ''})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
     </div>
   );
 }
