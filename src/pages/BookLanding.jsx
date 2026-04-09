@@ -101,26 +101,26 @@ export default function BookLanding() {
                 </p>
               )}
 
-              {hasPurchaseOptions ? (
-                <BookPurchaseOptions product={book} />
-              ) : (
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button
-                    onClick={handleDefaultPurchase}
-                    className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-8 py-5 text-base"
-                  >
-                    <ShoppingCart size={18} className="mr-2" />
-                    Buy the Book{book.price ? ` — ${formatPrice(book.price)}` : ""}
-                  </Button>
-                </div>
-              )}
-              <div className="mt-4">
-                <Link to={`/quiz/${quizSlug}`}>
-                  <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10 px-8 py-5 text-base">
-                    Take the Quiz
-                    <ArrowRight size={16} className="ml-2" />
-                  </Button>
-                </Link>
+              <div className="max-w-md">
+                {hasPurchaseOptions ? (
+                  <BookPurchaseOptions product={book} quiz={{ slug: quizSlug }} />
+                ) : (
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button
+                      onClick={handleDefaultPurchase}
+                      className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-8 py-5 text-base"
+                    >
+                      <ShoppingCart size={18} className="mr-2" />
+                      Buy the Book{book.price ? ` — ${formatPrice(book.price)}` : ""}
+                    </Button>
+                    <Link to={`/quiz/${quizSlug}`}>
+                      <Button variant="outline" className="border-[#D8B46B] text-[#1E3A32] hover:bg-[#D8B46B]/10 px-8 py-5 text-base">
+                        Take the Quiz
+                        <ArrowRight size={16} className="ml-2" />
+                      </Button>
+                    </Link>
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>
