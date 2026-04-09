@@ -180,8 +180,15 @@
             "description": "Format type"
           },
           "product_id": {
+            "description": "Reference to Product entity \u2014 a single ID (string) or multiple IDs (array) for bundle variants"
+          },
+          "bundle_price": {
+            "type": "number",
+            "description": "Custom bundle price in cents (for bundle-type purchase options)"
+          },
+          "digital_resource_id": {
             "type": "string",
-            "description": "Reference to the Product entity for this format variant"
+            "description": "Reference to Resource entity for digital delivery"
           },
           "enabled": {
             "type": "boolean",
@@ -202,8 +209,7 @@
           }
         },
         "required": [
-          "type",
-          "product_id"
+          "type"
         ]
       },
       "description": "Available purchase format options for books"
