@@ -3,7 +3,7 @@ import { Headphones, Video, FileText, CheckCircle2, Circle, PlayCircle, Lock, Cl
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
-export default function ModuleNavigator({ modules, lessons, userLessonProgress, currentLessonId, onLessonSelect }) {
+export default function ModuleNavigator({ modules, lessons, userLessonProgress, currentLessonId, onLessonSelect, lessonIdsWithNotes = new Set() }) {
   const getTypeIcon = (type) => {
     const iconMap = {
       audio: Headphones,
@@ -74,8 +74,7 @@ export default function ModuleNavigator({ modules, lessons, userLessonProgress, 
                     const status = getLessonStatus(lesson.id);
                     const isActive = lesson.id === currentLessonId;
                     const locked = isLessonLocked(lesson);
-                    // Check if lesson has notes (indicated by presence in userLessonProgress)
-                    const hasNotes = userLessonProgress.some(p => p.lesson_id === lesson.id && p.notes_count > 0);
+                    const hasNotes = lessonIdsWithNotes.has(lesson.id);
                     
                     return (
                       <button

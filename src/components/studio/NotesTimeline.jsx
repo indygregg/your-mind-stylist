@@ -173,12 +173,12 @@ export default function NotesTimeline({ notes = [], onSpotlight }) {
                       </button>
 
                       {/* Source Context */}
-                       {note.source_type && note.source_type !== 'freeform' && (
-                         <div className="text-xs text-[#2B2725]/60 mb-2 italic">
-                           From: <span className="font-medium capitalize">{note.source_type}</span>
-                           {note.source_id && <span> (ID: {note.source_id})</span>}
-                         </div>
-                       )}
+                      {note.source_type && note.source_type !== 'freeform' && (
+                        <div className="text-xs text-[#2B2725]/60 mb-2 italic">
+                          From: <span className="font-medium capitalize">{note.source_type}</span>
+                          {note.source_title && <span> — {note.source_title}</span>}
+                        </div>
+                      )}
 
                        {/* Note Content */}
                        <p className="text-[#2B2725] leading-relaxed mb-4 pr-8">{note.content}</p>

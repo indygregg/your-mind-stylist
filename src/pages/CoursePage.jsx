@@ -105,6 +105,14 @@ export default function CoursePage() {
     enabled: !!user?.id,
   });
 
+  // Fetch lesson notes to show indicator in module navigator
+  const { data: lessonNotes = [] } = useQuery({
+    queryKey: ["lessonNotes", user?.id, course?.id],
+    queryFn: () => base44.entities.Note.filter({ created_by: user.email, source_type: "lesson" }),
+    enabled: !!user?.id && !!course?.id,
+  });
+  const lessonIdsWithNotes = new Set(lessonNotes.map(n => n.source_id).filter(Boolean));
+
   // Set initial lesson
   useEffect(() => {
     if (allLessons.length > 0 && !currentLessonId) {
@@ -288,6 +296,7 @@ export default function CoursePage() {
           userLessonProgress={userLessonProgress}
           currentLessonId={currentLessonId}
           onLessonSelect={handleLessonSelect}
+          lessonIdsWithNotes={lessonIdsWithNotes}
         />
         <div className="flex-1 flex flex-col">
           {currentLesson && (
