@@ -237,7 +237,7 @@ export default function Layout({ children, currentPageName }) {
             <>
         {/* Micro Header */}
         <div className={`hidden lg:block border-b ${hasDarkHero ? 'border-white/20' : 'border-[#D8B46B]/20'}`}>
-          <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
+          <div className="w-full px-6 py-2 flex justify-between items-center">
             <p className={`text-xs tracking-[0.2em] ${textColorOpacity} uppercase font-light`}>
               Las Vegas • Emotional Intelligence • Mind Styling • Hypnosis • Professional Development
             </p>
@@ -259,7 +259,7 @@ export default function Layout({ children, currentPageName }) {
         </div>
 
         {/* Main Nav */}
-        <nav className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <nav className="w-full px-6 py-4 flex justify-between items-center">
           {/* Back Button for child routes on mobile */}
           {currentPageName !== 'Home' && (
             <button
@@ -350,7 +350,7 @@ export default function Layout({ children, currentPageName }) {
                     transition={{ duration: 0.2 }}
                     className="absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-b border-[#E4D9C4] z-50"
                   >
-                    <div className="max-w-7xl mx-auto grid grid-cols-3 gap-6 p-8">
+                    <div className="w-full grid grid-cols-3 gap-6 p-8 px-12">
                       {servicesMenu.map((section) => (
                         <div key={section.category}>
                           <h3 className="font-serif text-sm text-[#D8B46B] tracking-wider uppercase mb-4">
@@ -519,7 +519,7 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Footer */}
       <footer className="bg-[#1E3A32] text-[#F9F5EF]">
-        <div className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+        <div className="w-full px-6 py-16 md:py-24">
           <div className="grid md:grid-cols-3 gap-12 md:gap-8">
             {/* Brand */}
             <div>
