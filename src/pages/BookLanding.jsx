@@ -107,9 +107,9 @@ export default function BookLanding() {
                 </div>
               )}
               <div className="flex flex-col sm:flex-row gap-4">
-                {hasPurchaseOptions ? (
-                  <BookPurchaseOptions productId={book.id} />
-                ) : (
+               {hasPurchaseOptions ? (
+                 <BookPurchaseOptions product={book} />
+               ) : (
                   <Button
                     onClick={handleDefaultPurchase}
                     className="bg-[#1E3A32] hover:bg-[#2B2725] text-white px-8 py-6 text-base"
@@ -227,7 +227,7 @@ export default function BookLanding() {
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
            {hasPurchaseOptions ? (
-             <BookPurchaseOptions productId={book.id} />
+             <BookPurchaseOptions product={book} />
            ) : (
              <Button
                onClick={handleDefaultPurchase}
