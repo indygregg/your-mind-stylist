@@ -74,15 +74,7 @@ export default function BookPurchaseOptions({
     })
     .sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
 
-  // Set default selection if not already set
-  React.useEffect(() => {
-    if (!selectedProductId && enabledOptions.length > 0) {
-      const firstOption = enabledOptions[0];
-      // For arrays (bundles), use the first product ID; for single, use the product_id
-      const defaultId = Array.isArray(firstOption.product_id) ? firstOption.product_id[0] : firstOption.product_id;
-      setSelectedProductId(defaultId);
-    }
-  }, [enabledOptions, selectedProductId]);
+  // Don't auto-select - let user choose
 
   const selectedVariant = selectedProductId ? variantProducts[selectedProductId] : null;
 
@@ -199,23 +191,42 @@ export default function BookPurchaseOptions({
 
   return (
     <div className="space-y-4">
-      <select
-        value={selectedProductId || ""}
-        onChange={(e) => setSelectedProductId(e.target.value)}
-        className="w-full px-4 py-3 border border-[#E4D9C4] rounded-lg bg-white text-[#1E3A32] font-medium hover:border-[#D8B46B] transition-colors focus:outline-none focus:ring-2 focus:ring-[#D8B46B] focus:ring-offset-2"
-      >
-        <option value="" disabled>Select Format</option>
+      <div className="space-y-3">
         {enabledOptions.map((option) => {
           const productIds = Array.isArray(option.product_id) ? option.product_id : [option.product_id];
           const variant = variantProducts[productIds[0]];
           const price = variant?.price ? (variant.price / 100).toFixed(2) : "0.00";
+          const comparePrice = variant?.compare_at_price ? (variant.compare_at_price / 100).toFixed(2) : null;
+          const isSelected = selectedProductId === productIds[0];
+          
           return (
-            <option key={productIds[0]} value={productIds[0]}>
-              {option.display_label} — €{price}
-            </option>
+            <label key={productIds[0]} className="flex items-center gap-3 p-4 border border-[#E4D9C4] rounded-lg cursor-pointer hover:border-[#D8B46B] hover:bg-[#F9F5EF]/50 transition-all" style={{ borderColor: isSelected ? '#D8B46B' : '#E4D9C4', backgroundColor: isSelected ? '#1E3A32/5' : 'white' }}>
+              <input
+                type="radio"
+                name="format"
+                value={productIds[0]}
+                checked={isSelected}
+                onChange={(e) => setSelectedProductId(e.target.value)}
+                className="w-5 h-5 cursor-pointer accent-[#D8B46B]"
+              />
+              <div className="flex-1">
+                <div className="font-semibold text-[#1E3A32]">{option.display_label}</div>
+                {option.badge && (
+                  <div className="text-xs bg-[#D8B46B]/20 text-[#D8B46B] px-2 py-1 rounded mt-1 inline-block">
+                    {option.badge}
+                  </div>
+                )}
+              </div>
+              <div className="text-right flex-shrink-0">
+                <div className="font-bold text-[#1E3A32]">€{price}</div>
+                {comparePrice && comparePrice !== price && (
+                  <div className="text-xs text-gray-500 line-through">€{comparePrice}</div>
+                )}
+              </div>
+            </label>
           );
         })}
-      </select>
+      </div>
 
       {selectedOption && (
         <div className="bg-white border border-[#E4D9C4] p-4 rounded-lg">
