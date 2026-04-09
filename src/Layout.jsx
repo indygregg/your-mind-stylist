@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowLeft, ExternalLink, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Helmet } from "react-helmet";
 import CookieBanner from "./components/legal/CookieBanner";
@@ -17,7 +17,7 @@ import BooksMegaMenu from "./components/nav/BooksMegaMenu";
 import { PageTransition } from "./components/ui/PageTransition";
 import { CartProvider } from "./components/shop/CartContext";
 import CartIcon from "./components/shop/CartIcon";
-import { ArrowLeft, ExternalLink, Search } from "lucide-react";
+
 import GlobalSearch from "./components/GlobalSearch";
 import { useNavigate } from "react-router-dom";
 
