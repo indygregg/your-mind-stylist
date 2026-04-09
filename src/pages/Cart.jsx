@@ -9,6 +9,7 @@ import SEO from "../components/SEO";
 import { useCart } from "../components/shop/CartContext";
 import { base44 } from "@/api/base44Client";
 import { toast } from "react-hot-toast";
+import { Truck } from "lucide-react";
 
 export default function Cart() {
   const { items, removeItem, clearCart, total } = useCart();
@@ -18,6 +19,13 @@ export default function Cart() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   const formatPrice = (cents) => `$${(cents / 100).toFixed(2)}`;
+
+  // Check if cart has physical items (books are physical)
+  const hasPhysicalItems = items.some(item => 
+    item.product_subtype === 'book' || 
+    item.product_subtype === 'physical_product' ||
+    item.isPhysical
+  );
 
   const discount = appliedCode
     ? Math.round((total * appliedCode.discount_percentage) / 100)
@@ -230,6 +238,20 @@ export default function Cart() {
                       <>Checkout → Pay Securely</>
                     )}
                   </Button>
+
+                  {hasPhysicalItems && (
+                    <div className="mt-4 p-3 bg-[#1E3A32]/5 rounded-lg">
+                      <div className="flex items-start gap-2">
+                        <Truck size={16} className="text-[#1E3A32] mt-0.5 flex-shrink-0" />
+                        <div>
+                          <p className="text-xs font-medium text-[#1E3A32]">Shipping address required</p>
+                          <p className="text-[10px] text-[#2B2725]/60 mt-0.5">
+                            You'll enter your full shipping address, country, postal code, and phone number at checkout. Free shipping on orders over $50.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <p className="text-[10px] text-[#2B2725]/40 text-center mt-3">
                     Secured by Stripe · SSL encrypted

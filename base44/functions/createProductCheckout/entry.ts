@@ -110,8 +110,71 @@ Deno.serve(async (req) => {
 
     const origin = req.headers.get('origin') || 'https://yourmindstylist.com';
 
-    // Check if any product is a physical book (requires shipping address)
-    const hasPhysicalBook = products.some(p => p.product_subtype === 'book');
+    // Detect if any product requires physical shipping
+    // Check both product_subtype and purchase_options type
+    const hasPhysicalProduct = products.some(p => {
+      // Direct check on product subtype for physical products
+      if (p.product_subtype === 'physical_product') return true;
+      // Check if any purchase option is "physical" type
+      if (p.purchase_options && p.purchase_options.length > 0) {
+        return p.purchase_options.some(opt => opt.type === 'physical');
+      }
+      // Also check the parent product's purchase_options if this is a variant
+      // A book with product_subtype "book" that has physical purchase options
+      if (p.product_subtype === 'book') return true;
+      return false;
+    });
+
+    // Build shipping config for physical products
+    let shippingConfig = {};
+    if (hasPhysicalProduct) {
+      // Calculate cart subtotal in cents
+      const subtotalCents = products.reduce((sum, p) => sum + (p.price || 0), 0);
+      const FREE_SHIPPING_THRESHOLD_CENTS = 5000; // $50 free shipping threshold
+      const FLAT_RATE_CENTS = 599; // $5.99 flat rate shipping
+
+      const shippingOptions = [];
+
+      // If over threshold, offer free shipping as first option
+      if (subtotalCents >= FREE_SHIPPING_THRESHOLD_CENTS) {
+        shippingOptions.push({
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: { amount: 0, currency: 'usd' },
+            display_name: 'Free Shipping',
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 5 },
+              maximum: { unit: 'business_day', value: 10 },
+            },
+          },
+        });
+      } else {
+        // Standard shipping
+        shippingOptions.push({
+          shipping_rate_data: {
+            type: 'fixed_amount',
+            fixed_amount: { amount: FLAT_RATE_CENTS, currency: 'usd' },
+            display_name: 'Standard Shipping',
+            delivery_estimate: {
+              minimum: { unit: 'business_day', value: 5 },
+              maximum: { unit: 'business_day', value: 10 },
+            },
+          },
+        });
+      }
+
+      shippingConfig = {
+        shipping_address_collection: {
+          allowed_countries: [
+            'US', 'CA', 'GB', 'AU', 'DE', 'FR', 'ES', 'IT', 'MX',
+            'NL', 'BE', 'AT', 'CH', 'IE', 'NZ', 'SE', 'NO', 'DK',
+            'FI', 'PT', 'PL', 'CZ', 'IL', 'JP', 'KR', 'SG', 'BR',
+          ],
+        },
+        shipping_options: shippingOptions,
+        phone_number_collection: { enabled: true },
+      };
+    }
 
     // Create checkout session
     const sessionConfig = {
@@ -120,12 +183,8 @@ Deno.serve(async (req) => {
       line_items: line_items,
       success_url: `${origin}/PurchaseSuccess?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/Cart`,
-      ...(hasPhysicalBook && {
-        billing_address_collection: 'required',
-        shipping_address_collection: {
-          allowed_countries: ['US', 'CA', 'GB', 'AU', 'DE', 'FR', 'ES', 'IT', 'MX']
-        }
-      }),
+      billing_address_collection: hasPhysicalProduct ? 'required' : 'auto',
+      ...shippingConfig,
       metadata: {
         user_id: user?.id || '',
         product_ids: products.map(p => p.id).join(','),
@@ -133,6 +192,7 @@ Deno.serve(async (req) => {
         product_names: products.map(p => p.name).join('; '),
         affiliate_code: affiliateCodeValue || '',
         gift_code: gift_code || '',
+        has_physical: hasPhysicalProduct ? 'true' : 'false',
       },
       ...discountConfig,
     };
