@@ -80,22 +80,24 @@ Deno.serve(async (req) => {
         if (gift_code) {
             const giftCodes = await base44.asServiceRole.entities.GiftCode.filter({ code: gift_code.toUpperCase() });
             const gc = giftCodes[0];
-            if (gc && gc.is_active && gc.discount_percentage) {
+            if (gc && gc.is_active) {
                 giftCodeRecord = gc;
 
-                // Create a Stripe coupon for any discount (including 100% off)
+                // Gift codes grant 100% off — they represent pre-paid access
+                const discountPct = gc.discount_percentage || 100;
                 const coupon = await stripe.coupons.create({
-                    percent_off: gc.discount_percentage,
+                    percent_off: discountPct,
                     duration: 'once',
                     name: `Gift Code: ${gift_code}`,
                 });
                 discountConfig = { discounts: [{ coupon: coupon.id }] };
 
-                // Mark code as used
                 await base44.asServiceRole.entities.GiftCode.update(gc.id, {
                     times_used: (gc.times_used || 0) + 1,
                     is_active: gc.is_single_use ? false : gc.is_active,
                 });
+            } else if (gift_code) {
+                return Response.json({ error: 'Invalid or expired gift code' }, { status: 400 });
             }
         }
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
+import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
 import { CheckCircle, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,19 @@ export default function PurchaseSuccess() {
     setPurchaseType(params.get("type") || "");
     setPaymentType(params.get("payment_type") || "");
     clearCart();
+
+    // Verify the Stripe session is legitimate
+    const session_id = params.get("session_id");
+    if (session_id) {
+      base44.functions.invoke('verifyStripeSession', { session_id })
+        .then(res => {
+          if (!res.data?.valid) {
+            // Invalid or unpaid session — redirect away
+            window.location.href = createPageUrl('Programs');
+          }
+        })
+        .catch(() => {}); // Non-blocking — don't break the page if verification fails
+    }
   }, []);
 
   const getTitle = () => {

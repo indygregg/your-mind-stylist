@@ -53,7 +53,15 @@ export default function ProductPage() {
 
   const product = products[0];
 
+  const isContactOnly = product && (product.type === 'consultation' || !product.stripe_price_id);
+
   const handlePurchase = async () => {
+    // Consultation or products without Stripe price → redirect to booking
+    if (isContactOnly) {
+      window.location.href = createPageUrl('Bookings');
+      return;
+    }
+
     setCheckoutLoading(true);
     
     // Fire-and-forget tracking — never block checkout
