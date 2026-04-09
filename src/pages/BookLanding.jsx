@@ -52,7 +52,26 @@ export default function BookLanding() {
   }
 
   const coverImage = book.book_cover_image || book.thumbnail;
-  const quizSlug = slug; // quiz route mirrors book slug
+
+  // Fetch associated quiz
+  const { data: quiz } = useQuery({
+    queryKey: ["book-quiz", book?.id],
+    queryFn: async () => {
+      // Try matching by related_product_id (could be product key or id)
+      const quizzes = await base44.entities.Quiz.filter({ status: "published" });
+      return quizzes.find(q => 
+        q.related_product_id === book.key || 
+        q.related_product_id === book.id || 
+        q.related_product_id === book.slug ||
+        q.cta_product_id === book.key ||
+        q.cta_product_id === book.id ||
+        q.cta_product_id === book.slug
+      ) || null;
+    },
+    enabled: !!book,
+  });
+
+  const quizSlug = quiz?.slug || slug;
 
   return (
     <div className="min-h-screen bg-[#F9F5EF]">
