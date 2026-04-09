@@ -280,10 +280,13 @@ export default function ManagerProducts() {
       return clean;
     });
 
+    // Strip read-only / built-in fields that the API rejects on update
+    const { id, created_date, created_by, updated_date, ...writableFields } = formData;
+
     const dataToSave = {
-      ...formData,
+      ...writableFields,
       price: formData.price ? parseInt(parseFloat(formData.price) * 100) : 0,
-      features: formData.features.filter(f => f.trim() !== ""),
+      features: (formData.features || []).filter(f => f.trim() !== ""),
       purchase_options: cleanedOptions,
     };
 
