@@ -71,10 +71,7 @@ export default function ManagerProducts() {
     queryFn: () => base44.entities.Course.list("title"),
   });
 
-  const { data: webinars = [] } = useQuery({
-    queryKey: ["webinars"],
-    queryFn: () => base44.entities.Webinar.list("title"),
-  });
+
 
   const createMutation = useMutation({
     mutationFn: async (productData) => {
@@ -1198,9 +1195,9 @@ export default function ManagerProducts() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={null}>None</SelectItem>
-                  {webinars.map((w) => (
+                  {products.filter(p => p.product_subtype === 'webinar').map((w) => (
                     <SelectItem key={w.id} value={w.id}>
-                      {w.title}
+                      {w.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
