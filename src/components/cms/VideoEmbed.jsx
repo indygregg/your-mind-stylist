@@ -14,9 +14,17 @@ export default function VideoEmbed({ contentKey, fallback, page, blockTitle }) {
     const ytId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)?.[1];
     if (ytId) return `https://www.youtube.com/embed/${ytId}`;
     
-    // Vimeo - handle both full URLs and embed URLs
-    const vimeoId = url.match(/(?:vimeo\.com\/|player\.vimeo\.com\/video\/)(\d+)/)?.[1];
-    if (vimeoId) return `https://player.vimeo.com/video/${vimeoId}`;
+    // Vimeo - handle full URLs, embed URLs, and privacy hashes
+    const vimeoMatch = url.match(/(?:vimeo\.com\/|player\.vimeo\.com\/video\/)(\d+)(?:\/([a-f0-9]+))?/);
+    if (vimeoMatch) {
+      const videoId = vimeoMatch[1];
+      const pathHash = vimeoMatch[2];
+      const queryHash = url.match(/[?&]h=([a-f0-9]+)/)?.[1];
+      const hash = pathHash || queryHash;
+      return hash
+        ? `https://player.vimeo.com/video/${videoId}?h=${hash}`
+        : `https://player.vimeo.com/video/${videoId}`;
+    }
     
     // If it's already an embed URL, return as is
     if (url.includes('player.vimeo.com') || url.includes('youtube.com/embed')) {

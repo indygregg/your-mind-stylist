@@ -35,10 +35,17 @@ export default function VideoPlayer({ src, embedUrl, onProgressUpdate, lastPosit
       return url;
     }
 
-    // Vimeo: https://vimeo.com/123456789 or https://vimeo.com/123456789?fl=ip&fe=ec
-    const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+    // Vimeo: https://vimeo.com/123456789 or /123456789/hash or with ?h=hash
+    const vimeoMatch = url.match(/vimeo\.com\/(\d+)(?:\/([a-f0-9]+))?/);
     if (vimeoMatch) {
-      return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+      const videoId = vimeoMatch[1];
+      // Preserve privacy hash from path (/ID/HASH) or query (?h=HASH)
+      const pathHash = vimeoMatch[2];
+      const queryHash = url.match(/[?&]h=([a-f0-9]+)/)?.[1];
+      const hash = pathHash || queryHash;
+      return hash
+        ? `https://player.vimeo.com/video/${videoId}?h=${hash}`
+        : `https://player.vimeo.com/video/${videoId}`;
     }
 
     // YouTube: https://www.youtube.com/watch?v=ABC123 -> https://www.youtube.com/embed/ABC123
