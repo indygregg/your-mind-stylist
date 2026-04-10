@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye, Sparkles, RefreshCw, Download, Upload, Package, BookOpen, Video, GraduationCap, Info, GripVertical, Gift } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, Sparkles, RefreshCw, Download, Upload, Package, BookOpen, Video, GraduationCap, Info, GripVertical, Gift, ExternalLink } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ReactQuill from "react-quill";
 import BundleCreator from "../components/manager/BundleCreator";
@@ -587,9 +587,22 @@ export default function ManagerProducts() {
                     <Button size="sm" variant="outline" title="Generate Gift Code" onClick={() => { setGiftProduct(product); setGiftDialogOpen(true); }}><Gift size={14}/></Button>
                     <Button 
                       size="sm" 
+                      variant="outline"
+                      title="Preview product page"
+                      onClick={() => {
+                        if (product.slug) {
+                          window.open(`/ProductPage?slug=${product.slug}&preview=true`, '_blank');
+                        } else {
+                          toast.error('Add a slug to this product first to preview it');
+                        }
+                      }}
+                    ><ExternalLink size={14}/></Button>
+                    <Button 
+                      size="sm" 
                       variant={product.status === 'published' ? 'default' : 'outline'}
                       onClick={() => toggleStatusMutation.mutate({ id: product.id, status: product.status === "published" ? "draft" : "published" })}
                       className={product.status === 'published' ? 'bg-green-600 hover:bg-green-700' : ''}
+                      title={product.status === 'published' ? 'Unpublish' : 'Publish'}
                     ><Eye size={14}/></Button>
                     <Button size="sm" variant="outline" onClick={() => { if (confirm("Delete this product?")) deleteMutation.mutate(product.id); }}><Trash2 size={14}/></Button>
                   </div>
