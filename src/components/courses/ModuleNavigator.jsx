@@ -43,11 +43,11 @@ export default function ModuleNavigator({ modules, lessons, userLessonProgress, 
   };
 
   return (
-    <div className="w-full lg:w-80 bg-white border-r border-[#E4D9C4]">
+    <div className="w-full lg:w-80 bg-white border-r border-[#E4D9C4] lg:sticky lg:top-0 lg:h-screen flex flex-col">
       <div className="p-6 border-b border-[#E4D9C4]">
         <h2 className="font-serif text-xl text-[#1E3A32]">Course Content</h2>
       </div>
-      <ScrollArea className="h-[calc(100vh-240px-56px)]">
+      <ScrollArea className="flex-1 min-h-0">
         <div className="p-4">
           {modules.map((module) => {
             const moduleLessons = lessons.filter(l => l.module_id === module.id);
