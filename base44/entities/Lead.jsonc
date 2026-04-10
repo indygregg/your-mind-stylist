@@ -14,6 +14,10 @@
       "type": "string",
       "description": "Last name"
     },
+    "full_name": {
+      "type": "string",
+      "description": "Full name"
+    },
     "phone": {
       "type": "string",
       "description": "Phone number"
@@ -60,15 +64,22 @@
     "source": {
       "type": "string",
       "enum": [
+        "networking",
+        "internet",
+        "referral",
+        "client",
+        "colleague",
+        "vendor",
         "website",
         "masterclass",
-        "referral",
         "social_media",
         "paid_ad",
         "organic_search",
         "email_campaign",
         "event",
-        "networking",
+        "booking_system",
+        "product_purchase",
+        "free_masterclass",
         "other"
       ],
       "description": "How they found us"

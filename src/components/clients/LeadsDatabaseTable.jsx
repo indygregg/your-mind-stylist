@@ -6,17 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Trash2, ChevronUp, ChevronDown } from "lucide-react";
 import toast from "react-hot-toast";
 
-const stageLabels = {
-  new: "New", contacted: "Contacted", booked: "Booked",
-  qualified: "Qualified", proposal: "Proposal", negotiation: "Negotiation",
-  won: "Won", lost: "Lost",
+const sourceLabels = {
+  networking: "Networking", internet: "Internet", referral: "Referral",
+  client: "Client", colleague: "Colleague", vendor: "Vendor",
+  website: "Website", masterclass: "Masterclass", social_media: "Social Media",
+  paid_ad: "Paid Ad", organic_search: "Organic Search", email_campaign: "Email Campaign",
+  event: "Event", booking_system: "Booking", product_purchase: "Purchase",
+  free_masterclass: "Free Masterclass", other: "Other",
 };
 
-const stageColors = {
-  new: "bg-blue-100 text-blue-800", contacted: "bg-purple-100 text-purple-800",
-  booked: "bg-indigo-100 text-indigo-800", qualified: "bg-green-100 text-green-800",
-  proposal: "bg-yellow-100 text-yellow-800", negotiation: "bg-orange-100 text-orange-800",
-  won: "bg-emerald-100 text-emerald-800", lost: "bg-gray-100 text-gray-600",
+const sourceColors = {
+  networking: "bg-blue-100 text-blue-800", internet: "bg-cyan-100 text-cyan-800",
+  referral: "bg-purple-100 text-purple-800", client: "bg-emerald-100 text-emerald-800",
+  colleague: "bg-indigo-100 text-indigo-800", vendor: "bg-amber-100 text-amber-800",
+  website: "bg-blue-100 text-blue-800", masterclass: "bg-pink-100 text-pink-800",
+  social_media: "bg-violet-100 text-violet-800", other: "bg-gray-100 text-gray-600",
 };
 
 const getFullName = (lead) => {
@@ -68,9 +72,9 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
         aVal = a.date_of_purchase || "";
         bVal = b.date_of_purchase || "";
         break;
-      case "stage":
-        aVal = a.stage || "";
-        bVal = b.stage || "";
+      case "source":
+        aVal = a.source || "";
+        bVal = b.source || "";
         break;
       default:
         aVal = a.created_date || "";
@@ -109,7 +113,7 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
             <th className="px-4 py-3 text-left text-xs font-semibold text-[#2B2725] uppercase tracking-wide whitespace-nowrap">Location</th>
             <th className="px-4 py-3 text-left text-xs font-semibold text-[#2B2725] uppercase tracking-wide whitespace-nowrap">What They Bought</th>
             <ColHeader field="date_of_purchase">Purchase Date</ColHeader>
-            <ColHeader field="stage">Stage</ColHeader>
+            <ColHeader field="source">Source</ColHeader>
             <th className="px-4 py-3 text-left text-xs font-semibold text-[#2B2725] uppercase tracking-wide whitespace-nowrap">Follow-Up</th>
             <th className="px-4 py-3 w-12"></th>
           </tr>
@@ -132,8 +136,8 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
               </td>
               <td className="px-4 py-3 text-[#2B2725]/70 whitespace-nowrap">{lead.date_of_purchase || "—"}</td>
               <td className="px-4 py-3 whitespace-nowrap">
-                <Badge className={`text-xs ${stageColors[lead.stage] || "bg-gray-100 text-gray-600"}`}>
-                  {stageLabels[lead.stage] || lead.stage || "—"}
+                <Badge className={`text-xs ${sourceColors[lead.source] || "bg-gray-100 text-gray-600"}`}>
+                  {sourceLabels[lead.source] || lead.source || "—"}
                 </Badge>
               </td>
               <td className="px-4 py-3 text-[#2B2725]/70 max-w-[150px] truncate text-xs" title={lead.follow_up_actions || ""}>
