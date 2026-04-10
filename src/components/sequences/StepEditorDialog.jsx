@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, SendHorizonal } from "lucide-react";
+import { Loader2, SendHorizonal, Check } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import toast from "react-hot-toast";
+import { debounce } from "lodash";
 
 const VARIABLES = [
   { key: "{{name}}", desc: "Recipient name" },
@@ -73,6 +74,51 @@ export default function StepEditorDialog({ open, onOpenChange, step, sequenceId,
     active: true,
   });
 
+  // --- Autosave for existing steps ---
+  const [autoSaveStatus, setAutoSaveStatus] = useState(null); // null | 'saving' | 'saved'
+  const autoSaveTimerRef = useRef(null);
+  const lastSavedRef = useRef(null);
+
+  const debouncedAutosave = useCallback(
+    debounce(async (currentForm) => {
+      if (!currentForm.id) return;
+      if (!currentForm.subject?.trim() && !currentForm.body_html?.trim()) return;
+
+      const formKey = JSON.stringify({
+        subject: currentForm.subject, preview_text: currentForm.preview_text,
+        body_html: currentForm.body_html, cta_text: currentForm.cta_text,
+        cta_url: currentForm.cta_url, delay_days: currentForm.delay_days,
+        delay_hours: currentForm.delay_hours,
+      });
+      if (formKey === lastSavedRef.current) return;
+
+      setAutoSaveStatus('saving');
+      try {
+        await base44.entities.EmailSequenceStep.update(currentForm.id, {
+          subject: currentForm.subject,
+          preview_text: currentForm.preview_text,
+          body_html: currentForm.body_html,
+          cta_text: currentForm.cta_text,
+          cta_url: currentForm.cta_url,
+          delay_days: currentForm.delay_days,
+          delay_hours: currentForm.delay_hours,
+        });
+        lastSavedRef.current = formKey;
+        setAutoSaveStatus('saved');
+        if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+        autoSaveTimerRef.current = setTimeout(() => setAutoSaveStatus(null), 3000);
+      } catch {
+        setAutoSaveStatus(null);
+      }
+    }, 2000),
+    []
+  );
+
+  useEffect(() => {
+    if (open && form.id) debouncedAutosave(form);
+    return () => debouncedAutosave.cancel();
+  }, [form, open, debouncedAutosave]);
+
   useEffect(() => {
     if (step?.id) {
       setForm({ ...step });
@@ -90,6 +136,8 @@ export default function StepEditorDialog({ open, onOpenChange, step, sequenceId,
         active: true,
       });
     }
+    lastSavedRef.current = null;
+    setAutoSaveStatus(null);
   }, [step, sequenceId, nextStepNumber, open]);
 
   const handleSave = () => {
@@ -97,6 +145,7 @@ export default function StepEditorDialog({ open, onOpenChange, step, sequenceId,
       toast.error("Subject and body are required");
       return;
     }
+    debouncedAutosave.cancel();
     onSave(form);
   };
 
@@ -104,7 +153,19 @@ export default function StepEditorDialog({ open, onOpenChange, step, sequenceId,
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{isEditing ? "Edit Email Step" : "Add Email to Sequence"}</DialogTitle>
+          <DialogTitle className="flex items-center gap-3">
+            {isEditing ? "Edit Email Step" : "Add Email to Sequence"}
+            {autoSaveStatus === 'saving' && (
+              <span className="flex items-center gap-1 text-xs font-normal text-[#2B2725]/40">
+                <Loader2 size={12} className="animate-spin" /> Saving...
+              </span>
+            )}
+            {autoSaveStatus === 'saved' && (
+              <span className="flex items-center gap-1 text-xs font-normal text-emerald-600">
+                <Check size={12} /> Saved
+              </span>
+            )}
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           {/* Timing */}
