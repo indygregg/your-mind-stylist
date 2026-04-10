@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Users, TrendingUp, Plus, Upload, Mail, Send, Loader2, HelpCircle, BarChart3 } from "lucide-react";
+import { Users, TrendingUp, Plus, Upload, Mail, Send, Loader2, HelpCircle, BarChart3, FolderPlus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import toast from "react-hot-toast";
 import LeadsSection from "../components/clients/LeadsSection.jsx";
@@ -11,12 +11,15 @@ import UsersSection from "../components/clients/UsersSection.jsx";
 import ConvertLeadsDialog from "../components/clients/ConvertLeadsDialog.jsx";
 import MassEmailDialog from "../components/crm/MassEmailDialog";
 import CampaignHistory from "../components/crm/CampaignHistory";
+import GroupManagementPanel from "../components/crm/GroupManagementPanel";
+import BulkAssignGroupDialog from "../components/crm/BulkAssignGroupDialog";
 
 export default function ClientsHub() {
   const queryClient = useQueryClient();
   const [convertDialogOpen, setConvertDialogOpen] = useState(false);
   const [massEmailDialogOpen, setMassEmailDialogOpen] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [bulkGroupDialogOpen, setBulkGroupDialogOpen] = useState(false);
 
   // Fetch leads
   const { data: leads = [], isLoading: leadsLoading } = useQuery({
@@ -70,6 +73,14 @@ export default function ClientsHub() {
             </TooltipProvider>
           </div>
           <div className="flex gap-3 flex-wrap">
+            <Button
+              onClick={() => setBulkGroupDialogOpen(true)}
+              variant="outline"
+              className="border-[#6E4F7D] text-[#6E4F7D]"
+            >
+              <FolderPlus size={16} className="mr-2" />
+              Add to Group
+            </Button>
             <Button
               onClick={() => setMassEmailDialogOpen(true)}
               className="bg-[#D8B46B] hover:bg-[#C9A557] text-[#1E3A32]"
@@ -150,6 +161,10 @@ export default function ClientsHub() {
               <BarChart3 size={14} />
               Campaigns
             </TabsTrigger>
+            <TabsTrigger value="groups" className="flex items-center gap-1.5">
+              <Users size={14} />
+              Groups
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="leads">
@@ -178,6 +193,25 @@ export default function ClientsHub() {
               <CampaignHistory />
             </div>
           </TabsContent>
+
+          <TabsContent value="groups">
+            <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="font-serif text-xl text-[#1E3A32]">MailerLite Groups</h2>
+                  <p className="text-sm text-[#2B2725]/60 mt-1">Organize your contacts into groups for targeted campaigns</p>
+                </div>
+                <Button
+                  onClick={() => setBulkGroupDialogOpen(true)}
+                  className="bg-[#6E4F7D] hover:bg-[#5A3F69] text-white"
+                >
+                  <FolderPlus size={16} className="mr-2" />
+                  Bulk Add to Group
+                </Button>
+              </div>
+              <GroupManagementPanel />
+            </div>
+          </TabsContent>
         </Tabs>
 
         {/* Convert Leads Dialog */}
@@ -196,6 +230,13 @@ export default function ClientsHub() {
         <MassEmailDialog
           open={massEmailDialogOpen}
           onOpenChange={setMassEmailDialogOpen}
+          leads={leads}
+        />
+
+        {/* Bulk Assign Group Dialog */}
+        <BulkAssignGroupDialog
+          open={bulkGroupDialogOpen}
+          onOpenChange={setBulkGroupDialogOpen}
           leads={leads}
         />
       </div>
