@@ -150,13 +150,13 @@ export default function Dashboard() {
   const buyLinks = useMemo(() => [
     {
       label: "LENS™",
-      productId: "693d6b978867f6e147e25e91",
+      slug: "lens",
       description: "Transform through a new lens",
       color: "#6E4F7D",
     },
     {
       label: "Cleaning Out Your Closet™",
-      productId: "69a9b0ec1269644b5ea78346",
+      slug: "closet",
       description: "Clear your emotional closet",
       color: "#1E3A32",
     },
@@ -328,8 +328,8 @@ export default function Dashboard() {
             <div className="grid md:grid-cols-2 gap-6">
               {buyLinks.map((link) => (
                 <Link
-                  key={link.productId}
-                  to={createPageUrl(`ProductPage?id=${link.productId}`)}
+                  key={link.slug}
+                  to={createPageUrl(`ProductPage?slug=${link.slug}`)}
                   onClick={() => window.scrollTo(0, 0)}
                   className="bg-white p-6 hover:shadow-lg transition-shadow border-l-4 active:scale-98 touch-manipulation"
                   style={{ borderLeftColor: link.color }}
