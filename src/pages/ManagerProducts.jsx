@@ -588,12 +588,14 @@ export default function ManagerProducts() {
                     <Button 
                       size="sm" 
                       variant="outline"
-                      title="Preview product page"
+                      title={product.related_course_id ? "Preview course content" : "Preview product page"}
                       onClick={() => {
-                        if (product.slug) {
+                        if (product.related_course_id) {
+                          window.open(`/CoursePage?id=${product.related_course_id}`, '_blank');
+                        } else if (product.slug) {
                           window.open(`/ProductPage?slug=${product.slug}&preview=true`, '_blank');
                         } else {
-                          toast.error('Add a slug to this product first to preview it');
+                          toast.error('Add a slug or link a course to preview this product');
                         }
                       }}
                     ><ExternalLink size={14}/></Button>
