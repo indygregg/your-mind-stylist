@@ -7,12 +7,14 @@ import ModuleNavigator from "../components/courses/ModuleNavigator";
 import LessonArea from "../components/courses/LessonArea";
 import LessonNavigation from "../components/courses/LessonNavigation";
 import NotesDrawer from "../components/studio/NotesDrawer";
+import CourseNotesDrawer from "../components/courses/CourseNotesDrawer";
 import EmotionalCheckIn from "../components/courses/EmotionalCheckIn";
 
 export default function CoursePage() {
   const queryClient = useQueryClient();
   const [currentLessonId, setCurrentLessonId] = useState(null);
   const [notesDrawerOpen, setNotesDrawerOpen] = useState(false);
+  const [courseNotesDrawerOpen, setCourseNotesDrawerOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [showEmotionalCheckIn, setShowEmotionalCheckIn] = useState(false);
   const [checkInType, setCheckInType] = useState("before"); // "before" or "after"
@@ -302,6 +304,8 @@ export default function CoursePage() {
           currentLessonId={currentLessonId}
           onLessonSelect={handleLessonSelect}
           lessonIdsWithNotes={lessonIdsWithNotes}
+          onOpenNotes={() => setCourseNotesDrawerOpen(true)}
+          totalNotesCount={lessonNotes.length}
         />
         <div className="flex-1 flex flex-col">
           {currentLesson && (
@@ -339,6 +343,16 @@ export default function CoursePage() {
           source_type: "lesson",
           source_id: currentLessonId,
           source_title: currentLesson?.title,
+        }}
+      />
+      <CourseNotesDrawer
+        isOpen={courseNotesDrawerOpen}
+        onClose={() => setCourseNotesDrawerOpen(false)}
+        notes={lessonNotes}
+        lessons={allLessons}
+        onNavigateToLesson={(lessonId) => {
+          handleLessonSelect(lessonId);
+          setCourseNotesDrawerOpen(false);
         }}
       />
       {showEmotionalCheckIn && currentLesson && (

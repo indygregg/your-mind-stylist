@@ -3,7 +3,7 @@ import { Headphones, Video, FileText, CheckCircle2, Circle, PlayCircle, Lock, Cl
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
-export default function ModuleNavigator({ modules, lessons, userLessonProgress, currentLessonId, onLessonSelect, lessonIdsWithNotes = new Set() }) {
+export default function ModuleNavigator({ modules, lessons, userLessonProgress, currentLessonId, onLessonSelect, lessonIdsWithNotes = new Set(), onOpenNotes, totalNotesCount = 0 }) {
   const getTypeIcon = (type) => {
     const iconMap = {
       audio: Headphones,
@@ -47,7 +47,7 @@ export default function ModuleNavigator({ modules, lessons, userLessonProgress, 
       <div className="p-6 border-b border-[#E4D9C4]">
         <h2 className="font-serif text-xl text-[#1E3A32]">Course Content</h2>
       </div>
-      <ScrollArea className="h-[calc(100vh-240px)]">
+      <ScrollArea className="h-[calc(100vh-240px-56px)]">
         <div className="p-4">
           {modules.map((module) => {
             const moduleLessons = lessons.filter(l => l.module_id === module.id);
@@ -134,6 +134,20 @@ export default function ModuleNavigator({ modules, lessons, userLessonProgress, 
           })}
         </div>
       </ScrollArea>
+
+      {/* Sticky My Notes tab */}
+      <button
+        onClick={onOpenNotes}
+        className="w-full p-4 border-t border-[#E4D9C4] flex items-center gap-3 hover:bg-[#D8B46B]/10 transition-colors bg-white"
+      >
+        <StickyNote size={18} className="text-[#D8B46B]" />
+        <span className="text-sm font-medium text-[#1E3A32]">My Notes</span>
+        {totalNotesCount > 0 && (
+          <span className="ml-auto text-xs bg-[#D8B46B]/20 text-[#1E3A32] px-2 py-0.5 rounded-full">
+            {totalNotesCount}
+          </span>
+        )}
+      </button>
     </div>
   );
 }
