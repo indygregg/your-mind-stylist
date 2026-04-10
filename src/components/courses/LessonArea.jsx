@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import VideoPlayer from "./VideoPlayer";
 import CourseAudioPlayer from "./CourseAudioPlayer";
-// Removed: import LessonComments from "./LessonComments";
+import LessonNotes from "./LessonNotes";
 
 export default function LessonArea({ 
   lesson, 
@@ -16,7 +16,8 @@ export default function LessonArea({
   onProgressUpdate, 
   lastPosition,
   isLocked = false,
-  prerequisiteLessons = []
+  prerequisiteLessons = [],
+  lessonNotes = []
 }) {
   const [attachedResources, setAttachedResources] = useState([]);
   const [loadingResources, setLoadingResources] = useState(false);
@@ -147,6 +148,9 @@ export default function LessonArea({
           </div>
         )}
 
+            {/* Lesson Notes */}
+            <LessonNotes notes={lessonNotes} onAddNote={onAddNote} />
+
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
@@ -155,7 +159,7 @@ export default function LessonArea({
                 className="flex-1 border-[#D8B46B] hover:bg-[#D8B46B]/10"
               >
                 <StickyNote size={16} className="mr-2" />
-                Add Note
+                {lessonNotes.length > 0 ? "Add Another Note" : "Add Note"}
               </Button>
               <Button
                 onClick={onMarkComplete}

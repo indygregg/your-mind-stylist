@@ -63,13 +63,7 @@ export default function NotesDrawer({ isOpen, onClose, context = {} }) {
     onSuccess: () => {
       setSaveStatus('saved');
       queryClient.invalidateQueries({ queryKey: ["notes"] });
-      // Close the drawer after a brief success moment so content never lingers pre-filled
-      setTimeout(() => {
-        setContent("");
-        setTags([]);
-        setSaveStatus(null);
-        onClose();
-      }, 1200);
+      queryClient.invalidateQueries({ queryKey: ["lessonNotes"] });
     },
   });
 

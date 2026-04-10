@@ -105,13 +105,18 @@ export default function CoursePage() {
     enabled: !!user?.id,
   });
 
-  // Fetch lesson notes to show indicator in module navigator
+  // Fetch lesson notes to show indicator in module navigator and in lesson area
   const { data: lessonNotes = [] } = useQuery({
     queryKey: ["lessonNotes", user?.id, course?.id],
-    queryFn: () => base44.entities.Note.filter({ created_by: user.email, source_type: "lesson" }),
+    queryFn: async () => {
+      const notes = await base44.entities.Note.filter({ source_type: "lesson" }, "-created_date");
+      // Filter client-side to only show current user's notes
+      return notes.filter(n => n.user_id === user.id || n.created_by === user.email);
+    },
     enabled: !!user?.id && !!course?.id,
   });
   const lessonIdsWithNotes = new Set(lessonNotes.map(n => n.source_id).filter(Boolean));
+  const currentLessonNotes = lessonNotes.filter(n => n.source_id === currentLessonId);
 
   // Set initial lesson
   useEffect(() => {
@@ -310,6 +315,7 @@ export default function CoursePage() {
                 lastPosition={currentLessonProgress?.last_position || 0}
                 isLocked={isCurrentLessonLocked()}
                 prerequisiteLessons={getPrerequisiteLessons()}
+                lessonNotes={currentLessonNotes}
               />
               {!isCurrentLessonLocked() && (
                 <LessonNavigation
