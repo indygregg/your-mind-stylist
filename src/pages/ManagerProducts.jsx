@@ -588,6 +588,7 @@ export default function ManagerProducts() {
                     <Button 
                       size="sm" 
                       variant="outline"
+                      className="text-[#6E4F7D] border-[#6E4F7D]/30 hover:bg-[#6E4F7D]/10"
                       title={product.related_course_id ? "Preview course content" : "Preview product page"}
                       onClick={() => {
                         if (product.related_course_id) {
@@ -598,7 +599,7 @@ export default function ManagerProducts() {
                           toast.error('Add a slug or link a course to preview this product');
                         }
                       }}
-                    ><ExternalLink size={14}/></Button>
+                    ><ExternalLink size={14} className="mr-1"/> Preview</Button>
                     <Button 
                       size="sm" 
                       variant={product.status === 'published' ? 'default' : 'outline'}
