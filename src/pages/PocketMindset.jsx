@@ -5,6 +5,7 @@ import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { ArrowRight, Brain, Heart, Zap, Shield, Sparkles, Moon, Target, RefreshCw } from "lucide-react";
 import CmsText from "../components/cms/CmsText";
+import VideoEmbed from "../components/cms/VideoEmbed";
 
 export default function PocketMindset() {
   const whatItCombines = [
@@ -182,13 +183,12 @@ export default function PocketMindset() {
 
             <div className="mb-10 max-w-3xl mx-auto">
               <div className="aspect-video rounded-lg overflow-hidden shadow-2xl">
-                <iframe
-                   src="https://player.vimeo.com/video/1158920818?h=b90f971f48&badge=0&autopause=0&player_id=0&app_id=58479"
-                   className="w-full h-full"
-                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
-                   referrerPolicy="strict-origin-when-cross-origin"
-                   title="Pocket Mindset"
-                 />
+                <VideoEmbed
+                  contentKey="pocket.hero.video_embed"
+                  page="PocketMindset"
+                  blockTitle="Hero Video (Paste Vimeo or YouTube URL)"
+                  fallback="https://vimeo.com/1158920818/b90f971f48"
+                />
               </div>
             </div>
 
