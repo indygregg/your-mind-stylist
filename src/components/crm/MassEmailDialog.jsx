@@ -11,6 +11,7 @@ import { Loader2, Send, Upload, X, Mail, CheckCircle2, Zap, Users } from "lucide
 import toast from "react-hot-toast";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import TemplatePicker from "./TemplatePicker";
 
 export default function MassEmailDialog({ open, onOpenChange, leads }) {
   const [subject, setSubject] = useState("");
@@ -23,6 +24,7 @@ export default function MassEmailDialog({ open, onOpenChange, leads }) {
   const [selectedSources, setSelectedSources] = useState([]);
   const [selectedGroupId, setSelectedGroupId] = useState("");
   const [sendResult, setSendResult] = useState(null);
+  const [templateApplied, setTemplateApplied] = useState(false);
 
   // Get unique tags, stages, sources from leads
   const allTags = [...new Set(leads.flatMap(l => l.tags || []))].sort();
@@ -45,6 +47,7 @@ export default function MassEmailDialog({ open, onOpenChange, leads }) {
   useEffect(() => {
     if (open) {
       setSendResult(null);
+      setTemplateApplied(false);
     }
   }, [open]);
 
@@ -119,6 +122,7 @@ export default function MassEmailDialog({ open, onOpenChange, leads }) {
     setSelectedSources([]);
     setSelectedGroupId("");
     setSendResult(null);
+    setTemplateApplied(false);
     onOpenChange(false);
   };
 
@@ -152,6 +156,18 @@ export default function MassEmailDialog({ open, onOpenChange, leads }) {
           </div>
         ) : (
           <div className="space-y-6">
+            {/* Template picker — show only if subject & body are empty */}
+            {!templateApplied && !subject && !body && (
+              <TemplatePicker
+                onSelect={(tpl) => {
+                  setSubject(tpl.subject || "");
+                  setBody(tpl.body || "");
+                  setTemplateApplied(true);
+                }}
+                onSkip={() => setTemplateApplied(true)}
+              />
+            )}
+
             {/* Audience targeting */}
             <div className="border rounded-lg p-4 bg-[#F9F5EF]/50">
               <h3 className="font-medium text-sm mb-4 flex items-center gap-2">

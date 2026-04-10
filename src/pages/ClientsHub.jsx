@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Users, TrendingUp, Plus, Upload, Mail, Send, Loader2, HelpCircle, BarChart3, FolderPlus } from "lucide-react";
+import { Users, TrendingUp, Plus, Upload, Mail, Send, Loader2, HelpCircle, BarChart3, FolderPlus, FileText } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import toast from "react-hot-toast";
 import LeadsSection from "../components/clients/LeadsSection.jsx";
@@ -13,6 +13,7 @@ import MassEmailDialog from "../components/crm/MassEmailDialog";
 import CampaignHistory from "../components/crm/CampaignHistory";
 import GroupManagementPanel from "../components/crm/GroupManagementPanel";
 import BulkAssignGroupDialog from "../components/crm/BulkAssignGroupDialog";
+import EmailTemplateManager from "../components/crm/EmailTemplateManager";
 
 export default function ClientsHub() {
   const queryClient = useQueryClient();
@@ -165,6 +166,10 @@ export default function ClientsHub() {
               <Users size={14} />
               Groups
             </TabsTrigger>
+            <TabsTrigger value="templates" className="flex items-center gap-1.5">
+              <FileText size={14} />
+              Templates
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="leads">
@@ -210,6 +215,16 @@ export default function ClientsHub() {
                 </Button>
               </div>
               <GroupManagementPanel />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="templates">
+            <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
+              <div className="mb-6">
+                <h2 className="font-serif text-xl text-[#1E3A32]">Email Templates</h2>
+                <p className="text-sm text-[#2B2725]/60 mt-1">Create and manage reusable email templates for your campaigns</p>
+              </div>
+              <EmailTemplateManager />
             </div>
           </TabsContent>
         </Tabs>
