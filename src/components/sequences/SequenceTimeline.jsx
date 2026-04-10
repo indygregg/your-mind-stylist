@@ -1,10 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit2, Trash2, GripVertical, Clock, Mail, Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Edit2, Trash2, GripVertical, Clock, Mail, Plus, SendHorizonal, Loader2 } from "lucide-react";
+import { base44 } from "@/api/base44Client";
+import toast from "react-hot-toast";
 
 export default function SequenceTimeline({ steps, onReorder, onEditStep, onDeleteStep, onAddStep }) {
+  const [testingStepId, setTestingStepId] = useState(null);
+  const [testEmail, setTestEmail] = useState("");
+  const [sendingTest, setSendingTest] = useState(false);
+
+  const handleQuickTest = async (step) => {
+    if (!testEmail?.trim()) {
+      toast.error("Enter your email first");
+      return;
+    }
+    setSendingTest(true);
+    try {
+      const res = await base44.functions.invoke("sendTestSequenceEmail", {
+        to_email: testEmail.trim(),
+        subject: step.subject,
+        body_html: step.body_html,
+        cta_text: step.cta_text,
+        cta_url: step.cta_url,
+      });
+      toast.success(res.data.message || "Test sent!");
+      setTestingStepId(null);
+    } catch (err) {
+      toast.error("Failed: " + (err.message || "Unknown error"));
+    } finally {
+      setSendingTest(false);
+    }
+  };
+
   const handleDragEnd = (result) => {
     if (!result.destination) return;
     const reordered = Array.from(steps);
@@ -93,6 +123,15 @@ export default function SequenceTimeline({ steps, onReorder, onEditStep, onDelet
                             </div>
                           </div>
                           <div className="flex gap-1 flex-shrink-0 ml-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-7 w-7 p-0 text-[#6E4F7D] hover:text-[#5A3F69]"
+                              onClick={() => setTestingStepId(testingStepId === step.id ? null : step.id)}
+                              title="Send test email"
+                            >
+                              <SendHorizonal size={13} />
+                            </Button>
                             <Button variant="ghost" size="sm" className="h-7 w-7 p-0" onClick={() => onEditStep(step)}>
                               <Edit2 size={13} />
                             </Button>
@@ -108,6 +147,26 @@ export default function SequenceTimeline({ steps, onReorder, onEditStep, onDelet
                             </Button>
                           </div>
                         </div>
+                        {/* Quick test inline */}
+                        {testingStepId === step.id && (
+                          <div className="mt-2 pt-2 border-t border-[#E4D9C4]/60 flex gap-2 items-center">
+                            <Input
+                              type="email"
+                              value={testEmail}
+                              onChange={(e) => setTestEmail(e.target.value)}
+                              placeholder="your@email.com"
+                              className="h-7 text-xs flex-1"
+                            />
+                            <Button
+                              size="sm"
+                              className="h-7 text-xs bg-[#6E4F7D] hover:bg-[#5A3F69] text-white px-3"
+                              onClick={() => handleQuickTest(step)}
+                              disabled={sendingTest || !testEmail?.trim()}
+                            >
+                              {sendingTest ? <Loader2 size={12} className="animate-spin" /> : "Send"}
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}

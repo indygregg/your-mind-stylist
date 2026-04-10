@@ -3,7 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Loader2, SendHorizonal } from "lucide-react";
+import { base44 } from "@/api/base44Client";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import toast from "react-hot-toast";
@@ -28,6 +29,37 @@ const QUILL_MODULES = {
 
 export default function StepEditorDialog({ open, onOpenChange, step, sequenceId, nextStepNumber, onSave, saving }) {
   const isEditing = !!step?.id;
+  const [testEmail, setTestEmail] = useState("");
+  const [sendingTest, setSendingTest] = useState(false);
+  const [showTestInput, setShowTestInput] = useState(false);
+
+  const handleSendTest = async () => {
+    if (!testEmail?.trim()) {
+      toast.error("Enter an email address");
+      return;
+    }
+    if (!form.subject?.trim() || !form.body_html?.trim()) {
+      toast.error("Subject and body are required to send a test");
+      return;
+    }
+    setSendingTest(true);
+    try {
+      const res = await base44.functions.invoke("sendTestSequenceEmail", {
+        to_email: testEmail.trim(),
+        subject: form.subject,
+        body_html: form.body_html,
+        cta_text: form.cta_text,
+        cta_url: form.cta_url,
+        preview_text: form.preview_text,
+      });
+      toast.success(res.data.message || "Test email sent!");
+    } catch (err) {
+      toast.error("Failed to send test: " + (err.message || "Unknown error"));
+    } finally {
+      setSendingTest(false);
+    }
+  };
+
   const [form, setForm] = useState({
     sequence_id: sequenceId,
     step_number: nextStepNumber || 1,
@@ -185,6 +217,43 @@ export default function StepEditorDialog({ open, onOpenChange, step, sequenceId,
                 className="mt-1"
               />
             </div>
+          </div>
+
+          {/* Send Test Email */}
+          <div className="bg-[#F0EDE8] rounded-lg p-4 border border-[#E4D9C4]">
+            {!showTestInput ? (
+              <button
+                type="button"
+                onClick={() => setShowTestInput(true)}
+                className="flex items-center gap-2 text-sm text-[#6E4F7D] hover:text-[#1E3A32] font-medium transition-colors"
+              >
+                <SendHorizonal size={15} />
+                Send a test email to yourself
+              </button>
+            ) : (
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-[#1E3A32]">Send Test Email</p>
+                <p className="text-[11px] text-[#2B2725]/50">Variables will be replaced with sample data. Subject will be prefixed with [TEST].</p>
+                <div className="flex gap-2">
+                  <Input
+                    type="email"
+                    value={testEmail}
+                    onChange={(e) => setTestEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    onClick={handleSendTest}
+                    disabled={sendingTest || !testEmail?.trim()}
+                    className="bg-[#6E4F7D] hover:bg-[#5A3F69] text-white"
+                  >
+                    {sendingTest ? <Loader2 size={14} className="animate-spin mr-1" /> : <SendHorizonal size={14} className="mr-1" />}
+                    {sendingTest ? "Sending..." : "Send Test"}
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-2 pt-4 border-t">
