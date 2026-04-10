@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { 
   PenSquare, FileVideo, Headphones, Mail, Users, FileText, 
-  ShoppingCart, ListTodo, Settings, BarChart3, Shield, Sparkles, Target, Image, Download, Calendar, Bug 
+  ShoppingCart, ListTodo, Settings, BarChart3, Shield, Sparkles, Target, Image, Download, Calendar, Bug, FileSpreadsheet 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "react-hot-toast";
@@ -135,6 +135,13 @@ export default function AdminDashboard() {
                   className="inline-flex items-center gap-2 px-6 py-2 bg-white text-[#6E4F7D] font-medium hover:bg-white/90 transition-all text-sm"
                 >
                   View Full Roadmap
+                </a>
+                <a
+                  href={createPageUrl('StudioDevDocs') + '?search=PSA'}
+                  className="inline-flex items-center gap-2 px-6 py-2 border border-white/30 text-white font-medium hover:bg-white/10 transition-all text-sm"
+                >
+                  <FileSpreadsheet size={16} />
+                  Email Marketing Hub PSA
                 </a>
               </div>
             </div>
