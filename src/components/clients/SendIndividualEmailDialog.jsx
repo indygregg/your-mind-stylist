@@ -37,6 +37,16 @@ export default function SendIndividualEmailDialog({ open, onOpenChange, recipien
         body: `<div style="max-width:600px;margin:0 auto;font-family:'Inter',Arial,sans-serif;color:#2B2725;padding:24px;">${body}</div>`,
         from_name: "Your Mind Stylist",
       });
+      // Log the send for analytics
+      try {
+        await base44.entities.EmailSendLog.create({
+          recipient_email: recipientEmail,
+          recipient_name: recipientName || "",
+          subject,
+          send_type: "individual",
+          method: "platform",
+        });
+      } catch (_) { /* don't fail for logging */ }
       toast.success(`Email sent to ${recipientName || recipientEmail}`);
       setSubject("");
       setBody("");

@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, Mail, Eye, MousePointer, UserX, CheckCircle } from "lucide-react";
+import { Users, Mail, Eye, MousePointer, UserX, AlertTriangle } from "lucide-react";
 
 function StatCard({ icon: Icon, label, value, color = "text-[#1E3A32]", subValue }) {
   return (
@@ -20,17 +20,17 @@ export default function SequenceAnalytics({ sequences, allSteps, enrollments }) 
   // Aggregate stats
   const totalEnrolled = enrollments.length;
   const active = enrollments.filter((e) => e.status === "active").length;
-  const completed = enrollments.filter((e) => e.status === "completed").length;
+  const churned = enrollments.filter((e) => e.status === "completed" || e.status === "churned").length;
   const unsubscribed = enrollments.filter((e) => e.status === "unsubscribed").length;
   const totalEmailsSent = enrollments.reduce((sum, e) => sum + (e.emails_sent || 0), 0);
-  const completionRate = totalEnrolled > 0 ? Math.round((completed / totalEnrolled) * 100) : 0;
+  const churnRate = totalEnrolled > 0 ? Math.round((churned / totalEnrolled) * 100) : 0;
 
   // Per-sequence breakdown
   const sequenceBreakdown = sequences.map((seq) => {
     const seqSteps = allSteps.filter((s) => s.sequence_id === seq.id).sort((a, b) => a.step_number - b.step_number);
     const seqEnrollments = enrollments.filter((e) => e.sequence_id === seq.id);
     const seqActive = seqEnrollments.filter((e) => e.status === "active").length;
-    const seqCompleted = seqEnrollments.filter((e) => e.status === "completed").length;
+    const seqChurned = seqEnrollments.filter((e) => e.status === "completed" || e.status === "churned").length;
     const seqTotalSent = seqEnrollments.reduce((s, e) => s + (e.emails_sent || 0), 0);
 
     return {
@@ -38,7 +38,7 @@ export default function SequenceAnalytics({ sequences, allSteps, enrollments }) 
       steps: seqSteps,
       enrollmentCount: seqEnrollments.length,
       activeCount: seqActive,
-      completedCount: seqCompleted,
+      churnedCount: seqChurned,
       totalSent: seqTotalSent,
     };
   });
@@ -49,10 +49,10 @@ export default function SequenceAnalytics({ sequences, allSteps, enrollments }) 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         <StatCard icon={Users} label="Total Enrolled" value={totalEnrolled} />
         <StatCard icon={Users} label="Active" value={active} color="text-green-600" />
-        <StatCard icon={CheckCircle} label="Completed" value={completed} color="text-blue-600" />
+        <StatCard icon={AlertTriangle} label="Churned" value={churned} color="text-amber-600" />
         <StatCard icon={UserX} label="Unsubscribed" value={unsubscribed} color="text-red-500" />
         <StatCard icon={Mail} label="Emails Sent" value={totalEmailsSent} color="text-[#6E4F7D]" />
-        <StatCard icon={CheckCircle} label="Completion Rate" value={`${completionRate}%`} color="text-[#D8B46B]" />
+        <StatCard icon={AlertTriangle} label="Churn Rate" value={`${churnRate}%`} color="text-[#D8B46B]" />
       </div>
 
       {/* Per-sequence breakdown */}

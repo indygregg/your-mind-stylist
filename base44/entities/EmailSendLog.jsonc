@@ -1,0 +1,54 @@
+{
+  "name": "EmailSendLog",
+  "type": "object",
+  "properties": {
+    "recipient_email": {
+      "type": "string",
+      "description": "Email address of recipient"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Name of recipient"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Email subject line"
+    },
+    "send_type": {
+      "type": "string",
+      "enum": [
+        "individual",
+        "mass_campaign",
+        "sequence"
+      ],
+      "description": "How the email was sent"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "platform",
+        "mailerlite",
+        "resend"
+      ],
+      "default": "platform",
+      "description": "Which service sent the email"
+    },
+    "campaign_subject": {
+      "type": "string",
+      "description": "Campaign name (for mass sends)"
+    },
+    "recipient_count": {
+      "type": "number",
+      "description": "Total recipients (for mass sends)"
+    },
+    "sent_by": {
+      "type": "string",
+      "description": "Email of user who sent it"
+    }
+  },
+  "required": [
+    "recipient_email",
+    "subject",
+    "send_type"
+  ]
+}

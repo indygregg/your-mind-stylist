@@ -46,7 +46,6 @@ Deno.serve(async (req) => {
       let targetGroupId = groupId;
 
       if (!targetGroupId) {
-        // Create a temporary group for this send
         const groupName = `Campaign: ${subject.substring(0, 40)} (${new Date().toISOString().split('T')[0]})`;
         const createGroupRes = await fetch('https://connect.mailerlite.com/api/groups', {
           method: 'POST',
@@ -72,7 +71,6 @@ Deno.serve(async (req) => {
         const batch = validLeads.slice(i, i + batchSize);
         const results = await Promise.allSettled(
           batch.map(async (lead) => {
-            // Upsert subscriber
             const subRes = await fetch('https://connect.mailerlite.com/api/subscribers', {
               method: 'POST',
               headers: {
@@ -93,7 +91,6 @@ Deno.serve(async (req) => {
             return subRes;
           })
         );
-        // Small delay between batches
         if (i + batchSize < validLeads.length) {
           await new Promise(r => setTimeout(r, 300));
         }
@@ -102,32 +99,26 @@ Deno.serve(async (req) => {
       console.log(`[MailerLite] Synced ${syncedCount}/${validLeads.length} subscribers`);
 
       // Step 3: Build the branded HTML for MailerLite campaign
-      const brandedHtml = `
-<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="margin:0;padding:0;font-family:Georgia,serif;background-color:#F9F5EF;">
-  <div style="max-width:600px;margin:0 auto;background:#ffffff;">
-    <div style="background:#1E3A32;padding:28px 24px;text-align:center;">
-      <h2 style="color:#D8B46B;margin:0;font-size:18px;letter-spacing:2px;font-family:Georgia,serif;">YOUR MIND STYLIST</h2>
-      <p style="color:#F9F5EF;margin:4px 0 0;font-size:12px;font-family:Arial,sans-serif;">Roberta Fernandez</p>
-    </div>
-    <div style="padding:36px 28px;color:#2B2725;font-size:16px;line-height:1.7;">
-      ${body}
-    </div>
-    ${attachments.length > 0 ? `
-    <div style="padding:16px 28px;border-top:1px solid #E4D9C4;">
-      <p style="font-size:14px;color:#2B2725;margin:0 0 8px;"><strong>Attachments:</strong></p>
-      ${attachments.map(att => `<p style="margin:4px 0;"><a href="${att.url}" style="color:#1E3A32;text-decoration:underline;">${att.name}</a></p>`).join('')}
-    </div>` : ''}
-    <div style="background:#1E3A32;padding:20px 24px;text-align:center;">
-      <p style="color:#F9F5EF;font-size:11px;margin:0;">© ${new Date().getFullYear()} Your Mind Stylist. All rights reserved.</p>
-      <p style="color:#F9F5EF;font-size:11px;margin:4px 0 0;">8724 Spanish Ridge Ave #B, Las Vegas, NV 89148</p>
-      <p style="margin:8px 0 0;"><a href="{$unsubscribe}" style="color:#D8B46B;font-size:11px;">Unsubscribe</a></p>
-    </div>
-  </div>
-</body>
-</html>`;
+      const year = new Date().getFullYear();
+      const attachHtml = attachments.length > 0
+        ? '<div style="padding:16px 28px;border-top:1px solid #E4D9C4;"><p style="font-size:14px;color:#2B2725;margin:0 0 8px;"><strong>Attachments:</strong></p>' +
+          attachments.map(att => '<p style="margin:4px 0;"><a href="' + att.url + '" style="color:#1E3A32;text-decoration:underline;">' + att.name + '</a></p>').join('') +
+          '</div>'
+        : '';
+
+      const brandedHtml = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>' +
+        '<body style="margin:0;padding:0;font-family:Georgia,serif;background-color:#F9F5EF;">' +
+        '<div style="max-width:600px;margin:0 auto;background:#ffffff;">' +
+        '<div style="background:#1E3A32;padding:28px 24px;text-align:center;">' +
+        '<h2 style="color:#D8B46B;margin:0;font-size:18px;letter-spacing:2px;font-family:Georgia,serif;">YOUR MIND STYLIST</h2>' +
+        '<p style="color:#F9F5EF;margin:4px 0 0;font-size:12px;font-family:Arial,sans-serif;">Roberta Fernandez</p></div>' +
+        '<div style="padding:36px 28px;color:#2B2725;font-size:16px;line-height:1.7;">' + body + '</div>' +
+        attachHtml +
+        '<div style="background:#1E3A32;padding:20px 24px;text-align:center;">' +
+        '<p style="color:#F9F5EF;font-size:11px;margin:0;">\u00A9 ' + year + ' Your Mind Stylist. All rights reserved.</p>' +
+        '<p style="color:#F9F5EF;font-size:11px;margin:4px 0 0;">8724 Spanish Ridge Ave #B, Las Vegas, NV 89148</p>' +
+        '<p style="margin:8px 0 0;"><a href="{$unsubscribe}" style="color:#D8B46B;font-size:11px;">Unsubscribe</a></p>' +
+        '</div></div></body></html>';
 
       // Step 4: Create the campaign
       const campaignRes = await fetch('https://connect.mailerlite.com/api/campaigns', {
@@ -137,7 +128,7 @@ Deno.serve(async (req) => {
           'Authorization': `Bearer ${MAILERLITE_API_KEY}`,
         },
         body: JSON.stringify({
-          name: `${subject} — ${new Date().toLocaleDateString()}`,
+          name: subject + ' \u2014 ' + new Date().toLocaleDateString(),
           type: 'regular',
           emails: [{
             subject,
@@ -159,7 +150,7 @@ Deno.serve(async (req) => {
       console.log(`[MailerLite] Campaign created: ${campaignId}`);
 
       // Step 5: Schedule or send the campaign immediately
-      const scheduleRes = await fetch(`https://connect.mailerlite.com/api/campaigns/${campaignId}/schedule`, {
+      const scheduleRes = await fetch('https://connect.mailerlite.com/api/campaigns/' + campaignId + '/schedule', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -173,11 +164,10 @@ Deno.serve(async (req) => {
       const scheduleData = await scheduleRes.json();
       if (!scheduleRes.ok) {
         console.error('Campaign scheduling failed:', scheduleData);
-        // Campaign was created but not sent — return partial success
         return Response.json({
           success: true,
           partial: true,
-          message: `Campaign created but failed to send. Check MailerLite dashboard.`,
+          message: 'Campaign created but failed to send. Check MailerLite dashboard.',
           campaignId,
           recipientCount: syncedCount,
         });
@@ -185,13 +175,27 @@ Deno.serve(async (req) => {
 
       console.log(`[MailerLite] Campaign sent to ${syncedCount} recipients`);
 
+      // Log to EmailSendLog for analytics
+      try {
+        await base44.asServiceRole.entities.EmailSendLog.create({
+          recipient_email: validLeads[0]?.email || 'bulk',
+          recipient_name: syncedCount + ' recipients',
+          subject,
+          send_type: 'mass_campaign',
+          method: 'mailerlite',
+          campaign_subject: subject,
+          recipient_count: syncedCount,
+          sent_by: user.email,
+        });
+      } catch (_) { /* don't fail for logging */ }
+
       // Log activity
       for (const lead of validLeads.slice(0, 50)) {
         try {
           await base44.asServiceRole.entities.LeadActivity.create({
             lead_id: lead.id,
             activity_type: 'mass_email_sent',
-            description: `MailerLite campaign: "${subject}"`,
+            description: 'MailerLite campaign: "' + subject + '"',
           });
         } catch (e) {
           // Don't fail for logging
@@ -203,28 +207,29 @@ Deno.serve(async (req) => {
         method: 'mailerlite',
         recipientCount: syncedCount,
         campaignId,
-        message: `Campaign sent to ${syncedCount} recipients via MailerLite`,
+        message: 'Campaign sent to ' + syncedCount + ' recipients via MailerLite',
       });
     }
 
     // ── Fallback: Resend path (one-by-one) ──
     console.log(`[Resend] Sending to ${validLeads.length} recipients...`);
-    const fullHtml = `
-      <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #2B2725;">
-        <div style="background: #1E3A32; padding: 24px; text-align: center;">
-          <h2 style="color: #D8B46B; margin: 0; font-size: 18px; letter-spacing: 2px;">YOUR MIND STYLIST</h2>
-          <p style="color: #F9F5EF; margin: 4px 0 0; font-size: 12px;">Roberta Fernandez</p>
-        </div>
-        <div style="padding: 32px 24px; background: #F9F5EF;">${body}</div>
-        ${attachments.length > 0 ? `
-          <div style="padding: 16px 24px; background: #F9F5EF; border-top: 1px solid #E4D9C4;">
-            <p style="font-size: 14px; color: #2B2725; margin: 0 0 8px;"><strong>Attachments:</strong></p>
-            ${attachments.map(att => `<p style="margin: 4px 0;"><a href="${att.url}" style="color: #1E3A32;">${att.name}</a></p>`).join('')}
-          </div>` : ''}
-        <div style="background: #1E3A32; padding: 16px 24px; text-align: center;">
-          <p style="color: #F9F5EF; font-size: 11px; margin: 0;">© ${new Date().getFullYear()} Your Mind Stylist. All rights reserved.</p>
-        </div>
-      </div>`;
+
+    const fallbackAttachHtml = attachments.length > 0
+      ? '<div style="padding: 16px 24px; background: #F9F5EF; border-top: 1px solid #E4D9C4;">' +
+        '<p style="font-size: 14px; color: #2B2725; margin: 0 0 8px;"><strong>Attachments:</strong></p>' +
+        attachments.map(att => '<p style="margin: 4px 0;"><a href="' + att.url + '" style="color: #1E3A32;">' + att.name + '</a></p>').join('') +
+        '</div>'
+      : '';
+
+    const fullHtml = '<div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; color: #2B2725;">' +
+      '<div style="background: #1E3A32; padding: 24px; text-align: center;">' +
+      '<h2 style="color: #D8B46B; margin: 0; font-size: 18px; letter-spacing: 2px;">YOUR MIND STYLIST</h2>' +
+      '<p style="color: #F9F5EF; margin: 4px 0 0; font-size: 12px;">Roberta Fernandez</p></div>' +
+      '<div style="padding: 32px 24px; background: #F9F5EF;">' + body + '</div>' +
+      fallbackAttachHtml +
+      '<div style="background: #1E3A32; padding: 16px 24px; text-align: center;">' +
+      '<p style="color: #F9F5EF; font-size: 11px; margin: 0;">\u00A9 ' + new Date().getFullYear() + ' Your Mind Stylist. All rights reserved.</p>' +
+      '</div></div>';
 
     let successCount = 0;
     let failCount = 0;
@@ -247,12 +252,26 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Log mass CRM send for analytics
+    try {
+      await base44.asServiceRole.entities.EmailSendLog.create({
+        recipient_email: validLeads[0]?.email || 'bulk',
+        recipient_name: successCount + ' recipients',
+        subject,
+        send_type: 'mass_campaign',
+        method: 'resend',
+        campaign_subject: subject,
+        recipient_count: successCount,
+        sent_by: user.email,
+      });
+    } catch (_) { /* don't fail for logging */ }
+
     return Response.json({
       success: true,
       method: 'resend',
       recipientCount: successCount,
       failedCount: failCount,
-      message: `Email sent to ${successCount} lead(s) via Resend${failCount > 0 ? `, ${failCount} failed` : ''}`,
+      message: 'Email sent to ' + successCount + ' lead(s) via Resend' + (failCount > 0 ? ', ' + failCount + ' failed' : ''),
     });
   } catch (error) {
     console.error('sendMassEmailViaCRM error:', error);
