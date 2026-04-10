@@ -42,7 +42,7 @@ export default function ServicesMegaMenu({ isOpen }) {
 
   const webinarItems = webinars.map((w) => ({
     name: w.name,
-    page: `ProductPage?key=${w.key}`,
+    page: `ProductPage?slug=${w.slug}`,
     description: w.tagline || w.short_description,
     icon: "📺",
   }));

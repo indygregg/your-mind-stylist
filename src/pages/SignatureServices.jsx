@@ -40,7 +40,7 @@ const SERVICES = [
     details: ["Small group format", "Personalized attention", "Community support & connection", "Guided by Roberta directly"],
     color: "border-[#D8B46B]",
     accentColor: "text-[#D8B46B]",
-    linkPage: "Bookings",
+    linkPage: "LENS",
   },
   {
     key: "couture",
@@ -51,7 +51,7 @@ const SERVICES = [
     details: ["Fully bespoke engagement", "Ongoing private access to Roberta", "Custom timeline & scope", "Application-based enrollment"],
     color: "border-[#A6B7A3]",
     accentColor: "text-[#1E3A32]",
-    linkPage: "Consultations",
+    linkPage: "LENS",
   },
   {
     key: "pocket-mindset",
