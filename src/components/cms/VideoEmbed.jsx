@@ -21,9 +21,11 @@ export default function VideoEmbed({ contentKey, fallback, page, blockTitle }) {
       const pathHash = vimeoMatch[2];
       const queryHash = url.match(/[?&]h=([a-f0-9]+)/)?.[1];
       const hash = pathHash || queryHash;
-      return hash
-        ? `https://player.vimeo.com/video/${videoId}?h=${hash}`
-        : `https://player.vimeo.com/video/${videoId}`;
+      const base = `https://player.vimeo.com/video/${videoId}`;
+      const params = hash
+        ? `?h=${hash}&badge=0&autopause=0&player_id=0&app_id=58479`
+        : `?badge=0&autopause=0&player_id=0&app_id=58479`;
+      return base + params;
     }
     
     // If it's already an embed URL, return as is
@@ -78,7 +80,8 @@ export default function VideoEmbed({ contentKey, fallback, page, blockTitle }) {
           src={embedUrl}
           title="Video"
           frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+          referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
           className="w-full h-full"
         />
