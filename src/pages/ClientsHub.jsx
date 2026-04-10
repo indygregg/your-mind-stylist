@@ -3,13 +3,14 @@ import { base44 } from "@/api/base44Client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Users, TrendingUp, Plus, Upload, Mail, Send, Loader2, HelpCircle } from "lucide-react";
+import { Users, TrendingUp, Plus, Upload, Mail, Send, Loader2, HelpCircle, BarChart3 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import toast from "react-hot-toast";
 import LeadsSection from "../components/clients/LeadsSection.jsx";
 import UsersSection from "../components/clients/UsersSection.jsx";
 import ConvertLeadsDialog from "../components/clients/ConvertLeadsDialog.jsx";
 import MassEmailDialog from "../components/crm/MassEmailDialog";
+import CampaignHistory from "../components/crm/CampaignHistory";
 
 export default function ClientsHub() {
   const queryClient = useQueryClient();
@@ -145,6 +146,10 @@ export default function ClientsHub() {
           <TabsList className="bg-white">
             <TabsTrigger value="leads">Leads ({totalLeads})</TabsTrigger>
             <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
+            <TabsTrigger value="campaigns" className="flex items-center gap-1.5">
+              <BarChart3 size={14} />
+              Campaigns
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="leads">
@@ -153,6 +158,25 @@ export default function ClientsHub() {
 
           <TabsContent value="users">
             <UsersSection users={users} isLoading={usersLoading} />
+          </TabsContent>
+
+          <TabsContent value="campaigns">
+            <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="font-serif text-xl text-[#1E3A32]">Sent Campaigns</h2>
+                  <p className="text-sm text-[#2B2725]/60 mt-1">Email campaigns sent via MailerLite with open/click tracking</p>
+                </div>
+                <Button
+                  onClick={() => setMassEmailDialogOpen(true)}
+                  className="bg-[#D8B46B] hover:bg-[#C9A557] text-[#1E3A32]"
+                >
+                  <Mail size={16} className="mr-2" />
+                  New Campaign
+                </Button>
+              </div>
+              <CampaignHistory />
+            </div>
           </TabsContent>
         </Tabs>
 
