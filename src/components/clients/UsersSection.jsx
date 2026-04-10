@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Mail, Calendar, Plus } from "lucide-react";
+import { Search, Mail, Calendar, Plus, SendHorizonal } from "lucide-react";
+import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -17,6 +18,8 @@ export default function UsersSection({ users, isLoading }) {
   const [roleFilter, setRoleFilter] = useState("all");
   const [createUserOpen, setCreateUserOpen] = useState(false);
   const [enrollmentModalOpen, setEnrollmentModalOpen] = useState(false);
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [emailTarget, setEmailTarget] = useState(null);
   const queryClient = useQueryClient();
 
   const updateRoleMutation = useMutation({
@@ -126,6 +129,19 @@ export default function UsersSection({ users, isLoading }) {
                         <div className="flex items-center gap-2 text-[#2B2725]/70 text-sm">
                           <Mail size={14} />
                           {user.email}
+                          {user.email && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEmailTarget({ email: user.email, name: user.full_name });
+                                setEmailDialogOpen(true);
+                              }}
+                              className="p-1 rounded hover:bg-[#D8B46B]/20 text-[#6E4F7D] hover:text-[#1E3A32] transition-colors flex-shrink-0"
+                              title={`Send email to ${user.email}`}
+                            >
+                              <SendHorizonal size={13} />
+                            </button>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -195,6 +211,16 @@ export default function UsersSection({ users, isLoading }) {
           queryClient.invalidateQueries({ queryKey: ["admin-all-users"] });
         }}
       />
+
+      {/* Individual Email Dialog */}
+      {emailTarget && (
+        <SendIndividualEmailDialog
+          open={emailDialogOpen}
+          onOpenChange={setEmailDialogOpen}
+          recipientEmail={emailTarget.email}
+          recipientName={emailTarget.name}
+        />
+      )}
     </div>
   );
 }

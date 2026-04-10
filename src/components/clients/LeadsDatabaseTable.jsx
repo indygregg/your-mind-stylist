@@ -3,8 +3,9 @@ import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trash2, ChevronUp, ChevronDown } from "lucide-react";
+import { Trash2, ChevronUp, ChevronDown, Mail } from "lucide-react";
 import toast from "react-hot-toast";
+import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
 
 const sourceLabels = {
   networking: "Networking", internet: "Internet", referral: "Referral",
@@ -39,6 +40,8 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
   const queryClient = useQueryClient();
   const [sortField, setSortField] = useState("created_date");
   const [sortDir, setSortDir] = useState("desc");
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [emailTarget, setEmailTarget] = useState(null);
 
   const deleteLeadMutation = useMutation({
     mutationFn: (id) => base44.entities.Lead.delete(id),
@@ -128,7 +131,24 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
               <td className="px-4 py-3 font-medium text-[#1E3A32] whitespace-nowrap">
                 {getFullName(lead)}
               </td>
-              <td className="px-4 py-3 text-[#2B2725]/70 whitespace-nowrap">{lead.email || "—"}</td>
+              <td className="px-4 py-3 whitespace-nowrap">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#2B2725]/70">{lead.email || "—"}</span>
+                  {lead.email && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEmailTarget({ email: lead.email, name: getFullName(lead) });
+                        setEmailDialogOpen(true);
+                      }}
+                      className="p-1 rounded hover:bg-[#D8B46B]/20 text-[#6E4F7D] hover:text-[#1E3A32] transition-colors flex-shrink-0"
+                      title={`Email ${lead.email}`}
+                    >
+                      <Mail size={13} />
+                    </button>
+                  )}
+                </div>
+              </td>
               <td className="px-4 py-3 text-[#2B2725]/70 whitespace-nowrap">{lead.phone || "—"}</td>
               <td className="px-4 py-3 text-[#2B2725]/70 whitespace-nowrap">{getLocation(lead)}</td>
               <td className="px-4 py-3 text-[#2B2725]/70 max-w-[200px] truncate" title={lead.what_they_bought || ""}>
@@ -162,6 +182,15 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
       </table>
       {sorted.length === 0 && (
         <div className="py-12 text-center text-[#2B2725]/60 text-sm">No leads found</div>
+      )}
+
+      {emailTarget && (
+        <SendIndividualEmailDialog
+          open={emailDialogOpen}
+          onOpenChange={setEmailDialogOpen}
+          recipientEmail={emailTarget.email}
+          recipientName={emailTarget.name}
+        />
       )}
     </div>
   );
