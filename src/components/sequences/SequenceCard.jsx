@@ -16,6 +16,11 @@ const TRIGGER_LABELS = {
   course_completed: "Course Completed",
   abandoned_cart: "Abandoned Cart",
   inactive_user: "Inactive User",
+  lead_magnet_download: "Lead Magnet Download",
+  consultation_submitted: "Consultation Submitted",
+  webinar_registered: "Webinar Registered",
+  tag_added: "Tag Added",
+  form_submitted: "Form Submitted",
 };
 
 export default function SequenceCard({

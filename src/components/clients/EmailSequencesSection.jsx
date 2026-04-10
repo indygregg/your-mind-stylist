@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import SequenceCard from "../sequences/SequenceCard";
 import StepEditorDialog from "../sequences/StepEditorDialog";
 import TriggerConfigPanel from "../sequences/TriggerConfigPanel";
+import { SequenceInfoBanner } from "../sequences/SequenceHelpTooltips";
 
 export default function EmailSequencesSection() {
   const queryClient = useQueryClient();
@@ -160,6 +161,9 @@ export default function EmailSequencesSection() {
           </Button>
         </div>
       </div>
+
+      {/* Help banner */}
+      <SequenceInfoBanner />
 
       {/* List */}
       {isLoading ? (
