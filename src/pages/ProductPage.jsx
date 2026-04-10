@@ -175,6 +175,18 @@ export default function ProductPage() {
               {product.short_description}
             </p>
 
+            {isContactOnly ? (
+              <div className="inline-block bg-white p-8 mb-8">
+                <p className="text-[#2B2725]/70 text-lg mb-4">Pricing discussed during consultation</p>
+                <Link to={createPageUrl("Bookings")}>
+                  <Button className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] px-12 py-6 text-lg">
+                    Book a Consultation
+                    <ArrowRight size={20} className="ml-2" />
+                  </Button>
+                </Link>
+              </div>
+            ) : (
+              <>
             <div className="inline-block bg-white p-8 mb-8">
               {product.payment_plan_options && product.payment_plan_options.length > 0 && (
                 <div className="mb-6 space-y-3">
@@ -251,6 +263,8 @@ export default function ProductPage() {
                 </>
               )}
             </Button>
+              </>
+            )}
 
             {product.features && product.features.length > 0 && (
               <div className="mt-16 text-left">
@@ -310,6 +324,18 @@ export default function ProductPage() {
               </p>
 
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-12">
+                {isContactOnly ? (
+                  <>
+                    <p className="text-[#F9F5EF]/70 text-lg">Pricing discussed during consultation</p>
+                    <Link to={createPageUrl("Bookings")}>
+                      <Button className="bg-[#D8B46B] hover:bg-[#C9A55A] text-[#1E3A32] px-10 py-6 text-lg">
+                        Book a Consultation
+                        <ArrowRight size={20} className="ml-2" />
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <>
                 <div className="bg-[#D8B46B] px-8 py-4 text-[#1E3A32]">
                   <div className="font-serif text-4xl mb-1">
                     {formatPrice(product.price, product.billing_interval)}
@@ -336,6 +362,8 @@ export default function ProductPage() {
                     </>
                   )}
                 </Button>
+                  </>
+                )}
               </div>
             </motion.div>
           </div>
@@ -496,93 +524,114 @@ export default function ProductPage() {
           >
             <div className="bg-white p-8 sticky top-32">
               <div className="text-center mb-8">
-                {product.payment_plan_options && product.payment_plan_options.length > 0 ? (
-                  <div className="space-y-3 mb-6">
-                    <button
-                      onClick={() => {
-                        setSelectedPlan("full");
-                        setSelectedPriceId(null);
-                      }}
-                      className={`w-full p-4 border-2 rounded-lg transition-all text-left ${
-                        selectedPlan === "full" 
-                          ? "border-[#D8B46B] bg-[#D8B46B]/5" 
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    >
-                      <div className="font-medium text-[#1E3A32]">Pay in Full</div>
-                      <div className="text-2xl font-serif text-[#1E3A32] mt-1">
-                        {formatPrice(product.price, product.billing_interval)}
-                      </div>
-                    </button>
-                    {product.payment_plan_options.map((plan, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => {
-                          setSelectedPlan(plan.name);
-                          setSelectedPriceId(product.stripe_price_ids?.[idx + 1] || null);
-                        }}
-                        className={`w-full p-4 border-2 rounded-lg transition-all text-left ${
-                          selectedPlan === plan.name 
-                            ? "border-[#D8B46B] bg-[#D8B46B]/5" 
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <div className="font-medium text-[#1E3A32]">{plan.name}</div>
-                        <div className="text-2xl font-serif text-[#1E3A32] mt-1">
-                          {formatPrice(plan.monthly_price, "monthly")} × {plan.months}
-                        </div>
-                        <div className="text-sm text-[#2B2725]/60 mt-1">
-                          Total: {formatPrice(plan.monthly_price * plan.months, "one_time")}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+                {isContactOnly ? (
+                  <>
+                    <p className="text-[#2B2725]/70 text-lg mb-6">Pricing discussed during consultation</p>
+                    <Link to={createPageUrl("Bookings")}>
+                      <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] py-6 text-lg mb-3">
+                        Book a Consultation
+                        <ArrowRight size={20} className="ml-2" />
+                      </Button>
+                    </Link>
+                    <Link to={createPageUrl("Contact")} className="text-[#D8B46B] text-sm hover:underline">
+                      Have questions? Contact us
+                    </Link>
+                  </>
                 ) : (
                   <>
-                    <div className="font-serif text-5xl text-[#1E3A32] mb-2">
-                      {formatPrice(product.price, product.billing_interval)}
-                    </div>
-                    {product.type === "subscription" && (
-                      <p className="text-[#D8B46B] text-sm">Cancel anytime</p>
+                    {product.payment_plan_options && product.payment_plan_options.length > 0 ? (
+                      <div className="space-y-3 mb-6">
+                        <button
+                          onClick={() => {
+                            setSelectedPlan("full");
+                            setSelectedPriceId(null);
+                          }}
+                          className={`w-full p-4 border-2 rounded-lg transition-all text-left ${
+                            selectedPlan === "full" 
+                              ? "border-[#D8B46B] bg-[#D8B46B]/5" 
+                              : "border-gray-200 hover:border-gray-300"
+                          }`}
+                        >
+                          <div className="font-medium text-[#1E3A32]">Pay in Full</div>
+                          <div className="text-2xl font-serif text-[#1E3A32] mt-1">
+                            {formatPrice(product.price, product.billing_interval)}
+                          </div>
+                        </button>
+                        {product.payment_plan_options.map((plan, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => {
+                              setSelectedPlan(plan.name);
+                              setSelectedPriceId(product.stripe_price_ids?.[idx + 1] || null);
+                            }}
+                            className={`w-full p-4 border-2 rounded-lg transition-all text-left ${
+                              selectedPlan === plan.name 
+                                ? "border-[#D8B46B] bg-[#D8B46B]/5" 
+                                : "border-gray-200 hover:border-gray-300"
+                            }`}
+                          >
+                            <div className="font-medium text-[#1E3A32]">{plan.name}</div>
+                            <div className="text-2xl font-serif text-[#1E3A32] mt-1">
+                              {formatPrice(plan.monthly_price, "monthly")} × {plan.months}
+                            </div>
+                            <div className="text-sm text-[#2B2725]/60 mt-1">
+                              Total: {formatPrice(plan.monthly_price * plan.months, "one_time")}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    ) : (
+                      <>
+                        <div className="font-serif text-5xl text-[#1E3A32] mb-2">
+                          {formatPrice(product.price, product.billing_interval)}
+                        </div>
+                        {product.type === "subscription" && (
+                          <p className="text-[#D8B46B] text-sm">Cancel anytime</p>
+                        )}
+                      </>
                     )}
                   </>
                 )}
               </div>
 
-              <div className="mb-4">
-                 <GiftCodeInput productId={product.id} onCodeApplied={setAppliedGiftCode} />
-               </div>
+              {!isContactOnly && (
+                <>
+                  <div className="mb-4">
+                    <GiftCodeInput productId={product.id} onCodeApplied={setAppliedGiftCode} />
+                  </div>
 
-               <Button
-                 onClick={handlePurchase}
-                 disabled={checkoutLoading}
-                 className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] py-6 text-lg mb-3"
-               >
-                 {checkoutLoading ? (
-                   <>
-                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                     Processing...
-                   </>
-                 ) : (
-                   <>
-                     <ShoppingCart size={20} className="mr-2" />
-                     Purchase Now
-                   </>
-                 )}
-               </Button>
+                  <Button
+                    onClick={handlePurchase}
+                    disabled={checkoutLoading}
+                    className="w-full bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] py-6 text-lg mb-3"
+                  >
+                    {checkoutLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart size={20} className="mr-2" />
+                        Purchase Now
+                      </>
+                    )}
+                  </Button>
 
-               <Button
-                onClick={() => { addItem(product); toast.success(`${product.name} added to cart!`); }}
-                variant="outline"
-                className="w-full border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32]/5 py-5 text-base mb-4"
-              >
-                <Plus size={16} className="mr-2" />
-                Add to Cart
-              </Button>
+                  <Button
+                    onClick={() => { addItem(product); toast.success(`${product.name} added to cart!`); }}
+                    variant="outline"
+                    className="w-full border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32]/5 py-5 text-base mb-4"
+                  >
+                    <Plus size={16} className="mr-2" />
+                    Add to Cart
+                  </Button>
 
-              <p className="text-center text-[#2B2725]/60 text-sm mb-6">
-                Secure checkout powered by Stripe
-              </p>
+                  <p className="text-center text-[#2B2725]/60 text-sm mb-6">
+                    Secure checkout powered by Stripe
+                  </p>
+                </>
+              )}
 
               <div className="border-t border-[#E4D9C4] pt-6">
                 <h3 className="font-medium text-[#1E3A32] mb-3">
