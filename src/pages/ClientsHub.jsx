@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Users, TrendingUp, Plus, Upload, Mail, Send, Loader2, HelpCircle, BarChart3, FolderPlus, FileText } from "lucide-react";
+import { Users, TrendingUp, Plus, Mail, Send, Loader2, HelpCircle } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import toast from "react-hot-toast";
 import LeadsSection from "../components/clients/LeadsSection.jsx";
 import UsersSection from "../components/clients/UsersSection.jsx";
@@ -14,6 +14,9 @@ import CampaignHistory from "../components/crm/CampaignHistory";
 import GroupManagementPanel from "../components/crm/GroupManagementPanel";
 import BulkAssignGroupDialog from "../components/crm/BulkAssignGroupDialog";
 import EmailTemplateManager from "../components/crm/EmailTemplateManager";
+import ClientsHubSidebar, { SECTIONS } from "../components/clients/ClientsHubSidebar";
+import EmailSequencesSection from "../components/clients/EmailSequencesSection";
+import EmailAnalyticsSection from "../components/clients/EmailAnalyticsSection";
 
 export default function ClientsHub() {
   const queryClient = useQueryClient();
@@ -21,6 +24,7 @@ export default function ClientsHub() {
   const [massEmailDialogOpen, setMassEmailDialogOpen] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [bulkGroupDialogOpen, setBulkGroupDialogOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("leads");
 
   // Fetch leads
   const { data: leads = [], isLoading: leadsLoading } = useQuery({
@@ -42,6 +46,61 @@ export default function ClientsHub() {
   const convertedLeads = leads.filter((l) => l.converted_to_client).length;
   const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;
 
+  const renderContent = () => {
+    switch (activeSection) {
+      case "leads":
+        return <LeadsSection leads={leads} isLoading={leadsLoading} />;
+      case "users":
+        return <UsersSection users={users} isLoading={usersLoading} />;
+      case "sequences":
+        return <EmailSequencesSection />;
+      case "templates":
+        return (
+          <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
+            <div className="mb-6">
+              <h2 className="font-serif text-xl text-[#1E3A32]">Email Templates</h2>
+              <p className="text-sm text-[#2B2725]/60 mt-1">Create and manage reusable email templates for your campaigns</p>
+            </div>
+            <EmailTemplateManager />
+          </div>
+        );
+      case "campaigns":
+        return (
+          <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="font-serif text-xl text-[#1E3A32]">Sent Campaigns</h2>
+                <p className="text-sm text-[#2B2725]/60 mt-1">Email campaigns sent via MailerLite with open/click tracking</p>
+              </div>
+              <Button onClick={() => setMassEmailDialogOpen(true)} className="bg-[#D8B46B] hover:bg-[#C9A557] text-[#1E3A32]">
+                <Mail size={16} className="mr-2" /> New Campaign
+              </Button>
+            </div>
+            <CampaignHistory />
+          </div>
+        );
+      case "groups":
+        return (
+          <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="font-serif text-xl text-[#1E3A32]">MailerLite Groups</h2>
+                <p className="text-sm text-[#2B2725]/60 mt-1">Organize your contacts into groups for targeted campaigns</p>
+              </div>
+              <Button onClick={() => setBulkGroupDialogOpen(true)} className="bg-[#6E4F7D] hover:bg-[#5A3F69] text-white">
+                <Users size={16} className="mr-2" /> Bulk Add to Group
+              </Button>
+            </div>
+            <GroupManagementPanel />
+          </div>
+        );
+      case "analytics":
+        return <EmailAnalyticsSection />;
+      default:
+        return <LeadsSection leads={leads} isLoading={leadsLoading} />;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F5EF] py-12 px-6">
       <div className="max-w-[1600px] mx-auto">
@@ -50,7 +109,7 @@ export default function ClientsHub() {
           <div className="flex items-start gap-3">
             <div>
               <h1 className="font-serif text-4xl text-[#1E3A32] mb-2">Clients Hub</h1>
-              <p className="text-[#2B2725]/70">Manage leads and user accounts in one place</p>
+              <p className="text-[#2B2725]/70">Manage leads, users, and email marketing in one place</p>
             </div>
             <TooltipProvider>
               <Tooltip>
@@ -73,163 +132,111 @@ export default function ClientsHub() {
               </Tooltip>
             </TooltipProvider>
           </div>
+
+          {/* Context-sensitive header actions */}
           <div className="flex gap-3 flex-wrap">
-            <Button
-              onClick={() => setBulkGroupDialogOpen(true)}
-              variant="outline"
-              className="border-[#6E4F7D] text-[#6E4F7D]"
-            >
-              <FolderPlus size={16} className="mr-2" />
-              Add to Group
-            </Button>
-            <Button
-              onClick={() => setMassEmailDialogOpen(true)}
-              className="bg-[#D8B46B] hover:bg-[#C9A557] text-[#1E3A32]"
-            >
-              <Mail size={16} className="mr-2" />
-              Mass Email
-            </Button>
-            <Button
-              onClick={async () => {
-                setSyncing(true);
-                try {
-                  const response = await base44.functions.invoke('syncLeadsToMailerLite', {});
-                  if (response.data.success) {
-                    toast.success(`Synced ${response.data.syncedCount} leads to MailerLite`);
-                  }
-                } catch (e) {
-                  toast.error("Sync failed: " + e.message);
-                } finally {
-                  setSyncing(false);
-                }
-              }}
-              disabled={syncing}
-              variant="outline"
-              className="border-[#D8B46B] text-[#1E3A32]"
-            >
-              {syncing ? <Loader2 size={16} className="animate-spin mr-2" /> : <Send size={16} className="mr-2" />}
-              {syncing ? "Syncing..." : "Sync MailerLite"}
-            </Button>
-            <Button
-              onClick={() => setConvertDialogOpen(true)}
-              className="bg-[#6E4F7D] hover:bg-[#5A3F69] text-[#F9F5EF]"
-            >
-              <Plus size={16} className="mr-2" />
-              Convert to Users
-            </Button>
+            {activeSection === "leads" && (
+              <>
+                <Button onClick={() => setBulkGroupDialogOpen(true)} variant="outline" className="border-[#6E4F7D] text-[#6E4F7D]">
+                  <Users size={16} className="mr-2" /> Add to Group
+                </Button>
+                <Button onClick={() => setMassEmailDialogOpen(true)} className="bg-[#D8B46B] hover:bg-[#C9A557] text-[#1E3A32]">
+                  <Mail size={16} className="mr-2" /> Mass Email
+                </Button>
+                <Button
+                  onClick={async () => {
+                    setSyncing(true);
+                    try {
+                      const response = await base44.functions.invoke('syncLeadsToMailerLite', {});
+                      if (response.data.success) {
+                        toast.success(`Synced ${response.data.syncedCount} leads to MailerLite`);
+                      }
+                    } catch (e) {
+                      toast.error("Sync failed: " + e.message);
+                    } finally {
+                      setSyncing(false);
+                    }
+                  }}
+                  disabled={syncing}
+                  variant="outline"
+                  className="border-[#D8B46B] text-[#1E3A32]"
+                >
+                  {syncing ? <Loader2 size={16} className="animate-spin mr-2" /> : <Send size={16} className="mr-2" />}
+                  {syncing ? "Syncing..." : "Sync MailerLite"}
+                </Button>
+                <Button onClick={() => setConvertDialogOpen(true)} className="bg-[#6E4F7D] hover:bg-[#5A3F69] text-[#F9F5EF]">
+                  <Plus size={16} className="mr-2" /> Convert to Users
+                </Button>
+              </>
+            )}
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-[#2B2725]/60">Total Leads</p>
-                <p className="text-3xl font-bold text-[#1E3A32] mt-2">{totalLeads}</p>
+        {/* Stats - visible on people sections */}
+        {(activeSection === "leads" || activeSection === "users") && (
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-[#2B2725]/60">Total Leads</p>
+                  <p className="text-3xl font-bold text-[#1E3A32] mt-2">{totalLeads}</p>
+                </div>
+                <Users size={40} className="text-[#D8B46B]" />
               </div>
-              <Users size={40} className="text-[#D8B46B]" />
+            </div>
+            <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-[#2B2725]/60">Platform Users</p>
+                  <p className="text-3xl font-bold text-[#1E3A32] mt-2">{users.length}</p>
+                </div>
+                <Users size={40} className="text-[#6E4F7D]" />
+              </div>
+            </div>
+            <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-[#2B2725]/60">Conversion Rate</p>
+                  <p className="text-3xl font-bold text-[#1E3A32] mt-2">{conversionRate}%</p>
+                </div>
+                <TrendingUp size={40} className="text-green-600" />
+              </div>
             </div>
           </div>
+        )}
 
-          <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-[#2B2725]/60">Platform Users</p>
-                <p className="text-3xl font-bold text-[#1E3A32] mt-2">{users.length}</p>
-              </div>
-              <Users size={40} className="text-[#6E4F7D]" />
-            </div>
-          </div>
+        {/* Mobile section picker */}
+        <div className="lg:hidden mb-6">
+          <Select value={activeSection} onValueChange={setActiveSection}>
+            <SelectTrigger className="bg-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {SECTIONS.map((group) => (
+                <React.Fragment key={group.group}>
+                  <div className="px-2 py-1 text-[10px] uppercase tracking-wider text-[#2B2725]/40 font-semibold">{group.group}</div>
+                  {group.items.map((item) => (
+                    <SelectItem key={item.key} value={item.key}>{item.label}</SelectItem>
+                  ))}
+                </React.Fragment>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-          <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-[#2B2725]/60">Conversion Rate</p>
-                <p className="text-3xl font-bold text-[#1E3A32] mt-2">{conversionRate}%</p>
-              </div>
-              <TrendingUp size={40} className="text-green-600" />
-            </div>
+        {/* Sidebar + Content */}
+        <div className="flex gap-8">
+          <ClientsHubSidebar
+            activeSection={activeSection}
+            onSectionChange={setActiveSection}
+            counts={{ leads: totalLeads, users: users.length }}
+          />
+          <div className="flex-1 min-w-0">
+            {renderContent()}
           </div>
         </div>
 
-        {/* Tabs */}
-        <Tabs defaultValue="leads" className="space-y-6">
-          <TabsList className="bg-white">
-            <TabsTrigger value="leads">Leads ({totalLeads})</TabsTrigger>
-            <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
-            <TabsTrigger value="campaigns" className="flex items-center gap-1.5">
-              <BarChart3 size={14} />
-              Campaigns
-            </TabsTrigger>
-            <TabsTrigger value="groups" className="flex items-center gap-1.5">
-              <Users size={14} />
-              Groups
-            </TabsTrigger>
-            <TabsTrigger value="templates" className="flex items-center gap-1.5">
-              <FileText size={14} />
-              Templates
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="leads">
-            <LeadsSection leads={leads} isLoading={leadsLoading} />
-          </TabsContent>
-
-          <TabsContent value="users">
-            <UsersSection users={users} isLoading={usersLoading} />
-          </TabsContent>
-
-          <TabsContent value="campaigns">
-            <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="font-serif text-xl text-[#1E3A32]">Sent Campaigns</h2>
-                  <p className="text-sm text-[#2B2725]/60 mt-1">Email campaigns sent via MailerLite with open/click tracking</p>
-                </div>
-                <Button
-                  onClick={() => setMassEmailDialogOpen(true)}
-                  className="bg-[#D8B46B] hover:bg-[#C9A557] text-[#1E3A32]"
-                >
-                  <Mail size={16} className="mr-2" />
-                  New Campaign
-                </Button>
-              </div>
-              <CampaignHistory />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="groups">
-            <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="font-serif text-xl text-[#1E3A32]">MailerLite Groups</h2>
-                  <p className="text-sm text-[#2B2725]/60 mt-1">Organize your contacts into groups for targeted campaigns</p>
-                </div>
-                <Button
-                  onClick={() => setBulkGroupDialogOpen(true)}
-                  className="bg-[#6E4F7D] hover:bg-[#5A3F69] text-white"
-                >
-                  <FolderPlus size={16} className="mr-2" />
-                  Bulk Add to Group
-                </Button>
-              </div>
-              <GroupManagementPanel />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="templates">
-            <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
-              <div className="mb-6">
-                <h2 className="font-serif text-xl text-[#1E3A32]">Email Templates</h2>
-                <p className="text-sm text-[#2B2725]/60 mt-1">Create and manage reusable email templates for your campaigns</p>
-              </div>
-              <EmailTemplateManager />
-            </div>
-          </TabsContent>
-        </Tabs>
-
-        {/* Convert Leads Dialog */}
+        {/* Dialogs */}
         <ConvertLeadsDialog
           open={convertDialogOpen}
           onOpenChange={setConvertDialogOpen}
@@ -240,15 +247,11 @@ export default function ClientsHub() {
             setConvertDialogOpen(false);
           }}
         />
-
-        {/* Mass Email Dialog */}
         <MassEmailDialog
           open={massEmailDialogOpen}
           onOpenChange={setMassEmailDialogOpen}
           leads={leads}
         />
-
-        {/* Bulk Assign Group Dialog */}
         <BulkAssignGroupDialog
           open={bulkGroupDialogOpen}
           onOpenChange={setBulkGroupDialogOpen}
