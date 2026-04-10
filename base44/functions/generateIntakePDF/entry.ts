@@ -5,134 +5,106 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const { intake_id } = await req.json();
-    const intake = await base44.asServiceRole.entities.ConsultationIntake.filter({ id: intake_id });
+    const intakes = await base44.asServiceRole.entities.ConsultationIntake.filter({ id: intake_id });
 
-    if (!intake || intake.length === 0) {
+    if (!intakes || intakes.length === 0) {
       return Response.json({ error: 'Intake not found' }, { status: 404 });
     }
 
-    const data = intake[0];
+    const data = intakes[0];
+
+    // Fetch all form field definitions to build the PDF dynamically
+    const formFields = await base44.asServiceRole.entities.ConsultationForm.list(undefined, 200);
+    const processedFields = formFields.map(f => f.data || f).filter(f => f && f.field_name);
+
     const doc = new jsPDF();
     let y = 20;
 
-    // Header
-    doc.setFontSize(20);
-    doc.text('Initial Consultation Questionnaire', 20, y);
-    y += 10;
-    doc.setFontSize(10);
-    doc.text(`Submitted: ${new Date(data.submitted_date).toLocaleDateString()}`, 20, y);
-    y += 15;
+    const addPage = () => { doc.addPage(); y = 20; };
+    const checkY = (needed = 10) => { if (y + needed > 275) addPage(); };
 
-    // Personal Information
-    doc.setFontSize(14);
-    doc.text('Personal Information', 20, y);
-    y += 8;
-    doc.setFontSize(10);
+    const addText = (text, size = 10, bold = false) => {
+      checkY(size + 4);
+      doc.setFontSize(size);
+      doc.setFont('helvetica', bold ? 'bold' : 'normal');
+      const lines = doc.splitTextToSize(String(text || ''), 170);
+      doc.text(lines, 20, y);
+      y += lines.length * (size * 0.45 + 2);
+    };
 
     const addField = (label, value) => {
-      if (y > 270) {
-        doc.addPage();
-        y = 20;
-      }
-      doc.text(`${label}: ${value || 'N/A'}`, 20, y);
-      y += 6;
+      checkY(14);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      const labelLines = doc.splitTextToSize(`${label}:`, 170);
+      doc.text(labelLines, 20, y);
+      y += labelLines.length * 6;
+
+      doc.setFont('helvetica', 'normal');
+      const val = Array.isArray(value) ? value.join(', ') : (value === true ? 'Yes' : value === false ? 'No' : (value || 'N/A'));
+      const valLines = doc.splitTextToSize(String(val), 170);
+      doc.text(valLines, 25, y);
+      y += valLines.length * 5 + 3;
     };
 
     const addSection = (title) => {
-      if (y > 265) {
-        doc.addPage();
-        y = 20;
-      }
-      y += 5;
+      checkY(20);
+      y += 6;
+      doc.setDrawColor(216, 180, 107);
+      doc.setLineWidth(0.5);
+      doc.line(20, y, 190, y);
+      y += 6;
       doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
       doc.text(title, 20, y);
-      y += 8;
+      y += 10;
       doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
     };
 
-    addField('Name', data.name);
-    addField('Date of Birth', data.birth_date);
-    addField('Address', `${data.address || ''}, ${data.city || ''}, ${data.state || ''} ${data.zip || ''}`);
-    addField('Phone', data.phone);
-    addField('Email', data.email);
-    addField('Occupation', data.occupation);
-    addField('Emergency Contact', `${data.emergency_contact_name || ''} - ${data.emergency_contact_phone || ''}`);
-    addField('Referring Party', data.referring_party);
-    addField('How Did You Hear', data.how_did_you_hear);
-
-    addSection('Reason for Consultation');
-    const primaryConcerns = data.primary_concerns || '';
-    const splitText = doc.splitTextToSize(primaryConcerns, 170);
-    doc.text(splitText, 20, y);
-    y += splitText.length * 6;
-
-    addField('Previous Hypnosis', data.previous_hypnosis === 'yes' ? 'Yes' : 'No');
-    if (data.previous_hypnosis === 'yes' && data.previous_hypnosis_details) {
-      const details = doc.splitTextToSize(data.previous_hypnosis_details, 170);
-      doc.text(details, 20, y);
-      y += details.length * 6;
-    }
-
-    addSection('Medical & Mental Health History');
-    if (data.health_conditions && data.health_conditions.length > 0) {
-      addField('Health Conditions', data.health_conditions.join(', '));
-    }
-    if (data.health_conditions_other) {
-      addField('Other Conditions', data.health_conditions_other);
-    }
-    if (data.current_medications) {
-      const meds = doc.splitTextToSize(`Medications: ${data.current_medications}`, 170);
-      doc.text(meds, 20, y);
-      y += meds.length * 6;
-    }
-    addField('Mental Health Diagnosis', data.mental_health_diagnosis === 'yes' ? 'Yes' : 'No');
-    if (data.mental_health_diagnosis === 'yes' && data.mental_health_details) {
-      const mhDetails = doc.splitTextToSize(data.mental_health_details, 170);
-      doc.text(mhDetails, 20, y);
-      y += mhDetails.length * 6;
-    }
-    addField('Currently in Therapy', data.current_therapy === 'yes' ? 'Yes' : 'No');
-    if (data.current_therapy === 'yes') {
-      addField('Therapist Aware', data.therapist_awareness);
-    }
-    addField('Suicidal Thoughts (past 6 months)', data.suicidal_thoughts === 'yes' ? 'Yes' : 'No');
-    addField('Substance Use', data.substance_use === 'yes' ? 'Yes' : 'No');
-    if (data.substance_use === 'yes' && data.substance_details) {
-      const substanceDetails = doc.splitTextToSize(data.substance_details, 170);
-      doc.text(substanceDetails, 20, y);
-      y += substanceDetails.length * 6;
-    }
-
-    addSection('Goals & Expectations');
-    if (data.goals_expectations) {
-      const goals = doc.splitTextToSize(data.goals_expectations, 170);
-      doc.text(goals, 20, y);
-      y += goals.length * 6;
-    }
-    if (data.barriers_to_progress) {
-      const barriers = doc.splitTextToSize(`Barriers: ${data.barriers_to_progress}`, 170);
-      doc.text(barriers, 20, y);
-      y += barriers.length * 6;
-    }
-    addField('Commitment Level', data.commitment_level);
-    if (data.additional_info) {
-      const addInfo = doc.splitTextToSize(`Additional: ${data.additional_info}`, 170);
-      doc.text(addInfo, 20, y);
-      y += addInfo.length * 6;
-    }
-
-    addSection('Consent & Acknowledgment');
-    addField('Medical Advice Disclaimer', data.consent_no_medical_advice ? 'Acknowledged' : 'Not acknowledged');
-    addField('Not Therapy Disclaimer', data.consent_not_therapy ? 'Acknowledged' : 'Not acknowledged');
-    addField('Confidentiality', data.consent_confidentiality ? 'Acknowledged' : 'Not acknowledged');
-    addField('Voluntary Participation', data.consent_voluntary ? 'Acknowledged' : 'Not acknowledged');
-    addField('Questions Answered', data.consent_questions_answered ? 'Acknowledged' : 'Not acknowledged');
-    
+    // Title
+    addText('Initial Consultation Questionnaire', 18, true);
+    y += 2;
+    addText(`Submitted: ${new Date(data.submitted_date || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, 10);
     y += 5;
-    addField('Signature', data.signature_name);
-    addField('Date', data.signature_date);
-    if (data.guardian_signature) {
-      addField('Parent/Guardian', `${data.guardian_signature} (${data.guardian_relationship})`);
+
+    // Group form fields by step
+    const steps = {};
+    for (const field of processedFields) {
+      const stepNum = parseInt(field.step, 10);
+      if (!steps[stepNum]) steps[stepNum] = { title: field.step_title || `Step ${stepNum}`, fields: [] };
+      if (field.step_title && !steps[stepNum].titleSet) {
+        steps[stepNum].title = field.step_title;
+        steps[stepNum].titleSet = true;
+      }
+      steps[stepNum].fields.push(field);
+    }
+
+    const sortedStepNums = Object.keys(steps).map(Number).sort((a, b) => a - b);
+
+    for (const stepNum of sortedStepNums) {
+      const stepData = steps[stepNum];
+      addSection(stepData.title);
+
+      const sortedFields = stepData.fields.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+      for (const field of sortedFields) {
+        if (field.conditional_field) {
+          const condValue = data[field.conditional_field];
+          if (Array.isArray(condValue)) {
+            if (!condValue.includes(field.conditional_value)) continue;
+          } else if (String(condValue) !== String(field.conditional_value)) {
+            continue;
+          }
+        }
+
+        const value = data[field.field_name];
+        if (value === undefined || value === null || value === '') {
+          if (!field.required) continue;
+        }
+
+        addField(field.label, value);
+      }
     }
 
     const pdfBytes = doc.output('arraybuffer');
@@ -141,7 +113,7 @@ Deno.serve(async (req) => {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename=intake_${data.name.replace(/\s+/g, '_')}_${Date.now()}.pdf`
+        'Content-Disposition': `attachment; filename=intake_${(data.name || 'client').replace(/\s+/g, '_')}_${Date.now()}.pdf`
       }
     });
   } catch (error) {

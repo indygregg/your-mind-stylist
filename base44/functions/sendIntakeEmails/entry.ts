@@ -5,7 +5,7 @@ import { Resend } from 'npm:resend@2.0.0';
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 const ROBERTA_EMAIL = 'roberta@yourmindstylist.com';
 
-function buildPDF(data) {
+function buildPDF(data, formFields) {
   const doc = new jsPDF();
   let y = 20;
 
@@ -16,79 +16,91 @@ function buildPDF(data) {
     checkY(size + 4);
     doc.setFontSize(size);
     doc.setFont('helvetica', bold ? 'bold' : 'normal');
-    const lines = doc.splitTextToSize(text, 170);
+    const lines = doc.splitTextToSize(String(text || ''), 170);
     doc.text(lines, 20, y);
     y += lines.length * (size * 0.45 + 2);
   };
 
   const addField = (label, value) => {
-    checkY(12);
+    checkY(14);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text(`${label}:`, 20, y);
+    const labelLines = doc.splitTextToSize(`${label}:`, 170);
+    doc.text(labelLines, 20, y);
+    y += labelLines.length * 6;
+
     doc.setFont('helvetica', 'normal');
-    const val = Array.isArray(value) ? value.join(', ') : (value || 'N/A');
-    const lines = doc.splitTextToSize(val, 130);
-    doc.text(lines, 65, y);
-    y += Math.max(lines.length * 6, 7);
+    const val = Array.isArray(value) ? value.join(', ') : (value === true ? 'Yes' : value === false ? 'No' : (value || 'N/A'));
+    const valLines = doc.splitTextToSize(String(val), 170);
+    doc.text(valLines, 25, y);
+    y += valLines.length * 5 + 3;
   };
 
   const addSection = (title) => {
-    checkY(16);
-    y += 4;
-    doc.setFontSize(13);
+    checkY(20);
+    y += 6;
+    doc.setDrawColor(216, 180, 107); // gold
+    doc.setLineWidth(0.5);
+    doc.line(20, y, 190, y);
+    y += 6;
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
     doc.text(title, 20, y);
-    y += 8;
+    y += 10;
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
   };
 
+  // Title
   addText('Initial Consultation Questionnaire', 18, true);
-  y += 3;
-  addText(`Submitted: ${new Date(data.submitted_date || Date.now()).toLocaleDateString()}`, 10);
+  y += 2;
+  addText(`Submitted: ${new Date(data.submitted_date || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, 10);
   y += 5;
 
-  addSection('Personal Information');
-  addField('Name', data.name);
-  addField('Date of Birth', data.birth_date);
-  addField('Phone', data.phone);
-  addField('Email', data.email);
-  addField('Occupation', data.occupation);
-  addField('Address', [data.address, data.city, data.state, data.zip].filter(Boolean).join(', '));
-  addField('Emergency Contact', [data.emergency_contact_name, data.emergency_contact_phone].filter(Boolean).join(' — '));
-  addField('Referring Party', data.referring_party);
-  addField('How Did You Hear', data.how_did_you_hear);
+  // Group form fields by step
+  const steps = {};
+  for (const field of formFields) {
+    const stepNum = parseInt(field.step, 10);
+    if (!steps[stepNum]) steps[stepNum] = { title: field.step_title || `Step ${stepNum}`, fields: [] };
+    // Use first non-null step_title found
+    if (field.step_title && !steps[stepNum].titleSet) {
+      steps[stepNum].title = field.step_title;
+      steps[stepNum].titleSet = true;
+    }
+    steps[stepNum].fields.push(field);
+  }
 
-  addSection('Reason for Consultation');
-  if (data.primary_concerns) addText(data.primary_concerns);
-  addField('Previous Hypnosis', data.previous_hypnosis === 'yes' ? 'Yes' : 'No');
-  if (data.previous_hypnosis === 'yes') addText(data.previous_hypnosis_details || '');
+  // Sort steps and fields within each step
+  const sortedStepNums = Object.keys(steps).map(Number).sort((a, b) => a - b);
 
-  addSection('Medical & Mental Health History');
-  addField('Health Conditions', data.health_conditions);
-  if (data.health_conditions_other) addField('Other Conditions', data.health_conditions_other);
-  if (data.current_medications) addField('Current Medications', data.current_medications);
-  addField('Mental Health Diagnosis', data.mental_health_diagnosis === 'yes' ? 'Yes' : 'No');
-  if (data.mental_health_diagnosis === 'yes') addText(data.mental_health_details || '');
-  addField('Currently in Therapy', data.current_therapy === 'yes' ? 'Yes' : 'No');
-  if (data.current_therapy === 'yes') addField('Therapist Aware', data.therapist_awareness);
-  addField('Suicidal Thoughts (past 6 months)', data.suicidal_thoughts === 'yes' ? 'Yes' : 'No');
-  addField('Substance Use', data.substance_use === 'yes' ? 'Yes' : 'No');
-  if (data.substance_use === 'yes') addText(data.substance_details || '');
-  addField('Excessive Emotions', data.excessive_emotions);
-  addField('Life Events (past 5 years)', data.life_events);
+  for (const stepNum of sortedStepNums) {
+    const stepData = steps[stepNum];
+    addSection(stepData.title);
 
-  addSection('Goals & Expectations');
-  if (data.goals_expectations) addText(data.goals_expectations);
-  if (data.barriers_to_progress) addField('Barriers', data.barriers_to_progress);
-  addField('Commitment Level', data.commitment_level);
-  if (data.additional_info) addText(data.additional_info);
+    // Sort fields by order
+    const sortedFields = stepData.fields.sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  addSection('Consent & Acknowledgment');
-  addField('Signature', data.signature_name);
-  addField('Date', data.signature_date);
-  if (data.guardian_signature) addField('Parent/Guardian', `${data.guardian_signature} (${data.guardian_relationship})`);
+    for (const field of sortedFields) {
+      // Skip conditional fields whose condition isn't met
+      if (field.conditional_field) {
+        const condValue = data[field.conditional_field];
+        if (Array.isArray(condValue)) {
+          if (!condValue.includes(field.conditional_value)) continue;
+        } else if (String(condValue) !== String(field.conditional_value)) {
+          continue;
+        }
+      }
+
+      const value = data[field.field_name];
+
+      // Skip empty/undefined values for non-required fields
+      if (value === undefined || value === null || value === '') {
+        if (!field.required) continue;
+      }
+
+      addField(field.label, value);
+    }
+  }
 
   return doc.output('arraybuffer');
 }
@@ -104,19 +116,22 @@ Deno.serve(async (req) => {
     }
     const data = intakes[0];
 
-    const pdfBuffer = buildPDF(data);
+    // Fetch all form field definitions to build the PDF dynamically
+    const formFields = await base44.asServiceRole.entities.ConsultationForm.list(undefined, 200);
+    const processedFields = formFields.map(f => f.data || f).filter(f => f && f.field_name);
+
+    const pdfBuffer = buildPDF(data, processedFields);
     const pdfBase64 = btoa(String.fromCharCode(...new Uint8Array(pdfBuffer)));
     const clientName = data.name || 'New Client';
     const clientEmail = data.email;
 
-    // 3. Upsert lead in CRM
+    // Upsert lead in CRM
     const intakeLink = `https://yourmindstylist.com/ConsultationQuestionnaire`;
     const existingLeads = clientEmail
       ? await base44.asServiceRole.entities.Lead.filter({ email: clientEmail })
       : [];
 
     if (existingLeads && existingLeads.length > 0) {
-      // Update existing lead
       await base44.asServiceRole.entities.Lead.update(existingLeads[0].id, {
         first_name: data.name ? data.name.split(' ')[0] : existingLeads[0].first_name,
         last_name: data.name && data.name.split(' ').length > 1 ? data.name.split(' ').slice(1).join(' ') : existingLeads[0].last_name,
@@ -126,7 +141,6 @@ Deno.serve(async (req) => {
         last_contact_date: new Date().toISOString(),
       });
     } else {
-      // Create new lead
       const nameParts = (data.name || '').split(' ');
       await base44.asServiceRole.entities.Lead.create({
         email: clientEmail || '',
@@ -164,7 +178,7 @@ Deno.serve(async (req) => {
               <p style="line-height: 1.7; color: #2B2725; font-size: 13px; color: #777;">Please remember our 48-hour cancellation policy. Cancellations must be made at least 2 business days prior to your appointment.</p>
             </div>
             <div style="background-color: #2B2725; padding: 20px 32px; text-align: center;">
-              <p style="color: #F9F5EF; font-size: 12px; margin: 0;">© ${new Date().getFullYear()} Your Mind Stylist · 8724 Spanish Ridge Ave #B, Las Vegas, NV 89148</p>
+              <p style="color: #F9F5EF; font-size: 12px; margin: 0;">&copy; ${new Date().getFullYear()} Your Mind Stylist &middot; 8724 Spanish Ridge Ave #B, Las Vegas, NV 89148</p>
             </div>
           </div>
         `

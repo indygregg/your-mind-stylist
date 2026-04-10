@@ -187,6 +187,8 @@ export default function ConsultationQuestionnaire() {
   }, [step, formFields, currentStepFields, formData]);
 
   const WELCOME_LETTER_URL = "https://media.base44.com/files/public/693a98b3e154ab3b36c88ebb/6abd9ef03_Welcome-letter.pdf";
+  const CLIENT_BOR_URL = "https://base44.app/api/apps/693a98b3e154ab3b36c88ebb/files/public/693a98b3e154ab3b36c88ebb/5363d88f4_ClientBOR.pdf";
+  const CLIENT_BOR_MINORS_URL = "https://base44.app/api/apps/693a98b3e154ab3b36c88ebb/files/public/693a98b3e154ab3b36c88ebb/41b22fa7e_ClientBOR-minors.pdf";
 
   const handleCheckboxChange = (fieldName, value) => {
     setFormData(prev => {
@@ -225,7 +227,14 @@ export default function ConsultationQuestionnaire() {
   const isStepValid = () => {
     const requiredFields = currentStepFields.filter(field => {
       if (!field.required) return false;
-      if (field.conditional_field && formData[field.conditional_field] !== field.conditional_value) return false;
+      if (field.conditional_field) {
+        const condVal = formData[field.conditional_field];
+        if (Array.isArray(condVal)) {
+          if (!condVal.includes(field.conditional_value)) return false;
+        } else if (condVal !== field.conditional_value) {
+          return false;
+        }
+      }
       return true;
     });
     if (requiredFields.length === 0) return true;
@@ -243,8 +252,13 @@ export default function ConsultationQuestionnaire() {
   
   const renderField = (field) => {
     // Handle conditional fields
-    if (field.conditional_field && formData[field.conditional_field] !== field.conditional_value) {
-      return null;
+    if (field.conditional_field) {
+      const condVal = formData[field.conditional_field];
+      if (Array.isArray(condVal)) {
+        if (!condVal.includes(field.conditional_value)) return null;
+      } else if (condVal !== field.conditional_value) {
+        return null;
+      }
     }
     
     const value = formData[field.field_name];
@@ -334,6 +348,18 @@ export default function ConsultationQuestionnaire() {
               </Label>
               {field.help_text && (
                 <p className="text-xs text-[#2B2725]/60 mt-1 mb-2">{field.help_text}</p>
+              )}
+              {/* Client Bill of Rights links for disclosure forms */}
+              {field.field_name === 'disclosure_forms' && (
+                <div className="mt-2 mb-3 p-3 bg-[#1E3A32]/5 border border-[#D8B46B]/30 rounded-lg space-y-2">
+                  <p className="text-sm font-medium text-[#1E3A32]">Important Documents:</p>
+                  <a href={CLIENT_BOR_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-[#D8B46B] hover:text-[#1E3A32] underline transition-colors">
+                    📄 Client Bill of Rights (PDF)
+                  </a>
+                  <a href={CLIENT_BOR_MINORS_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-[#D8B46B] hover:text-[#1E3A32] underline transition-colors">
+                    📄 Client Bill of Rights — Minors (PDF)
+                  </a>
+                </div>
               )}
               <div className="mt-2 space-y-2">
                 {field.options.map((option) => {
@@ -475,14 +501,26 @@ export default function ConsultationQuestionnaire() {
               Next
             </Button>
           ) : (
-            <Button
-              onClick={handleSubmit}
-              disabled={!isStepValid() || submitting}
-              className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[#1E3A32] ml-auto"
-            >
-              {submitting ? "Submitting..." : "Submit Questionnaire"}
-              {!submitting && <CheckCircle2 className="ml-2" size={16} />}
-            </Button>
+            <div className="flex flex-col items-end gap-3 ml-auto">
+              {/* Bill of Rights links on final step */}
+              <div className="text-right text-sm text-[#2B2725]/70 space-y-1">
+                <p>Before submitting, please review:</p>
+                <a href={CLIENT_BOR_URL} target="_blank" rel="noopener noreferrer" className="block text-[#D8B46B] hover:text-[#1E3A32] underline transition-colors">
+                  Client Bill of Rights (PDF)
+                </a>
+                <a href={CLIENT_BOR_MINORS_URL} target="_blank" rel="noopener noreferrer" className="block text-[#D8B46B] hover:text-[#1E3A32] underline transition-colors">
+                  Client Bill of Rights — Minors (PDF)
+                </a>
+              </div>
+              <Button
+                onClick={handleSubmit}
+                disabled={!isStepValid() || submitting}
+                className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[#1E3A32]"
+              >
+                {submitting ? "Submitting..." : "Submit Questionnaire"}
+                {!submitting && <CheckCircle2 className="ml-2" size={16} />}
+              </Button>
+            </div>
           )}
         </div>
 
