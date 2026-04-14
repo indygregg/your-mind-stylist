@@ -187,7 +187,7 @@ export default function PocketMindset() {
                   contentKey="pocket.hero.video_embed"
                   page="PocketMindset"
                   blockTitle="Hero Video (Paste Vimeo or YouTube URL)"
-                  fallback="https://vimeo.com/1158920818/b90f971f48"
+                  fallback="https://vimeo.com/1158920818/3969eaaa17"
                 />
               </div>
             </div>
