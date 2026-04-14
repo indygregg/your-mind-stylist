@@ -17,6 +17,16 @@ export default function ManagerPaymentPlans() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [plans, setPlans] = useState([
+    { name: "3 Monthly Payments", months: 3, monthly_price: 0 },
+  ]);
+
+  const { data: products = [], isLoading: isProductsLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: () => base44.entities.Product.filter({ active: true }),
+  });
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -35,20 +45,6 @@ export default function ManagerPaymentPlans() {
     checkAuth();
   }, [navigate]);
 
-  if (isLoading || !isAuthenticated) {
-    return <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">Loading...</div>;
-  }
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [plans, setPlans] = useState([
-    { name: "3 Monthly Payments", months: 3, monthly_price: 0 },
-  ]);
-
-  const { data: products = [], isLoading: isProductsLoading } = useQuery({
-    queryKey: ["products"],
-    queryFn: () => base44.entities.Product.filter({ active: true }),
-  });
-
   const syncPaymentPlansMutation = useMutation({
     mutationFn: ({ product_id, payment_plan_options }) =>
       base44.functions.invoke("syncPaymentPlans", { product_id, payment_plan_options }),
@@ -61,6 +57,10 @@ export default function ManagerPaymentPlans() {
       toast.error(error.message || "Failed to sync payment plans");
     },
   });
+
+  if (isLoading || !isAuthenticated) {
+    return <div className="min-h-screen bg-[#F9F5EF] flex items-center justify-center">Loading...</div>;
+  }
 
   const handleOpenDialog = (product) => {
     setSelectedProduct(product);

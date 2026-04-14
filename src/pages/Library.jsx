@@ -8,18 +8,7 @@ export default function Library() {
     navigate(createPageUrl("ClientPortal"), { replace: true });
   }, []);
   return null;
-  const queryClient = useQueryClient();
-  const [showDashboard, setShowDashboard] = useState(true);
-  const [expandedSections, setExpandedSections] = useState({
-    featured: true,
-    programs: true,
-    pocketVisualization: true,
-    webinars: true,
-    audio: true,
-    coaching: false,
-    training: false,
-    comingSoon: false
-  });
+});
 
   const { pullY, isRefreshing, handlers: pullToRefreshHandlers } = usePullToRefresh(async () => {
     await queryClient.invalidateQueries({ queryKey: ["userCourseProgress"] });

@@ -39,9 +39,7 @@ export default function CoursePage() {
             related_id: course.id
           });
           
-          if (existingSnapshots.length === 0 && courseProgress?.status === 'not_started') {
-            setShowStartSnapshot(true);
-          }
+          // Snapshot check removed — no longer needed
         }
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -359,7 +357,12 @@ export default function CoursePage() {
         <EmotionalCheckIn
           type={checkInType}
           lessonTitle={currentLesson.title}
-          onComplete={handleEmotionalCheckInComplete}
+          onComplete={(data) => {
+            setShowEmotionalCheckIn(false);
+            if (checkInType === "after") {
+              lessonCompleteMutation.mutate(currentLessonId);
+            }
+          }}
           onSkip={() => {
             setShowEmotionalCheckIn(false);
             if (checkInType === "after") {
