@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Edit, Trash2, Eye, Sparkles, RefreshCw, Download, Upload, Package, BookOpen, Video, GraduationCap, Info, GripVertical, Gift, ExternalLink } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, Sparkles, RefreshCw, Download, Upload, Package, BookOpen, Video, GraduationCap, Info, GripVertical, Gift, ExternalLink, Headphones } from "lucide-react";
 import { toast } from "react-hot-toast";
 import ReactQuill from "react-quill";
 import BundleCreator from "../components/manager/BundleCreator";
@@ -70,6 +70,20 @@ export default function ManagerProducts() {
     queryKey: ["courses"],
     queryFn: () => base44.entities.Course.list("title"),
   });
+
+  const { data: audiobooks = [] } = useQuery({
+    queryKey: ["audiobooks"],
+    queryFn: () => base44.entities.Audiobook.list(),
+  });
+
+  // Build a map of product_id → audiobook for quick lookup
+  const audiobookByProductId = React.useMemo(() => {
+    const map = {};
+    audiobooks.forEach((ab) => {
+      if (ab.product_id) map[ab.product_id] = ab;
+    });
+    return map;
+  }, [audiobooks]);
 
 
 
@@ -576,7 +590,18 @@ export default function ManagerProducts() {
                 <div key={product.id} className="flex items-center gap-3 bg-white p-4 rounded-lg border border-[#E4D9C4] hover:border-[#D8B46B]/50 transition-all">
                   <GripVertical size={18} className="text-[#D8B46B]/50 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-[#1E3A32] truncate">{product.name}</h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-medium text-[#1E3A32] truncate">{product.name}</h3>
+                      {audiobookByProductId[product.id] && (
+                        <a
+                          href="/ManagerAudiobooks"
+                          className="inline-flex items-center gap-1 text-xs text-[#6E4F7D] hover:text-[#1E3A32] transition-colors flex-shrink-0"
+                          title={`Linked audiobook: ${audiobookByProductId[product.id].title}`}
+                        >
+                          <Headphones size={12} /> Audiobook
+                        </a>
+                      )}
+                    </div>
                     <p className="text-xs text-[#2B2725]/60">{product.status === 'published' ? '✓ Published' : 'Draft'}</p>
                   </div>
                   <span className="text-sm font-medium text-[#1E3A32] flex-shrink-0">
