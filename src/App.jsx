@@ -16,6 +16,8 @@ import QuizPage from './pages/QuizPage';
 import QuizResults from './pages/QuizResults';
 import ManagerStyleInsightsPage from './pages/ManagerStyleInsights';
 import ManagerQuizEditorPage from './pages/ManagerQuizEditor';
+import AudiobookPage from './pages/AudiobookPage';
+import ManagerAudiobooks from './pages/ManagerAudiobooks';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 
@@ -78,6 +80,8 @@ const AuthenticatedApp = () => {
       <Route path="/books/:slug" element={<LayoutWrapper currentPageName="BookLanding"><BookLandingPage /></LayoutWrapper>} />
       <Route path="/quiz/:slug" element={<LayoutWrapper currentPageName="QuizPage"><QuizPage /></LayoutWrapper>} />
       <Route path="/quiz/:slug/results" element={<LayoutWrapper currentPageName="QuizResults"><QuizResults /></LayoutWrapper>} />
+      <Route path="/audiobook/:slug" element={<LayoutWrapper currentPageName="AudiobookPage"><AudiobookPage /></LayoutWrapper>} />
+      <Route path="/ManagerAudiobooks" element={<LayoutWrapper currentPageName="ManagerAudiobooks"><ManagerAudiobooks /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
