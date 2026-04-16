@@ -87,6 +87,7 @@ export default function AuthLayout({ children, currentPageName }) {
         { name: "Library", page: "Library" },
         { name: "Clients", page: "ClientsHub" },
         { name: "Style Insights", page: "ManagerStyleInsights" },
+        { name: "Audiobooks", page: "ManagerAudiobooks" },
         { name: "Studio", page: "StudioDashboard" },
         { name: "Roadmap", page: "AdminRoadmap" },
         { name: "Settings", page: "StudioSettings" },
@@ -105,6 +106,7 @@ export default function AuthLayout({ children, currentPageName }) {
         { name: "Author Profile", page: "AuthorProfile" },
         { name: "Courses", page: "CourseManager" },
         { name: "Audio", page: "StudioAudio" },
+        { name: "Audiobooks", page: "ManagerAudiobooks" },
         { name: "Messages", page: "MessagesManager" },
         { name: "Affiliates", page: "ManagerAffiliates" },
       ];
