@@ -236,6 +236,9 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
         <div>
           <Label className="text-base font-semibold text-[#1E3A32]">Purchase Options (Variants)</Label>
           <p className="text-xs text-[#2B2725]/60 mt-1">Add Digital, Paperback, Bundle, or other purchase formats for this book</p>
+          <p className="text-xs text-[#D8B46B]/80 mt-1 italic">
+            💡 Create one Product per book. Add variants here for Digital, Paperback, and Bundle options. Link each digital variant to a Resource for delivery.
+          </p>
         </div>
         <Button
           type="button"
@@ -308,23 +311,30 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
                   getProductName={getProductName}
                 />
               ) : option.product_id && !option._inline ? (
-                // Already linked to an existing product — show it
+                // Already linked to an existing product — show it with inline price edit
                 <div>
                   <Label className="text-xs">Linked Product</Label>
-                  <div className="mt-1 p-3 bg-[#F9F5EF] rounded border border-[#E4D9C4] flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-[#1E3A32]">{getProductName(option.product_id)}</p>
-                      <p className="text-xs text-[#2B2725]/60">{getProductPrice(option.product_id)}</p>
+                  <div className="mt-1 p-3 bg-[#F9F5EF] rounded border border-[#E4D9C4]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-[#1E3A32]">{getProductName(option.product_id)}</p>
+                        <p className="text-xs text-[#2B2725]/60">{getProductPrice(option.product_id)}</p>
+                      </div>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleUpdateOption(index, "product_id", "")}
+                        className="text-xs"
+                      >
+                        Change
+                      </Button>
                     </div>
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleUpdateOption(index, "product_id", "")}
-                      className="text-xs"
-                    >
-                      Change
-                    </Button>
+                    <InlinePriceEditor
+                      productId={option.product_id}
+                      allProducts={allProducts}
+                      queryClient={queryClient}
+                    />
                   </div>
                 </div>
               ) : (
@@ -518,8 +528,8 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
             </div>
           </div>
 
-          {/* Digital Resource Attachment */}
-          {option.type === 'digital' && option.product_id && !option._inline && (
+          {/* Digital Resource Attachment — show for all digital variants, even during inline creation */}
+          {option.type === 'digital' && (
             <DigitalResourcePicker
               option={option}
               index={index}
@@ -650,6 +660,87 @@ function DigitalResourcePicker({ option, index, allResources, handleUpdateOption
           </Select>
         </div>
       )}
+    </div>
+  );
+}
+
+function InlinePriceEditor({ productId, allProducts, queryClient }) {
+  const product = allProducts.find(p => p.id === productId);
+  const [editing, setEditing] = useState(false);
+  const [newPrice, setNewPrice] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  if (!product) return null;
+
+  const handleSave = async () => {
+    const priceVal = parseFloat(newPrice);
+    if (!priceVal || priceVal <= 0) {
+      toast.error("Please enter a valid price");
+      return;
+    }
+    setSaving(true);
+    try {
+      const priceInCents = Math.round(priceVal * 100);
+      await base44.entities.Product.update(productId, { price: priceInCents });
+      // Re-sync to Stripe if product has stripe ID
+      if (product.stripe_product_id) {
+        try {
+          await base44.functions.invoke('syncProductStripe', {
+            product_id: productId,
+            key: product.key,
+            name: product.name,
+            description: product.short_description || `Variant of ${product.name}`,
+            price: priceInCents,
+            currency: product.currency || "usd",
+            billing_interval: "one_time",
+            type: product.type || "one_time",
+          });
+        } catch (stripeErr) {
+          console.warn("Stripe re-sync after price change:", stripeErr);
+        }
+      }
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      toast.success(`Price updated to $${priceVal.toFixed(2)}`);
+      setEditing(false);
+    } catch (err) {
+      toast.error(`Failed: ${err.message}`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (!editing) {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          setNewPrice((product.price / 100).toFixed(2));
+          setEditing(true);
+        }}
+        className="mt-2 text-xs text-[#D8B46B] hover:text-[#C9A55C] underline"
+      >
+        Edit price
+      </button>
+    );
+  }
+
+  return (
+    <div className="mt-2 flex items-center gap-2">
+      <span className="text-xs text-[#2B2725]/60">$</span>
+      <Input
+        type="number"
+        step="0.01"
+        value={newPrice}
+        onChange={(e) => setNewPrice(e.target.value)}
+        className="h-8 text-sm w-28"
+        autoFocus
+      />
+      <Button type="button" size="sm" onClick={handleSave} disabled={saving} className="h-8 bg-[#1E3A32] hover:bg-[#2B2725] text-xs px-3">
+        {saving ? <Loader2 size={12} className="animate-spin" /> : "Save"}
+      </Button>
+      <Button type="button" size="sm" variant="ghost" onClick={() => setEditing(false)} className="h-8 text-xs px-2">
+        Cancel
+      </Button>
     </div>
   );
 }
