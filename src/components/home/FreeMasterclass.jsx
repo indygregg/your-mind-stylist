@@ -27,7 +27,7 @@ export default function FreeMasterclass() {
               className="relative aspect-video bg-[#2B2725] overflow-hidden group cursor-pointer block"
             >
               <img
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80"
+                src="https://media.base44.com/images/public/693a98b3e154ab3b36c88ebb/a9538f497_generated_image.png"
                 alt="Free Masterclass"
                 className="w-full h-full object-cover opacity-60 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700"
               />
