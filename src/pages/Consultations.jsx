@@ -390,7 +390,7 @@ export default function Consultations() {
                           contentKey="consultations.step1.hypnosis_video_url"
                           page="Consultations"
                           blockTitle="Learn About Hypnosis Video URL"
-                          fallback="https://vimeo.com/1164998743"
+                          fallback="https://vimeo.com/1164998743/021c3419cc"
                         />
                       </div>
                     </div>
