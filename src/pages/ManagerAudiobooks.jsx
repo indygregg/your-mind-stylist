@@ -19,9 +19,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, BookOpen, Upload, HelpCircle, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, BookOpen, Upload, HelpCircle, Loader2, Library, ExternalLink, DollarSign } from "lucide-react";
 import AudiobookSetupGuide from "@/components/audiobook/AudiobookSetupGuide";
 import AudiobookChapterEditor from "@/components/audiobook/AudiobookChapterEditor";
+import ResourceAudioPicker from "@/components/audiobook/ResourceAudioPicker";
+import CreateProductShortcut from "@/components/audiobook/CreateProductShortcut";
 
 export default function ManagerAudiobooks() {
   const [editingBook, setEditingBook] = useState(null);
@@ -164,6 +166,8 @@ function AudiobookEditDialog({ audiobook, products, onClose, queryClient }) {
   const [form, setForm] = useState({ ...audiobook });
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showResourcePicker, setShowResourcePicker] = useState(false);
+  const [showCreateProduct, setShowCreateProduct] = useState(false);
 
   const handleFileUpload = async (e, field) => {
     const file = e.target.files?.[0];
@@ -254,6 +258,14 @@ function AudiobookEditDialog({ audiobook, products, onClose, queryClient }) {
                       <span>{uploading ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />} Upload</span>
                     </Button>
                   </label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="gap-1"
+                    onClick={() => setShowResourcePicker(true)}
+                  >
+                    <Library size={14} /> Resources
+                  </Button>
                 </div>
               </div>
 
@@ -352,10 +364,34 @@ function AudiobookEditDialog({ audiobook, products, onClose, queryClient }) {
                   <SelectContent>
                     <SelectItem value={null}>None</SelectItem>
                     {products.map((p) => (
-                      <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>
+                      <SelectItem key={p.id} value={p.id}>
+                        {p.name}{p.price ? ` ($${(p.price / 100).toFixed(2)})` : ""}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                <div className="flex gap-2 mt-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="text-xs gap-1"
+                    onClick={() => setShowCreateProduct(true)}
+                    disabled={!form.title || !form.slug}
+                  >
+                    <DollarSign size={12} /> Create New Product
+                  </Button>
+                  {form.product_id && (
+                    <a
+                      href={`/ManagerProducts`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs text-[#D8B46B] hover:text-[#1E3A32] transition-colors pt-1"
+                    >
+                      View in Product Manager <ExternalLink size={10} />
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -369,6 +405,28 @@ function AudiobookEditDialog({ audiobook, products, onClose, queryClient }) {
             </Button>
           </div>
         </div>
+
+        {/* Resource Audio Picker */}
+        <ResourceAudioPicker
+          open={showResourcePicker}
+          onClose={() => setShowResourcePicker(false)}
+          onSelect={(resource) => {
+            updateField("audio_url", resource.file_url);
+            if (resource.id) updateField("resource_id", resource.id);
+          }}
+        />
+
+        {/* Create Product Shortcut */}
+        <CreateProductShortcut
+          open={showCreateProduct}
+          onClose={() => setShowCreateProduct(false)}
+          audiobookTitle={form.title}
+          audiobookSlug={form.slug}
+          onProductCreated={(productId) => {
+            updateField("product_id", productId);
+            queryClient.invalidateQueries({ queryKey: ["products"] });
+          }}
+        />
       </DialogContent>
     </Dialog>
   );
