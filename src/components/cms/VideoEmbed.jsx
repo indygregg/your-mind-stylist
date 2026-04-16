@@ -10,12 +10,28 @@ export default function VideoEmbed({ contentKey, fallback, page, blockTitle }) {
   const [isEditing, setIsEditing] = useState(false);
   
   const getVideoEmbedUrl = (url) => {
+    // If input contains an iframe tag, extract the src attribute
+    const iframeSrc = url.match(/<iframe[^>]+src=["']([^"']+)["']/i)?.[1];
+    if (iframeSrc) {
+      // If src is already a player embed URL, use it directly
+      if (iframeSrc.includes('player.vimeo.com') || iframeSrc.includes('youtube.com/embed')) {
+        return iframeSrc.replace(/&amp;/g, '&');
+      }
+      // Otherwise, process the extracted src as a normal URL
+      return getVideoEmbedUrl(iframeSrc.replace(/&amp;/g, '&'));
+    }
+
     // YouTube
     const ytId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)?.[1];
     if (ytId) return `https://www.youtube.com/embed/${ytId}`;
     
-    // Vimeo - handle full URLs, embed URLs, and privacy hashes
-    const vimeoMatch = url.match(/(?:vimeo\.com\/|player\.vimeo\.com\/video\/)(\d+)(?:\/([a-f0-9]+))?/);
+    // If it's already a player embed URL, return as is
+    if (url.includes('player.vimeo.com/video/') || url.includes('youtube.com/embed')) {
+      return url;
+    }
+
+    // Vimeo - handle full URLs and privacy hashes
+    const vimeoMatch = url.match(/vimeo\.com\/(\d+)(?:\/([a-f0-9]+))?/);
     if (vimeoMatch) {
       const videoId = vimeoMatch[1];
       const pathHash = vimeoMatch[2];
@@ -26,11 +42,6 @@ export default function VideoEmbed({ contentKey, fallback, page, blockTitle }) {
         ? `?h=${hash}&badge=0&autopause=0&player_id=0&app_id=58479`
         : `?badge=0&autopause=0&player_id=0&app_id=58479`;
       return base + params;
-    }
-    
-    // If it's already an embed URL, return as is
-    if (url.includes('player.vimeo.com') || url.includes('youtube.com/embed')) {
-      return url;
     }
     
     return null;
