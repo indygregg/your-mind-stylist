@@ -21,6 +21,7 @@ export default function ConsultationQuestionnaire() {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({});
   const [isSaving, setIsSaving] = useState(false);
+  const [showValidationErrors, setShowValidationErrors] = useState(false);
   const autosaveTimeoutRef = useRef(null);
 
   // Fetch form fields from ConsultationForm entity with aggressive retry logic
@@ -130,8 +131,13 @@ export default function ConsultationQuestionnaire() {
   // Initialize formData when fields are loaded
   useEffect(() => {
     if (formFields.length > 0) {
+      const today = new Date().toISOString().split('T')[0];
       const initialData = formFields.reduce((acc, field) => {
-        acc[field.field_name] = field.field_type === 'checkbox' ? false : '';
+        if (field.field_name === 'signature_date') {
+          acc[field.field_name] = today;
+        } else {
+          acc[field.field_name] = field.field_type === 'checkbox' ? false : '';
+        }
         return acc;
       }, {});
       
@@ -250,6 +256,14 @@ export default function ConsultationQuestionnaire() {
     });
   };
   
+  const isFieldEmpty = (field) => {
+    const value = formData[field.field_name];
+    if (field.field_type === 'checkbox' && field.options && field.options.length > 0) {
+      return !Array.isArray(value) || value.length === 0;
+    }
+    return value === undefined || value === null || String(value).trim().length === 0;
+  };
+
   const renderField = (field) => {
     // Handle conditional fields
     if (field.conditional_field) {
@@ -262,6 +276,7 @@ export default function ConsultationQuestionnaire() {
     }
     
     const value = formData[field.field_name];
+    const hasError = showValidationErrors && field.required && isFieldEmpty(field);
     const onChange = (newValue) => {
       setFormData(prev => ({...prev, [field.field_name]: newValue}));
     };
@@ -270,7 +285,6 @@ export default function ConsultationQuestionnaire() {
       case 'text':
       case 'email':
       case 'tel':
-      case 'date':
       case 'number':
         return (
           <div key={field.field_name}>
@@ -285,9 +299,33 @@ export default function ConsultationQuestionnaire() {
               type={field.field_type}
               value={value}
               onChange={(e) => onChange(e.target.value)}
-              className="mt-1"
+              className={`mt-1 ${hasError ? 'border-red-400 ring-1 ring-red-400' : ''}`}
               placeholder={field.help_text}
             />
+            {hasError && <p className="text-xs text-red-500 mt-1">This field is required</p>}
+          </div>
+        );
+
+      case 'date':
+        return (
+          <div key={field.field_name}>
+            <Label htmlFor={field.field_name}>
+              {field.label} {field.required && '*'}
+            </Label>
+            {field.help_text && (
+              <p className="text-xs text-[#2B2725]/60 mt-1">{field.help_text}</p>
+            )}
+            {!value && (
+              <p className="text-xs text-[#D8B46B] mt-1 font-medium">Please click to select a date</p>
+            )}
+            <Input
+              id={field.field_name}
+              type="date"
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              className={`mt-1 ${hasError ? 'border-red-400 ring-1 ring-red-400' : ''} ${!value ? 'border-[#D8B46B] ring-1 ring-[#D8B46B]/50' : ''}`}
+            />
+            {hasError && <p className="text-xs text-red-500 mt-1">This field is required</p>}
           </div>
         );
         
@@ -305,9 +343,10 @@ export default function ConsultationQuestionnaire() {
               id={field.field_name}
               value={value}
               onChange={(e) => onChange(e.target.value)}
-              className="mt-1 min-h-[100px]"
+              className={`mt-1 min-h-[100px] ${hasError ? 'border-red-400 ring-1 ring-red-400' : ''}`}
               placeholder={field.help_text}
             />
+            {hasError && <p className="text-xs text-red-500 mt-1">This field is required</p>}
           </div>
         );
         
@@ -323,7 +362,7 @@ export default function ConsultationQuestionnaire() {
             <RadioGroup
               value={value || ''}
               onValueChange={onChange}
-              className="mt-2"
+              className={`mt-2 ${hasError ? 'rounded-md ring-1 ring-red-400 p-2' : ''}`}
             >
               {field.options && field.options.map((option) => (
                 <div key={option} className="flex items-center space-x-2">
@@ -334,6 +373,7 @@ export default function ConsultationQuestionnaire() {
                 </div>
               ))}
             </RadioGroup>
+            {hasError && <p className="text-xs text-red-500 mt-1">This field is required</p>}
           </div>
         );
         
@@ -343,7 +383,7 @@ export default function ConsultationQuestionnaire() {
           const checked = Array.isArray(value) ? value : [];
           return (
             <div key={field.field_name}>
-              <Label className="font-medium">
+              <Label className={`font-medium ${hasError ? 'text-red-500' : ''}`}>
                 {field.label} {field.required && '*'}
               </Label>
               {field.help_text && (
@@ -494,8 +534,14 @@ export default function ConsultationQuestionnaire() {
           )}
           {step < totalSteps ? (
             <Button
-              onClick={() => setStep(step + 1)}
-              disabled={!isStepValid()}
+              onClick={() => {
+                if (isStepValid()) {
+                  setShowValidationErrors(false);
+                  setStep(step + 1);
+                } else {
+                  setShowValidationErrors(true);
+                }
+              }}
               className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] ml-auto"
             >
               Next
@@ -513,8 +559,15 @@ export default function ConsultationQuestionnaire() {
                 </a>
               </div>
               <Button
-                onClick={handleSubmit}
-                disabled={!isStepValid() || submitting}
+                onClick={() => {
+                  if (isStepValid()) {
+                    setShowValidationErrors(false);
+                    handleSubmit();
+                  } else {
+                    setShowValidationErrors(true);
+                  }
+                }}
+                disabled={submitting}
                 className="bg-[#D8B46B] hover:bg-[#F9F5EF] text-[#1E3A32]"
               >
                 {submitting ? "Submitting..." : "Submit Questionnaire"}
