@@ -22,10 +22,17 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Distribute books across 3 columns
-  const col1 = books.filter((_, i) => i % 3 === 0);
-  const col2 = books.filter((_, i) => i % 3 === 1);
-  const col3 = books.filter((_, i) => i % 3 === 2);
+  // Cap books at 9 for the mega menu, distribute across 3 columns
+  const MAX_BOOKS = 9;
+  const MAX_AUDIOBOOKS = 5;
+  const visibleBooks = books.slice(0, MAX_BOOKS);
+  const hasMoreBooks = books.length > MAX_BOOKS;
+  const visibleAudiobooks = audiobooks.slice(0, MAX_AUDIOBOOKS);
+  const hasMoreAudiobooks = audiobooks.length > MAX_AUDIOBOOKS;
+
+  const col1 = visibleBooks.filter((_, i) => i % 3 === 0);
+  const col2 = visibleBooks.filter((_, i) => i % 3 === 1);
+  const col3 = visibleBooks.filter((_, i) => i % 3 === 2);
 
   const displayBook = hoveredBook || books[0];
   const displayCover = displayBook?.book_cover_image || displayBook?.thumbnail;
@@ -71,6 +78,14 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
                         </Link>
                       );
                     })}
+                    {colIdx === 0 && hasMoreBooks && (
+                      <Link
+                        to="/Books"
+                        className="block text-xs text-[#D8B46B] hover:text-[#1E3A32] transition-colors mt-3 font-medium"
+                      >
+                        See All Books →
+                      </Link>
+                    )}
                   </div>
                 ))}
 
@@ -83,20 +98,30 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
                   {audiobooks.length === 0 ? (
                     <p className="text-[#2B2725]/40 text-xs italic">Coming soon</p>
                   ) : (
-                    audiobooks.map((ab) => (
-                      <Link
-                        key={ab.id}
-                        to={`/audiobook/${ab.slug}`}
-                        className="block group py-1"
-                      >
-                        <p className="text-[#1E3A32] font-medium text-sm group-hover:text-[#D8B46B] transition-colors leading-snug">
-                          {ab.title}
-                        </p>
-                        {ab.author && (
-                          <p className="text-[#2B2725]/50 text-xs mt-0.5">by {ab.author}</p>
-                        )}
-                      </Link>
-                    ))
+                    <>
+                      {visibleAudiobooks.map((ab) => (
+                        <Link
+                          key={ab.id}
+                          to={`/audiobook/${ab.slug}`}
+                          className="block group py-1"
+                        >
+                          <p className="text-[#1E3A32] font-medium text-sm group-hover:text-[#D8B46B] transition-colors leading-snug">
+                            {ab.title}
+                          </p>
+                          {ab.author && (
+                            <p className="text-[#2B2725]/50 text-xs mt-0.5">by {ab.author}</p>
+                          )}
+                        </Link>
+                      ))}
+                      {hasMoreAudiobooks && (
+                        <Link
+                          to="/Books"
+                          className="block text-xs text-[#D8B46B] hover:text-[#1E3A32] transition-colors mt-3 font-medium"
+                        >
+                          See All Audiobooks →
+                        </Link>
+                      )}
+                    </>
                   )}
                 </div>
 
