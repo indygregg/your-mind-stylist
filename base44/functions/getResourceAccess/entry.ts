@@ -60,12 +60,42 @@ Deno.serve(async (req) => {
             break;
           }
         }
-        // Also check if user purchased any product whose purchase_options reference this resource
+
+        // Check 1.5: Variant-aware — if the resource is gated by a parent product,
+        // check if the user owns any variant listed in that parent's purchase_options.
+        if (!hasAccess) {
+          const gatingProducts = await base44.asServiceRole.entities.Product.filter({
+            id: { $in: resource.product_ids }
+          });
+          for (const parent of gatingProducts) {
+            if (!parent.purchase_options?.length) continue;
+            for (const opt of parent.purchase_options) {
+              if (opt.bundle_product_id && purchasedIds.includes(opt.bundle_product_id)) {
+                hasAccess = true;
+                break;
+              }
+              const vid = opt.product_id;
+              if (vid) {
+                let ids = Array.isArray(vid) ? vid : [vid];
+                if (typeof vid === 'string' && vid.startsWith('[')) {
+                  try { ids = JSON.parse(vid); } catch (e) { /* keep */ }
+                }
+                if (ids.some(id => purchasedIds.includes(id))) {
+                  hasAccess = true;
+                  break;
+                }
+              }
+            }
+            if (hasAccess) break;
+          }
+        }
+
+        // Check 1.6: Also check if user purchased any product whose purchase_options
+        // reference this resource via digital_resource_id
         if (!hasAccess) {
           const allProducts = await base44.asServiceRole.entities.Product.filter({});
           for (const product of allProducts) {
             if (!purchasedIds.includes(product.id)) continue;
-            // Check if this product has purchase_options with digital_resource_id matching this resource
             if (product.purchase_options?.length > 0) {
               for (const opt of product.purchase_options) {
                 if (opt.digital_resource_id === resource.id) {

@@ -32,7 +32,6 @@ Deno.serve(async (req) => {
 
     const product = products[0];
 
-    // Check if product has related course/webinar access grants
     let hasAccess = false;
     let accessDetails = null;
 
@@ -44,6 +43,44 @@ Deno.serve(async (req) => {
         type: 'purchased',
         link: 'ClientPortal'
       };
+    }
+
+    // Check 1.5: Variant-aware lookup — if this is a parent product with purchase_options,
+    // check if the user owns any of the child variant products referenced in those options.
+    // This covers the case where user buys "Book Title - Audiobook" (variant) but we're checking
+    // access against the parent product ID.
+    if (!hasAccess && product.purchase_options?.length > 0 && purchasedIds.length > 0) {
+      for (const opt of product.purchase_options) {
+        // Check bundle_product_id
+        if (opt.bundle_product_id && purchasedIds.includes(opt.bundle_product_id)) {
+          hasAccess = true;
+          accessDetails = { type: 'purchased_variant', link: 'ClientPortal' };
+          break;
+        }
+        // Check product_id (can be string or array)
+        const variantId = opt.product_id;
+        if (variantId) {
+          if (Array.isArray(variantId)) {
+            // Bundle-type option with multiple product IDs — user owns if they have any
+            if (variantId.some(id => purchasedIds.includes(id))) {
+              hasAccess = true;
+              accessDetails = { type: 'purchased_variant', link: 'ClientPortal' };
+              break;
+            }
+          } else if (typeof variantId === 'string') {
+            // Could be a JSON-encoded array string or a plain ID
+            let ids = [variantId];
+            if (variantId.startsWith('[')) {
+              try { ids = JSON.parse(variantId); } catch (e) { /* keep as single */ }
+            }
+            if (ids.some(id => purchasedIds.includes(id))) {
+              hasAccess = true;
+              accessDetails = { type: 'purchased_variant', link: 'ClientPortal' };
+              break;
+            }
+          }
+        }
+      }
     }
 
     // Check 2: Course access via related_course_id OR access_grants
@@ -88,8 +125,6 @@ Deno.serve(async (req) => {
 
     // Check for active subscription (for Pocket Visualization)
     if (!hasAccess && product.key === 'pocket-visualization') {
-      // Check if user has active subscription via Stripe
-      // This would be tracked in user data or a subscription entity
       if (user.pocket_visualization_active) {
         hasAccess = true;
         accessDetails = {

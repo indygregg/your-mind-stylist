@@ -17,7 +17,7 @@ export default function SocialProofStrip() {
   return (
     <section className="py-16 md:py-20 bg-[#1E3A32]">
       <div className="max-w-7xl mx-auto px-6">
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -30,7 +30,7 @@ export default function SocialProofStrip() {
             fallback="Companies I've Worked With"
             contentType="short_text"
           />
-        </motion.p>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

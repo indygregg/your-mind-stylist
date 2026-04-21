@@ -373,7 +373,7 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
                           size="sm"
                           value={option._variant_name || ""}
                           onChange={(e) => handleUpdateOption(index, "_variant_name", e.target.value)}
-                          placeholder={`e.g., ${parentProductName || 'Book Title'} - ${option.type === 'digital' ? 'Digital' : option.type === 'physical' ? 'Paperback' : 'Edition'}`}
+                          placeholder={`e.g., ${parentProductName || 'Book Title'} - ${option.type === 'digital' ? 'Digital' : option.type === 'physical' ? 'Paperback' : option.type === 'audiobook' ? 'Audiobook' : 'Edition'}`}
                           className="h-9 text-sm"
                         />
                       </div>
