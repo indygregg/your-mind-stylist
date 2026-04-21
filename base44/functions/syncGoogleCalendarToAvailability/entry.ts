@@ -82,7 +82,7 @@ Deno.serve(async (req) => {
       return formatter.format(new Date(date));
     };
 
-    // Create blocked rules for each calendar event
+    // Build the fresh set of rules from calendar events
     const rulesToCreate = [];
     for (const event of events) {
       if (event.status === 'cancelled') continue;
@@ -104,15 +104,34 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Bulk create rules
+    // DEDUP FIX: Delete all existing calendar_sync rules for this manager
+    // in the current date range BEFORE creating fresh ones.
+    // This prevents the accumulation of duplicate rules every sync cycle.
+    const todayStr = getDateInTimezone(now, userTimezone);
+    const existingRules = await base44.asServiceRole.entities.AvailabilityRule.filter({
+      manager_id: user.id,
+      source: 'calendar_sync',
+    });
+
+    let deletedCount = 0;
+    for (const rule of existingRules) {
+      // Only delete rules for today or future dates (preserve historical)
+      if (rule.specific_date >= todayStr) {
+        await base44.asServiceRole.entities.AvailabilityRule.delete(rule.id);
+        deletedCount++;
+      }
+    }
+
+    // Bulk create the fresh rules
     if (rulesToCreate.length > 0) {
       await base44.asServiceRole.entities.AvailabilityRule.bulkCreate(rulesToCreate);
     }
 
     return Response.json({
       success: true,
+      deleted_stale: deletedCount,
       synced_events: rulesToCreate.length,
-      message: `Synced ${rulesToCreate.length} calendar events to availability rules`
+      message: `Cleaned ${deletedCount} stale rules, synced ${rulesToCreate.length} calendar events to availability rules`
     });
   } catch (error) {
     console.error('Calendar sync error:', error);
