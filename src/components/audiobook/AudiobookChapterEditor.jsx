@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, GripVertical } from "lucide-react";
+import { Plus, Trash2, GripVertical, RefreshCw } from "lucide-react";
 
 function secondsToTimestamp(totalSeconds) {
   if (!totalSeconds && totalSeconds !== 0) return "";
@@ -43,6 +43,16 @@ export default function AudiobookChapterEditor({ chapters = [], onChange }) {
     onChange(chapters.filter((_, i) => i !== index));
   };
 
+  const recalculateStartTimes = () => {
+    let cumulative = 0;
+    const recalculated = chapters.map((chapter) => {
+      const updated = { ...chapter, start_seconds: cumulative };
+      cumulative += chapter.duration_seconds || 0;
+      return updated;
+    });
+    onChange(recalculated);
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
@@ -52,9 +62,16 @@ export default function AudiobookChapterEditor({ chapters = [], onChange }) {
             Add chapter markers so listeners can jump to specific sections
           </p>
         </div>
-        <Button size="sm" variant="outline" onClick={addChapter} className="gap-1 text-xs">
-          <Plus size={14} /> Add Chapter
-        </Button>
+        <div className="flex gap-2">
+          {chapters.length > 0 && (
+            <Button size="sm" variant="outline" onClick={recalculateStartTimes} className="gap-1 text-xs" title="Set each chapter's start time to the cumulative sum of all previous durations">
+              <RefreshCw size={14} /> Recalculate Starts
+            </Button>
+          )}
+          <Button size="sm" variant="outline" onClick={addChapter} className="gap-1 text-xs">
+            <Plus size={14} /> Add Chapter
+          </Button>
+        </div>
       </div>
 
       {chapters.length === 0 ? (

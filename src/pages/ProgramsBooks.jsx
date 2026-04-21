@@ -28,7 +28,9 @@ export default function ProgramsBooks() {
         status: "published",
         product_subtype: "book"
       });
-      return all.sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
+      // Filter out variant/hidden products — only show parent books
+      const parentBooks = all.filter(p => p.ui_group !== "hidden");
+      return parentBooks.sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
     },
   });
 
