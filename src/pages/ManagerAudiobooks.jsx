@@ -168,6 +168,24 @@ function AudiobookEditDialog({ audiobook, products, onClose, queryClient }) {
   const [saving, setSaving] = useState(false);
   const [showResourcePicker, setShowResourcePicker] = useState(false);
   const [showCreateProduct, setShowCreateProduct] = useState(false);
+  const [autosaveStatus, setAutosaveStatus] = useState(null); // null | 'saving' | 'saved'
+  const autosaveTimerRef = React.useRef(null);
+  const formRef = React.useRef(form);
+  formRef.current = form;
+
+  // Autosave: debounce 2 seconds after any form change (only for existing audiobooks)
+  React.useEffect(() => {
+    if (isNew) return;
+    if (autosaveTimerRef.current) clearTimeout(autosaveTimerRef.current);
+    autosaveTimerRef.current = setTimeout(async () => {
+      setAutosaveStatus('saving');
+      await base44.entities.Audiobook.update(audiobook.id, formRef.current);
+      queryClient.invalidateQueries({ queryKey: ["audiobooks"] });
+      setAutosaveStatus('saved');
+      setTimeout(() => setAutosaveStatus(null), 2000);
+    }, 2000);
+    return () => { if (autosaveTimerRef.current) clearTimeout(autosaveTimerRef.current); };
+  }, [form]);
 
   const handleFileUpload = async (e, field) => {
     const file = e.target.files?.[0];
@@ -397,12 +415,22 @@ function AudiobookEditDialog({ audiobook, products, onClose, queryClient }) {
           </div>
 
           {/* Save */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-[#E4D9C4]">
-            <Button variant="outline" onClick={onClose}>Cancel</Button>
-            <Button onClick={handleSave} disabled={saving} className="bg-[#1E3A32] hover:bg-[#2B2725] gap-2">
-              {saving && <Loader2 size={14} className="animate-spin" />}
-              {isNew ? "Create Audiobook" : "Save Changes"}
-            </Button>
+          <div className="flex justify-between items-center gap-3 pt-4 border-t border-[#E4D9C4]">
+            {!isNew && (
+              <span className="text-xs text-[#2B2725]/50">
+                {autosaveStatus === 'saving' && '⟳ Saving...'}
+                {autosaveStatus === 'saved' && '✓ Saved'}
+                {!autosaveStatus && 'Changes auto-save'}
+              </span>
+            )}
+            {isNew && <span />}
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={onClose}>{isNew ? "Cancel" : "Close"}</Button>
+              <Button onClick={handleSave} disabled={saving} className="bg-[#1E3A32] hover:bg-[#2B2725] gap-2">
+                {saving && <Loader2 size={14} className="animate-spin" />}
+                {isNew ? "Create Audiobook" : "Save & Close"}
+              </Button>
+            </div>
           </div>
         </div>
 
