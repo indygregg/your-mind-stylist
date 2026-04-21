@@ -289,10 +289,14 @@ Deno.serve(async (req) => {
                 }
                 
                 // Handle Product Purchase (single product_id OR multi product_ids from cart)
-                else if ((session.metadata.product_id || session.metadata.product_ids) && session.metadata.user_id && session.metadata.user_id.length > 0) {
+                else if (session.metadata.product_id || session.metadata.product_ids) {
                     const productIdList = session.metadata.product_ids
                         ? session.metadata.product_ids.split(',').map(id => id.trim()).filter(Boolean)
                         : [session.metadata.product_id];
+
+                    const userId = session.metadata.user_id && session.metadata.user_id.length > 0
+                        ? session.metadata.user_id
+                        : null;
 
                     const allProducts = await base44.asServiceRole.entities.Product.filter({});
                     const purchasedProducts = allProducts.filter(p => productIdList.includes(p.id));
@@ -314,28 +318,34 @@ Deno.serve(async (req) => {
                             }
                         }
 
-                        try {
-                            await base44.asServiceRole.functions.invoke('autoTagUser', {
-                                user_id: session.metadata.user_id,
-                                product_key: product.key
-                            });
-                        } catch (tagError) {
-                            console.error('Auto-tagging failed:', tagError);
+                        // Auto-tag only for authenticated users
+                        if (userId) {
+                            try {
+                                await base44.asServiceRole.functions.invoke('autoTagUser', {
+                                    user_id: userId,
+                                    product_key: product.key
+                                });
+                            } catch (tagError) {
+                                console.error('Auto-tagging failed:', tagError);
+                            }
                         }
                     }
 
-                    for (const courseId of allCourseIds) {
-                        const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
-                            user_id: session.metadata.user_id,
-                            course_id: courseId
-                        });
-                        if (existing.length === 0) {
-                            await base44.asServiceRole.entities.UserCourseProgress.create({
-                                user_id: session.metadata.user_id,
-                                course_id: courseId,
-                                status: 'not_started',
-                                completion_percentage: 0
+                    // Course enrollment only for authenticated users
+                    if (userId) {
+                        for (const courseId of allCourseIds) {
+                            const existing = await base44.asServiceRole.entities.UserCourseProgress.filter({
+                                user_id: userId,
+                                course_id: courseId
                             });
+                            if (existing.length === 0) {
+                                await base44.asServiceRole.entities.UserCourseProgress.create({
+                                    user_id: userId,
+                                    course_id: courseId,
+                                    status: 'not_started',
+                                    completion_percentage: 0
+                                });
+                            }
                         }
                     }
 
@@ -343,15 +353,17 @@ Deno.serve(async (req) => {
                     const today = new Date().toISOString().split('T')[0];
 
                     // Record purchased product IDs on the user for direct ownership checks
-                    try {
-                        const userRecord = await base44.asServiceRole.entities.User.get(session.metadata.user_id);
-                        const existingIds = userRecord?.purchased_product_ids || [];
-                        const newIds = [...new Set([...existingIds, ...productIdList])];
-                        await base44.asServiceRole.entities.User.update(session.metadata.user_id, {
-                            purchased_product_ids: newIds
-                        });
-                    } catch (ownershipError) {
-                        console.error('Failed to record product ownership (non-critical):', ownershipError.message);
+                    if (userId) {
+                        try {
+                            const userRecord = await base44.asServiceRole.entities.User.get(userId);
+                            const existingIds = userRecord?.purchased_product_ids || [];
+                            const newIds = [...new Set([...existingIds, ...productIdList])];
+                            await base44.asServiceRole.entities.User.update(userId, {
+                                purchased_product_ids: newIds
+                            });
+                        } catch (ownershipError) {
+                            console.error('Failed to record product ownership (non-critical):', ownershipError.message);
+                        }
                     }
 
                     // Add to CRM as lead with customer details
