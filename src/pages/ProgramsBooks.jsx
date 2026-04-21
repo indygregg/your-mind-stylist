@@ -28,9 +28,20 @@ export default function ProgramsBooks() {
         status: "published",
         product_subtype: "book"
       });
-      // Filter out variant/hidden products — only show parent books
-      const parentBooks = all.filter(p => p.ui_group !== "hidden");
-      return parentBooks.sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
+      // Collect all product IDs referenced as purchase option variants
+      const variantIds = new Set();
+      all.forEach(book => {
+        (book.purchase_options || []).forEach(opt => {
+          if (opt.product_id) {
+            const ids = Array.isArray(opt.product_id) ? opt.product_id : [opt.product_id];
+            ids.forEach(id => variantIds.add(id));
+          }
+          if (opt.bundle_product_id) variantIds.add(opt.bundle_product_id);
+        });
+      });
+      return all
+        .filter(p => p.ui_group !== "hidden" && !variantIds.has(p.id))
+        .sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
     },
   });
 
