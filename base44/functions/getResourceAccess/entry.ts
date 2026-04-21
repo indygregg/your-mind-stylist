@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
@@ -47,23 +47,64 @@ Deno.serve(async (req) => {
         return Response.json({ error: 'Resource misconfigured' }, { status: 500 });
       }
 
-      // Get the products to check access_grants
-      const productsToCheck = await base44.asServiceRole.entities.Product.filter({
-        id: { $in: resource.product_ids }
-      });
-
       let hasAccess = false;
 
-      // Check if user is enrolled in any course that grants access
-      for (const product of productsToCheck) {
-        if (product.access_grants && product.access_grants.length > 0) {
-          const userProgress = await base44.entities.UserCourseProgress.filter({
-            user_id: user.id,
-            course_id: { $in: product.access_grants }
-          });
-          if (userProgress.length > 0) {
+      // Check 1: Direct product ownership via purchased_product_ids on User
+      const userRecord = await base44.asServiceRole.entities.User.get(user.id);
+      const purchasedIds = userRecord?.purchased_product_ids || [];
+      if (purchasedIds.length > 0) {
+        // Check if user purchased any product that gates this resource
+        for (const productId of resource.product_ids) {
+          if (purchasedIds.includes(productId)) {
             hasAccess = true;
             break;
+          }
+        }
+        // Also check if user purchased any product whose purchase_options reference this resource
+        if (!hasAccess) {
+          const allProducts = await base44.asServiceRole.entities.Product.filter({});
+          for (const product of allProducts) {
+            if (!purchasedIds.includes(product.id)) continue;
+            // Check if this product has purchase_options with digital_resource_id matching this resource
+            if (product.purchase_options?.length > 0) {
+              for (const opt of product.purchase_options) {
+                if (opt.digital_resource_id === resource.id) {
+                  hasAccess = true;
+                  break;
+                }
+              }
+            }
+            // Check if this is a parent product with variants the user purchased
+            if (!hasAccess && product.purchase_options?.length > 0) {
+              for (const opt of product.purchase_options) {
+                const variantId = opt.bundle_product_id || opt.product_id;
+                if (variantId && purchasedIds.includes(variantId) && opt.digital_resource_id === resource.id) {
+                  hasAccess = true;
+                  break;
+                }
+              }
+            }
+            if (hasAccess) break;
+          }
+        }
+      }
+
+      // Check 2: Course enrollment via access_grants (existing logic)
+      if (!hasAccess) {
+        const productsToCheck = await base44.asServiceRole.entities.Product.filter({
+          id: { $in: resource.product_ids }
+        });
+
+        for (const product of productsToCheck) {
+          if (product.access_grants && product.access_grants.length > 0) {
+            const userProgress = await base44.entities.UserCourseProgress.filter({
+              user_id: user.id,
+              course_id: { $in: product.access_grants }
+            });
+            if (userProgress.length > 0) {
+              hasAccess = true;
+              break;
+            }
           }
         }
       }

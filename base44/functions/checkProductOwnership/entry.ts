@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
@@ -30,24 +30,36 @@ Deno.serve(async (req) => {
     let hasAccess = false;
     let accessDetails = null;
 
-    // Check for course access via related_course_id OR access_grants
-    const courseIdsToCheck = [];
-    if (product.related_course_id) courseIdsToCheck.push(product.related_course_id);
-    if (product.access_grants?.length > 0) courseIdsToCheck.push(...product.access_grants);
+    // Check 1: Direct product ownership via purchased_product_ids on User
+    const purchasedIds = user.purchased_product_ids || [];
+    if (purchasedIds.includes(product.id)) {
+      hasAccess = true;
+      accessDetails = {
+        type: 'purchased',
+        link: 'ClientPortal'
+      };
+    }
 
-    for (const courseId of courseIdsToCheck) {
-      const courseProgress = await base44.entities.UserCourseProgress.filter({
-        user_id: user.id,
-        course_id: courseId
-      });
-      if (courseProgress.length > 0) {
-        hasAccess = true;
-        accessDetails = {
-          type: 'course',
-          id: courseId,
-          link: `CoursePage?id=${courseId}`
-        };
-        break;
+    // Check 2: Course access via related_course_id OR access_grants
+    if (!hasAccess) {
+      const courseIdsToCheck = [];
+      if (product.related_course_id) courseIdsToCheck.push(product.related_course_id);
+      if (product.access_grants?.length > 0) courseIdsToCheck.push(...product.access_grants);
+
+      for (const courseId of courseIdsToCheck) {
+        const courseProgress = await base44.entities.UserCourseProgress.filter({
+          user_id: user.id,
+          course_id: courseId
+        });
+        if (courseProgress.length > 0) {
+          hasAccess = true;
+          accessDetails = {
+            type: 'course',
+            id: courseId,
+            link: `CoursePage?id=${courseId}`
+          };
+          break;
+        }
       }
     }
 

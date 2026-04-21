@@ -342,6 +342,18 @@ Deno.serve(async (req) => {
                     const combinedProductName = productNames.join(', ');
                     const today = new Date().toISOString().split('T')[0];
 
+                    // Record purchased product IDs on the user for direct ownership checks
+                    try {
+                        const userRecord = await base44.asServiceRole.entities.User.get(session.metadata.user_id);
+                        const existingIds = userRecord?.purchased_product_ids || [];
+                        const newIds = [...new Set([...existingIds, ...productIdList])];
+                        await base44.asServiceRole.entities.User.update(session.metadata.user_id, {
+                            purchased_product_ids: newIds
+                        });
+                    } catch (ownershipError) {
+                        console.error('Failed to record product ownership (non-critical):', ownershipError.message);
+                    }
+
                     // Add to CRM as lead with customer details
                     try {
                         const customerInfo = extractCustomerDetails(session);
@@ -387,6 +399,8 @@ Deno.serve(async (req) => {
 
                     // Send purchase confirmation email
                     const hasPocketMindset = purchasedProducts.some(p => p.key === 'pocket-mindset' || p.slug === 'pocket-mindset');
+                    const hasDigitalBook = purchasedProducts.some(p => p.product_subtype === 'book');
+                    
                     if (hasPocketMindset && purchasedProducts.length === 1) {
                         await base44.asServiceRole.functions.invoke('sendTemplatedEmail', {
                             template_key: 'pocket_mindset_purchase',
@@ -396,6 +410,74 @@ Deno.serve(async (req) => {
                                 access_code: '935384',
                                 current_year: new Date().getFullYear().toString()
                             }
+                        });
+                    } else if (hasDigitalBook) {
+                        // Rich branded email for book purchases with clear download instructions
+                        const bookNames = purchasedProducts.filter(p => p.product_subtype === 'book').map(p => p.name);
+                        const otherNames = purchasedProducts.filter(p => p.product_subtype !== 'book').map(p => p.name);
+                        const customerName = session.customer_details?.name || 'there';
+                        
+                        let itemsList = bookNames.map(n => `<li style="margin-bottom: 8px;">${n}</li>`).join('');
+                        if (otherNames.length > 0) {
+                            itemsList += otherNames.map(n => `<li style="margin-bottom: 8px;">${n}</li>`).join('');
+                        }
+
+                        await base44.asServiceRole.integrations.Core.SendEmail({
+                            to: session.customer_email,
+                            subject: `Your purchase is confirmed — ${combinedProductName}`,
+                            body: `
+                                <div style="font-family: Inter, sans-serif; max-width: 600px; margin: 0 auto;">
+                                    <h1 style="font-family: 'Playfair Display', serif; color: #1E3A32; font-size: 28px; margin-bottom: 16px;">
+                                        Thank you, ${customerName}!
+                                    </h1>
+                                    
+                                    <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
+                                        Your purchase has been confirmed. Here's what you ordered:
+                                    </p>
+                                    
+                                    <div style="background: #F9F5EF; padding: 24px; margin: 24px 0; border-left: 4px solid #D8B46B;">
+                                        <p style="color: #1E3A32; font-size: 16px; margin: 0 0 12px 0;">
+                                            <strong>Your Purchase:</strong>
+                                        </p>
+                                        <ul style="color: #2B2725; margin: 0; padding-left: 20px;">
+                                            ${itemsList}
+                                        </ul>
+                                    </div>
+                                    
+                                    <h2 style="font-family: 'Playfair Display', serif; color: #1E3A32; font-size: 22px; margin: 32px 0 16px;">
+                                        How to Access Your Content
+                                    </h2>
+                                    
+                                    <div style="margin-bottom: 24px;">
+                                        <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin-bottom: 12px;">
+                                            <strong>Step 1:</strong> Log in to your account at yourmindstylist.com
+                                        </p>
+                                        <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin-bottom: 12px;">
+                                            <strong>Step 2:</strong> Go to your <strong>Client Portal</strong> — you'll find your purchased content in the <strong>My Library</strong> tab
+                                        </p>
+                                        <p style="color: #2B2725; font-size: 16px; line-height: 1.6; margin-bottom: 12px;">
+                                            <strong>Step 3:</strong> For downloadable files (digital books, PDFs), visit the <strong>Resources</strong> page to download your files
+                                        </p>
+                                    </div>
+                                    
+                                    <div style="text-align: center; margin: 32px 0;">
+                                        <a href="https://yourmindstylist.com/login" 
+                                           style="display: inline-block; background: #1E3A32; color: #F9F5EF; padding: 16px 32px; text-decoration: none; font-weight: 500; letter-spacing: 0.5px;">
+                                            LOG IN TO YOUR ACCOUNT
+                                        </a>
+                                    </div>
+                                    
+                                    <p style="color: #2B2725; font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+                                        If you have any questions or need help accessing your content, simply reply to this email or reach out at roberta@yourmindstylist.com.
+                                    </p>
+                                    
+                                    <p style="color: #2B2725; font-size: 16px; line-height: 1.6;">
+                                        Enjoy your reading,<br>
+                                        <strong>Roberta Fernandez</strong><br>
+                                        <span style="color: #D8B46B;">Your Mind Stylist</span>
+                                    </p>
+                                </div>
+                            `
                         });
                     } else {
                         await base44.asServiceRole.integrations.Core.SendEmail({

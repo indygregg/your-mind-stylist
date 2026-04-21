@@ -1,0 +1,105 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "profile_photo": {
+      "type": "string",
+      "description": "Profile photo URL"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Short bio or description"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "America/Los_Angeles",
+      "description": "User's timezone"
+    },
+    "custom_role": {
+      "type": "string",
+      "enum": [
+        "manager",
+        "client",
+        "guest_author"
+      ],
+      "description": "Custom role for extended permissions"
+    },
+    "onboarding_completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has user completed onboarding flow"
+    },
+    "subscription_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "cancelled",
+        "past_due"
+      ],
+      "description": "Subscription status"
+    },
+    "stripe_customer_id": {
+      "type": "string",
+      "description": "Stripe customer ID"
+    },
+    "stripe_subscription_id": {
+      "type": "string",
+      "description": "Stripe subscription ID"
+    },
+    "purchased_product_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Product IDs the user has purchased (populated by Stripe webhook)"
+    },
+    "zoom_access_token": {
+      "type": "string",
+      "description": "Zoom OAuth access token"
+    },
+    "zoom_refresh_token": {
+      "type": "string",
+      "description": "Zoom OAuth refresh token"
+    },
+    "zoom_token_expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the Zoom access token expires"
+    },
+    "zoom_connected": {
+      "type": "boolean",
+      "default": false,
+      "description": "Is Zoom account connected"
+    },
+    "google_calendar_access_token": {
+      "type": "string",
+      "description": "Google Calendar OAuth access token"
+    },
+    "google_calendar_refresh_token": {
+      "type": "string",
+      "description": "Google Calendar OAuth refresh token"
+    },
+    "google_calendar_token_expiry": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the Google Calendar access token expires"
+    },
+    "hasGoogleCalendar": {
+      "type": "boolean",
+      "default": false,
+      "description": "Is Google Calendar connected"
+    },
+    "email_unsubscribed": {
+      "type": "boolean",
+      "default": false,
+      "description": "User has unsubscribed from marketing emails via MailerLite"
+    }
+  },
+  "required": []
+}

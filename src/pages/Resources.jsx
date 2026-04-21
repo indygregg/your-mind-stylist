@@ -50,12 +50,26 @@ export default function Resources() {
     if (resource.access_level === "public") return true;
     if (resource.access_level === "authenticated" && user) return true;
     if (resource.access_level === "product_gated" && user && resource.product_ids?.length > 0) {
-      // Check if user owns any of the gated products via course enrollment or subscriptions
-      const product = products.find(p => resource.product_ids.includes(p.id));
-      if (!product) return false;
+      const purchasedIds = user.purchased_product_ids || [];
       
-      // Check course access via access_grants
-      if (product.access_grants?.length > 0) {
+      // Check 1: Direct product ownership via purchased_product_ids
+      if (resource.product_ids.some(pid => purchasedIds.includes(pid))) return true;
+      
+      // Check 2: Check if user purchased a product whose variant links to this resource
+      for (const product of products) {
+        if (!purchasedIds.includes(product.id)) continue;
+        if (product.purchase_options?.length > 0) {
+          for (const opt of product.purchase_options) {
+            if (opt.digital_resource_id === resource.id) return true;
+            const variantId = opt.bundle_product_id || opt.product_id;
+            if (variantId && purchasedIds.includes(variantId) && opt.digital_resource_id === resource.id) return true;
+          }
+        }
+      }
+      
+      // Check 3: Course enrollment via access_grants (existing logic)
+      const product = products.find(p => resource.product_ids.includes(p.id));
+      if (product?.access_grants?.length > 0) {
         return userProgress.some(p => product.access_grants.includes(p.course_id));
       }
       return false;
