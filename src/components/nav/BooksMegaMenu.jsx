@@ -11,7 +11,21 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
     queryKey: ["nav-books"],
     queryFn: async () => {
       const all = await base44.entities.Product.filter({ status: "published", product_subtype: "book" });
-      return all.filter(b => b.ui_group !== "hidden").sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
+      // Collect all product IDs referenced as purchase option variants
+      const variantIds = new Set();
+      all.forEach(book => {
+        (book.purchase_options || []).forEach(opt => {
+          if (opt.product_id) {
+            // product_id can be a string or array of strings
+            const ids = Array.isArray(opt.product_id) ? opt.product_id : [opt.product_id];
+            ids.forEach(id => variantIds.add(id));
+          }
+          if (opt.bundle_product_id) variantIds.add(opt.bundle_product_id);
+        });
+      });
+      return all
+        .filter(b => b.ui_group !== "hidden" && !variantIds.has(b.id))
+        .sort((a, b) => (a.display_order ?? 999) - (b.display_order ?? 999));
     },
     staleTime: 5 * 60 * 1000,
   });
