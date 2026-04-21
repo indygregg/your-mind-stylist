@@ -10,13 +10,7 @@ import SEO from "../components/SEO";
 import BookCover3D from "../components/books/BookCover3D";
 import BookPurchaseOptions from "../components/books/BookPurchaseOptions";
 
-const formatPrice = (price) => {
-  const curr = new Intl.NumberFormat('en-EU', {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(price / 100);
-  return curr;
-};
+const formatPrice = (price) => `$${(price / 100).toFixed(2)}`;
 
 function StarRating({ stars }) {
   return (
@@ -261,7 +255,7 @@ export default function BookProductPage() {
           </div>
         </section>
       )}
-      {!book.purchase_options || book.purchase_options.length === 0 && (
+      {(!book.purchase_options || book.purchase_options.length === 0) && (
         <section className="py-20 bg-[#D8B46B]/10 border-t border-[#D8B46B]/20">
           <div className="max-w-2xl mx-auto px-6 text-center">
             <h2 className="font-serif text-3xl text-[#1E3A32] mb-4">Ready to Begin?</h2>
