@@ -18,8 +18,15 @@ const isHypnosisTraining = (p) =>
 const isSignatureService = (p) => !isHypnosisTraining(p);
 
 function ProductCard({ product }) {
-  const price = product.price ? `$${(product.price / 100).toFixed(0)}` : "Contact";
-  const interval = product.billing_interval === "monthly" ? "/mo" : product.billing_interval === "yearly" ? "/yr" : "";
+  const priceDisplay = product.price_display || "show_price";
+  const price = priceDisplay === "contact_for_pricing" 
+    ? "Contact for Pricing" 
+    : priceDisplay === "hidden" 
+      ? null 
+      : product.price 
+        ? `$${(product.price / 100).toFixed(0)}` 
+        : "Contact";
+  const interval = priceDisplay === "show_price" && product.billing_interval === "monthly" ? "/mo" : priceDisplay === "show_price" && product.billing_interval === "yearly" ? "/yr" : "";
 
   return (
     <div className="bg-white p-8 border border-[#E4D9C4] hover:border-[#D8B46B] transition-all rounded-lg flex flex-col">
@@ -38,12 +45,14 @@ function ProductCard({ product }) {
           ))}
         </ul>
       )}
-      <p className="text-2xl font-bold text-[#1E3A32] mb-6">
-        {price}{interval}
-        {product.payment_plan_options?.length > 0 && (
-          <span className="text-sm font-normal text-[#2B2725]/60 ml-2">or payment plan</span>
-        )}
-      </p>
+      {price && (
+        <p className="text-2xl font-bold text-[#1E3A32] mb-6">
+          {price}{interval}
+          {priceDisplay === "show_price" && product.payment_plan_options?.length > 0 && (
+            <span className="text-sm font-normal text-[#2B2725]/60 ml-2">or payment plan</span>
+          )}
+        </p>
+      )}
       <Link to={createPageUrl(`ProductPage?slug=${product.slug || product.key}`)}>
         <Button className="w-full bg-[#1E3A32] hover:bg-[#2B2725]">
           Learn More <ArrowRight size={16} className="ml-2" />

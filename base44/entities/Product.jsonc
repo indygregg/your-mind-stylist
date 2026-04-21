@@ -84,6 +84,16 @@
       "default": "usd",
       "description": "Currency code"
     },
+    "price_display": {
+      "type": "string",
+      "enum": [
+        "show_price",
+        "contact_for_pricing",
+        "hidden"
+      ],
+      "default": "show_price",
+      "description": "How to display pricing on public pages. 'show_price' shows the dollar amount, 'contact_for_pricing' shows a 'Contact for Pricing' label, 'hidden' shows no price at all."
+    },
     "billing_interval": {
       "type": "string",
       "enum": [

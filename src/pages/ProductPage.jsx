@@ -53,7 +53,7 @@ export default function ProductPage() {
 
   const product = products[0];
 
-  const isContactOnly = product && (product.type === 'consultation' || !product.stripe_price_id);
+  const isContactOnly = product && (product.type === 'consultation' || !product.stripe_price_id || product.price_display === 'contact_for_pricing');
 
   const handlePurchase = async () => {
     // Consultation or products without Stripe price → redirect to booking
