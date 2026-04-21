@@ -79,8 +79,9 @@ export default function AudiobookPage() {
     );
   }
 
-  // Access denied
-  if (!ownershipResult?.has_access) {
+  // Access denied — checkProductOwnership returns owns_product, normalize both field names
+  const hasAccess = ownershipResult?.has_access || ownershipResult?.owns_product;
+  if (!hasAccess) {
     return (
       <div className="min-h-screen bg-[#F9F5EF] pt-32 pb-24 px-6">
         <div className="max-w-2xl mx-auto text-center">

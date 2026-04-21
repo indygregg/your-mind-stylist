@@ -185,6 +185,7 @@
               "digital",
               "physical",
               "bundle",
+              "audiobook",
               "custom"
             ],
             "description": "Format type"
@@ -200,6 +201,10 @@
             "type": "number",
             "description": "Custom bundle price in cents (for bundle-type purchase options)"
           },
+          "audiobook_id": {
+            "type": "string",
+            "description": "Reference to Audiobook entity (for audiobook-type purchase options) \u2014 grants player access on purchase"
+          },
           "digital_resource_id": {
             "type": "string",
             "description": "Reference to Resource entity for digital delivery"
@@ -211,7 +216,7 @@
           },
           "display_label": {
             "type": "string",
-            "description": "Custom label (e.g., 'Digital Book', 'Paperback', 'Bundle')"
+            "description": "Custom label (e.g., 'Digital Book', 'Paperback', 'Audiobook', 'Bundle')"
           },
           "badge": {
             "type": "string",

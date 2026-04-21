@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import AudiobookPicker from "./AudiobookPicker";
 
 export default function PurchaseOptionsEditor({ options = [], onChange, currentProductId, parentProductName }) {
   const queryClient = useQueryClient();
@@ -294,6 +295,7 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
                 <SelectContent>
                   <SelectItem value="digital">📱 Digital</SelectItem>
                   <SelectItem value="physical">📦 Paperback / Physical</SelectItem>
+                  <SelectItem value="audiobook">🎧 Audiobook</SelectItem>
                   <SelectItem value="bundle">🎁 Bundle</SelectItem>
                   <SelectItem value="custom">✨ Custom</SelectItem>
                 </SelectContent>
@@ -536,6 +538,14 @@ export default function PurchaseOptionsEditor({ options = [], onChange, currentP
               allResources={allResources}
               handleUpdateOption={handleUpdateOption}
               queryClient={queryClient}
+            />
+          )}
+
+          {/* Audiobook Picker — link to existing Audiobook entity */}
+          {option.type === 'audiobook' && (
+            <AudiobookPicker
+              audiobookId={option.audiobook_id}
+              onChange={(id) => handleUpdateOption(index, 'audiobook_id', id)}
             />
           )}
 

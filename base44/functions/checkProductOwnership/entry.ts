@@ -9,14 +9,20 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { product_key } = await req.json();
+    const body = await req.json();
+    const { product_key, product_id } = body;
 
-    if (!product_key) {
-      return Response.json({ error: 'product_key is required' }, { status: 400 });
+    if (!product_key && !product_id) {
+      return Response.json({ error: 'product_key or product_id is required' }, { status: 400 });
     }
 
-    // Get the product
-    const products = await base44.entities.Product.filter({ key: product_key });
+    // Get the product by key or ID
+    let products;
+    if (product_id) {
+      products = await base44.entities.Product.filter({ id: product_id });
+    } else {
+      products = await base44.entities.Product.filter({ key: product_key });
+    }
     if (!products || products.length === 0) {
       return Response.json({ 
         owns_product: false, 
