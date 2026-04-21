@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { motion, AnimatePresence } from "framer-motion";
-import { Headphones } from "lucide-react";
 
 export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
   const [hoveredBook, setHoveredBook] = useState(null);
@@ -30,19 +29,10 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
     staleTime: 5 * 60 * 1000,
   });
 
-  const { data: audiobooks = [] } = useQuery({
-    queryKey: ["nav-audiobooks"],
-    queryFn: () => base44.entities.Audiobook.filter({ status: "published" }),
-    staleTime: 5 * 60 * 1000,
-  });
-
   // Cap books at 9 for the mega menu, distribute across 3 columns
   const MAX_BOOKS = 9;
-  const MAX_AUDIOBOOKS = 5;
   const visibleBooks = books.slice(0, MAX_BOOKS);
   const hasMoreBooks = books.length > MAX_BOOKS;
-  const visibleAudiobooks = audiobooks.slice(0, MAX_AUDIOBOOKS);
-  const hasMoreAudiobooks = audiobooks.length > MAX_AUDIOBOOKS;
 
   const col1 = visibleBooks.filter((_, i) => i % 3 === 0);
   const col2 = visibleBooks.filter((_, i) => i % 3 === 1);
@@ -65,7 +55,7 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
             {books.length === 0 ? (
               <p className="text-[#2B2725]/60 text-sm">No books available yet.</p>
             ) : (
-              <div className="grid grid-cols-5 gap-8">
+              <div className="grid grid-cols-4 gap-8">
                 {/* Columns 1-3: Book titles */}
                 {[col1, col2, col3].map((col, colIdx) => (
                   <div key={colIdx} className="space-y-3">
@@ -103,43 +93,7 @@ export default function BooksMegaMenu({ isOpen, hasDarkHero }) {
                   </div>
                 ))}
 
-                {/* Column 4: Audiobooks */}
-                <div className="space-y-3">
-                  <h3 className="text-[#D8B46B] text-xs tracking-[0.2em] uppercase mb-4 flex items-center gap-1.5">
-                    <Headphones size={12} />
-                    Audiobooks
-                  </h3>
-                  {audiobooks.length === 0 ? (
-                    <p className="text-[#2B2725]/40 text-xs italic">Coming soon</p>
-                  ) : (
-                    <>
-                      {visibleAudiobooks.map((ab) => (
-                        <Link
-                          key={ab.id}
-                          to={`/audiobook/${ab.slug}`}
-                          className="block group py-1"
-                        >
-                          <p className="text-[#1E3A32] font-medium text-sm group-hover:text-[#D8B46B] transition-colors leading-snug">
-                            {ab.title}
-                          </p>
-                          {ab.author && (
-                            <p className="text-[#2B2725]/50 text-xs mt-0.5">by {ab.author}</p>
-                          )}
-                        </Link>
-                      ))}
-                      {hasMoreAudiobooks && (
-                        <Link
-                          to="/Books"
-                          className="block text-xs text-[#D8B46B] hover:text-[#1E3A32] transition-colors mt-3 font-medium"
-                        >
-                          See All Audiobooks →
-                        </Link>
-                      )}
-                    </>
-                  )}
-                </div>
-
-                {/* Column 5: Cover preview */}
+                {/* Column 4: Cover preview */}
                 <div className="flex flex-col items-center justify-center gap-4">
                   <AnimatePresence mode="wait">
                     {displayBook && (
