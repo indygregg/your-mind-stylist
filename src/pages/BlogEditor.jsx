@@ -386,10 +386,25 @@ export default function BlogEditor() {
 
           {/* Featured Image */}
           <div className="border border-[#D8B46B]/20 rounded-lg p-6 bg-[#F9F5EF]">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-2">
               <ImageIcon size={20} className="text-[#D8B46B]" />
               <h3 className="font-serif text-lg text-[#1E3A32]">Featured Image</h3>
             </div>
+            <p className="text-xs text-[#2B2725]/60 mb-4">
+              This image appears as the blog thumbnail on the blog listing page and in social sharing previews. It is separate from images you insert in the body text above.
+            </p>
+            {!formData.featured_image && formData.content && (() => {
+              const match = formData.content.match(/<img[^>]+src=["']([^"']+)["']/);
+              return match ? (
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, featured_image: match[1] }))}
+                  className="mb-4 text-xs text-[#D8B46B] hover:text-[#1E3A32] underline transition-colors"
+                >
+                  Auto-detect from content — use first image in body text
+                </button>
+              ) : null;
+            })()}
             {formData.featured_image && (
               <div className="mb-4">
                 <img
