@@ -250,17 +250,42 @@ export default function ManagerIntakeReview() {
                 <div>
                   <h3 className="font-medium text-[#1E3A32] mb-3">Health Information</h3>
                   <div className="text-sm space-y-2">
+                    {selectedIntake.health_diagnosis && selectedIntake.health_diagnosis.length > 0 && (
+                      <div><span className="font-medium">Diagnosed Conditions:</span> {Array.isArray(selectedIntake.health_diagnosis) ? selectedIntake.health_diagnosis.join(', ') : selectedIntake.health_diagnosis}</div>
+                    )}
                     {selectedIntake.health_conditions && selectedIntake.health_conditions.length > 0 && (
-                      <div><span className="font-medium">Conditions:</span> {selectedIntake.health_conditions.join(', ')}</div>
+                      <div><span className="font-medium">Other Health Conditions:</span> {Array.isArray(selectedIntake.health_conditions) ? selectedIntake.health_conditions.join(', ') : selectedIntake.health_conditions}</div>
+                    )}
+                    {selectedIntake.other_conditions && (
+                      <div><span className="font-medium">Other Conditions Detail:</span> {selectedIntake.other_conditions}</div>
                     )}
                     {selectedIntake.current_medications && (
                       <div><span className="font-medium">Medications:</span> {selectedIntake.current_medications}</div>
                     )}
-                    <div><span className="font-medium">Mental Health Diagnosis:</span> {selectedIntake.mental_health_diagnosis === 'yes' ? 'Yes' : 'No'}</div>
-                    {selectedIntake.mental_health_details && (
-                      <div><span className="font-medium">Details:</span> {selectedIntake.mental_health_details}</div>
+                    {selectedIntake.current_therapy && (
+                      <div><span className="font-medium">Currently Seeing Someone:</span> {selectedIntake.current_therapy}</div>
                     )}
-                    <div><span className="font-medium">Currently in Therapy:</span> {selectedIntake.current_therapy === 'yes' ? 'Yes' : 'No'}</div>
+                    {selectedIntake.addictions && (
+                      <div><span className="font-medium">Substance Use:</span> {selectedIntake.addictions}</div>
+                    )}
+                    {selectedIntake.emotions && selectedIntake.emotions.length > 0 && (
+                      <div><span className="font-medium">Excessive Emotions:</span> {Array.isArray(selectedIntake.emotions) ? selectedIntake.emotions.join(', ') : selectedIntake.emotions}</div>
+                    )}
+                    {selectedIntake.events && selectedIntake.events.length > 0 && (
+                      <div><span className="font-medium">Life Events:</span> {Array.isArray(selectedIntake.events) ? selectedIntake.events.join(', ') : selectedIntake.events}</div>
+                    )}
+                    {selectedIntake.events_explain && (
+                      <div><span className="font-medium">Events Detail:</span> {selectedIntake.events_explain}</div>
+                    )}
+                    {selectedIntake.boundaries && (
+                      <div><span className="font-medium">Diagnosis Boundaries:</span> {selectedIntake.boundaries}</div>
+                    )}
+                    {selectedIntake.mental_health_diagnosis && (
+                      <div><span className="font-medium">Mental Health Diagnosis:</span> {selectedIntake.mental_health_diagnosis}</div>
+                    )}
+                    {selectedIntake.mental_health_details && (
+                      <div><span className="font-medium">Mental Health Details:</span> {selectedIntake.mental_health_details}</div>
+                    )}
                   </div>
                 </div>
 
