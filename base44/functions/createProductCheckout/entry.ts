@@ -187,7 +187,7 @@ Deno.serve(async (req) => {
       phone_number_collection: { enabled: true },
       ...shippingConfig,
       metadata: {
-        user_id: user?.id || '',
+        ...(user?.id ? { user_id: user.id } : {}),
         product_ids: products.map(p => p.id).join(','),
         product_keys: products.map(p => p.key).join(','),
         product_names: products.map(p => p.name).join('; '),

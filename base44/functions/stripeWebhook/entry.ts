@@ -289,7 +289,7 @@ Deno.serve(async (req) => {
                 }
                 
                 // Handle Product Purchase (single product_id OR multi product_ids from cart)
-                else if ((session.metadata.product_id || session.metadata.product_ids) && session.metadata.user_id) {
+                else if ((session.metadata.product_id || session.metadata.product_ids) && session.metadata.user_id && session.metadata.user_id.length > 0) {
                     const productIdList = session.metadata.product_ids
                         ? session.metadata.product_ids.split(',').map(id => id.trim()).filter(Boolean)
                         : [session.metadata.product_id];
