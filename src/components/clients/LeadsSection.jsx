@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import LeadImport from "../manager/LeadImport";
 import LeadDetailsDialog from "./LeadDetailsDialog.jsx";
 import KajabiImportModal from "./KajabiImportModal";
+import AddLeadDialog from "./AddLeadDialog";
 
 export default function LeadsSection({ leads, isLoading }) {
   const queryClient = useQueryClient();
@@ -263,6 +264,12 @@ export default function LeadsSection({ leads, isLoading }) {
           queryClient.invalidateQueries({ queryKey: ["leads"] });
           setKajabiDialogOpen(false);
         }}
+      />
+
+      {/* Add Lead Dialog */}
+      <AddLeadDialog
+        open={addLeadDialogOpen}
+        onOpenChange={setAddLeadDialogOpen}
       />
     </div>
   );

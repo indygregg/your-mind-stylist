@@ -437,23 +437,87 @@ export default function Layout({ children, currentPageName }) {
               className="lg:hidden bg-[#F9F5EF] border-t border-[#D8B46B]/20 max-h-[calc(100vh-80px)] overflow-y-auto"
             >
               <div className="px-6 py-8 flex flex-col gap-2">
-                {navLinks.map((link) => (
+                {/* Home */}
+                <Link
+                  to={createPageUrl("Home")}
+                  onClick={() => { haptics.light(); setMobileMenuOpen(false); }}
+                  className={`text-lg py-4 px-4 rounded-lg transition-colors active:scale-98 min-h-[52px] flex items-center ${
+                    currentPageName === "Home" ? "text-[#1E3A32] font-medium bg-[#D8B46B]/10" : "text-[#2B2725]/70 hover:bg-[#E4D9C4]/50"
+                  }`}
+                >
+                  Home
+                </Link>
+
+                {/* About */}
+                <Link
+                  to={createPageUrl("About")}
+                  onClick={() => { haptics.light(); setMobileMenuOpen(false); }}
+                  className={`text-lg py-4 px-4 rounded-lg transition-colors active:scale-98 min-h-[52px] flex items-center ${
+                    currentPageName === "About" ? "text-[#1E3A32] font-medium bg-[#D8B46B]/10" : "text-[#2B2725]/70 hover:bg-[#E4D9C4]/50"
+                  }`}
+                >
+                  About
+                </Link>
+
+                {/* Services Section */}
+                <div className="mt-2">
+                  <p className="text-xs tracking-[0.2em] text-[#D8B46B] uppercase px-4 py-2 font-medium">Services</p>
+                  {[
+                    { name: "Tools & Programs", page: "Programs" },
+                    { name: "LENS™", page: "LENS" },
+                    { name: "Cleaning Out Your Closet", page: "CleaningOutYourCloset" },
+                    { name: "Pocket Mindset™", page: "PocketMindset" },
+                    { name: "Hypnosis Training", page: "LearnHypnosis" },
+                    { name: "Speaking & Training", page: "SpeakingTraining" },
+                  ].map((link) => (
+                    <Link
+                      key={link.page}
+                      to={createPageUrl(link.page)}
+                      onClick={() => { haptics.light(); setMobileMenuOpen(false); }}
+                      className={`text-base py-3 px-6 rounded-lg transition-colors active:scale-98 min-h-[48px] flex items-center ${
+                        currentPageName === link.page ? "text-[#1E3A32] font-medium bg-[#D8B46B]/10" : "text-[#2B2725]/70 hover:bg-[#E4D9C4]/50"
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+
+                {/* Books Section */}
+                <div className="mt-2">
+                  <p className="text-xs tracking-[0.2em] text-[#D8B46B] uppercase px-4 py-2 font-medium">Books</p>
                   <Link
-                    key={link.page}
-                    to={createPageUrl(link.page)}
-                    onClick={() => {
-                      haptics.light();
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`text-lg py-4 px-4 rounded-lg transition-colors active:scale-98 min-h-[52px] flex items-center ${
-                      currentPageName === link.page
-                        ? "text-[#1E3A32] font-medium bg-[#D8B46B]/10"
-                        : "text-[#2B2725]/70 hover:bg-[#E4D9C4]/50"
+                    to="/Books"
+                    onClick={() => { haptics.light(); setMobileMenuOpen(false); }}
+                    className={`text-base py-3 px-6 rounded-lg transition-colors active:scale-98 min-h-[48px] flex items-center ${
+                      currentPageName === "ProgramsBooks" ? "text-[#1E3A32] font-medium bg-[#D8B46B]/10" : "text-[#2B2725]/70 hover:bg-[#E4D9C4]/50"
                     }`}
                   >
-                    {link.name}
+                    Browse All Books
                   </Link>
-                ))}
+                </div>
+
+                {/* Remaining nav links */}
+                <div className="mt-2 border-t border-[#E4D9C4] pt-2">
+                  {[
+                    { name: "Initial Consultation", page: "Consultations" },
+                    { name: "Book a Session", page: "Bookings" },
+                    { name: "Blog", page: "Blog" },
+                    { name: "Contact", page: "Contact" },
+                  ].map((link) => (
+                    <Link
+                      key={link.page}
+                      to={createPageUrl(link.page)}
+                      onClick={() => { haptics.light(); setMobileMenuOpen(false); }}
+                      className={`text-lg py-4 px-4 rounded-lg transition-colors active:scale-98 min-h-[52px] flex items-center ${
+                        currentPageName === link.page ? "text-[#1E3A32] font-medium bg-[#D8B46B]/10" : "text-[#2B2725]/70 hover:bg-[#E4D9C4]/50"
+                      }`}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
+
                 <div className="mt-6 pt-4 border-t border-[#E4D9C4] flex flex-col gap-3">
                   <a
                     href="https://yourmindstylist.com/login"
