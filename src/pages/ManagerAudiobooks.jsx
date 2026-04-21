@@ -161,31 +161,103 @@ export default function ManagerAudiobooks() {
   );
 }
 
+const DRAFT_KEY = "audiobook-editor-draft";
+
 function AudiobookEditDialog({ audiobook, products, onClose, queryClient }) {
   const isNew = !audiobook.id;
-  const [form, setForm] = useState({ ...audiobook });
+  const [form, setForm] = useState(() => {
+    // For new audiobooks, check localStorage for a recovered draft
+    if (!audiobook.id) {
+      try {
+        const saved = localStorage.getItem(DRAFT_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          // Only restore if it has real content (not just defaults)
+          if (parsed.title || parsed.description || (parsed.chapters && parsed.chapters.length > 0)) {
+            return parsed;
+          }
+        }
+      } catch {}
+    }
+    return { ...audiobook };
+  });
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showResourcePicker, setShowResourcePicker] = useState(false);
   const [showCreateProduct, setShowCreateProduct] = useState(false);
-  const [autosaveStatus, setAutosaveStatus] = useState(null); // null | 'saving' | 'saved'
+  const [autosaveStatus, setAutosaveStatus] = useState(null); // null | 'saving' | 'saved' | 'draft-saved'
+  const [showDraftRecovery, setShowDraftRecovery] = useState(() => {
+    if (!audiobook.id) {
+      try {
+        const saved = localStorage.getItem(DRAFT_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          return !!(parsed.title || parsed.description || (parsed.chapters && parsed.chapters.length > 0));
+        }
+      } catch {}
+    }
+    return false;
+  });
   const autosaveTimerRef = React.useRef(null);
   const formRef = React.useRef(form);
   formRef.current = form;
+  const initialFormRef = React.useRef(JSON.stringify(form));
+  const hasSavedRef = React.useRef(false);
 
   // Autosave: debounce 2 seconds after any form change (only for existing audiobooks)
+  // For new audiobooks: persist to localStorage as draft protection
   React.useEffect(() => {
-    if (isNew) return;
     if (autosaveTimerRef.current) clearTimeout(autosaveTimerRef.current);
     autosaveTimerRef.current = setTimeout(async () => {
-      setAutosaveStatus('saving');
-      await base44.entities.Audiobook.update(audiobook.id, formRef.current);
-      queryClient.invalidateQueries({ queryKey: ["audiobooks"] });
-      setAutosaveStatus('saved');
-      setTimeout(() => setAutosaveStatus(null), 2000);
+      if (isNew) {
+        // Save to localStorage for draft recovery
+        try {
+          localStorage.setItem(DRAFT_KEY, JSON.stringify(formRef.current));
+          setAutosaveStatus('draft-saved');
+          setTimeout(() => setAutosaveStatus(null), 1500);
+        } catch {}
+      } else {
+        setAutosaveStatus('saving');
+        await base44.entities.Audiobook.update(audiobook.id, formRef.current);
+        queryClient.invalidateQueries({ queryKey: ["audiobooks"] });
+        setAutosaveStatus('saved');
+        setTimeout(() => setAutosaveStatus(null), 2000);
+      }
     }, 2000);
     return () => { if (autosaveTimerRef.current) clearTimeout(autosaveTimerRef.current); };
   }, [form]);
+
+  // Warn before browser/tab close
+  React.useEffect(() => {
+    const handler = (e) => {
+      const isDirty = JSON.stringify(formRef.current) !== initialFormRef.current;
+      if (isDirty && !hasSavedRef.current) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, []);
+
+  const handleClose = () => {
+    const isDirty = JSON.stringify(form) !== initialFormRef.current;
+    if (isDirty && !hasSavedRef.current) {
+      if (!confirm("You have unsaved changes. Are you sure you want to close?")) return;
+    }
+    // Clear draft on intentional close
+    if (isNew) {
+      try { localStorage.removeItem(DRAFT_KEY); } catch {}
+    }
+    onClose();
+  };
+
+  const discardDraft = () => {
+    try { localStorage.removeItem(DRAFT_KEY); } catch {}
+    setForm({ ...audiobook });
+    initialFormRef.current = JSON.stringify(audiobook);
+    setShowDraftRecovery(false);
+  };
 
   const handleFileUpload = async (e, field) => {
     const file = e.target.files?.[0];
@@ -204,9 +276,30 @@ function AudiobookEditDialog({ audiobook, products, onClose, queryClient }) {
     setSaving(true);
     if (isNew) {
       await base44.entities.Audiobook.create(form);
+      try { localStorage.removeItem(DRAFT_KEY); } catch {}
     } else {
       await base44.entities.Audiobook.update(audiobook.id, form);
     }
+    hasSavedRef.current = true;
+    queryClient.invalidateQueries({ queryKey: ["audiobooks"] });
+    setSaving(false);
+    onClose();
+  };
+
+  const handleQuickSaveDraft = async () => {
+    if (!form.title || !form.slug) {
+      alert("Title and slug are required to save as draft.");
+      return;
+    }
+    setSaving(true);
+    const draftForm = { ...form, status: "draft" };
+    if (isNew) {
+      await base44.entities.Audiobook.create(draftForm);
+      try { localStorage.removeItem(DRAFT_KEY); } catch {}
+    } else {
+      await base44.entities.Audiobook.update(audiobook.id, draftForm);
+    }
+    hasSavedRef.current = true;
     queryClient.invalidateQueries({ queryKey: ["audiobooks"] });
     setSaving(false);
     onClose();
@@ -215,13 +308,30 @@ function AudiobookEditDialog({ audiobook, products, onClose, queryClient }) {
   const updateField = (key, val) => setForm((prev) => ({ ...prev, [key]: val }));
 
   return (
-    <Dialog open onOpenChange={onClose}>
+    <Dialog open onOpenChange={handleClose}>
       <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-serif text-xl text-[#1E3A32]">
             {isNew ? "New Audiobook" : `Edit: ${audiobook.title}`}
           </DialogTitle>
         </DialogHeader>
+
+        {/* Draft Recovery Banner */}
+        {showDraftRecovery && (
+          <div className="bg-[#D8B46B]/10 border border-[#D8B46B]/30 rounded-lg p-3 flex items-center justify-between">
+            <p className="text-sm text-[#1E3A32]">
+              <strong>Draft recovered.</strong> We found unsaved work from a previous session.
+            </p>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={discardDraft} className="text-xs">
+                Discard
+              </Button>
+              <Button size="sm" onClick={() => setShowDraftRecovery(false)} className="text-xs bg-[#1E3A32] hover:bg-[#2B2725]">
+                Keep Working
+              </Button>
+            </div>
+          </div>
+        )}
 
         <div className="space-y-5 mt-4">
           {/* Basic Info */}
@@ -416,16 +526,20 @@ function AudiobookEditDialog({ audiobook, products, onClose, queryClient }) {
 
           {/* Save */}
           <div className="flex justify-between items-center gap-3 pt-4 border-t border-[#E4D9C4]">
-            {!isNew && (
-              <span className="text-xs text-[#2B2725]/50">
-                {autosaveStatus === 'saving' && '⟳ Saving...'}
-                {autosaveStatus === 'saved' && '✓ Saved'}
-                {!autosaveStatus && 'Changes auto-save'}
-              </span>
-            )}
-            {isNew && <span />}
+            <span className="text-xs text-[#2B2725]/50">
+              {autosaveStatus === 'saving' && '⟳ Saving...'}
+              {autosaveStatus === 'saved' && '✓ Saved'}
+              {autosaveStatus === 'draft-saved' && '✓ Draft backed up locally'}
+              {!autosaveStatus && (isNew ? 'Draft auto-backed up locally' : 'Changes auto-save')}
+            </span>
             <div className="flex gap-3">
-              <Button variant="outline" onClick={onClose}>{isNew ? "Cancel" : "Close"}</Button>
+              <Button variant="outline" onClick={handleClose}>{isNew ? "Cancel" : "Close"}</Button>
+              {isNew && (
+                <Button variant="outline" onClick={handleQuickSaveDraft} disabled={saving} className="gap-2">
+                  {saving && <Loader2 size={14} className="animate-spin" />}
+                  Save as Draft
+                </Button>
+              )}
               <Button onClick={handleSave} disabled={saving} className="bg-[#1E3A32] hover:bg-[#2B2725] gap-2">
                 {saving && <Loader2 size={14} className="animate-spin" />}
                 {isNew ? "Create Audiobook" : "Save & Close"}
