@@ -53,6 +53,7 @@ export default function UsersSection({ users, isLoading }) {
         <p className="text-sm text-[#2B2725]/80">
           <strong>Users</strong> have platform accounts — they can log in, access courses, and use the client portal. 
           Use <strong>"Create User"</strong> to invite someone new, then <strong>"Enroll User in Course"</strong> to grant them course access (e.g., gifting LENS™).
+          <span className="block mt-1 text-[#2B2725]/60"><strong>Note:</strong> New users must accept their email invitation and set up a password before their account is fully active. Course enrollment works best after they've accepted.</span>
         </p>
       </div>
 
