@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Mail, Filter, Plus, Trash2, Upload } from "lucide-react";
+import { Search, Mail, Filter, Plus, Trash2, Upload, Info } from "lucide-react";
 import LeadsDatabaseTable from "./LeadsDatabaseTable";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -98,6 +98,15 @@ export default function LeadsSection({ leads, isLoading }) {
 
   return (
     <div className="space-y-6">
+      {/* Info Banner */}
+      <div className="flex items-start gap-3 p-4 bg-[#D8B46B]/10 border border-[#D8B46B]/30 rounded-lg">
+        <Info size={18} className="text-[#D8B46B] mt-0.5 flex-shrink-0" />
+        <p className="text-sm text-[#2B2725]/80">
+          <strong>Leads</strong> are CRM contacts for tracking interest and follow-ups — they don't have platform accounts. 
+          To give someone access to courses or the client portal, use the <strong>"Convert to Users"</strong> button in the Clients Hub header to invite them and optionally enroll them in a course at the same time.
+        </p>
+      </div>
+
       {/* Top Actions */}
       <div className="flex gap-3 flex-wrap">
         <Button

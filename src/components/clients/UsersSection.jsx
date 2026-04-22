@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Mail, Calendar, Plus, SendHorizonal } from "lucide-react";
+import { Search, Mail, Calendar, Plus, SendHorizonal, Info } from "lucide-react";
 import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
 import { format } from "date-fns";
 import { motion } from "framer-motion";
@@ -47,6 +47,15 @@ export default function UsersSection({ users, isLoading }) {
 
   return (
     <div className="space-y-6">
+      {/* Info Banner */}
+      <div className="flex items-start gap-3 p-4 bg-[#A6B7A3]/15 border border-[#A6B7A3]/30 rounded-lg">
+        <Info size={18} className="text-[#1E3A32] mt-0.5 flex-shrink-0" />
+        <p className="text-sm text-[#2B2725]/80">
+          <strong>Users</strong> have platform accounts — they can log in, access courses, and use the client portal. 
+          Use <strong>"Create User"</strong> to invite someone new, then <strong>"Enroll User in Course"</strong> to grant them course access (e.g., gifting LENS™).
+        </p>
+      </div>
+
       {/* Top Actions */}
       <div className="flex gap-3 flex-wrap">
         <Button
