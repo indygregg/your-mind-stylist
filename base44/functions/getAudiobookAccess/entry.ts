@@ -29,6 +29,18 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Manager bypass: creator of this audiobook can always preview
+    if (user.role === 'manager' && audiobook.created_by === user.email) {
+      return Response.json({
+        has_access: true,
+        access_type: 'manager_preview',
+        audio_url: audiobook.audio_url,
+        download_url: audiobook.download_url || audiobook.audio_url,
+        file_format: audiobook.file_format || 'mp3',
+        file_size_mb: audiobook.file_size_mb,
+      });
+    }
+
     // Product-gated — check ownership
     const ownership = await base44.functions.invoke('checkProductOwnership', {
       product_id: audiobook.product_id,
