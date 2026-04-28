@@ -35,10 +35,46 @@ export default function PurchaseSuccess() {
             try {
               const ids = productIds.split(',').map(id => id.trim()).filter(Boolean);
               const audiobooks = await base44.entities.Audiobook.filter({ status: "published" });
+              
+              // Direct match: audiobook.product_id matches a purchased product ID
               for (const ab of audiobooks) {
                 if (ab.product_id && ids.includes(ab.product_id)) {
                   setAudiobookSlug(ab.slug);
-                  break;
+                  return;
+                }
+              }
+              
+              // Indirect match: a purchased product has a purchase_option with audiobook_id
+              const products = await base44.entities.Product.filter({});
+              const purchasedProducts = products.filter(p => ids.includes(p.id));
+              for (const product of purchasedProducts) {
+                if (product.purchase_options?.length > 0) {
+                  for (const opt of product.purchase_options) {
+                    if (opt.type === 'audiobook' && opt.audiobook_id) {
+                      const matchedAb = audiobooks.find(ab => ab.id === opt.audiobook_id);
+                      if (matchedAb) {
+                        setAudiobookSlug(matchedAb.slug);
+                        return;
+                      }
+                    }
+                  }
+                }
+                // Also check bundled products
+                if (product.is_bundle && product.bundled_product_ids?.length > 0) {
+                  const bundledProducts = products.filter(p => product.bundled_product_ids.includes(p.id));
+                  for (const bp of bundledProducts) {
+                    if (bp.purchase_options?.length > 0) {
+                      for (const opt of bp.purchase_options) {
+                        if (opt.type === 'audiobook' && opt.audiobook_id) {
+                          const matchedAb = audiobooks.find(ab => ab.id === opt.audiobook_id);
+                          if (matchedAb) {
+                            setAudiobookSlug(matchedAb.slug);
+                            return;
+                          }
+                        }
+                      }
+                    }
+                  }
                 }
               }
             } catch {}
