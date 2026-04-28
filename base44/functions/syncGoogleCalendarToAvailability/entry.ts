@@ -26,31 +26,59 @@ Deno.serve(async (req) => {
       }, { status: 400 });
     }
     
-    // Fetch events from Google Calendar (next 30 days only - faster)
+    // Fetch events from Google Calendar (next 180 days - full visibility)
+    const SYNC_DAYS = 180;
     const now = new Date();
-    const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const futureLimit = new Date(now.getTime() + SYNC_DAYS * 24 * 60 * 60 * 1000);
 
-    const calendarRes = await fetch(
-      `https://www.googleapis.com/calendar/v3/calendars/primary/events?` +
-      `timeMin=${now.toISOString()}&` +
-      `timeMax=${in30Days.toISOString()}&` +
-      `singleEvents=true&` +
-      `maxResults=100&` +
-      `orderBy=startTime`,
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        }
-      }
+    // Fetch all calendars the user has access to
+    const calListRes = await fetch(
+      'https://www.googleapis.com/calendar/v3/users/me/calendarList?minAccessRole=reader',
+      { headers: { 'Authorization': `Bearer ${accessToken}` } }
     );
+    if (!calListRes.ok) {
+      throw new Error(`CalendarList API error: ${calListRes.status}`);
+    }
+    const calListData = await calListRes.json();
+    const calendars = (calListData.items || []).filter(c => !c.deleted && c.selected !== false);
+    console.log(`Found ${calendars.length} calendars: ${calendars.map(c => c.summary || c.id).join(', ')}`);
 
-    if (!calendarRes.ok) {
-      throw new Error(`Google Calendar API error: ${calendarRes.statusText}`);
+    // Fetch events from ALL calendars
+    const allEvents = [];
+    for (const cal of calendars) {
+      const calId = encodeURIComponent(cal.id);
+      const calendarRes = await fetch(
+        `https://www.googleapis.com/calendar/v3/calendars/${calId}/events?` +
+        `timeMin=${now.toISOString()}&` +
+        `timeMax=${futureLimit.toISOString()}&` +
+        `singleEvents=true&` +
+        `maxResults=500&` +
+        `orderBy=startTime`,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      if (!calendarRes.ok) {
+        console.warn(`Skipping calendar ${cal.summary}: ${calendarRes.status}`);
+        continue;
+      }
+      const calendarData = await calendarRes.json();
+      const calEvents = (calendarData.items || []).filter(e => e.status !== 'cancelled');
+      console.log(`  Calendar "${cal.summary}": ${calEvents.length} events`);
+      allEvents.push(...calEvents);
     }
 
-    const calendarData = await calendarRes.json();
-    const events = calendarData.items || [];
+    // De-duplicate by event id
+    const seenIds = new Set();
+    const events = allEvents.filter(e => {
+      if (seenIds.has(e.id)) return false;
+      seenIds.add(e.id);
+      return true;
+    });
+    console.log(`Total unique events: ${events.length}`);
 
     // Get user's timezone from availability settings
     const settingsRes = await base44.asServiceRole.entities.AvailabilitySettings.filter(
@@ -85,23 +113,48 @@ Deno.serve(async (req) => {
     // Build the fresh set of rules from calendar events
     const rulesToCreate = [];
     for (const event of events) {
-      if (event.status === 'cancelled') continue;
+      // Skip events created by our own booking system
+      if (event.description && event.description.includes('Booking ID:')) continue;
+      if (event.summary && event.summary.match(/ - Session$/)) continue;
+      // Skip events the user declined
+      if (event.attendees) {
+        const self = event.attendees.find(a => a.self);
+        if (self && self.responseStatus === 'declined') continue;
+      }
 
-      const startTimeUTC = event.start.dateTime || event.start.date;
-      const endTimeUTC = event.end.dateTime || event.end.date;
-
-      rulesToCreate.push({
-        manager_id: user.id,
-        rule_type: 'blocked',
-        specific_date: getDateInTimezone(startTimeUTC, userTimezone),
-        start_time: formatTimeInTimezone(startTimeUTC, userTimezone),
-        end_time: formatTimeInTimezone(endTimeUTC, userTimezone),
-        is_available: false,
-        reason: `Calendar event: ${event.summary}`,
-        source: 'calendar_sync',
-        external_event_id: event.id,
-        active: true
-      });
+      if (event.start?.dateTime) {
+        rulesToCreate.push({
+          manager_id: user.id,
+          rule_type: 'blocked',
+          specific_date: getDateInTimezone(event.start.dateTime, userTimezone),
+          start_time: formatTimeInTimezone(event.start.dateTime, userTimezone),
+          end_time: formatTimeInTimezone(event.end.dateTime, userTimezone),
+          is_available: false,
+          reason: `Calendar: ${event.summary || 'Busy'}`,
+          source: 'calendar_sync',
+          external_event_id: event.id,
+          active: true
+        });
+      } else if (event.start?.date) {
+        // All-day event — create block for each day
+        let d = new Date(event.start.date + 'T12:00:00Z');
+        const endD = new Date((event.end?.date || event.start.date) + 'T12:00:00Z');
+        while (d < endD) {
+          rulesToCreate.push({
+            manager_id: user.id,
+            rule_type: 'blocked',
+            specific_date: getDateInTimezone(d.toISOString(), userTimezone),
+            start_time: '00:00',
+            end_time: '23:59',
+            is_available: false,
+            reason: `All-day: ${event.summary || 'Busy'}`,
+            source: 'calendar_sync',
+            external_event_id: event.id,
+            active: true
+          });
+          d.setUTCDate(d.getUTCDate() + 1);
+        }
+      }
     }
 
     // DEDUP FIX: Delete all existing calendar_sync rules for this manager
@@ -122,16 +175,23 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Bulk create the fresh rules
-    if (rulesToCreate.length > 0) {
-      await base44.asServiceRole.entities.AvailabilityRule.bulkCreate(rulesToCreate);
+    // Bulk create the fresh rules in batches
+    let createdCount = 0;
+    for (let i = 0; i < rulesToCreate.length; i += 10) {
+      const batch = rulesToCreate.slice(i, i + 10);
+      await base44.asServiceRole.entities.AvailabilityRule.bulkCreate(batch);
+      createdCount += batch.length;
     }
 
+    const futureLimitStr = getDateInTimezone(futureLimit, userTimezone);
     return Response.json({
       success: true,
+      calendars_synced: calendars.map(c => c.summary || c.id),
       deleted_stale: deletedCount,
-      synced_events: rulesToCreate.length,
-      message: `Cleaned ${deletedCount} stale rules, synced ${rulesToCreate.length} calendar events to availability rules`
+      synced_events: createdCount,
+      sync_days: SYNC_DAYS,
+      window: `${todayStr} to ${futureLimitStr}`,
+      message: `Cleaned ${deletedCount} stale rules, synced ${createdCount} events from ${calendars.length} calendars (${SYNC_DAYS}-day window)`
     });
   } catch (error) {
     console.error('Calendar sync error:', error);

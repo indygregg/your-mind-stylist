@@ -55,11 +55,12 @@ Deno.serve(async (req) => {
     const calendars = (calListData.items || []).filter(c => !c.deleted && c.selected !== false);
     console.log(`Found ${calendars.length} calendars: ${calendars.map(c => c.summary || c.id).join(', ')}`);
 
-    // Time window: now → 30 days out
+    // Time window: now → 180 days out (6 months for full visibility)
+    const SYNC_DAYS = 180;
     const now = new Date();
-    const in30Days = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const futureLimit = new Date(now.getTime() + SYNC_DAYS * 24 * 60 * 60 * 1000);
     const todayStr = getDateInTimezone(now.toISOString(), userTimezone);
-    const in30DaysStr = getDateInTimezone(in30Days.toISOString(), userTimezone);
+    const futureLimitStr = getDateInTimezone(futureLimit.toISOString(), userTimezone);
 
     // Fetch events from ALL calendars
     const allEvents = [];
@@ -67,8 +68,8 @@ Deno.serve(async (req) => {
       const calId = encodeURIComponent(cal.id);
       const eventsRes = await fetch(
         `https://www.googleapis.com/calendar/v3/calendars/${calId}/events?` +
-        `timeMin=${now.toISOString()}&timeMax=${in30Days.toISOString()}&` +
-        `singleEvents=true&maxResults=100&orderBy=startTime`,
+        `timeMin=${now.toISOString()}&timeMax=${futureLimit.toISOString()}&` +
+        `singleEvents=true&maxResults=500&orderBy=startTime`,
         { headers: { 'Authorization': `Bearer ${accessToken}` } }
       );
       if (!eventsRes.ok) {
@@ -158,14 +159,14 @@ Deno.serve(async (req) => {
     const toDelete = existingRules.filter(r =>
       r.specific_date &&
       r.specific_date >= todayStr &&
-      r.specific_date <= in30DaysStr &&
+      r.specific_date <= futureLimitStr &&
       r.external_event_id &&
       !newRuleKeys.has(`${r.external_event_id}::${r.specific_date}::${r.start_time}`)
     );
 
     const existingKeys = new Set(
       existingRules
-        .filter(r => r.specific_date >= todayStr && r.specific_date <= in30DaysStr)
+        .filter(r => r.specific_date >= todayStr && r.specific_date <= futureLimitStr)
         .map(r => `${r.external_event_id}::${r.specific_date}::${r.start_time}`)
     );
     const toCreate = newRules.filter(r => !existingKeys.has(`${r.external_event_id}::${r.specific_date}::${r.start_time}`));
@@ -199,8 +200,9 @@ Deno.serve(async (req) => {
       rules_deleted: deleted,
       rules_created: created,
       timezone: userTimezone,
-      window: `${todayStr} to ${in30DaysStr}`,
-      message: `Synced ${created} new / removed ${deleted} stale blocked slots from ${calendars.length} Google Calendars`
+      sync_days: SYNC_DAYS,
+      window: `${todayStr} to ${futureLimitStr}`,
+      message: `Synced ${created} new / removed ${deleted} stale blocked slots from ${calendars.length} Google Calendars (${SYNC_DAYS}-day window)`
     });
   } catch (error) {
     console.error('Calendar sync error:', error.message);
