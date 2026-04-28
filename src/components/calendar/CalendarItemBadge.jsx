@@ -1,40 +1,48 @@
 import React from "react";
 import { Calendar, Globe, UserCheck } from "lucide-react";
+import { getCalendarColor, SOURCE_COLORS } from "./calendarColors";
 
 export function getSourceInfo(item) {
-  // Determine source type
+  // Website booking
   if (item.type === 'booking') {
+    const c = SOURCE_COLORS.booking;
     return {
       source: 'booking',
-      label: 'Website Booking',
+      label: c.label,
       icon: Globe,
-      bgClass: 'bg-emerald-100',
-      textClass: 'text-emerald-700',
-      borderClass: 'border-emerald-300',
-      badgeBg: 'bg-emerald-500',
+      bgClass: c.bg,
+      textClass: c.text,
+      borderClass: c.border,
+      badgeBg: c.badge,
     };
   }
   
+  // Blocked time
   if (item.type === 'blocked') {
     if (item.source === 'calendar_sync') {
+      // Use per-calendar colors if calendar_name is available
+      const calName = item.calendar_name;
+      const c = getCalendarColor(calName);
       return {
         source: 'google',
-        label: 'Google Calendar',
+        calendarName: calName,
+        label: calName || c.label,
         icon: Calendar,
-        bgClass: 'bg-slate-100',
-        textClass: 'text-slate-700',
-        borderClass: 'border-slate-300',
-        badgeBg: 'bg-slate-500',
+        bgClass: c.bg,
+        textClass: c.text,
+        borderClass: c.border,
+        badgeBg: c.badge,
       };
     }
+    const c = SOURCE_COLORS.manual;
     return {
       source: 'manual',
-      label: 'Manual Block',
+      label: c.label,
       icon: UserCheck,
-      bgClass: 'bg-purple-100',
-      textClass: 'text-purple-700',
-      borderClass: 'border-purple-300',
-      badgeBg: 'bg-purple-500',
+      bgClass: c.bg,
+      textClass: c.text,
+      borderClass: c.border,
+      badgeBg: c.badge,
     };
   }
 

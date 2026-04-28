@@ -53,7 +53,7 @@ export default function CalendarItemDetail({ item, onClose }) {
         {item.source === 'calendar_sync' && (
           <div className="flex items-center gap-2 text-[#2B2725]/70">
             <Calendar size={14} className="text-slate-500" />
-            <span>From Google Calendar</span>
+            <span>From Google Calendar{item.calendar_name ? `: ${item.calendar_name}` : ''}</span>
           </div>
         )}
 

@@ -79,6 +79,9 @@ Deno.serve(async (req) => {
       const eventsData = await eventsRes.json();
       const events = (eventsData.items || []).filter(e => e.status !== 'cancelled');
       console.log(`  Calendar "${cal.summary}": ${events.length} events`);
+      // Tag each event with its source calendar name
+      const calName = cal.summary || cal.id;
+      events.forEach(e => { e._calendarName = calName; });
       allEvents.push(...events);
       await sleep(100); // small pause between calendar requests
     }
@@ -123,6 +126,7 @@ Deno.serve(async (req) => {
           is_available: false,
           reason: `Calendar: ${event.summary || 'Busy'}`,
           source: 'calendar_sync',
+          calendar_name: event._calendarName || null,
           external_event_id: event.id,
           active: true
         });
@@ -140,6 +144,7 @@ Deno.serve(async (req) => {
             is_available: false,
             reason: `All-day: ${event.summary || 'Busy'}`,
             source: 'calendar_sync',
+            calendar_name: event._calendarName || null,
             external_event_id: event.id,
             active: true
           });

@@ -184,7 +184,6 @@ export default function ManagerCalendar() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [filters, setFilters] = useState({
-    google: true,
     booking: true,
     manual: true,
     available: false,
@@ -222,13 +221,46 @@ export default function ManagerCalendar() {
   const calendarEnd = endOfWeek(monthEnd);
   const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
+  // Discover unique Google Calendar names from synced data
+  const calendarNames = useMemo(() => {
+    const names = new Set();
+    blockedTimes.forEach(r => {
+      if (r.source === 'calendar_sync' && r.calendar_name) {
+        names.add(r.calendar_name);
+      }
+    });
+    // Also include items without calendar_name as "Google Calendar" (legacy)
+    const hasLegacy = blockedTimes.some(r => r.source === 'calendar_sync' && !r.calendar_name);
+    if (hasLegacy) names.add('_legacy');
+    return Array.from(names).sort();
+  }, [blockedTimes]);
+
+  // Auto-enable new calendar filters when they appear
+  const [filtersInitialized, setFiltersInitialized] = useState(false);
+  React.useEffect(() => {
+    if (calendarNames.length > 0 && !filtersInitialized) {
+      const calFilters = {};
+      calendarNames.forEach(name => { calFilters[`cal_${name}`] = true; });
+      setFilters(prev => ({ ...prev, ...calFilters }));
+      setFiltersInitialized(true);
+    }
+  }, [calendarNames, filtersInitialized]);
+
   // Compute counts for filters
   const filterCounts = useMemo(() => {
-    const googleCount = blockedTimes.filter(r => r.source === 'calendar_sync').length;
     const manualCount = blockedTimes.filter(r => r.source !== 'calendar_sync').length;
     const bookingCount = bookings.length;
-    return { google: googleCount, manual: manualCount, booking: bookingCount };
-  }, [bookings, blockedTimes]);
+    const counts = { manual: manualCount, booking: bookingCount };
+    // Per-calendar counts
+    calendarNames.forEach(name => {
+      if (name === '_legacy') {
+        counts[`cal__legacy`] = blockedTimes.filter(r => r.source === 'calendar_sync' && !r.calendar_name).length;
+      } else {
+        counts[`cal_${name}`] = blockedTimes.filter(r => r.source === 'calendar_sync' && r.calendar_name === name).length;
+      }
+    });
+    return counts;
+  }, [bookings, blockedTimes, calendarNames]);
 
   const bookingsByDate = useMemo(() => {
     const map = {};
@@ -247,7 +279,11 @@ export default function ManagerCalendar() {
     blockedTimes.forEach((rule) => {
       if (rule.specific_date) {
         const isGoogle = rule.source === 'calendar_sync';
-        if (isGoogle && !filters.google) return;
+        if (isGoogle) {
+          // Check per-calendar filter
+          const calKey = rule.calendar_name ? `cal_${rule.calendar_name}` : 'cal__legacy';
+          if (!filters[calKey]) return;
+        }
         if (!isGoogle && !filters.manual) return;
         
         const dateKey = rule.specific_date;
@@ -349,7 +385,7 @@ export default function ManagerCalendar() {
         <CalendarTrustPanel />
 
         {/* Source Filters */}
-        <CalendarFilters filters={filters} onFilterChange={setFilters} counts={filterCounts} />
+        <CalendarFilters filters={filters} onFilterChange={setFilters} counts={filterCounts} calendarNames={calendarNames} />
 
         {/* Calendar (Desktop Only) */}
         <div className="hidden lg:block bg-white shadow-md mb-6">
