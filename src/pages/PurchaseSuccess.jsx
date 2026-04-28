@@ -106,7 +106,7 @@ export default function PurchaseSuccess() {
                 <div>
                   <h3 className="font-medium text-[#1E3A32] mb-1">Access Your Content</h3>
                   <p className="text-[#2B2725]/70 text-sm">
-                    Head to your Client Portal to start exploring your new program.
+                    Head to your Client Portal to start exploring your new program. If your purchase includes an audiobook, you can listen directly on the site or download it for offline listening.
                   </p>
                 </div>
               </div>

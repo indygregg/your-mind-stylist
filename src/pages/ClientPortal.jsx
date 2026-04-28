@@ -27,13 +27,14 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import StudentDashboard from "../components/library/StudentDashboard";
+import AudiobookLibrarySection from "../components/audiobook/AudiobookLibrarySection";
 
 export default function ClientPortal() {
   if (typeof window !== 'undefined') {
     window.__USE_AUTH_LAYOUT = true;
   }
 
-  const [expandedSections, setExpandedSections] = useState({ toolkit: true, webinars: true, audio: true, training: true });
+  const [expandedSections, setExpandedSections] = useState({ toolkit: true, webinars: true, audio: true, training: true, audiobooks: true });
   const toggleSection = (key) => setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }));
 
   const { data: user } = useQuery({
@@ -225,43 +226,52 @@ export default function ClientPortal() {
 
           {/* Materials / Library Tab */}
           <TabsContent value="materials">
-            {courses.length === 0 ? (
-              <Card className="p-12 text-center">
-                <Lock size={48} className="mx-auto mb-4 text-[#2B2725]/30" />
-                <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">Your Library is Empty (For Now)</h3>
-                <p className="text-[#2B2725]/70 mb-6">You can start anytime. Pocket Visualization™ is a gentle place to begin, or explore all programs to see what resonates.</p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Link to={createPageUrl("Programs")}>
-                    <Button className="bg-[#1E3A32] hover:bg-[#2B2725]">Explore Programs</Button>
-                  </Link>
-                  <Link to={createPageUrl("PocketMindset")}>
-                    <Button variant="outline">Explore Pocket Mindset™</Button>
-                  </Link>
-                </div>
-              </Card>
-            ) : (
-              <div>
-                {/* Student Dashboard Summary */}
-                {userProgress.length > 0 && (
-                  <div className="mb-8">
-                    <StudentDashboard
-                      courses={courses}
-                      userProgress={userProgress}
-                      userLessonProgress={userLessonProgress}
-                      allLessons={allLessons}
-                      modules={allModules}
-                      upcomingBookings={upcomingBookings}
-                    />
-                  </div>
-                )}
+            <div>
+              {/* Audiobooks — always rendered (component handles its own empty state) */}
+              <AudiobookLibrarySection
+                userId={user?.id}
+                expanded={expandedSections.audiobooks}
+                onToggle={() => toggleSection("audiobooks")}
+              />
 
-                {/* Courses by Type */}
-                <CourseSection title="Mind Style Toolkit" icon={Layers} sectionKey="toolkit" items={coursesByType.toolkit} color="#1E3A32" />
-                <CourseSection title="Webinars" icon={Video} sectionKey="webinars" items={coursesByType.webinar} color="#6E4F7D" />
-                <CourseSection title="Audio Programs" icon={Headphones} sectionKey="audio" items={coursesByType.audio} color="#D8B46B" />
-                <CourseSection title="Training & Certification" icon={Award} sectionKey="training" items={coursesByType.training} color="#1E3A32" />
-              </div>
-            )}
+              {courses.length === 0 ? (
+                <Card className="p-12 text-center">
+                  <Lock size={48} className="mx-auto mb-4 text-[#2B2725]/30" />
+                  <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">Your Library is Empty (For Now)</h3>
+                  <p className="text-[#2B2725]/70 mb-6">You can start anytime. Pocket Visualization™ is a gentle place to begin, or explore all programs to see what resonates.</p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <Link to={createPageUrl("Programs")}>
+                      <Button className="bg-[#1E3A32] hover:bg-[#2B2725]">Explore Programs</Button>
+                    </Link>
+                    <Link to={createPageUrl("PocketMindset")}>
+                      <Button variant="outline">Explore Pocket Mindset™</Button>
+                    </Link>
+                  </div>
+                </Card>
+              ) : (
+                <div>
+                  {/* Student Dashboard Summary */}
+                  {userProgress.length > 0 && (
+                    <div className="mb-8">
+                      <StudentDashboard
+                        courses={courses}
+                        userProgress={userProgress}
+                        userLessonProgress={userLessonProgress}
+                        allLessons={allLessons}
+                        modules={allModules}
+                        upcomingBookings={upcomingBookings}
+                      />
+                    </div>
+                  )}
+
+                  {/* Courses by Type */}
+                  <CourseSection title="Mind Style Toolkit" icon={Layers} sectionKey="toolkit" items={coursesByType.toolkit} color="#1E3A32" />
+                  <CourseSection title="Webinars" icon={Video} sectionKey="webinars" items={coursesByType.webinar} color="#6E4F7D" />
+                  <CourseSection title="Audio Programs" icon={Headphones} sectionKey="audio" items={coursesByType.audio} color="#D8B46B" />
+                  <CourseSection title="Training & Certification" icon={Award} sectionKey="training" items={coursesByType.training} color="#1E3A32" />
+                </div>
+              )}
+            </div>
           </TabsContent>
 
           {/* Session Notes Tab */}

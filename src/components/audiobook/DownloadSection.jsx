@@ -15,14 +15,18 @@ export default function DownloadSection({ audiobook }) {
         <h3 className="text-sm font-medium text-[#1E3A32]">Offline Listening</h3>
       </div>
 
-      <p className="text-xs text-[#2B2725]/60 mb-4">
+      <p className="text-xs text-[#2B2725]/60 mb-1">
         Prefer to listen offline? Download the {format} file and play it in your favorite app.
+      </p>
+      <p className="text-xs text-[#2B2725]/40 mb-4 italic">
+        Listen here directly, or download the audio file to listen on your preferred device.
       </p>
 
       <div className="flex items-center gap-3 flex-wrap">
         <a
           href={downloadUrl}
-          download
+          download={`${audiobook.title || "audiobook"}.${(audiobook.file_format || "mp3").toLowerCase()}`}
+          type={format === "MP3" ? "audio/mpeg" : format === "M4B" ? "audio/mp4" : format === "M4A" ? "audio/mp4" : "audio/mpeg"}
           className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1E3A32] text-[#F9F5EF] text-sm tracking-wide hover:bg-[#2B2725] transition-colors rounded"
         >
           <Download size={16} />

@@ -126,6 +126,21 @@ export default function AudiobookPage() {
           </Link>
         </div>
 
+        {/* Instructions */}
+        <div className="max-w-3xl mx-auto mb-6 bg-white border border-[#E4D9C4] rounded-lg p-5">
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-full bg-[#6E4F7D]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6E4F7D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            </div>
+            <div>
+              <p className="text-sm text-[#1E3A32] font-medium mb-1">How to listen</p>
+              <p className="text-sm text-[#2B2725]/70">
+                Listen here directly using the player below, or scroll down to download the audio file to listen on your preferred device.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Player */}
         <AudiobookPlayer
           audiobook={audiobook}

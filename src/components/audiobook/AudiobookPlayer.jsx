@@ -178,7 +178,7 @@ export default function AudiobookPlayer({ audiobook, userProgress, onProgressSav
   return (
     <div className="max-w-3xl mx-auto">
       {/* Hidden audio element */}
-      <audio ref={audioRef} src={audiobook.audio_url} preload="metadata" />
+      <audio ref={audioRef} src={audiobook.audio_url} preload="metadata" crossOrigin="anonymous" />
 
       {/* Cover & Info */}
       <div className="flex flex-col md:flex-row gap-6 mb-8">
