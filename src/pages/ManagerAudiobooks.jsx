@@ -19,7 +19,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, BookOpen, Upload, HelpCircle, Loader2, Library, ExternalLink, DollarSign } from "lucide-react";
+import { Plus, Pencil, Trash2, BookOpen, Upload, HelpCircle, Loader2, Library, ExternalLink, DollarSign, Headphones } from "lucide-react";
+import { Link } from "react-router-dom";
 import AudiobookSetupGuide from "@/components/audiobook/AudiobookSetupGuide";
 import AudiobookChapterEditor from "@/components/audiobook/AudiobookChapterEditor";
 import ResourceAudioPicker from "@/components/audiobook/ResourceAudioPicker";
@@ -114,6 +115,13 @@ export default function ManagerAudiobooks() {
                   </p>
                 </div>
                 <div className="flex gap-2">
+                  {book.slug && (
+                    <Link to={`/audiobook/${book.slug}`}>
+                      <Button size="sm" variant="outline" className="gap-1 text-[#6E4F7D] border-[#6E4F7D]/30 hover:bg-[#6E4F7D]/5">
+                        <Headphones size={14} /> Preview
+                      </Button>
+                    </Link>
+                  )}
                   <Button size="sm" variant="outline" onClick={() => setEditingBook(book)} className="gap-1">
                     <Pencil size={14} /> Edit
                   </Button>
