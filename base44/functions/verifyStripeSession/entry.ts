@@ -24,6 +24,8 @@ Deno.serve(async (req) => {
             valid,
             customer_email: session.customer_details?.email,
             amount_total: session.amount_total,
+            product_ids: session.metadata?.product_ids || session.metadata?.product_id || null,
+            type: session.metadata?.type || null,
         });
     } catch (error) {
         return Response.json({ valid: false, error: error.message });

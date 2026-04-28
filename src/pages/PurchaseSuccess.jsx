@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { base44 } from "@/api/base44Client";
 import { motion } from "framer-motion";
-import { CheckCircle, ArrowRight, Sparkles } from "lucide-react";
+import { CheckCircle, ArrowRight, Sparkles, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
 import { useCart } from "../components/shop/CartContext";
@@ -11,6 +11,7 @@ import { useCart } from "../components/shop/CartContext";
 export default function PurchaseSuccess() {
   const [purchaseType, setPurchaseType] = useState("");
   const [paymentType, setPaymentType] = useState("");
+  const [audiobookSlug, setAudiobookSlug] = useState(null);
   const { clearCart } = useCart();
 
   useEffect(() => {
@@ -23,13 +24,27 @@ export default function PurchaseSuccess() {
     const session_id = params.get("session_id");
     if (session_id) {
       base44.functions.invoke('verifyStripeSession', { session_id })
-        .then(res => {
+        .then(async (res) => {
           if (!res.data?.valid) {
-            // Invalid or unpaid session — redirect away
             window.location.href = createPageUrl('Programs');
+            return;
+          }
+          // Check if purchase includes an audiobook
+          const productIds = res.data?.product_ids;
+          if (productIds) {
+            try {
+              const ids = productIds.split(',').map(id => id.trim()).filter(Boolean);
+              const audiobooks = await base44.entities.Audiobook.filter({ status: "published" });
+              for (const ab of audiobooks) {
+                if (ab.product_id && ids.includes(ab.product_id)) {
+                  setAudiobookSlug(ab.slug);
+                  break;
+                }
+              }
+            } catch {}
           }
         })
-        .catch(() => {}); // Non-blocking — don't break the page if verification fails
+        .catch(() => {});
     }
   }, []);
 
@@ -125,10 +140,29 @@ export default function PurchaseSuccess() {
             </div>
           </div>
 
+          {/* Audiobook CTA — shown when purchase includes an audiobook */}
+          {audiobookSlug && (
+            <div className="bg-white p-8 mb-8 text-center border border-[#6E4F7D]/20">
+              <div className="w-14 h-14 bg-[#6E4F7D]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Headphones size={28} className="text-[#6E4F7D]" />
+              </div>
+              <h2 className="font-serif text-2xl text-[#1E3A32] mb-2">Your audiobook is ready</h2>
+              <p className="text-[#2B2725]/70 mb-6">
+                You can listen directly on the site or download the audio file to listen on your preferred device.
+              </p>
+              <Link to={`/audiobook/${audiobookSlug}`}>
+                <Button className="px-8 py-6 text-lg gap-2" style={{ backgroundColor: "#6E4F7D" }}>
+                  <Headphones size={20} />
+                  Listen Now
+                </Button>
+              </Link>
+            </div>
+          )}
+
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to={createPageUrl("ClientPortal")}>
-              <Button className="bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF] px-8 py-6 text-lg">
+              <Button className={`${audiobookSlug ? 'bg-transparent border border-[#1E3A32] text-[#1E3A32] hover:bg-[#1E3A32]/5' : 'bg-[#1E3A32] hover:bg-[#2B2725] text-[#F9F5EF]'} px-8 py-6 text-lg`}>
                 Go to Client Portal
                 <ArrowRight size={20} className="ml-2" />
               </Button>
