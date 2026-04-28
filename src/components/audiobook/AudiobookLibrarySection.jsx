@@ -31,17 +31,25 @@ export default function AudiobookLibrarySection({ userId, expanded, onToggle }) 
     staleTime: 2 * 60 * 1000,
   });
 
-  // Check product ownership for each gated audiobook
+  // Get current user for manager bypass check
+  const { data: currentUser } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: () => base44.auth.me(),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Check product ownership for each gated audiobook (manager/creator bypass included)
   const { data: accessMap = {}, isLoading: loadingAccess } = useQuery({
-    queryKey: ["audiobookAccess", userId, audiobooks.map(a => a.id).join(",")],
+    queryKey: ["audiobookAccess", userId, audiobooks.map(a => a.id).join(","), currentUser?.role, currentUser?.email],
     queryFn: async () => {
       const map = {};
       for (const ab of audiobooks) {
-        if (ab.access_level === "free") {
+        if (ab.access_level === "free" || !ab.product_id) {
           map[ab.id] = true;
           continue;
         }
-        if (!ab.product_id) {
+        // Manager bypass: creator of this audiobook can always preview
+        if (currentUser?.role === "manager" && ab.created_by === currentUser.email) {
           map[ab.id] = true;
           continue;
         }
@@ -52,7 +60,7 @@ export default function AudiobookLibrarySection({ userId, expanded, onToggle }) 
       }
       return map;
     },
-    enabled: audiobooks.length > 0 && !!userId,
+    enabled: audiobooks.length > 0 && !!userId && !!currentUser,
     staleTime: 5 * 60 * 1000,
   });
 

@@ -25,19 +25,23 @@ export default function AudiobookPage() {
     queryFn: () => base44.auth.me(),
   });
 
-  // Check product ownership if gated
+  // Check product ownership if gated (manager/creator bypass included)
   const { data: ownershipResult, isLoading: loadingOwnership } = useQuery({
-    queryKey: ["audiobookAccess", audiobook?.id, audiobook?.product_id],
+    queryKey: ["audiobookAccess", audiobook?.id, audiobook?.product_id, user?.role, user?.email],
     queryFn: async () => {
       if (!audiobook?.product_id || audiobook.access_level === "free") {
         return { has_access: true };
+      }
+      // Manager bypass: creator of this audiobook can always preview
+      if (user?.role === "manager" && audiobook.created_by === user.email) {
+        return { has_access: true, access_type: "manager_preview" };
       }
       const result = await base44.functions.invoke("checkProductOwnership", {
         product_id: audiobook.product_id,
       });
       return result.data;
     },
-    enabled: !!audiobook,
+    enabled: !!audiobook && !!user,
   });
 
   // Get user's progress
