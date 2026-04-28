@@ -1,13 +1,17 @@
 import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Calendar, ChevronLeft, ChevronRight, Video, Mail, Phone, Clock, DollarSign, ExternalLink, AlertCircle, MapPin } from "lucide-react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek, isToday } from "date-fns";
 import ManagerBookingActions from "@/components/manager/ManagerBookingActions";
+import CalendarTrustPanel from "@/components/calendar/CalendarTrustPanel";
+import CalendarFilters from "@/components/calendar/CalendarFilters";
+import CalendarItemBadge, { getSourceInfo } from "@/components/calendar/CalendarItemBadge";
+import CalendarItemDetail from "@/components/calendar/CalendarItemDetail";
 
 function BookingDetailContent({ selectedBooking, appointmentTypes, getStatusColor, formatAmount, onSuccess }) {
   const apptType = appointmentTypes.find(a => a.id === selectedBooking.appointment_type_id);
@@ -178,6 +182,13 @@ export default function ManagerCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
+  const [hoveredItem, setHoveredItem] = useState(null);
+  const [filters, setFilters] = useState({
+    google: true,
+    booking: true,
+    manual: true,
+    available: false,
+  });
   const queryClient = useQueryClient();
 
   const { data: appointmentTypes = [] } = useQuery({
@@ -199,33 +210,65 @@ export default function ManagerCalendar() {
     queryFn: () => base44.entities.AvailabilityRule.filter({ rule_type: "blocked", active: true }),
   });
 
+  const { data: availableRules = [] } = useQuery({
+    queryKey: ["availableRules"],
+    queryFn: () => base44.entities.AvailabilityRule.filter({ rule_type: "available", active: true }),
+    enabled: filters.available,
+  });
+
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   const calendarStart = startOfWeek(monthStart);
   const calendarEnd = endOfWeek(monthEnd);
   const calendarDays = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
+  // Compute counts for filters
+  const filterCounts = useMemo(() => {
+    const googleCount = blockedTimes.filter(r => r.source === 'calendar_sync').length;
+    const manualCount = blockedTimes.filter(r => r.source !== 'calendar_sync').length;
+    const bookingCount = bookings.length;
+    return { google: googleCount, manual: manualCount, booking: bookingCount };
+  }, [bookings, blockedTimes]);
+
   const bookingsByDate = useMemo(() => {
     const map = {};
-    bookings.forEach((booking) => {
-      if (booking.scheduled_date) {
-        const dateKey = format(new Date(booking.scheduled_date), "yyyy-MM-dd");
-        if (!map[dateKey]) map[dateKey] = [];
-        map[dateKey].push({ type: 'booking', ...booking });
-      }
-    });
     
-    // Add blocked times to the map
+    if (filters.booking) {
+      bookings.forEach((booking) => {
+        if (booking.scheduled_date) {
+          const dateKey = format(new Date(booking.scheduled_date), "yyyy-MM-dd");
+          if (!map[dateKey]) map[dateKey] = [];
+          map[dateKey].push({ type: 'booking', ...booking });
+        }
+      });
+    }
+    
+    // Add blocked times to the map (filtered by source)
     blockedTimes.forEach((rule) => {
       if (rule.specific_date) {
+        const isGoogle = rule.source === 'calendar_sync';
+        if (isGoogle && !filters.google) return;
+        if (!isGoogle && !filters.manual) return;
+        
         const dateKey = rule.specific_date;
         if (!map[dateKey]) map[dateKey] = [];
         map[dateKey].push({ type: 'blocked', ...rule });
       }
     });
+
+    // Add available hours if toggled on
+    if (filters.available) {
+      availableRules.forEach((rule) => {
+        if (rule.specific_date) {
+          const dateKey = rule.specific_date;
+          if (!map[dateKey]) map[dateKey] = [];
+          map[dateKey].push({ type: 'available', ...rule });
+        }
+      });
+    }
     
     return map;
-  }, [bookings, blockedTimes]);
+  }, [bookings, blockedTimes, availableRules, filters]);
 
   const getStatusColor = (status) => {
     const colors = {
@@ -301,6 +344,12 @@ export default function ManagerCalendar() {
             </div>
           </div>
         </div>
+
+        {/* Calendar Trust Panel */}
+        <CalendarTrustPanel />
+
+        {/* Source Filters */}
+        <CalendarFilters filters={filters} onFilterChange={setFilters} counts={filterCounts} />
 
         {/* Calendar (Desktop Only) */}
         <div className="hidden lg:block bg-white shadow-md mb-6">
@@ -378,19 +427,45 @@ export default function ManagerCalendar() {
                   </div>
                   <div className="space-y-1.5">
                     {dayBookings.slice(0, 3).map((item) => {
+                      const sourceInfo = getSourceInfo(item);
+                      
+                      if (item.type === 'available') {
+                        return (
+                          <div
+                            key={item.id}
+                            className="w-full text-left px-2 py-1.5 rounded bg-[#D8B46B]/10 border border-[#D8B46B]/30 text-xs"
+                          >
+                            <div className="font-medium truncate flex items-center gap-1 text-[#1E3A32]/70">
+                              <Clock size={10} className="flex-shrink-0" />
+                              <span>{formatTime24to12(item.start_time)} - {formatTime24to12(item.end_time)}</span>
+                            </div>
+                            <div className="text-[10px] truncate text-[#2B2725]/50 mt-0.5">Available</div>
+                          </div>
+                        );
+                      }
+                      
                       if (item.type === 'blocked') {
                         return (
                           <div
                             key={item.id}
-                            className="w-full text-left px-2 py-1.5 rounded bg-gray-100 border border-gray-300 text-xs"
+                            className={`w-full text-left px-2 py-1.5 rounded border text-xs relative group ${sourceInfo.bgClass} ${sourceInfo.borderClass}`}
+                            onMouseEnter={() => setHoveredItem(item.id)}
+                            onMouseLeave={() => setHoveredItem(null)}
                           >
-                            <div className="font-medium truncate flex items-center gap-1">
-                              <Clock size={10} className="flex-shrink-0" />
-                              <span>{formatTime24to12(item.start_time)} - {formatTime24to12(item.end_time)}</span>
+                            <div className="flex items-center gap-1">
+                              <CalendarItemBadge item={item} size="xs" />
+                              <span className="font-medium truncate flex-1">
+                                {formatTime24to12(item.start_time)} - {formatTime24to12(item.end_time)}
+                              </span>
                             </div>
-                            <div className="text-[10px] truncate text-gray-600 mt-0.5">
-                              🚫 {item.reason || 'Blocked'}
+                            <div className={`text-[10px] truncate mt-0.5 ${sourceInfo.textClass}`}>
+                              {item.reason || 'Blocked'}
                             </div>
+                            {hoveredItem === item.id && (
+                              <div className="absolute z-50 top-full left-0 mt-1">
+                                <CalendarItemDetail item={item} onClose={() => setHoveredItem(null)} />
+                              </div>
+                            )}
                           </div>
                         );
                       }
@@ -399,20 +474,15 @@ export default function ManagerCalendar() {
                         <button
                           key={item.id}
                           onClick={() => setSelectedBooking(item)}
-                          className={`w-full text-left px-2 py-1.5 rounded transition-all text-xs ${
-                            item.booking_status === 'confirmed' 
-                              ? 'bg-green-100 hover:bg-green-200 border border-green-300' 
-                              : item.booking_status === 'cancelled'
-                              ? 'bg-red-100 hover:bg-red-200 border border-red-300'
-                              : 'bg-blue-100 hover:bg-blue-200 border border-blue-300'
-                          }`}
+                          onMouseEnter={() => setHoveredItem(item.id)}
+                          onMouseLeave={() => setHoveredItem(null)}
+                          className="w-full text-left px-2 py-1.5 rounded transition-all text-xs bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 relative group"
                         >
-                          <div className="font-medium truncate flex items-center gap-1">
-                            <Clock size={10} className="flex-shrink-0" />
-                            <span>{item.scheduled_date && format(new Date(item.scheduled_date), "h:mm a")}</span>
-                          </div>
-                          <div className="text-[10px] truncate font-medium mt-0.5 flex items-center gap-1">
-                            {item.user_name}
+                          <div className="flex items-center gap-1">
+                            <CalendarItemBadge item={item} size="xs" />
+                            <span className="font-medium truncate flex-1">
+                              {item.scheduled_date && format(new Date(item.scheduled_date), "h:mm a")}
+                            </span>
                             {item.zoom_status === 'created' && (
                               <Video size={10} className="text-blue-600 flex-shrink-0" />
                             )}
@@ -420,6 +490,14 @@ export default function ManagerCalendar() {
                               <AlertCircle size={10} className="text-red-500 flex-shrink-0" />
                             )}
                           </div>
+                          <div className="text-[10px] truncate font-medium mt-0.5 text-emerald-700">
+                            {item.user_name}
+                          </div>
+                          {hoveredItem === item.id && (
+                            <div className="absolute z-50 top-full left-0 mt-1" onClick={(e) => e.stopPropagation()}>
+                              <CalendarItemDetail item={item} onClose={() => setHoveredItem(null)} />
+                            </div>
+                          )}
                         </button>
                       );
                     })}
@@ -456,13 +534,33 @@ export default function ManagerCalendar() {
                     return timeA.localeCompare(timeB);
                   })
                   .map((item) => {
+                    const sourceInfo = getSourceInfo(item);
+                    
+                    if (item.type === 'available') {
+                      return (
+                        <div key={item.id} className="flex items-start gap-3 p-3 bg-[#D8B46B]/10 border border-[#D8B46B]/30 rounded">
+                          <Clock size={14} className="text-[#D8B46B] mt-0.5 flex-shrink-0" />
+                          <div className="flex-1">
+                            <div className="text-sm font-medium text-[#1E3A32]/70">{formatTime24to12(item.start_time)} – {formatTime24to12(item.end_time)}</div>
+                            <div className="text-xs text-[#2B2725]/50 mt-0.5">Available for booking</div>
+                          </div>
+                        </div>
+                      );
+                    }
+                    
                     if (item.type === 'blocked') {
                       return (
-                        <div key={item.id} className="flex items-start gap-3 p-3 bg-gray-50 border border-gray-200 rounded">
-                          <Clock size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
-                          <div>
-                            <div className="text-sm font-medium text-gray-700">{formatTime24to12(item.start_time)} – {formatTime24to12(item.end_time)}</div>
-                            <div className="text-xs text-gray-500 mt-0.5">🚫 {item.reason || 'Blocked'}</div>
+                        <div key={item.id} className={`flex items-start gap-3 p-3 ${sourceInfo.bgClass} border ${sourceInfo.borderClass} rounded`}>
+                          <Clock size={14} className={`${sourceInfo.textClass} mt-0.5 flex-shrink-0`} />
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <CalendarItemBadge item={item} size="sm" />
+                            </div>
+                            <div className={`text-sm font-medium ${sourceInfo.textClass}`}>{formatTime24to12(item.start_time)} – {formatTime24to12(item.end_time)}</div>
+                            <div className="text-xs text-gray-500 mt-0.5">{item.reason || 'Blocked'}</div>
+                            {item.updated_date && (
+                              <div className="text-[10px] text-gray-400 mt-1">Updated: {format(new Date(item.updated_date), "MMM d, h:mm a")}</div>
+                            )}
                           </div>
                         </div>
                       );
@@ -471,10 +569,13 @@ export default function ManagerCalendar() {
                       <button
                         key={item.id}
                         onClick={() => { setSelectedDay(null); setSelectedBooking(item); }}
-                        className="w-full text-left flex items-start gap-3 p-3 bg-green-50 border border-green-200 rounded hover:bg-green-100 transition-colors"
+                        className="w-full text-left flex items-start gap-3 p-3 bg-emerald-50 border border-emerald-200 rounded hover:bg-emerald-100 transition-colors"
                       >
-                        <Clock size={14} className="text-green-600 mt-0.5 flex-shrink-0" />
-                        <div>
+                        <Clock size={14} className="text-emerald-600 mt-0.5 flex-shrink-0" />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <CalendarItemBadge item={item} size="sm" />
+                          </div>
                           <div className="text-sm font-medium text-[#1E3A32]">
                             {item.scheduled_date && format(new Date(item.scheduled_date), "h:mm a")} — {item.user_name}
                           </div>
