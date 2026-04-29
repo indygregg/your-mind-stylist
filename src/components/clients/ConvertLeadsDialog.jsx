@@ -165,14 +165,14 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
                     onCheckedChange={setIncludeEnrollment}
                   />
                   <Label className="font-medium cursor-pointer">
-                    Queue course enrollment (starts after they accept the invite)
+                   Also enroll in courses after they accept the invite
                   </Label>
                 </div>
 
                 {includeEnrollment && (
                   <div className="space-y-3 pl-6 border-l-2 border-[#D8B46B] pt-2">
                     <p className="text-sm text-[#2B2725]/70">
-                      Select courses for the {selectedLeads.length} invited people. Enrollment will happen after they set up their account:
+                      Select courses for the {selectedLeads.length} invited people. Enrollment will be available after they create their account:
                     </p>
                     <div className="space-y-2 max-h-[300px] overflow-y-auto">
                       {courses.length === 0 ? (

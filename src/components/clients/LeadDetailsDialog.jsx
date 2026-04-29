@@ -37,7 +37,8 @@ export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
     try {
       await base44.entities.Lead.update(lead.id, editData);
       queryClient.invalidateQueries({ queryKey: ["leads"] });
-      toast.success("Lead updated");
+      queryClient.invalidateQueries({ queryKey: ["person-lead", lead.email?.toLowerCase()] });
+      toast.success("Details saved");
       setEditing(false);
     } catch (error) {
       toast.error("Failed to save: " + error.message);

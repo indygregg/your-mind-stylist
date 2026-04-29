@@ -17,6 +17,7 @@ import SuggestedNextStep from "./SuggestedNextStep";
 import ManualEnrollmentModal from "../manager/ManualEnrollmentModal";
 import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
 import LeadDetailsDialog from "./LeadDetailsDialog";
+import InviteEmailPreview from "./InviteEmailPreview";
 
 function SectionLabel({ children }) {
   return (
@@ -36,6 +37,8 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
   const [inviting, setInviting] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [invitePreviewOpen, setInvitePreviewOpen] = useState(false);
+  const [invitePreviewMode, setInvitePreviewMode] = useState("invite"); // "invite" or "invite_enroll"
 
   // Look up user by email
   const { data: userData } = useQuery({
@@ -119,19 +122,36 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
   // Purchased products from lead
   const whatBought = leadData?.what_they_bought;
 
-  const handleInvite = async () => {
+  const handleInvite = () => {
+    setInvitePreviewMode("invite");
+    setInvitePreviewOpen(true);
+  };
+
+  const handleConfirmInvite = async ({ subject, body }) => {
     setInviting(true);
     try {
       await base44.functions.invoke("inviteUserToApp", {
         email: email.toLowerCase(),
         role: "user",
+        brandedSubject: subject,
+        brandedBody: body,
       });
-      toast.success("Invite sent! They'll receive an email to set up their account.");
+      toast.success("Invite sent! They'll receive a branded email from Roberta, followed by an account setup email.");
       queryClient.invalidateQueries({ queryKey: ["person-user", email] });
+      setInvitePreviewOpen(false);
+      if (invitePreviewMode === "invite_enroll") {
+        // For invite+enroll, after invite succeeds, try to open enrollment
+        // but user may not exist yet
+        toast("You can enroll them once they accept the invite.", { duration: 5000 });
+      }
     } catch (error) {
       if (error.response?.data?.userExists) {
         toast.success("This person already has an account.");
         queryClient.invalidateQueries({ queryKey: ["person-user", email] });
+        setInvitePreviewOpen(false);
+        if (invitePreviewMode === "invite_enroll") {
+          setEnrollModalOpen(true);
+        }
       } else {
         toast.error(error.response?.data?.error || error.message);
       }
@@ -328,8 +348,8 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
               <SectionLabel>Enrolled Programs</SectionLabel>
               {!userData ? (
                 <EmptyState text={personStatus === "invite_pending"
-                  ? "They haven't set up their account yet — enrollment will be available once they accept the invite"
-                  : "Send an invite first so they can create an account"
+                  ? "Enrollment will be available after they accept the invite and set up their account."
+                  : "Send an invite first so they can create an account."
                 } />
               ) : enrollments.length === 0 ? (
                 <EmptyState text="No enrollments yet" />
@@ -453,46 +473,21 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                 ) : (
                   <Button
                     className="justify-start bg-[#6E4F7D]/80 hover:bg-[#6E4F7D] text-white"
-                    onClick={async () => {
-                      // Send invite first, then open enrollment
-                      setInviting(true);
-                      try {
-                        await base44.functions.invoke("inviteUserToApp", {
-                          email: email.toLowerCase(),
-                          role: "user",
-                        });
-                        toast.success(
-                          "Invite sent! Once they set up their account, you can enroll them in a course.",
-                          { duration: 5000 }
-                        );
-                        queryClient.invalidateQueries({ queryKey: ["person-user", email] });
-                      } catch (error) {
-                        if (error.response?.data?.userExists) {
-                          toast.success("They already have an account! You can enroll them now.");
-                          queryClient.invalidateQueries({ queryKey: ["person-user", email] });
-                          setEnrollModalOpen(true);
-                        } else {
-                          toast.error(error.response?.data?.error || error.message);
-                        }
-                      } finally {
-                        setInviting(false);
-                      }
+                    onClick={() => {
+                      setInvitePreviewMode("invite_enroll");
+                      setInvitePreviewOpen(true);
                     }}
                     disabled={inviting}
                   >
-                    {inviting ? (
-                      <Loader2 size={15} className="mr-2 animate-spin" />
-                    ) : (
-                      <GraduationCap size={15} className="mr-2" />
-                    )}
+                    <GraduationCap size={15} className="mr-2" />
                     Invite + Enroll
                   </Button>
                 )}
                 {!userData && (
                   <p className="text-xs text-[#2B2725]/40 italic ml-1">
                     {personStatus === "invite_pending"
-                      ? "They haven't set up their account yet. You can enroll them once they accept the invite."
-                      : "They'll be enrolled after they create their account."}
+                      ? "Enrollment will be available after they accept the invite and create their account."
+                      : "Send an invite first — enrollment will be available after they create their account."}
                   </p>
                 )}
               </div>
@@ -551,6 +546,15 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
           lead={leadData}
         />
       )}
+
+      {/* Branded invite email preview */}
+      <InviteEmailPreview
+        open={invitePreviewOpen}
+        onOpenChange={setInvitePreviewOpen}
+        recipientName={displayName}
+        recipientEmail={email}
+        onConfirmSend={handleConfirmInvite}
+      />
     </>
   );
 }

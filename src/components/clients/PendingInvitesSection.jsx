@@ -9,6 +9,7 @@ import { Search, RefreshCw, Loader2, Clock, Mail, Info } from "lucide-react";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
 import PersonDetailPanel from "./PersonDetailPanel";
+import InviteEmailPreview from "./InviteEmailPreview";
 
 export default function PendingInvitesSection({ leads, users }) {
   const queryClient = useQueryClient();
@@ -16,6 +17,8 @@ export default function PendingInvitesSection({ leads, users }) {
   const [resendingId, setResendingId] = useState(null);
   const [personPanelOpen, setPersonPanelOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
+  const [invitePreviewOpen, setInvitePreviewOpen] = useState(false);
+  const [invitePreviewTarget, setInvitePreviewTarget] = useState(null);
 
   // People who were invited (converted_to_client or user_id set) but don't have active User records
   const userEmails = new Set((users || []).map((u) => u.email?.toLowerCase()));
