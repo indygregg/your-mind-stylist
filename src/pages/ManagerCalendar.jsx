@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Calendar, ChevronLeft, ChevronRight, Video, Mail, Phone, Clock, DollarSign, ExternalLink, AlertCircle, MapPin } from "lucide-react";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfWeek, endOfWeek, isToday } from "date-fns";
 import ManagerBookingActions from "@/components/manager/ManagerBookingActions";
-import CalendarTrustPanel from "@/components/calendar/CalendarTrustPanel";
+import CalendarSourcesPanel from "@/components/calendar/CalendarSourcesPanel";
 import CalendarFilters from "@/components/calendar/CalendarFilters";
 import CalendarItemBadge, { getSourceInfo } from "@/components/calendar/CalendarItemBadge";
 import CalendarItemDetail from "@/components/calendar/CalendarItemDetail";
@@ -402,8 +402,8 @@ export default function ManagerCalendar() {
           </div>
         </div>
 
-        {/* Calendar Trust Panel */}
-        <CalendarTrustPanel />
+        {/* Calendar Sources Panel */}
+        <CalendarSourcesPanel />
 
         {/* Source Filters */}
         <CalendarFilters filters={filters} onFilterChange={setFilters} counts={filterCounts} calendarNames={calendarNames} />
