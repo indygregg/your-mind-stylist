@@ -5,7 +5,7 @@ Deno.serve(async (req) => {
         const base44 = createClientFromRequest(req);
         const user = await base44.auth.me();
         
-        if (!user || (user.role !== 'admin' && user.custom_role !== 'manager')) {
+        if (!user || (user.role !== 'admin' && user.role !== 'manager' && user.custom_role !== 'manager')) {
             return Response.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
@@ -223,10 +223,37 @@ async function managerCancel(base44, booking, data) {
         return Response.json({ error: 'Cannot cancel this booking' }, { status: 400 });
     }
 
+    // Get current user for cancelled_by
+    const user = await base44.auth.me();
+
     await base44.asServiceRole.entities.Booking.update(booking.id, {
         booking_status: 'cancelled',
+        cancelled_at: new Date().toISOString(),
+        cancelled_by: user?.email || 'manager',
+        cancellation_reason: data.reason || null,
         notes: booking.notes ? `${booking.notes}\n\nCancelled by manager. Reason: ${data.reason || 'Not provided'}` : `Cancelled by manager. Reason: ${data.reason || 'Not provided'}`
     });
+
+    // Delete Google Calendar event if we have the ID
+    if (booking.google_event_id) {
+        try {
+            const conn = await base44.asServiceRole.connectors.getConnection('googlecalendar');
+            const delRes = await fetch(
+                `https://www.googleapis.com/calendar/v3/calendars/primary/events/${booking.google_event_id}`,
+                {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${conn.accessToken}` }
+                }
+            );
+            if (delRes.ok || delRes.status === 204) {
+                console.log('[managerCancel] Deleted Google Calendar event:', booking.google_event_id);
+            } else {
+                console.error('[managerCancel] Failed to delete Google Calendar event:', await delRes.text());
+            }
+        } catch (calErr) {
+            console.error('[managerCancel] Google Calendar cleanup error:', calErr.message);
+        }
+    }
 
     // Notify client (try to send email, but don't fail if recipient is not a registered user)
     try {
@@ -403,14 +430,24 @@ function generateTypeChangeEmail(booking, newType, reason) {
 }
 
 async function deleteBooking(base44, booking) {
-    // Delete from Google Calendar if synced
-    if (booking.google_calendar_event_id) {
+    // Delete from Google Calendar if we have the event ID
+    if (booking.google_event_id) {
         try {
-            await base44.asServiceRole.functions.invoke('deleteCalendarEvent', {
-                event_id: booking.google_calendar_event_id
-            });
+            const conn = await base44.asServiceRole.connectors.getConnection('googlecalendar');
+            const delRes = await fetch(
+                `https://www.googleapis.com/calendar/v3/calendars/primary/events/${booking.google_event_id}`,
+                {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${conn.accessToken}` }
+                }
+            );
+            if (delRes.ok || delRes.status === 204) {
+                console.log('[deleteBooking] Deleted Google Calendar event:', booking.google_event_id);
+            } else {
+                console.error('[deleteBooking] Failed to delete Google Calendar event:', await delRes.text());
+            }
         } catch (error) {
-            console.error('Error deleting calendar event:', error);
+            console.error('[deleteBooking] Google Calendar cleanup error:', error.message);
         }
     }
 

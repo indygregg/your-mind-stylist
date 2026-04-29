@@ -169,6 +169,14 @@ Deno.serve(async (req) => {
 
         if (calendarRes.ok) {
           calendarSynced = true;
+          const calData = await calendarRes.json();
+          // Store Google Calendar event ID on the booking for future cleanup
+          if (calData.id) {
+            await base44.asServiceRole.entities.Booking.update(booking.id, {
+              google_event_id: calData.id
+            });
+            console.log('[createManualBooking] Stored google_event_id:', calData.id);
+          }
           console.log('[createManualBooking] Synced to Google Calendar');
         } else {
           const errText = await calendarRes.text();

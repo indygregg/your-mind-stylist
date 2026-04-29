@@ -171,6 +171,10 @@
       "default": "pending",
       "description": "Zoom meeting creation status"
     },
+    "google_event_id": {
+      "type": "string",
+      "description": "Google Calendar event ID for sync cleanup"
+    },
     "recurring_series_id": {
       "type": "string",
       "description": "ID linking recurring bookings together"
