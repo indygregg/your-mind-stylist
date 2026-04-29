@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import PersonDetailPanel from "../components/clients/PersonDetailPanel";
 
 export default function ManagerBookings() {
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -26,6 +27,8 @@ export default function ManagerBookings() {
   const [searchQuery, setSearchQuery] = useState("");
   const [dateRangeFilter, setDateRangeFilter] = useState("all");
   const [createBookingOpen, setCreateBookingOpen] = useState(false);
+  const [personPanelOpen, setPersonPanelOpen] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(null);
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["manager-bookings"],
@@ -347,10 +350,26 @@ export default function ManagerBookings() {
                     >
                       <td className="px-6 py-4">
                         <div>
-                          <p className="text-sm font-medium text-[#1E3A32]">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedPerson({ email: booking.user_email, name: booking.user_name });
+                              setPersonPanelOpen(true);
+                            }}
+                            className="text-sm font-medium text-[#1E3A32] hover:text-[#6E4F7D] hover:underline transition-colors text-left"
+                          >
                             {booking.user_name}
-                          </p>
-                          <p className="text-xs text-[#2B2725]/60">{booking.user_email}</p>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedPerson({ email: booking.user_email, name: booking.user_name });
+                              setPersonPanelOpen(true);
+                            }}
+                            className="text-xs text-[#2B2725]/60 hover:text-[#6E4F7D] hover:underline transition-colors"
+                          >
+                            {booking.user_email}
+                          </button>
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -420,9 +439,15 @@ export default function ManagerBookings() {
                   <div className="bg-[#F9F5EF] p-4 space-y-2">
                     <div className="flex justify-between">
                       <span className="text-sm text-[#2B2725]/70">Name:</span>
-                      <span className="text-sm font-medium text-[#1E3A32]">
+                      <button
+                        onClick={() => {
+                          setSelectedPerson({ email: selectedBooking.user_email, name: selectedBooking.user_name });
+                          setPersonPanelOpen(true);
+                        }}
+                        className="text-sm font-medium text-[#1E3A32] hover:text-[#6E4F7D] hover:underline transition-colors"
+                      >
                         {selectedBooking.user_name}
-                      </span>
+                      </button>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm text-[#2B2725]/70">Email:</span>
@@ -661,6 +686,16 @@ export default function ManagerBookings() {
         open={createBookingOpen}
         onOpenChange={setCreateBookingOpen}
       />
+
+      {/* Person Detail Panel */}
+      {selectedPerson && (
+        <PersonDetailPanel
+          open={personPanelOpen}
+          onOpenChange={setPersonPanelOpen}
+          email={selectedPerson.email}
+          name={selectedPerson.name}
+        />
+      )}
     </div>
   );
 }

@@ -13,9 +13,10 @@ import CalendarFilters from "@/components/calendar/CalendarFilters";
 import CalendarItemBadge, { getSourceInfo } from "@/components/calendar/CalendarItemBadge";
 import CalendarItemDetail from "@/components/calendar/CalendarItemDetail";
 import CreateManualBookingDialog from "@/components/manager/CreateManualBookingDialog";
+import PersonDetailPanel from "@/components/clients/PersonDetailPanel";
 import { Plus } from "lucide-react";
 
-function BookingDetailContent({ selectedBooking, appointmentTypes, getStatusColor, formatAmount, onSuccess }) {
+function BookingDetailContent({ selectedBooking, appointmentTypes, getStatusColor, formatAmount, onSuccess, onViewPerson }) {
   const apptType = appointmentTypes.find(a => a.id === selectedBooking.appointment_type_id);
   const apptName = (apptType?.name || selectedBooking.service_type || "").toLowerCase();
   const isPhone = !apptType?.zoom_enabled && (apptName.includes('phone') || apptName.includes('call'));
@@ -55,7 +56,12 @@ function BookingDetailContent({ selectedBooking, appointmentTypes, getStatusColo
         <div className="space-y-2 text-sm">
           <div className="flex items-center gap-2">
             <span className="text-[#2B2725]/60 w-24">Name:</span>
-            <span className="text-[#1E3A32] font-medium">{selectedBooking.user_name}</span>
+            <button
+              onClick={() => onViewPerson?.({ email: selectedBooking.user_email, name: selectedBooking.user_name })}
+              className="text-[#1E3A32] font-medium hover:text-[#6E4F7D] hover:underline transition-colors"
+            >
+              {selectedBooking.user_name}
+            </button>
           </div>
           <div className="flex items-center gap-2">
             <Mail size={14} className="text-[#D8B46B]" />
@@ -195,6 +201,8 @@ export default function ManagerCalendar() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [createBookingOpen, setCreateBookingOpen] = useState(false);
+  const [personPanelOpen, setPersonPanelOpen] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(null);
   const [filters, setFilters] = useState({
     booking: true,
     manual: true,
@@ -662,6 +670,10 @@ export default function ManagerCalendar() {
                 queryClient.invalidateQueries({ queryKey: ["bookings"] });
                 setSelectedBooking(null);
               }}
+              onViewPerson={(person) => {
+                setSelectedPerson(person);
+                setPersonPanelOpen(true);
+              }}
             />}
             </DialogContent>
             </Dialog>
@@ -681,7 +693,16 @@ export default function ManagerCalendar() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="font-serif text-lg text-[#1E3A32]">{booking.user_name}</div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedPerson({ email: booking.user_email, name: booking.user_name });
+                          setPersonPanelOpen(true);
+                        }}
+                        className="font-serif text-lg text-[#1E3A32] hover:text-[#6E4F7D] hover:underline transition-colors"
+                      >
+                        {booking.user_name}
+                      </button>
                       {booking.zoom_status === "created" && (
                         <div className="flex items-center gap-1 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
                           <Video size={12} />
@@ -725,6 +746,16 @@ export default function ManagerCalendar() {
         open={createBookingOpen}
         onOpenChange={setCreateBookingOpen}
       />
+
+      {/* Person Detail Panel */}
+      {selectedPerson && (
+        <PersonDetailPanel
+          open={personPanelOpen}
+          onOpenChange={setPersonPanelOpen}
+          email={selectedPerson.email}
+          name={selectedPerson.name}
+        />
+      )}
       </div>
     </div>
   );

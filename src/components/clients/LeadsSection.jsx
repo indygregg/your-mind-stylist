@@ -14,6 +14,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import LeadImport from "../manager/LeadImport";
 import LeadDetailsDialog from "./LeadDetailsDialog.jsx";
+import PersonDetailPanel from "./PersonDetailPanel";
 import KajabiImportModal from "./KajabiImportModal";
 import AddLeadDialog from "./AddLeadDialog";
 
@@ -27,6 +28,8 @@ export default function LeadsSection({ leads, isLoading }) {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [kajabiDialogOpen, setKajabiDialogOpen] = useState(false);
   const [addLeadDialogOpen, setAddLeadDialogOpen] = useState(false);
+  const [personPanelOpen, setPersonPanelOpen] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(null);
 
   const stages = ["new", "contacted", "booked", "qualified", "proposal", "negotiation", "won", "lost"];
   const stageLabels = {
@@ -190,7 +193,16 @@ export default function LeadsSection({ leads, isLoading }) {
                           setDetailsDialogOpen(true);
                         }}
                       >
-                        <p className="font-medium text-[#1E3A32] truncate">{getFullName(lead)}</p>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedPerson({ email: lead.email, name: getFullName(lead) });
+                            setPersonPanelOpen(true);
+                          }}
+                          className="font-medium text-[#1E3A32] truncate hover:text-[#6E4F7D] hover:underline transition-colors text-left w-full"
+                        >
+                          {getFullName(lead)}
+                        </button>
                         <p className="text-xs text-[#2B2725]/60 truncate">{lead.email}</p>
                       </motion.div>
                     ))}
@@ -280,6 +292,16 @@ export default function LeadsSection({ leads, isLoading }) {
         open={addLeadDialogOpen}
         onOpenChange={setAddLeadDialogOpen}
       />
+
+      {/* Person Detail Panel */}
+      {selectedPerson && (
+        <PersonDetailPanel
+          open={personPanelOpen}
+          onOpenChange={setPersonPanelOpen}
+          email={selectedPerson.email}
+          name={selectedPerson.name}
+        />
+      )}
     </div>
   );
 }

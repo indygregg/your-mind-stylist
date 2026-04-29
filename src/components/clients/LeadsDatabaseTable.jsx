@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2, ChevronUp, ChevronDown, Mail } from "lucide-react";
 import toast from "react-hot-toast";
 import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
+import PersonDetailPanel from "./PersonDetailPanel";
 
 const sourceLabels = {
   networking: "Networking", internet: "Internet", referral: "Referral",
@@ -42,6 +43,8 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
   const [sortDir, setSortDir] = useState("desc");
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
   const [emailTarget, setEmailTarget] = useState(null);
+  const [personPanelOpen, setPersonPanelOpen] = useState(false);
+  const [selectedPerson, setSelectedPerson] = useState(null);
 
   const deleteLeadMutation = useMutation({
     mutationFn: (id) => base44.entities.Lead.delete(id),
@@ -128,12 +131,30 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
               className="hover:bg-[#F9F5EF]/50 cursor-pointer transition-colors"
               onClick={() => onSelectLead(lead)}
             >
-              <td className="px-4 py-3 font-medium text-[#1E3A32] whitespace-nowrap">
-                {getFullName(lead)}
+              <td className="px-4 py-3 whitespace-nowrap">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedPerson({ email: lead.email, name: getFullName(lead) });
+                    setPersonPanelOpen(true);
+                  }}
+                  className="font-medium text-[#1E3A32] hover:text-[#6E4F7D] hover:underline transition-colors text-left"
+                >
+                  {getFullName(lead)}
+                </button>
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[#2B2725]/70">{lead.email || "—"}</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedPerson({ email: lead.email, name: getFullName(lead) });
+                      setPersonPanelOpen(true);
+                    }}
+                    className="text-[#2B2725]/70 hover:text-[#6E4F7D] hover:underline transition-colors"
+                  >
+                    {lead.email || "—"}
+                  </button>
                   {lead.email && (
                     <button
                       onClick={(e) => {
@@ -190,6 +211,15 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
           onOpenChange={setEmailDialogOpen}
           recipientEmail={emailTarget.email}
           recipientName={emailTarget.name}
+        />
+      )}
+
+      {selectedPerson && (
+        <PersonDetailPanel
+          open={personPanelOpen}
+          onOpenChange={setPersonPanelOpen}
+          email={selectedPerson.email}
+          name={selectedPerson.name}
         />
       )}
     </div>

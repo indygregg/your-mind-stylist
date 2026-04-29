@@ -34,7 +34,7 @@ Deno.serve(async (req) => {
     if (!targetUser) {
       console.error(`[manualEnrollUser] User not found: ${user_email}`);
       return Response.json({ 
-        error: `User with email ${user_email} not found. Please invite them to the app first via Dashboard > Overview > Send Invites` 
+        error: `This person hasn't set up their account yet. Please send them an invite first — once they accept and create their account, you'll be able to enroll them.` 
       }, { status: 404 });
     }
     console.log(`[manualEnrollUser] Found user: ${targetUser.id} (${targetUser.email})`);

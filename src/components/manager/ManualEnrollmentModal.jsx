@@ -249,11 +249,11 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
               disabled={enrollmentMutation.isPending || inviteMutation.isPending}
             />
             {userEmail && !userExists && !checkingUser && (
-              <div className="flex items-center gap-2 mt-2 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                <Mail size={16} className="text-yellow-700 flex-shrink-0" />
+              <div className="flex items-center gap-2 mt-2 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                <Mail size={16} className="text-amber-700 flex-shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-yellow-800 font-medium">User not in system</p>
-                  <p className="text-xs text-yellow-700">Send them an invite first</p>
+                  <p className="text-xs text-amber-800 font-medium">This person hasn't set up their account yet</p>
+                  <p className="text-xs text-amber-700">Send them an invite so they can create their account</p>
                 </div>
                 <Button
                   size="sm"
@@ -272,7 +272,7 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
             )}
             {userExists && (
               <div className="mt-1">
-                <p className="text-xs text-green-600">✓ User is in the system</p>
+                <p className="text-xs text-green-600">✓ Active client — ready to enroll</p>
                 {existingEnrollments.length > 0 && (
                   <div className="mt-2 p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
                     <p className="font-medium mb-1">Already enrolled in:</p>

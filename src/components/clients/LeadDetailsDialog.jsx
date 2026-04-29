@@ -9,12 +9,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { base44 } from "@/api/base44Client";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, ExternalLink } from "lucide-react";
+import PersonDetailPanel from "./PersonDetailPanel";
+import PersonStatusBadge, { getPersonStatus } from "./PersonStatusBadge";
 
 export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [editData, setEditData] = useState(lead);
+  const [personPanelOpen, setPersonPanelOpen] = useState(false);
   const queryClient = useQueryClient();
 
   // Re-sync editData when lead changes (e.g. clicking a different lead)
@@ -44,6 +47,7 @@ export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
   };
 
   return (
+    <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
@@ -131,11 +135,19 @@ export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
               />
             </div>
 
-            {editData.converted_to_client && (
-              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                <Badge className="bg-green-100 text-green-800">Converted to Client</Badge>
-              </div>
-            )}
+            {/* Person status + link to full profile */}
+            <div className="flex items-center justify-between p-3 bg-[#F9F5EF] border border-[#E4D9C4] rounded-lg">
+              <PersonStatusBadge status={getPersonStatus({ user: null, lead: editData })} />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-[#6E4F7D] hover:text-[#5A3F69] text-xs gap-1.5"
+                onClick={() => setPersonPanelOpen(true)}
+              >
+                <ExternalLink size={13} />
+                View Full Profile
+              </Button>
+            </div>
 
             <div className="flex justify-between pt-4">
               <div>
@@ -178,5 +190,16 @@ export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
         )}
       </DialogContent>
     </Dialog>
+
+    {/* Person Detail Panel */}
+    {lead?.email && (
+      <PersonDetailPanel
+        open={personPanelOpen}
+        onOpenChange={setPersonPanelOpen}
+        email={lead.email}
+        name={getDisplayName(lead)}
+      />
+    )}
+    </>
   );
 }
