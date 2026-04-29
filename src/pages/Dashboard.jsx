@@ -30,6 +30,7 @@ import { useSmartSuggestions } from "../components/ui/useSmartSuggestions";
 import haptics from "@/components/utils/haptics";
 import { usePullToRefresh } from "@/components/utils/usePullToRefresh";
 import ProductCard from "@/components/dashboard/ProductCard.jsx";
+import ProfileCompletionBanner from "@/components/profile/ProfileCompletionBanner";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -193,6 +194,7 @@ export default function Dashboard() {
         className="max-w-6xl mx-auto px-6"
         {...pullToRefreshHandlers}
       >
+        {user && <ProfileCompletionBanner user={user} />}
         <PaymentFailureBanner 
           status={subscriptionStatus}
           onUpdatePayment={handleUpdatePayment}

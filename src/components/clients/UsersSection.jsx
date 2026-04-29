@@ -52,11 +52,17 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
 
   const filteredUsers = users.filter((user) => {
     const lead = getLeadForUser(user);
+    const term = searchTerm.toLowerCase();
     const matchesSearch =
-      user.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.full_name?.toLowerCase().includes(term) ||
+      user.first_name?.toLowerCase().includes(term) ||
+      user.last_name?.toLowerCase().includes(term) ||
+      user.username?.toLowerCase().includes(term) ||
+      user.email?.toLowerCase().includes(term) ||
+      lead?.first_name?.toLowerCase().includes(term) ||
+      lead?.last_name?.toLowerCase().includes(term) ||
       lead?.phone?.includes(searchTerm) ||
-      lead?.city?.toLowerCase().includes(searchTerm.toLowerCase());
+      lead?.city?.toLowerCase().includes(term);
     const userRole = user.custom_role || user.role;
     const matchesRole = roleFilter === "all" || userRole === roleFilter;
     return matchesSearch && matchesRole;
@@ -134,7 +140,7 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
               <table className="w-full">
                 <thead className="bg-[#F9F5EF]">
                   <tr>
-                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">User</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Name</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Email</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Phone</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Location</th>
@@ -151,6 +157,12 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
                     const location = [lead?.city, lead?.state].filter(Boolean).join(", ");
                     const purchased = lead?.what_they_bought || "";
 
+                    // Derive display name: prefer first_name+last_name, fallback to full_name, then lead
+                    const derivedName = user.first_name
+                      ? `${user.first_name} ${user.last_name || ""}`.trim()
+                      : user.full_name || (lead?.first_name ? `${lead.first_name} ${lead.last_name || ""}`.trim() : lead?.full_name || "");
+                    const displayUsername = user.username || (user.email ? user.email.split("@")[0] : "—");
+
                     return (
                     <motion.tr
                       key={user.id}
@@ -161,12 +173,17 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
                       <td className="px-6 py-4">
                         <button
                           onClick={() => {
-                            setSelectedPerson({ email: user.email, name: user.full_name });
+                            setSelectedPerson({ email: user.email, name: derivedName || user.full_name });
                             setPersonPanelOpen(true);
                           }}
-                          className="font-medium text-[#1E3A32] hover:text-[#6E4F7D] hover:underline transition-colors text-left"
+                          className="text-left group"
                         >
-                          {user.full_name || "—"}
+                          <span className="font-medium text-[#1E3A32] group-hover:text-[#6E4F7D] group-hover:underline transition-colors block">
+                            {derivedName || <span className="italic text-[#2B2725]/40">Name not set</span>}
+                          </span>
+                          <span className="text-xs text-[#2B2725]/50 block mt-0.5">
+                            @{displayUsername}
+                          </span>
                         </button>
                       </td>
                       <td className="px-6 py-4">

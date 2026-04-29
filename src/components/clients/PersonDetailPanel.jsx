@@ -102,8 +102,14 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
   });
 
   const personStatus = getPersonStatus({ user: userData, lead: leadData, enrollments });
-  const displayName = userData?.full_name || name || leadData?.full_name ||
-    (leadData?.first_name ? `${leadData.first_name} ${leadData.last_name || ""}`.trim() : email);
+
+  // Derive display name: prefer first_name+last_name, fallback to full_name, then lead
+  const derivedFullName = userData?.first_name
+    ? `${userData.first_name} ${userData.last_name || ""}`.trim()
+    : userData?.full_name || name || (leadData?.first_name ? `${leadData.first_name} ${leadData.last_name || ""}`.trim() : leadData?.full_name || "");
+  const displayName = derivedFullName || email;
+  const displayUsername = userData?.username || (userData?.email ? userData.email.split("@")[0] : null);
+  const nameIsMissing = !userData?.first_name && !userData?.full_name && !leadData?.first_name && !leadData?.full_name && !name;
   const phone = userData?.phone || leadData?.phone || null;
 
   // Address from lead (populated by Stripe webhook)
@@ -186,8 +192,15 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
         <SheetContent className="w-full sm:max-w-lg overflow-y-auto bg-white">
           <SheetHeader className="pb-0">
             <SheetTitle className="font-serif text-2xl text-[#1E3A32]">
-              {displayName}
+              {nameIsMissing ? (
+                <span className="italic text-[#2B2725]/40 text-lg">Name not set yet</span>
+              ) : (
+                displayName
+              )}
             </SheetTitle>
+            {displayUsername && (
+              <p className="text-sm text-[#2B2725]/50 -mt-1">@{displayUsername}</p>
+            )}
           </SheetHeader>
 
           <div className="mt-4 space-y-6">

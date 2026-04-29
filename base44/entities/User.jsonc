@@ -2,6 +2,18 @@
   "name": "User",
   "type": "object",
   "properties": {
+    "first_name": {
+      "type": "string",
+      "description": "User's first name"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "User's last name"
+    },
+    "username": {
+      "type": "string",
+      "description": "Display username (auto-generated from email if not set)"
+    },
     "profile_photo": {
       "type": "string",
       "description": "Profile photo URL"
@@ -32,6 +44,11 @@
       "type": "boolean",
       "default": false,
       "description": "Has user completed onboarding flow"
+    },
+    "profile_complete": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether first_name and last_name are set"
     },
     "subscription_status": {
       "type": "string",

@@ -37,6 +37,9 @@ export default function ProfileSettings() {
 
   const [profileData, setProfileData] = useState({
     full_name: user?.full_name || "",
+    first_name: user?.first_name || "",
+    last_name: user?.last_name || "",
+    username: user?.username || "",
     email: user?.email || "",
   });
 
@@ -51,6 +54,9 @@ export default function ProfileSettings() {
     if (user) {
       setProfileData({
         full_name: user.full_name || "",
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        username: user.username || "",
         email: user.email || "",
       });
       setNotificationPrefs({
@@ -75,7 +81,12 @@ export default function ProfileSettings() {
 
   const handleProfileSubmit = (e) => {
     e.preventDefault();
-    updateProfileMutation.mutate(profileData);
+    const updates = { ...profileData };
+    // Mark profile_complete if first and last names are set
+    if (updates.first_name?.trim() && updates.last_name?.trim()) {
+      updates.profile_complete = true;
+    }
+    updateProfileMutation.mutate(updates);
   };
 
   const handleNotificationUpdate = (key, value) => {
@@ -213,16 +224,46 @@ export default function ProfileSettings() {
 
                 {/* Profile Form */}
                 <form onSubmit={handleProfileSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="first_name">First Name *</Label>
+                      <Input
+                        id="first_name"
+                        value={profileData.first_name}
+                        onChange={(e) =>
+                          setProfileData({ ...profileData, first_name: e.target.value })
+                        }
+                        placeholder="Jane"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="last_name">Last Name *</Label>
+                      <Input
+                        id="last_name"
+                        value={profileData.last_name}
+                        onChange={(e) =>
+                          setProfileData({ ...profileData, last_name: e.target.value })
+                        }
+                        placeholder="Smith"
+                        required
+                      />
+                    </div>
+                  </div>
+
                   <div>
-                    <Label htmlFor="full_name">Full Name</Label>
+                    <Label htmlFor="username">Username</Label>
                     <Input
-                      id="full_name"
-                      value={profileData.full_name}
+                      id="username"
+                      value={profileData.username}
                       onChange={(e) =>
-                        setProfileData({ ...profileData, full_name: e.target.value })
+                        setProfileData({ ...profileData, username: e.target.value })
                       }
-                      required
+                      placeholder={user?.email?.split("@")[0] || "username"}
                     />
+                    <p className="text-xs text-[#2B2725]/60 mt-1">
+                      Optional display name. Defaults to your email prefix.
+                    </p>
                   </div>
 
                   <div>
