@@ -7,11 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   User, Mail, Phone, MapPin, Calendar, BookOpen,
-  ShoppingBag, Send, GraduationCap, Loader2, RefreshCw, ExternalLink
+  ShoppingBag, Send, GraduationCap, Loader2, RefreshCw, ExternalLink, Clock
 } from "lucide-react";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
 import PersonStatusBadge, { getPersonStatus } from "./PersonStatusBadge";
+import PersonSummaryLine from "./PersonSummaryLine";
+import SuggestedNextStep from "./SuggestedNextStep";
 import ManualEnrollmentModal from "../manager/ManualEnrollmentModal";
 import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
 
@@ -167,19 +169,14 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
           </SheetHeader>
 
           <div className="mt-4 space-y-6">
-            {/* Status */}
+            {/* Status + Summary Line */}
             <div>
               <PersonStatusBadge status={personStatus} />
-              {personStatus === "lead" && (
-                <p className="text-xs text-[#2B2725]/50 mt-2">
-                  This person doesn't have a platform account yet.
-                </p>
-              )}
-              {personStatus === "converted_lead" && !userData && (
-                <p className="text-xs text-[#2B2725]/50 mt-2">
-                  Marked as converted, but hasn't set up their account yet.
-                </p>
-              )}
+              <PersonSummaryLine
+                personStatus={personStatus}
+                bookings={bookings}
+                whatBought={whatBought}
+              />
             </div>
 
             <Separator className="bg-[#E4D9C4]" />
@@ -223,13 +220,22 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                 <div className="flex items-start gap-3 text-sm">
                   <MapPin size={15} className="text-[#D8B46B] flex-shrink-0 mt-0.5" />
                   <div className="text-[#2B2725]">
-                    {address.line1 && <p>{address.line1}</p>}
-                    {address.line2 && <p>{address.line2}</p>}
-                    <p>
-                      {[address.city, address.state, address.zip].filter(Boolean).join(", ")}
-                    </p>
-                    {address.country && address.country !== "US" && (
-                      <p>{address.country}</p>
+                    {address.line1 ? (
+                      <>
+                        <p>{address.line1}</p>
+                        {address.line2 && <p>{address.line2}</p>}
+                        <p>
+                          {[address.city, address.state, address.zip].filter(Boolean).join(", ")}
+                        </p>
+                        {address.country && address.country !== "US" && (
+                          <p>{address.country}</p>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <p>{[address.city, address.state].filter(Boolean).join(", ")}</p>
+                        <p className="text-xs text-[#2B2725]/40 italic mt-0.5">City-level location only</p>
+                      </>
                     )}
                   </div>
                 </div>
@@ -282,16 +288,31 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
             <div>
               <SectionLabel>Purchases</SectionLabel>
               {whatBought ? (
-                <div className="flex items-start gap-3 text-sm">
-                  <ShoppingBag size={15} className="text-[#D8B46B] flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-[#2B2725]">{whatBought}</p>
-                    {leadData?.date_of_purchase && (
-                      <p className="text-xs text-[#2B2725]/50 mt-0.5">
-                        Last purchase: {leadData.date_of_purchase}
-                      </p>
-                    )}
-                  </div>
+                <div className="space-y-2">
+                  {whatBought.split(",").map((product, i) => {
+                    const trimmed = product.trim();
+                    if (!trimmed) return null;
+                    return (
+                      <div key={i} className="flex items-start gap-3 text-sm">
+                        <ShoppingBag size={15} className="text-[#D8B46B] flex-shrink-0 mt-0.5" />
+                        <p className="text-[#2B2725]">
+                          {trimmed}
+                          {i === 0 && leadData?.date_of_purchase && (
+                            <span className="text-[#2B2725]/50"> — Purchased {(() => {
+                              try {
+                                return format(new Date(leadData.date_of_purchase), "MMM d, yyyy");
+                              } catch {
+                                return leadData.date_of_purchase;
+                              }
+                            })()}</span>
+                          )}
+                          {leadData?.total_value > 0 && i === 0 && (
+                            <span className="text-[#2B2725]/50"> — ${(leadData.total_value / 100).toFixed(0)}</span>
+                          )}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <EmptyState text="No purchases yet" />
@@ -336,6 +357,32 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
             </div>
 
             <Separator className="bg-[#E4D9C4]" />
+
+            {/* Invite Status — only show when not an active user */}
+            {!userData && (
+              <>
+                <div>
+                  <SectionLabel>Account Status</SectionLabel>
+                  {personStatus === "invite_pending" ? (
+                    <div className="flex items-start gap-3 text-sm">
+                      <Clock size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-[#2B2725]">Invite sent</p>
+                        <p className="text-xs text-[#2B2725]/50 mt-0.5">
+                          Waiting for them to set up their account
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-start gap-3 text-sm">
+                      <Mail size={15} className="text-[#2B2725]/25 flex-shrink-0 mt-0.5" />
+                      <p className="text-[#2B2725]/40 italic">No invite sent yet</p>
+                    </div>
+                  )}
+                </div>
+                <Separator className="bg-[#E4D9C4]" />
+              </>
+            )}
 
             {/* Actions */}
             <div>
@@ -415,8 +462,22 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                     Send Invite + Enroll
                   </Button>
                 )}
+                {!userData && (
+                  <p className="text-xs text-[#2B2725]/40 italic ml-1">
+                    They'll be enrolled after they create their account.
+                  </p>
+                )}
               </div>
             </div>
+
+            {/* Suggested Next Step */}
+            <SuggestedNextStep
+              personStatus={personStatus}
+              userData={userData}
+              bookings={bookings}
+              whatBought={whatBought}
+              enrollments={enrollments}
+            />
 
             {/* Lead notes */}
             {leadData?.notes && (
