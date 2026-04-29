@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
@@ -22,7 +22,8 @@ Deno.serve(async (req) => {
     // Get access token using app connector (already authorized)
     let accessToken;
     try {
-      accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
+      const conn = await base44.asServiceRole.connectors.getConnection('googlecalendar');
+      accessToken = conn.accessToken;
     } catch (err) {
       return Response.json({ 
         error: 'Google Calendar not connected. Please authorize in Manager Settings first.' 

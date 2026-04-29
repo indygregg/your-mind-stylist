@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
     try {
@@ -10,7 +10,8 @@ Deno.serve(async (req) => {
         }
 
         // Get Google Calendar access token
-        const accessToken = await base44.asServiceRole.connectors.getAccessToken("googlecalendar");
+        const conn = await base44.asServiceRole.connectors.getConnection("googlecalendar");
+        const accessToken = conn.accessToken;
 
         // Fetch events from primary calendar for the next 90 days
         const now = new Date();

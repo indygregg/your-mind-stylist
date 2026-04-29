@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -24,7 +24,8 @@ Deno.serve(async (req) => {
     // Get access token via service role connector
     let accessToken;
     try {
-      accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
+      const conn = await base44.asServiceRole.connectors.getConnection('googlecalendar');
+      accessToken = conn.accessToken;
     } catch (err) {
       console.error('Google Calendar connector error:', err.message);
       return Response.json({ error: 'Google Calendar not connected.' }, { status: 400 });
