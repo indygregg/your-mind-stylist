@@ -31,6 +31,9 @@ function BookingDetailContent({ selectedBooking, appointmentTypes, getStatusColo
         <Badge className={getStatusColor(selectedBooking.payment_status)}>
           Payment: {selectedBooking.payment_status?.toUpperCase()}
         </Badge>
+        {selectedBooking.booking_source === "manual_manager" && (
+          <Badge className="bg-[#6E4F7D]/10 text-[#6E4F7D]">Manual</Badge>
+        )}
         {isZoom ? (
           <span className="flex items-center gap-1 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
             <Video size={11} /> Virtual (Zoom)
@@ -104,6 +107,12 @@ function BookingDetailContent({ selectedBooking, appointmentTypes, getStatusColo
             {apptType?.name || selectedBooking.service_type?.replace(/_/g, " ").toUpperCase()}
           </span>
         </div>
+        {selectedBooking.location && (
+          <div className="flex items-start gap-3">
+            <span className="text-sm text-[#2B2725]/60 w-24">Location:</span>
+            <span className="text-[#1E3A32] font-medium">{selectedBooking.location}</span>
+          </div>
+        )}
         {selectedBooking.session_count > 1 && (
           <div className="flex items-start gap-3">
             <span className="text-sm text-[#2B2725]/60 w-24">Sessions:</span>
@@ -678,6 +687,9 @@ export default function ManagerCalendar() {
                           <Video size={12} />
                           <span>Zoom Ready</span>
                         </div>
+                      )}
+                      {booking.booking_source === "manual_manager" && (
+                        <Badge className="bg-[#6E4F7D]/10 text-[#6E4F7D] text-[10px]">Manual</Badge>
                       )}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-[#2B2725]/70 mb-1">

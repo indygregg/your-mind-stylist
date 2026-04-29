@@ -375,9 +375,14 @@ export default function ManagerBookings() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <Badge className={getStatusColor(booking.booking_status)}>
-                          {booking.booking_status?.replace("_", " ")}
-                        </Badge>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <Badge className={getStatusColor(booking.booking_status)}>
+                            {booking.booking_status?.replace("_", " ")}
+                          </Badge>
+                          {booking.booking_source === "manual_manager" && (
+                            <Badge className="bg-[#6E4F7D]/10 text-[#6E4F7D] text-[10px]">Manual</Badge>
+                          )}
+                        </div>
                       </td>
                       <td className="px-6 py-4">
                         <p className="text-sm text-[#2B2725]/70">
@@ -449,10 +454,23 @@ export default function ManagerBookings() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm text-[#2B2725]/70">Status:</span>
-                      <Badge className={getStatusColor(selectedBooking.booking_status)}>
-                        {selectedBooking.booking_status?.replace("_", " ")}
-                      </Badge>
+                      <div className="flex items-center gap-1.5">
+                        <Badge className={getStatusColor(selectedBooking.booking_status)}>
+                          {selectedBooking.booking_status?.replace("_", " ")}
+                        </Badge>
+                        {selectedBooking.booking_source === "manual_manager" && (
+                          <Badge className="bg-[#6E4F7D]/10 text-[#6E4F7D]">Manual</Badge>
+                        )}
+                      </div>
                     </div>
+                    {selectedBooking.location && (
+                      <div className="flex justify-between">
+                        <span className="text-sm text-[#2B2725]/70">Location:</span>
+                        <span className="text-sm font-medium text-[#1E3A32]">
+                          {selectedBooking.location}
+                        </span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="text-sm text-[#2B2725]/70">Created:</span>
                       <span className="text-sm font-medium text-[#1E3A32]">

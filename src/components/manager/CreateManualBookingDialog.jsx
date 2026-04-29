@@ -356,7 +356,9 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
                 <span className="text-sm font-medium text-[#1E3A32]">
                   {new Date(`${scheduledDate}T${scheduledTime}`).toLocaleDateString('en-US', {
                     weekday: 'short', month: 'short', day: 'numeric'
-                  })} at {scheduledTime} PT
+                  })} at {new Date(`${scheduledDate}T${scheduledTime}`).toLocaleTimeString('en-US', {
+                    hour: 'numeric', minute: '2-digit', hour12: true
+                  })} PT
                 </span>
               </div>
               <div className="flex justify-between items-center">

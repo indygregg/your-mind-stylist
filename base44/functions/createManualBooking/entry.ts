@@ -69,6 +69,8 @@ Deno.serve(async (req) => {
       currency: 'usd',
       payment_status: 'not_required',
       booking_status: 'confirmed',
+      booking_source: 'manual_manager',
+      location: locationStr || '',
       scheduled_date: scheduled_date,
       notes: notes || '',
       manager_notes: manager_notes || '',
