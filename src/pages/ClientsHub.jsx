@@ -63,7 +63,7 @@ export default function ClientsHub() {
       case "pending_invites":
         return <PendingInvitesSection leads={leads} users={users} />;
       case "users":
-        return <UsersSection users={users} isLoading={usersLoading} />;
+        return <UsersSection users={users} isLoading={usersLoading} leads={leads} />;
       case "sequences":
         return <EmailSequencesSection />;
       case "templates":

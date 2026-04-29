@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 import CreateUserModal from "./CreateUserModal.jsx";
 import ManualEnrollmentModal from "../manager/ManualEnrollmentModal";
 
-export default function UsersSection({ users, isLoading }) {
+export default function UsersSection({ users, isLoading, leads = [] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [createUserOpen, setCreateUserOpen] = useState(false);
@@ -39,10 +39,24 @@ export default function UsersSection({ users, isLoading }) {
     },
   });
 
+  // Build email→lead lookup for extra details
+  const leadByEmail = React.useMemo(() => {
+    const map = {};
+    leads.forEach((l) => {
+      if (l.email) map[l.email.toLowerCase()] = l;
+    });
+    return map;
+  }, [leads]);
+
+  const getLeadForUser = (user) => leadByEmail[user.email?.toLowerCase()] || null;
+
   const filteredUsers = users.filter((user) => {
+    const lead = getLeadForUser(user);
     const matchesSearch =
       user.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      lead?.phone?.includes(searchTerm) ||
+      lead?.city?.toLowerCase().includes(searchTerm.toLowerCase());
     const userRole = user.custom_role || user.role;
     const matchesRole = roleFilter === "all" || userRole === roleFilter;
     return matchesSearch && matchesRole;
@@ -122,13 +136,22 @@ export default function UsersSection({ users, isLoading }) {
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">User</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Email</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Phone</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Location</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">What They Bought</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Role</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Joined</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#E4D9C4]">
-                  {filteredUsers.map((user) => (
+                  {filteredUsers.map((user) => {
+                    const lead = getLeadForUser(user);
+                    const phone = user.phone || lead?.phone || "";
+                    const location = [lead?.city, lead?.state].filter(Boolean).join(", ");
+                    const purchased = lead?.what_they_bought || "";
+
+                    return (
                     <motion.tr
                       key={user.id}
                       initial={{ opacity: 0 }}
@@ -173,6 +196,15 @@ export default function UsersSection({ users, isLoading }) {
                           )}
                         </div>
                       </td>
+                      <td className="px-6 py-4 text-sm text-[#2B2725]/70 whitespace-nowrap">
+                        {phone || "—"}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-[#2B2725]/70 whitespace-nowrap">
+                        {location || "—"}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-[#2B2725]/70 max-w-[200px] truncate" title={purchased}>
+                        {purchased || "—"}
+                      </td>
                       <td className="px-6 py-4">
                         <span
                           className={`inline-flex px-3 py-1 text-xs uppercase tracking-wide rounded ${
@@ -210,7 +242,8 @@ export default function UsersSection({ users, isLoading }) {
                         </Select>
                       </td>
                     </motion.tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
