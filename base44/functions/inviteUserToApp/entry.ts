@@ -20,8 +20,10 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Email is required' }, { status: 400 });
     }
 
+    const normalizedEmail = email.toLowerCase().trim();
+
     // Check if user already exists
-    const existingUsers = await base44.asServiceRole.entities.User.filter({ email: email.toLowerCase() });
+    const existingUsers = await base44.asServiceRole.entities.User.filter({ email: normalizedEmail });
     const userExists = existingUsers.length > 0;
 
     // If just checking, return early
@@ -29,7 +31,7 @@ Deno.serve(async (req) => {
       return Response.json({ userExists });
     }
 
-    if (userExists) {
+    if (userExists && !resend) {
       return Response.json({ error: 'User already exists', userExists: true }, { status: 400 });
     }
 
@@ -37,35 +39,78 @@ Deno.serve(async (req) => {
     let brandedEmailSent = false;
     try {
       const finalSubject = brandedSubject || "Your Mind Stylist access from Roberta Fernandez";
-      const finalBody = brandedBody || getDefaultBrandedBody(email);
+      const finalBody = brandedBody || getDefaultBrandedBody(normalizedEmail);
 
       await base44.integrations.Core.SendEmail({
-        to: email,
+        to: normalizedEmail,
         from_name: "Roberta Fernandez",
         subject: finalSubject,
         body: finalBody,
       });
       brandedEmailSent = true;
-      console.log('Branded invite email sent to', email);
+      console.log('Branded invite email sent to', normalizedEmail);
     } catch (emailError) {
       console.error('Error sending branded invite email:', emailError);
     }
 
     // STEP 2: Send system invite (triggers account setup email from Base44)
+    let systemInviteSent = false;
     try {
-      await base44.auth.inviteUser(email, role);
-      console.log('System invite sent to', email);
+      await base44.auth.inviteUser(normalizedEmail, role);
+      systemInviteSent = true;
+      console.log('System invite sent to', normalizedEmail);
     } catch (inviteError) {
       // If invite fails because user was already invited but hasn't accepted,
       // that's OK — the branded email was already sent above
       console.log('Invite call result:', inviteError.message);
     }
 
+    // STEP 3: Update Lead record so it appears in Pending Invites
+    try {
+      const existingLeads = await base44.asServiceRole.entities.Lead.filter({ email: normalizedEmail });
+      const nowISO = new Date().toISOString();
+
+      if (existingLeads.length > 0) {
+        const lead = existingLeads[0];
+        const updates = {
+          converted_to_client: true,
+          last_contact_date: nowISO,
+        };
+        // Only set notes on first invite, append on resend
+        if (resend) {
+          updates.notes = `${lead.notes || ''}\n[${new Date().toLocaleDateString()}] Invite resent`.trim();
+        } else {
+          updates.notes = `${lead.notes || ''}\n[${new Date().toLocaleDateString()}] Invited to platform`.trim();
+          updates.stage = lead.stage === 'new' || lead.stage === 'contacted' ? 'qualified' : lead.stage;
+        }
+        await base44.asServiceRole.entities.Lead.update(lead.id, updates);
+        console.log('Lead updated with converted_to_client=true for', normalizedEmail);
+      } else {
+        // No lead exists — create one so it shows in Pending Invites
+        const nameParts = normalizedEmail.split('@')[0].replace(/[._-]/g, ' ').split(' ');
+        await base44.asServiceRole.entities.Lead.create({
+          email: normalizedEmail,
+          first_name: nameParts[0] ? nameParts[0].charAt(0).toUpperCase() + nameParts[0].slice(1) : '',
+          last_name: nameParts.length > 1 ? nameParts.slice(1).map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ') : '',
+          full_name: normalizedEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+          stage: 'qualified',
+          source: 'referral',
+          converted_to_client: true,
+          last_contact_date: nowISO,
+          notes: `[${new Date().toLocaleDateString()}] Invited to platform`,
+        });
+        console.log('Lead created with converted_to_client=true for', normalizedEmail);
+      }
+    } catch (leadError) {
+      console.error('Failed to update Lead record (non-critical):', leadError.message);
+    }
+
     return Response.json({ 
       success: true, 
-      message: `Invitation sent to ${email}`,
+      message: `Invitation sent to ${normalizedEmail}`,
       brandedEmailSent,
-      resend: resend
+      systemInviteSent,
+      resend
     });
   } catch (error) {
     console.error('Error inviting user:', error);

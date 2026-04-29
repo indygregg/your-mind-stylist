@@ -22,6 +22,7 @@ const CATEGORY_LABELS = {
   manager_notification: "Manager",
   user_notification: "User",
   admin_notification: "Admin",
+  booking_reminder: "Booking Reminder",
 };
 
 const CATEGORY_COLORS = {
@@ -30,6 +31,7 @@ const CATEGORY_COLORS = {
   follow_up: "bg-amber-100 text-amber-800",
   event: "bg-pink-100 text-pink-800",
   announcement: "bg-emerald-100 text-emerald-800",
+  booking_reminder: "bg-teal-100 text-teal-800",
 };
 
 const AVAILABLE_VARIABLES = [
@@ -37,6 +39,20 @@ const AVAILABLE_VARIABLES = [
   { key: "{{full_name}}", desc: "Lead's full name" },
   { key: "{{email}}", desc: "Lead's email" },
   { key: "{{company}}", desc: "Company/brand name" },
+];
+
+const BOOKING_VARIABLES = [
+  { key: "{{client_name}}", desc: "Client full name" },
+  { key: "{{first_name}}", desc: "Client first name" },
+  { key: "{{service_name}}", desc: "Service/appointment type name" },
+  { key: "{{date_time}}", desc: "Formatted date and time" },
+  { key: "{{duration}}", desc: "Session duration in minutes" },
+  { key: "{{zoom_link}}", desc: "Zoom join URL" },
+  { key: "{{zoom_password}}", desc: "Zoom meeting password" },
+  { key: "{{client_email}}", desc: "Client email address" },
+  { key: "{{client_phone}}", desc: "Client phone number" },
+  { key: "{{amount}}", desc: "Payment amount" },
+  { key: "{{current_year}}", desc: "Current year" },
 ];
 
 export default function EmailTemplateManager() {
@@ -79,7 +95,7 @@ export default function EmailTemplateManager() {
     return t.category === filterCategory;
   });
 
-  const marketingCategories = ["marketing", "newsletter", "follow_up", "event", "announcement", "user_notification", "manager_notification"];
+  const marketingCategories = ["marketing", "newsletter", "follow_up", "event", "announcement", "user_notification", "manager_notification", "booking_reminder"];
 
   const openEditor = (template = null) => {
     setEditingTemplate(template ? { ...template } : {
@@ -249,6 +265,7 @@ function TemplateEditorDialog({ open, onOpenChange, template, onSave, saving }) 
                   <SelectItem value="announcement">Announcement</SelectItem>
                   <SelectItem value="user_notification">User Notification</SelectItem>
                   <SelectItem value="manager_notification">Manager Notification</SelectItem>
+                  <SelectItem value="booking_reminder">Booking Reminder</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -263,7 +280,7 @@ function TemplateEditorDialog({ open, onOpenChange, template, onSave, saving }) 
           <div className="bg-[#F9F5EF] rounded-lg p-3">
             <p className="text-xs font-semibold text-[#1E3A32] mb-2">Available Variables (click to insert)</p>
             <div className="flex flex-wrap gap-2">
-              {AVAILABLE_VARIABLES.map(v => (
+              {(form.category === "booking_reminder" ? BOOKING_VARIABLES : AVAILABLE_VARIABLES).map(v => (
                 <button
                   key={v.key}
                   type="button"

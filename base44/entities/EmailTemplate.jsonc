@@ -16,6 +16,7 @@
         "manager_notification",
         "user_notification",
         "admin_notification",
+        "booking_reminder",
         "marketing",
         "newsletter",
         "follow_up",
