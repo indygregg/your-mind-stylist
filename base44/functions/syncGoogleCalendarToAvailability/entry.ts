@@ -16,6 +16,9 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden' }, { status: 403 });
     }
 
+    // CANONICAL MANAGER: Always sync to Roberta's manager profile, regardless of who triggers
+    const CANONICAL_MANAGER_ID = '693b6b4124b276d4067b6d8e';
+
     // Get access token using app connector (already authorized)
     let accessToken;
     try {
@@ -83,9 +86,9 @@ Deno.serve(async (req) => {
     });
     console.log(`Total unique events: ${events.length}`);
 
-    // Get user's timezone from availability settings
+    // Get timezone from canonical manager's availability settings
     const settingsRes = await base44.asServiceRole.entities.AvailabilitySettings.filter(
-      { manager_id: user.id },
+      { manager_id: CANONICAL_MANAGER_ID },
       '-created_date',
       1
     );
@@ -127,7 +130,7 @@ Deno.serve(async (req) => {
 
       if (event.start?.dateTime) {
         rulesToCreate.push({
-          manager_id: user.id,
+          manager_id: CANONICAL_MANAGER_ID,
           rule_type: 'blocked',
           specific_date: getDateInTimezone(event.start.dateTime, userTimezone),
           start_time: formatTimeInTimezone(event.start.dateTime, userTimezone),
@@ -145,7 +148,7 @@ Deno.serve(async (req) => {
         const endD = new Date((event.end?.date || event.start.date) + 'T12:00:00Z');
         while (d < endD) {
           rulesToCreate.push({
-            manager_id: user.id,
+            manager_id: CANONICAL_MANAGER_ID,
             rule_type: 'blocked',
             specific_date: getDateInTimezone(d.toISOString(), userTimezone),
             start_time: '00:00',
@@ -167,7 +170,7 @@ Deno.serve(async (req) => {
     // This prevents the accumulation of duplicate rules every sync cycle.
     const todayStr = getDateInTimezone(now, userTimezone);
     const existingRules = await base44.asServiceRole.entities.AvailabilityRule.filter({
-      manager_id: user.id,
+      manager_id: CANONICAL_MANAGER_ID,
       source: 'calendar_sync',
     });
 

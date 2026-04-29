@@ -37,9 +37,11 @@ Deno.serve(async (req) => {
     }
 
     const settings = allSettings[0];
-    const managerId = settings.manager_id;
+    // CANONICAL MANAGER: Always sync to Roberta's profile, regardless of settings order
+    const CANONICAL_MANAGER_ID = '693b6b4124b276d4067b6d8e';
+    const managerId = CANONICAL_MANAGER_ID;
     const userTimezone = settings.timezone || 'America/Los_Angeles';
-    console.log(`Syncing for manager ${managerId} timezone=${userTimezone}`);
+    console.log(`Syncing for canonical manager ${managerId} timezone=${userTimezone}`);
 
     // Fetch all calendars the user has access to
     const calListRes = await fetch(
