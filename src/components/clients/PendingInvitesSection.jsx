@@ -40,20 +40,32 @@ export default function PendingInvitesSection({ leads, users }) {
     return lead.email;
   };
 
-  const handleResend = async (lead) => {
+  const handleResendClick = (lead) => {
+    setInvitePreviewTarget(lead);
+    setInvitePreviewOpen(true);
+  };
+
+  const handleConfirmResend = async ({ subject, body }) => {
+    const lead = invitePreviewTarget;
+    if (!lead) return;
     setResendingId(lead.id);
     try {
       await base44.functions.invoke("inviteUserToApp", {
         email: lead.email.toLowerCase(),
         role: "user",
+        resend: true,
+        brandedSubject: subject,
+        brandedBody: body,
       });
-      toast.success(`Invite resent to ${lead.email}`);
+      toast.success(`Branded invite resent to ${lead.email}`);
       queryClient.invalidateQueries({ queryKey: ["leads"] });
+      setInvitePreviewOpen(false);
     } catch (error) {
       if (error.response?.data?.userExists) {
         toast.success("They already set up their account!");
         queryClient.invalidateQueries({ queryKey: ["admin-all-users"] });
         queryClient.invalidateQueries({ queryKey: ["leads"] });
+        setInvitePreviewOpen(false);
       } else {
         toast.error(error.response?.data?.error || error.message);
       }
@@ -144,7 +156,7 @@ export default function PendingInvitesSection({ leads, users }) {
                       variant="outline"
                       size="sm"
                       className="border-amber-300 text-amber-700 hover:bg-amber-50"
-                      onClick={() => handleResend(lead)}
+                      onClick={() => handleResendClick(lead)}
                       disabled={resendingId === lead.id}
                     >
                       {resendingId === lead.id ? (
@@ -173,6 +185,17 @@ export default function PendingInvitesSection({ leads, users }) {
           onOpenChange={setPersonPanelOpen}
           email={selectedPerson.email}
           name={selectedPerson.name}
+        />
+      )}
+
+      {/* Invite Email Preview for Resend */}
+      {invitePreviewTarget && (
+        <InviteEmailPreview
+          open={invitePreviewOpen}
+          onOpenChange={setInvitePreviewOpen}
+          recipientName={getFullName(invitePreviewTarget)}
+          recipientEmail={invitePreviewTarget.email}
+          onConfirmSend={handleConfirmResend}
         />
       )}
     </div>

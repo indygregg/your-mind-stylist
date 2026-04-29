@@ -6,8 +6,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Loader2, AlertCircle, CheckCircle2, Eye } from "lucide-react";
 import toast from "react-hot-toast";
+import InviteEmailPreview from "./InviteEmailPreview";
 
 export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSuccess }) {
   const [step, setStep] = useState(1);
@@ -16,6 +17,8 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [converting, setConverting] = useState(false);
   const [results, setResults] = useState(null);
+  const [emailPreviewOpen, setEmailPreviewOpen] = useState(false);
+  const [brandedEmailConfig, setBrandedEmailConfig] = useState(null);
 
   // Get all available courses
   const [courses, setCourses] = React.useState([]);
@@ -41,7 +44,7 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
     }
   };
 
-  const handleConvert = async () => {
+  const handleConvert = async (emailConfig) => {
     if (selectedLeads.length === 0) {
       toast.error("Please select at least one lead");
       return;
@@ -59,6 +62,8 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
           last_name: lead.last_name || lead.full_name?.split(" ").slice(1).join(" ") || "",
         })),
         courses: includeEnrollment ? selectedCourses : [],
+        brandedSubject: emailConfig?.subject,
+        brandedBody: emailConfig?.body,
       });
 
       // Mark leads as converted
@@ -84,6 +89,8 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
     setSelectedCourses([]);
     setIncludeEnrollment(false);
     setResults(null);
+    setBrandedEmailConfig(null);
+    setConverting(false);
   };
 
   return (
@@ -207,17 +214,12 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
                 Back
               </Button>
               <Button
-                onClick={handleConvert}
+                onClick={() => setEmailPreviewOpen(true)}
                 disabled={converting}
                 className="bg-[#6E4F7D] hover:bg-[#5A3F69] text-white"
               >
-                {converting ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin mr-2" /> Converting...
-                  </>
-                ) : (
-                  `Send ${selectedLeads.length} Invite${selectedLeads.length !== 1 ? "s" : ""}`
-                )}
+                <Eye size={16} className="mr-2" />
+                Preview &amp; Send {selectedLeads.length} Invite{selectedLeads.length !== 1 ? "s" : ""}
               </Button>
             </div>
           </div>
@@ -279,6 +281,24 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
           </div>
         )}
       </DialogContent>
+
+      {/* Branded Email Preview (shown before bulk send) */}
+      <InviteEmailPreview
+        open={emailPreviewOpen}
+        onOpenChange={setEmailPreviewOpen}
+        recipientName={(() => {
+          const first = unconvertedLeads.find((l) => selectedLeads.includes(l.id));
+          return first?.full_name || first?.first_name || "Preview Recipient";
+        })()}
+        recipientEmail={(() => {
+          const first = unconvertedLeads.find((l) => selectedLeads.includes(l.id));
+          return first?.email || "";
+        })()}
+        onConfirmSend={async (config) => {
+          setEmailPreviewOpen(false);
+          await handleConvert(config);
+        }}
+      />
     </Dialog>
   );
 }
