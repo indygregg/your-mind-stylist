@@ -12,6 +12,8 @@ import CalendarTrustPanel from "@/components/calendar/CalendarTrustPanel";
 import CalendarFilters from "@/components/calendar/CalendarFilters";
 import CalendarItemBadge, { getSourceInfo } from "@/components/calendar/CalendarItemBadge";
 import CalendarItemDetail from "@/components/calendar/CalendarItemDetail";
+import CreateManualBookingDialog from "@/components/manager/CreateManualBookingDialog";
+import { Plus } from "lucide-react";
 
 function BookingDetailContent({ selectedBooking, appointmentTypes, getStatusColor, formatAmount, onSuccess }) {
   const apptType = appointmentTypes.find(a => a.id === selectedBooking.appointment_type_id);
@@ -183,6 +185,7 @@ export default function ManagerCalendar() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [createBookingOpen, setCreateBookingOpen] = useState(false);
   const [filters, setFilters] = useState({
     booking: true,
     manual: true,
@@ -364,7 +367,16 @@ export default function ManagerCalendar() {
             <p className="text-[#2B2725]/70">View and manage all scheduled appointments</p>
           </div>
           
-          {/* Quick Stats */}
+          {/* Actions + Quick Stats */}
+          <div className="flex items-center gap-4 flex-wrap">
+            <Button
+              onClick={() => setCreateBookingOpen(true)}
+              className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
+            >
+              <Plus size={16} className="mr-2" />
+              Create Appointment
+            </Button>
+          </div>
           <div className="flex gap-4">
             <div className="bg-white px-4 py-3 shadow-sm">
               <div className="text-2xl font-serif text-[#1E3A32]">{todayBookings.length}</div>
@@ -695,6 +707,12 @@ export default function ManagerCalendar() {
             )}
           </div>
         </div>
+
+      {/* Create Manual Booking Dialog */}
+      <CreateManualBookingDialog
+        open={createBookingOpen}
+        onOpenChange={setCreateBookingOpen}
+      />
       </div>
     </div>
   );

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Calendar, DollarSign, Mail, Phone, User, Clock, CheckCircle, XCircle, AlertCircle, Video, Copy, Filter, Search } from "lucide-react";
+import { Calendar, DollarSign, Mail, Phone, User, Clock, CheckCircle, XCircle, AlertCircle, Video, Copy, Filter, Search, Plus } from "lucide-react";
+import CreateManualBookingDialog from "../components/manager/CreateManualBookingDialog";
 import RecurringSessionManager from "../components/manager/RecurringSessionManager";
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,7 @@ export default function ManagerBookings() {
   const [serviceFilter, setServiceFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [dateRangeFilter, setDateRangeFilter] = useState("all");
+  const [createBookingOpen, setCreateBookingOpen] = useState(false);
 
   const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["manager-bookings"],
@@ -168,6 +170,13 @@ export default function ManagerBookings() {
           <p className="text-[#2B2725]/70 text-lg">
             Manage all private session bookings and payment status
           </p>
+          <Button
+            onClick={() => setCreateBookingOpen(true)}
+            className="bg-[#1E3A32] hover:bg-[#2B2725] text-white mt-4"
+          >
+            <Plus size={16} className="mr-2" />
+            Create Appointment
+          </Button>
         </motion.div>
 
         {/* Filters */}
@@ -628,6 +637,12 @@ export default function ManagerBookings() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {/* Create Manual Booking Dialog */}
+      <CreateManualBookingDialog
+        open={createBookingOpen}
+        onOpenChange={setCreateBookingOpen}
+      />
     </div>
   );
 }
