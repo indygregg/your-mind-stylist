@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   User, Mail, Phone, MapPin, Calendar, BookOpen,
-  ShoppingBag, Send, GraduationCap, Loader2, RefreshCw, ExternalLink, Clock
+  ShoppingBag, Send, GraduationCap, Loader2, RefreshCw, ExternalLink, Clock, Pencil
 } from "lucide-react";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
@@ -16,6 +16,7 @@ import PersonSummaryLine from "./PersonSummaryLine";
 import SuggestedNextStep from "./SuggestedNextStep";
 import ManualEnrollmentModal from "../manager/ManualEnrollmentModal";
 import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
+import LeadDetailsDialog from "./LeadDetailsDialog";
 
 function SectionLabel({ children }) {
   return (
@@ -34,6 +35,7 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
   const [enrollModalOpen, setEnrollModalOpen] = useState(false);
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
   const [inviting, setInviting] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   // Look up user by email
   const { data: userData } = useQuery({
@@ -388,6 +390,18 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
             <div>
               <SectionLabel>Actions</SectionLabel>
               <div className="flex flex-col gap-2">
+                {/* Edit Details */}
+                {leadData && (
+                  <Button
+                    variant="outline"
+                    className="justify-start border-[#E4D9C4]"
+                    onClick={() => setEditDialogOpen(true)}
+                  >
+                    <Pencil size={15} className="mr-2 text-[#D8B46B]" />
+                    Edit Details
+                  </Button>
+                )}
+
                 {/* Email */}
                 <Button
                   variant="outline"
@@ -512,6 +526,15 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
           onOpenChange={setEmailDialogOpen}
           recipientEmail={email}
           recipientName={displayName}
+        />
+      )}
+
+      {/* Edit lead details dialog */}
+      {editDialogOpen && leadData && (
+        <LeadDetailsDialog
+          open={editDialogOpen}
+          onOpenChange={setEditDialogOpen}
+          lead={leadData}
         />
       )}
     </>

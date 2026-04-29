@@ -13,7 +13,7 @@ export default function ManagerBar() {
   // Show minimal button when in View Mode
   if (!isEditMode) {
     return (
-      <div className="fixed top-24 right-6 z-[100]">
+      <div className="fixed top-24 right-6 z-40">
         <Button
           size="sm"
           onClick={() => setIsEditMode(true)}
@@ -33,7 +33,7 @@ export default function ManagerBar() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         exit={{ y: -100 }}
-        className="fixed top-0 left-0 right-0 z-[100] bg-[#1E3A32] text-white shadow-lg"
+        className="fixed top-0 left-0 right-0 z-40 bg-[#1E3A32] text-white shadow-lg"
       >
         <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
