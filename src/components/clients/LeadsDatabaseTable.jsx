@@ -8,6 +8,7 @@ import { Trash2, ChevronUp, ChevronDown, Mail, Clock, RefreshCw, Loader2 } from 
 import toast from "react-hot-toast";
 import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
 import PersonDetailPanel from "./PersonDetailPanel";
+import InviteEmailPreview from "./InviteEmailPreview";
 
 const sourceLabels = {
   networking: "Networking", internet: "Internet", referral: "Referral",
@@ -47,18 +48,33 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
   const [personPanelOpen, setPersonPanelOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [resendingId, setResendingId] = useState(null);
+  const [invitePreviewOpen, setInvitePreviewOpen] = useState(false);
+  const [invitePreviewTarget, setInvitePreviewTarget] = useState(null);
 
-  const handleResendInvite = async (lead) => {
+  const handleResendClick = (lead) => {
+    setInvitePreviewTarget(lead);
+    setInvitePreviewOpen(true);
+  };
+
+  const handleConfirmResend = async ({ subject, body }) => {
+    const lead = invitePreviewTarget;
+    if (!lead) return;
     setResendingId(lead.id);
     try {
       await base44.functions.invoke("inviteUserToApp", {
         email: lead.email.toLowerCase(),
         role: "user",
+        resend: true,
+        brandedSubject: subject,
+        brandedBody: body,
       });
-      toast.success(`Invite resent to ${lead.email}`);
+      toast.success(`Branded invite resent to ${lead.email}`);
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+      setInvitePreviewOpen(false);
     } catch (error) {
       if (error.response?.data?.userExists) {
         toast.success("They already set up their account!");
+        setInvitePreviewOpen(false);
       } else {
         toast.error(error.response?.data?.error || error.message);
       }
@@ -223,7 +239,7 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
                       className="h-7 px-2 text-amber-700 hover:bg-amber-50 text-xs"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleResendInvite(lead);
+                        handleResendClick(lead);
                       }}
                       disabled={resendingId === lead.id}
                       title="Resend invite"
@@ -267,6 +283,17 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
           onOpenChange={setPersonPanelOpen}
           email={selectedPerson.email}
           name={selectedPerson.name}
+        />
+      )}
+
+      {invitePreviewTarget && (
+        <InviteEmailPreview
+          open={invitePreviewOpen}
+          onOpenChange={setInvitePreviewOpen}
+          recipientName={getFullName(invitePreviewTarget)}
+          recipientEmail={invitePreviewTarget.email}
+          mode="resend"
+          onConfirmSend={handleConfirmResend}
         />
       )}
     </div>

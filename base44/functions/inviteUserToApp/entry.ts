@@ -36,7 +36,7 @@ Deno.serve(async (req) => {
     // STEP 1: Send branded email from Roberta FIRST
     let brandedEmailSent = false;
     try {
-      const finalSubject = brandedSubject || "You're Invited — Your Mind Stylist Portal";
+      const finalSubject = brandedSubject || "Your Mind Stylist access from Roberta Fernandez";
       const finalBody = brandedBody || getDefaultBrandedBody(email);
 
       await base44.integrations.Core.SendEmail({
@@ -75,15 +75,15 @@ Deno.serve(async (req) => {
 
 function getDefaultBrandedBody(email) {
   const name = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-  return `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #F9F5EF; padding: 0;">
+  return `<div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #F9F5EF; padding: 0;">
   <div style="text-align: center; padding: 32px 24px 16px;">
     <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/fad26f1a8_mind-stylist-whie-gold-logo2x.png" alt="Your Mind Stylist" style="height: 60px; width: auto;" />
   </div>
   <div style="background: white; border-radius: 12px; margin: 0 24px; padding: 32px 28px; border: 1px solid #E4D9C4;">
-    <h1 style="font-family: Georgia, serif; color: #1E3A32; font-size: 24px; margin: 0 0 16px;">Welcome, ${name}!</h1>
-    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">I'm so glad you're here. I've set up a personal space for you on the Your Mind Stylist platform — your own portal for courses, resources, and our work together.</p>
-    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">You'll receive a second email shortly with a link to create your account and set a password. Once you're in, everything will be ready for you.</p>
-    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">If you have any questions at all, just reply to this email — I'm always here.</p>
+    <p style="font-family: Georgia, serif; color: #1E3A32; font-size: 18px; margin: 0 0 16px;">Hi ${name},</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">Roberta here. I've created access for you inside Your Mind Stylist so you can access your programs, courses, and resources.</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">You'll receive a separate setup email shortly. Please use that link to create your login.</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">Once inside, you'll be able to find your materials, appointments, and resources in your client area.</p>
     <p style="color: #1E3A32; font-size: 15px; font-weight: 500; margin: 0;">Warmly,</p>
     <p style="color: #1E3A32; font-size: 15px; margin: 4px 0 0;">Roberta Fernandez<br/><span style="color: #6E4F7D; font-size: 13px;">Your Mind Stylist</span></p>
   </div>

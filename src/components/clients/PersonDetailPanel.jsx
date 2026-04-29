@@ -553,6 +553,7 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
         onOpenChange={setInvitePreviewOpen}
         recipientName={displayName}
         recipientEmail={email}
+        mode={invitePreviewMode === "invite_enroll" ? "invite_enroll" : personStatus === "invite_pending" ? "resend" : "invite"}
         onConfirmSend={handleConfirmInvite}
       />
     </>

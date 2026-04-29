@@ -31,11 +31,23 @@ export default function SendIndividualEmailDialog({ open, onOpenChange, recipien
     }
     setSending(true);
     try {
+      const brandedHtml = `<div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #F9F5EF; padding: 0;">
+  <div style="text-align: center; padding: 32px 24px 16px;">
+    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/fad26f1a8_mind-stylist-whie-gold-logo2x.png" alt="Your Mind Stylist" style="height: 60px; width: auto;" />
+  </div>
+  <div style="background: white; border-radius: 12px; margin: 0 24px; padding: 32px 28px; border: 1px solid #E4D9C4;">
+    ${body}
+  </div>
+  <div style="text-align: center; padding: 24px; color: #2B2725; opacity: 0.5; font-size: 12px;">
+    <p style="margin: 0;">&copy; ${new Date().getFullYear()} Your Mind Stylist &middot; Las Vegas, NV</p>
+    <p style="margin: 4px 0 0;"><a href="https://yourmindstylist.com" style="color: #6E4F7D;">yourmindstylist.com</a></p>
+  </div>
+</div>`;
       await base44.integrations.Core.SendEmail({
         to: recipientEmail,
         subject,
-        body: `<div style="max-width:600px;margin:0 auto;font-family:'Inter',Arial,sans-serif;color:#2B2725;padding:24px;">${body}</div>`,
-        from_name: "Your Mind Stylist",
+        body: brandedHtml,
+        from_name: "Roberta Fernandez",
       });
       // Log the send for analytics
       try {
