@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useCallback } from "react";
+import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -29,7 +29,9 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
   const [clientPhone, setClientPhone] = useState("");
   const [appointmentTypeId, setAppointmentTypeId] = useState("");
   const [scheduledDate, setScheduledDate] = useState(prefillDate || "");
-  const [scheduledTime, setScheduledTime] = useState("");
+  const [timeHour, setTimeHour] = useState("");
+  const [timeMinute, setTimeMinute] = useState("");
+  const [timePeriod, setTimePeriod] = useState("AM");
   const [durationMinutes, setDurationMinutes] = useState("");
   const [locationType, setLocationType] = useState("in_person");
   const [customLocation, setCustomLocation] = useState("");
@@ -37,21 +39,21 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
   const [managerNotes, setManagerNotes] = useState("");
   const [sendConfirmation, setSendConfirmation] = useState(true);
   const [syncToCalendar, setSyncToCalendar] = useState(true);
-  const timeInputRef = useRef(null);
 
-  // Force-read the time input value from the DOM (workaround for browser bugs)
-  const getResolvedTime = useCallback(() => {
-    if (scheduledTime) return scheduledTime;
-    // Fallback: read directly from the DOM input element
-    if (timeInputRef.current) {
-      const domVal = timeInputRef.current.value;
-      if (domVal) {
-        setScheduledTime(domVal);
-        return domVal;
-      }
-    }
-    return "";
-  }, [scheduledTime]);
+  // Build 24-hour time string from the 12-hour selects
+  const scheduledTime = useMemo(() => {
+    if (!timeHour || !timeMinute) return "";
+    let h = parseInt(timeHour);
+    if (timePeriod === "AM" && h === 12) h = 0;
+    if (timePeriod === "PM" && h !== 12) h += 12;
+    return `${String(h).padStart(2, "0")}:${timeMinute}`;
+  }, [timeHour, timeMinute, timePeriod]);
+
+  // Display-friendly time string
+  const displayTime = useMemo(() => {
+    if (!timeHour || !timeMinute) return "";
+    return `${timeHour}:${timeMinute} ${timePeriod}`;
+  }, [timeHour, timeMinute, timePeriod]);
 
   // Fetch appointment types
   const { data: appointmentTypes = [] } = useQuery({
@@ -84,13 +86,12 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
   };
 
   const handleSubmit = async () => {
-    const resolvedTime = getResolvedTime();
-    if (!clientName || !clientEmail || !scheduledDate || !resolvedTime) return;
+    if (!clientName || !clientEmail || !scheduledDate || !scheduledTime) return;
 
     setSubmitting(true);
     try {
       // Build ISO date from date + time
-      const dateTimeStr = `${scheduledDate}T${resolvedTime}:00`;
+      const dateTimeStr = `${scheduledDate}T${scheduledTime}:00`;
       // Convert local Pacific time to ISO
       const localDate = new Date(dateTimeStr);
       const isDST = localDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', timeZoneName: 'short' }).includes('PDT');
@@ -135,7 +136,9 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
     setClientPhone("");
     setAppointmentTypeId("");
     setScheduledDate(prefillDate || "");
-    setScheduledTime("");
+    setTimeHour("");
+    setTimeMinute("");
+    setTimePeriod("AM");
     setDurationMinutes("");
     setLocationType("in_person");
     setCustomLocation("");
@@ -225,32 +228,13 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
                 </Select>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <Label className="text-xs text-[#2B2725]/70">Date *</Label>
                   <Input
                     type="date"
                     value={scheduledDate}
                     onChange={(e) => setScheduledDate(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label className="text-xs text-[#2B2725]/70">Time (Pacific) *</Label>
-                  <Input
-                    ref={timeInputRef}
-                    type="time"
-                    value={scheduledTime}
-                    onChange={(e) => setScheduledTime(e.target.value)}
-                    onBlur={(e) => {
-                      if (e.target.value && e.target.value !== scheduledTime) {
-                        setScheduledTime(e.target.value);
-                      }
-                    }}
-                    onInput={(e) => {
-                      if (e.target.value && e.target.value !== scheduledTime) {
-                        setScheduledTime(e.target.value);
-                      }
-                    }}
                   />
                 </div>
                 <div>
@@ -261,6 +245,41 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
                     onChange={(e) => setDurationMinutes(e.target.value)}
                     placeholder="60"
                   />
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-xs text-[#2B2725]/70">Time (Pacific) *</Label>
+                <div className="grid grid-cols-3 gap-2 mt-1">
+                  <Select value={timeHour} onValueChange={setTimeHour}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Hour" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {["12","1","2","3","4","5","6","7","8","9","10","11"].map(h => (
+                        <SelectItem key={h} value={h}>{h}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select value={timeMinute} onValueChange={setTimeMinute}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Min" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {["00","15","30","45"].map(m => (
+                        <SelectItem key={m} value={m}>{m}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select value={timePeriod} onValueChange={setTimePeriod}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="AM">AM</SelectItem>
+                      <SelectItem value="PM">PM</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </div>
@@ -342,20 +361,14 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
             <div className="flex justify-between items-end pt-4">
               <Button variant="outline" onClick={handleClose}>Cancel</Button>
               <div className="flex flex-col items-end gap-1.5">
-                {(!clientName || !clientEmail || !scheduledDate || !getResolvedTime()) && (
+                {(!clientName || !clientEmail || !scheduledDate || !scheduledTime) && (
                   <p className="text-xs text-red-500">
                     {!clientName ? "Name is required" : !clientEmail ? "Email is required" : !scheduledDate ? "Date is required" : "Time is required"}
                   </p>
                 )}
                 <Button
-                  onClick={() => {
-                    // Force-read time from DOM before proceeding
-                    const resolvedTime = getResolvedTime();
-                    if (clientName && clientEmail && scheduledDate && resolvedTime) {
-                      setStep(2);
-                    }
-                  }}
-                  disabled={!clientName || !clientEmail || !scheduledDate}
+                  onClick={() => setStep(2)}
+                  disabled={!clientName || !clientEmail || !scheduledDate || !scheduledTime}
                   className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
                 >
                   Review Appointment
@@ -396,9 +409,7 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
                 <span className="text-sm font-medium text-[#1E3A32]">
                   {new Date(`${scheduledDate}T${scheduledTime}`).toLocaleDateString('en-US', {
                     weekday: 'short', month: 'short', day: 'numeric'
-                  })} at {new Date(`${scheduledDate}T${scheduledTime}`).toLocaleTimeString('en-US', {
-                    hour: 'numeric', minute: '2-digit', hour12: true
-                  })} PT
+                  })} at {displayTime} PT
                 </span>
               </div>
               <div className="flex justify-between items-center">
