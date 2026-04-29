@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   User, Mail, Phone, MapPin, Calendar, BookOpen,
-  ShoppingBag, Send, GraduationCap, Loader2, RefreshCw, ExternalLink, Clock, Pencil
+  ShoppingBag, Send, GraduationCap, Loader2, RefreshCw, ExternalLink, Clock, Pencil, Tag
 } from "lucide-react";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
@@ -155,6 +155,8 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
       });
       toast.success("Invite sent! They'll receive a branded email from Roberta, followed by an account setup email.");
       queryClient.invalidateQueries({ queryKey: ["person-user", email] });
+      queryClient.invalidateQueries({ queryKey: ["person-lead", email] });
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
       setInvitePreviewOpen(false);
       if (invitePreviewMode === "invite_enroll") {
         // For invite+enroll, after invite succeeds, try to open enrollment
@@ -251,6 +253,22 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                     <Calendar size={15} className="text-[#D8B46B] flex-shrink-0" />
                     <span className="text-[#2B2725]">
                       Member since {format(new Date(userData.created_date), "MMM d, yyyy")}
+                    </span>
+                  </div>
+                )}
+                {leadData?.source && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <ExternalLink size={15} className="text-[#D8B46B] flex-shrink-0" />
+                    <span className="text-[#2B2725]">
+                      Source: <span className="font-medium">{leadData.source.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}</span>
+                    </span>
+                  </div>
+                )}
+                {leadData?.last_contact_date && (
+                  <div className="flex items-center gap-3 text-sm">
+                    <Clock size={15} className="text-[#D8B46B] flex-shrink-0" />
+                    <span className="text-[#2B2725]">
+                      Last contact: {format(new Date(leadData.last_contact_date), "MMM d, yyyy")}
                     </span>
                   </div>
                 )}

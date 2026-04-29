@@ -217,8 +217,8 @@ export default function LeadsSection({ leads, isLoading }) {
         {/* Database View */}
         <TabsContent value="list">
           <div className="space-y-4">
-            <div className="flex gap-4 items-center bg-white rounded-lg border border-[#E4D9C4] p-4">
-              <div className="flex-1 relative">
+            <div className="flex gap-4 items-center flex-wrap bg-white rounded-lg border border-[#E4D9C4] p-4">
+              <div className="flex-1 relative min-w-[200px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" size={16} />
                 <Input
                   placeholder="Search by name, email, or phone..."
@@ -227,6 +227,31 @@ export default function LeadsSection({ leads, isLoading }) {
                   className="pl-9"
                 />
               </div>
+              <Select value={sourceFilter} onValueChange={setSourceFilter}>
+                <SelectTrigger className="w-48">
+                  <SelectValue placeholder="All Sources" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Sources</SelectItem>
+                  <SelectItem value="networking">Networking</SelectItem>
+                  <SelectItem value="internet">Internet</SelectItem>
+                  <SelectItem value="referral">Referral</SelectItem>
+                  <SelectItem value="client">Client</SelectItem>
+                  <SelectItem value="colleague">Colleague</SelectItem>
+                  <SelectItem value="vendor">Vendor</SelectItem>
+                  <SelectItem value="website">Website</SelectItem>
+                  <SelectItem value="masterclass">Masterclass</SelectItem>
+                  <SelectItem value="social_media">Social Media</SelectItem>
+                  <SelectItem value="paid_ad">Paid Ad</SelectItem>
+                  <SelectItem value="organic_search">Organic Search</SelectItem>
+                  <SelectItem value="email_campaign">Email Campaign</SelectItem>
+                  <SelectItem value="event">Event</SelectItem>
+                  <SelectItem value="booking_system">Booking</SelectItem>
+                  <SelectItem value="product_purchase">Purchase</SelectItem>
+                  <SelectItem value="free_masterclass">Free Masterclass</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
               <Select value={stageFilter} onValueChange={setStageFilter}>
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="All Stages" />

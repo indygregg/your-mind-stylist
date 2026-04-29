@@ -109,6 +109,35 @@ export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
+                <Label>Source</Label>
+                {editing ? (
+                  <Select value={editData.source || ""} onValueChange={(val) => setEditData({ ...editData, source: val })}>
+                    <SelectTrigger><SelectValue placeholder="Select source" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="networking">Networking</SelectItem>
+                      <SelectItem value="internet">Internet</SelectItem>
+                      <SelectItem value="referral">Referral</SelectItem>
+                      <SelectItem value="client">Client</SelectItem>
+                      <SelectItem value="colleague">Colleague</SelectItem>
+                      <SelectItem value="vendor">Vendor</SelectItem>
+                      <SelectItem value="website">Website</SelectItem>
+                      <SelectItem value="masterclass">Masterclass</SelectItem>
+                      <SelectItem value="social_media">Social Media</SelectItem>
+                      <SelectItem value="paid_ad">Paid Ad</SelectItem>
+                      <SelectItem value="organic_search">Organic Search</SelectItem>
+                      <SelectItem value="email_campaign">Email Campaign</SelectItem>
+                      <SelectItem value="event">Event</SelectItem>
+                      <SelectItem value="booking_system">Booking</SelectItem>
+                      <SelectItem value="product_purchase">Purchase</SelectItem>
+                      <SelectItem value="free_masterclass">Free Masterclass</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input value={editData.source ? editData.source.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()) : "—"} disabled />
+                )}
+              </div>
+              <div>
                 <Label>What They Inquired About</Label>
                 <Input value={editData.what_inquired_about || ""} onChange={(e) => setEditData({ ...editData, what_inquired_about: e.target.value })} disabled={!editing} />
               </div>

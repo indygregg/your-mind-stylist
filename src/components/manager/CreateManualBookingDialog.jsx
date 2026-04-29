@@ -312,15 +312,22 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
               </div>
             </div>
 
-            <div className="flex justify-between pt-4">
+            <div className="flex justify-between items-end pt-4">
               <Button variant="outline" onClick={handleClose}>Cancel</Button>
-              <Button
-                onClick={() => setStep(2)}
-                disabled={!clientName || !clientEmail || !scheduledDate || !scheduledTime}
-                className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
-              >
-                Review Appointment
-              </Button>
+              <div className="flex flex-col items-end gap-1.5">
+                {(!clientName || !clientEmail || !scheduledDate || !scheduledTime) && (
+                  <p className="text-xs text-red-500">
+                    {!clientName ? "Name is required" : !clientEmail ? "Email is required" : !scheduledDate ? "Date is required" : "Time is required"}
+                  </p>
+                )}
+                <Button
+                  onClick={() => setStep(2)}
+                  disabled={!clientName || !clientEmail || !scheduledDate || !scheduledTime}
+                  className="bg-[#1E3A32] hover:bg-[#2B2725] text-white"
+                >
+                  Review Appointment
+                </Button>
+              </div>
             </div>
           </div>
         )}
