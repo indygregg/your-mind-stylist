@@ -18,6 +18,7 @@ import ManualEnrollmentModal from "../manager/ManualEnrollmentModal";
 import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
 import LeadDetailsDialog from "./LeadDetailsDialog";
 import InviteEmailPreview from "./InviteEmailPreview";
+import EditUserDialog from "./EditUserDialog";
 
 function SectionLabel({ children }) {
   return (
@@ -37,6 +38,7 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
   const [emailDialogOpen, setEmailDialogOpen] = useState(false);
   const [inviting, setInviting] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editUserDialogOpen, setEditUserDialogOpen] = useState(false);
   const [invitePreviewOpen, setInvitePreviewOpen] = useState(false);
   const [invitePreviewMode, setInvitePreviewMode] = useState("invite"); // "invite" or "invite_enroll"
 
@@ -112,8 +114,17 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
   const nameIsMissing = !userData?.first_name && !userData?.full_name && !leadData?.first_name && !leadData?.full_name && !name;
   const phone = userData?.phone || leadData?.phone || null;
 
-  // Address from lead (populated by Stripe webhook)
-  const address = leadData
+  // Address — prefer user data, fallback to lead data
+  const address = userData?.address_line1 || userData?.city
+    ? {
+        line1: userData.address_line1,
+        line2: userData.address_line2,
+        city: userData.city,
+        state: userData.state,
+        zip: userData.zip,
+        country: userData.country,
+      }
+    : leadData
     ? {
         line1: leadData.address_line1,
         line2: leadData.address_line2,
@@ -435,7 +446,17 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
             <div>
               <SectionLabel>Actions</SectionLabel>
               <div className="flex flex-col gap-2">
-                {/* Edit Details */}
+                {/* Edit Details — for users or leads */}
+                {userData && (
+                  <Button
+                    variant="outline"
+                    className="justify-start border-[#E4D9C4]"
+                    onClick={() => setEditUserDialogOpen(true)}
+                  >
+                    <Pencil size={15} className="mr-2 text-[#D8B46B]" />
+                    Edit User Details
+                  </Button>
+                )}
                 {leadData && (
                   <Button
                     variant="outline"
@@ -443,7 +464,7 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                     onClick={() => setEditDialogOpen(true)}
                   >
                     <Pencil size={15} className="mr-2 text-[#D8B46B]" />
-                    Edit Details
+                    Edit Lead Details
                   </Button>
                 )}
 
@@ -515,15 +536,30 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
               enrollments={enrollments}
             />
 
-            {/* Lead notes */}
-            {leadData?.notes && (
+            {/* Notes — user manager notes + lead notes */}
+            {(userData?.manager_notes || leadData?.notes) && (
               <>
                 <Separator className="bg-[#E4D9C4]" />
                 <div>
                   <SectionLabel>Notes</SectionLabel>
-                  <p className="text-sm text-[#2B2725] whitespace-pre-line">
-                    {leadData.notes}
-                  </p>
+                  {userData?.manager_notes && (
+                    <p className="text-sm text-[#2B2725] whitespace-pre-line">
+                      {userData.manager_notes}
+                    </p>
+                  )}
+                  {leadData?.notes && userData?.manager_notes && leadData.notes !== userData.manager_notes && (
+                    <div className="mt-2 pt-2 border-t border-[#E4D9C4]/50">
+                      <p className="text-[10px] uppercase tracking-[0.1em] text-[#2B2725]/40 mb-1">From Lead Record</p>
+                      <p className="text-sm text-[#2B2725]/70 whitespace-pre-line">
+                        {leadData.notes}
+                      </p>
+                    </div>
+                  )}
+                  {leadData?.notes && !userData?.manager_notes && (
+                    <p className="text-sm text-[#2B2725] whitespace-pre-line">
+                      {leadData.notes}
+                    </p>
+                  )}
                 </div>
               </>
             )}
@@ -548,6 +584,15 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
           onOpenChange={setEmailDialogOpen}
           recipientEmail={email}
           recipientName={displayName}
+        />
+      )}
+
+      {/* Edit user details dialog */}
+      {editUserDialogOpen && userData && (
+        <EditUserDialog
+          open={editUserDialogOpen}
+          onOpenChange={setEditUserDialogOpen}
+          user={userData}
         />
       )}
 
