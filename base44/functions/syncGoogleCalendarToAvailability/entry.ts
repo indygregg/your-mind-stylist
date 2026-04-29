@@ -166,41 +166,57 @@ Deno.serve(async (req) => {
       }
     }
 
-    // DEDUP FIX: Delete all existing calendar_sync rules for this manager
-    // in the current date range BEFORE creating fresh ones.
-    // This prevents the accumulation of duplicate rules every sync cycle.
+    // Delta sync: compare new rules with existing ones, only create/delete what changed
     const todayStr = getDateInTimezone(now, userTimezone);
+    const futureLimitStr = getDateInTimezone(futureLimit, userTimezone);
+
     const existingRules = await base44.asServiceRole.entities.AvailabilityRule.filter({
       manager_id: CANONICAL_MANAGER_ID,
       source: 'calendar_sync',
     });
 
+    // Build key sets for comparison
+    const newRuleKeys = new Set(rulesToCreate.map(r => `${r.external_event_id}::${r.specific_date}::${r.start_time}`));
+    const existingFutureRules = existingRules.filter(r => r.specific_date && r.specific_date >= todayStr && r.specific_date <= futureLimitStr);
+    const existingKeys = new Set(existingFutureRules.map(r => `${r.external_event_id}::${r.specific_date}::${r.start_time}`));
+
+    // Rules to delete: exist in DB but not in fresh calendar data
+    const toDelete = existingFutureRules.filter(r =>
+      r.external_event_id && !newRuleKeys.has(`${r.external_event_id}::${r.specific_date}::${r.start_time}`)
+    );
+    // Rules to create: exist in calendar but not in DB
+    const toCreate = rulesToCreate.filter(r => !existingKeys.has(`${r.external_event_id}::${r.specific_date}::${r.start_time}`));
+
+    console.log(`Delta: ${toDelete.length} to delete, ${toCreate.length} to create (of ${rulesToCreate.length} total)`);
+
+    // Delete stale rules in batches with pauses
     let deletedCount = 0;
-    for (const rule of existingRules) {
-      // Only delete rules for today or future dates (preserve historical)
-      if (rule.specific_date >= todayStr) {
-        await base44.asServiceRole.entities.AvailabilityRule.delete(rule.id);
-        deletedCount++;
-      }
+    for (let i = 0; i < toDelete.length; i += 5) {
+      const batch = toDelete.slice(i, i + 5);
+      await Promise.all(batch.map(r => base44.asServiceRole.entities.AvailabilityRule.delete(r.id)));
+      deletedCount += batch.length;
+      if (i + 5 < toDelete.length) await new Promise(r => setTimeout(r, 600));
     }
 
-    // Bulk create the fresh rules in batches
+    // Create new rules in batches with pauses
     let createdCount = 0;
-    for (let i = 0; i < rulesToCreate.length; i += 10) {
-      const batch = rulesToCreate.slice(i, i + 10);
+    for (let i = 0; i < toCreate.length; i += 10) {
+      const batch = toCreate.slice(i, i + 10);
       await base44.asServiceRole.entities.AvailabilityRule.bulkCreate(batch);
       createdCount += batch.length;
+      if (i + 10 < toCreate.length) await new Promise(r => setTimeout(r, 600));
     }
 
-    const futureLimitStr = getDateInTimezone(futureLimit, userTimezone);
     return Response.json({
       success: true,
       calendars_synced: calendars.map(c => c.summary || c.id),
       deleted_stale: deletedCount,
       synced_events: createdCount,
+      total_calendar_events: rulesToCreate.length,
+      existing_rules: existingFutureRules.length,
       sync_days: SYNC_DAYS,
       window: `${todayStr} to ${futureLimitStr}`,
-      message: `Cleaned ${deletedCount} stale rules, synced ${createdCount} events from ${calendars.length} calendars (${SYNC_DAYS}-day window)`
+      message: `Delta sync: created ${createdCount} new, removed ${deletedCount} stale from ${calendars.length} calendars (${SYNC_DAYS}-day window)`
     });
   } catch (error) {
     console.error('Calendar sync error:', error);
