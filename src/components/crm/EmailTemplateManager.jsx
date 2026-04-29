@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Edit2, Trash2, Copy, Loader2, FileText, X } from "lucide-react";
+import { Plus, Edit2, Trash2, Copy, Loader2, FileText, X, ToggleLeft, ToggleRight } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -78,7 +79,7 @@ export default function EmailTemplateManager() {
     return t.category === filterCategory;
   });
 
-  const marketingCategories = ["marketing", "newsletter", "follow_up", "event", "announcement"];
+  const marketingCategories = ["marketing", "newsletter", "follow_up", "event", "announcement", "user_notification", "manager_notification"];
 
   const openEditor = (template = null) => {
     setEditingTemplate(template ? { ...template } : {
@@ -148,9 +149,14 @@ export default function EmailTemplateManager() {
                   <h3 className="font-medium text-[#1E3A32] truncate">{tpl.name}</h3>
                   <p className="text-xs text-[#2B2725]/50 truncate mt-1">{tpl.subject}</p>
                 </div>
-                {tpl.is_starter && (
-                  <Badge className="bg-[#D8B46B]/10 text-[#D8B46B] text-[10px] ml-2 flex-shrink-0">Starter</Badge>
-                )}
+                <div className="flex items-center gap-1 ml-2 flex-shrink-0">
+                  {tpl.is_starter && (
+                    <Badge className="bg-[#D8B46B]/10 text-[#D8B46B] text-[10px]">Starter</Badge>
+                  )}
+                  {tpl.active === false && (
+                    <Badge className="bg-red-100 text-red-600 text-[10px]">Inactive</Badge>
+                  )}
+                </div>
               </div>
               <Badge className={`text-[10px] ${CATEGORY_COLORS[tpl.category] || "bg-gray-100 text-gray-600"}`}>
                 {CATEGORY_LABELS[tpl.category] || tpl.category}
@@ -241,6 +247,8 @@ function TemplateEditorDialog({ open, onOpenChange, template, onSave, saving }) 
                   <SelectItem value="follow_up">Follow-Up</SelectItem>
                   <SelectItem value="event">Event</SelectItem>
                   <SelectItem value="announcement">Announcement</SelectItem>
+                  <SelectItem value="user_notification">User Notification</SelectItem>
+                  <SelectItem value="manager_notification">Manager Notification</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -296,6 +304,17 @@ function TemplateEditorDialog({ open, onOpenChange, template, onSave, saving }) 
                 style={{ minHeight: "300px" }}
               />
             </div>
+          </div>
+
+          <div className="flex items-center gap-3 py-2">
+            <Switch
+              checked={form.active !== false}
+              onCheckedChange={(v) => updateField("active", v)}
+              id="template-active"
+            />
+            <Label htmlFor="template-active" className="text-sm cursor-pointer">
+              {form.active !== false ? "Active" : "Inactive"}
+            </Label>
           </div>
 
           <div className="flex justify-end gap-2 pt-4 border-t">

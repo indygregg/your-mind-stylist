@@ -247,6 +247,20 @@ Deno.serve(async (req) => {
                             <p>Roberta Fernandez<br>Your Mind Stylist</p>
                         `
                     });
+
+                    // Notify Roberta of webinar purchase
+                    try {
+                        const webinarName = session.metadata.webinar_slug || 'Webinar';
+                        const amountStr = session.amount_total ? `$${(session.amount_total / 100).toFixed(2)}` : 'N/A';
+                        await base44.asServiceRole.integrations.Core.SendEmail({
+                            to: 'roberta@robertafernandez.com',
+                            from_name: 'Your Mind Stylist',
+                            subject: `💰 New Webinar Purchase: ${webinarName} — ${session.customer_details?.name || session.customer_email}`,
+                            body: `<div style="font-family: Inter, sans-serif; max-width: 500px;"><h2 style="color: #1E3A32;">New Webinar Purchase</h2><p><strong>Customer:</strong> ${session.customer_details?.name || 'N/A'}</p><p><strong>Email:</strong> ${session.customer_email}</p><p><strong>Webinar:</strong> ${webinarName}</p><p><strong>Amount:</strong> ${amountStr}</p><p style="margin-top: 16px;"><a href="https://yourmindstylist.com/ClientsHub" style="color: #6E4F7D;">View in Clients Hub</a></p></div>`
+                        });
+                    } catch (notifErr) {
+                        console.error('Manager webinar notification failed:', notifErr.message);
+                    }
                 }
                 
                 // Handle Gift Code Purchase (gift code redeemed)
@@ -504,6 +518,83 @@ Deno.serve(async (req) => {
                                 <p>Roberta Fernandez<br>Your Mind Stylist</p>
                             `
                         });
+                    }
+
+                    // --- MANAGER PURCHASE NOTIFICATION ---
+                    try {
+                        const customerName = session.customer_details?.name || session.customer_email;
+                        const amountStr = session.amount_total ? `$${(session.amount_total / 100).toFixed(2)}` : 'N/A';
+                        const purchaseDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                        const isPhysical = session.metadata?.has_physical === 'true';
+                        const customerInfo = extractCustomerDetails(session);
+                        
+                        let shippingBlock = '';
+                        if (isPhysical && (customerInfo.address_line1 || customerInfo.city)) {
+                            const addrLines = [
+                                customerInfo.address_line1,
+                                customerInfo.address_line2,
+                                [customerInfo.city, customerInfo.state, customerInfo.zip].filter(Boolean).join(', '),
+                                customerInfo.country && customerInfo.country !== 'US' ? customerInfo.country : null
+                            ].filter(Boolean);
+                            shippingBlock = `
+                                <tr>
+                                    <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4; font-weight: 600;">Shipping Address</td>
+                                    <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4;">${addrLines.join('<br>')}</td>
+                                </tr>`;
+                        }
+
+                        const phoneBlock = (customerInfo.phone || session.customer_details?.phone) 
+                            ? `<tr><td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4; font-weight: 600;">Phone</td><td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4;">${customerInfo.phone || session.customer_details?.phone}</td></tr>` 
+                            : '';
+
+                        await base44.asServiceRole.integrations.Core.SendEmail({
+                            to: 'roberta@robertafernandez.com',
+                            from_name: 'Your Mind Stylist',
+                            subject: `💰 New Purchase: ${combinedProductName} — ${customerName}`,
+                            body: `<div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #F9F5EF; padding: 0;">
+                                <div style="background: #1E3A32; padding: 24px; text-align: center;">
+                                    <h1 style="color: #F9F5EF; font-family: Georgia, serif; font-size: 22px; margin: 0;">New Purchase Notification</h1>
+                                </div>
+                                <div style="padding: 24px;">
+                                    <table style="width: 100%; border-collapse: collapse; background: white; border: 1px solid #E4D9C4; border-radius: 8px;">
+                                        <tr>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4; font-weight: 600;">Customer</td>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4;">${customerName}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4; font-weight: 600;">Email</td>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4;">${session.customer_email}</td>
+                                        </tr>
+                                        ${phoneBlock}
+                                        <tr>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4; font-weight: 600;">Product</td>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4;">${combinedProductName}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4; font-weight: 600;">Amount</td>
+                                            <td style="padding: 8px 16px; color: #1E3A32; font-size: 14px; font-weight: 600; border-bottom: 1px solid #E4D9C4;">${amountStr}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4; font-weight: 600;">Date</td>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4;">${purchaseDate}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4; font-weight: 600;">Delivery</td>
+                                            <td style="padding: 8px 16px; color: #2B2725; font-size: 14px; border-bottom: 1px solid #E4D9C4;">${isPhysical ? '📦 Physical — needs shipping' : '💻 Digital — instant access'}</td>
+                                        </tr>
+                                        ${shippingBlock}
+                                    </table>
+                                    <div style="text-align: center; margin-top: 24px;">
+                                        <a href="https://yourmindstylist.com/ClientsHub" style="display: inline-block; background: #6E4F7D; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 14px;">View in Clients Hub</a>
+                                    </div>
+                                </div>
+                                <div style="text-align: center; padding: 16px; color: #2B2725; opacity: 0.4; font-size: 11px;">
+                                    Automated notification from Your Mind Stylist
+                                </div>
+                            </div>`
+                        });
+                    } catch (notifError) {
+                        console.error('Manager purchase notification failed (non-critical):', notifError.message);
                     }
                 }
                 
