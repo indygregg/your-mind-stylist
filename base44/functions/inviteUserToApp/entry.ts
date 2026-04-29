@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Only admins and managers can invite users' }, { status: 403 });
     }
 
-    const { email, role = 'user', checkOnly = false } = await req.json();
+    const { email, role = 'user', checkOnly = false, resend = false } = await req.json();
 
     if (!email) {
       return Response.json({ error: 'Email is required' }, { status: 400 });
@@ -33,8 +33,14 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'User already exists', userExists: true }, { status: 400 });
     }
 
-    // Invite the user
-    await base44.auth.inviteUser(email, role);
+    // Invite the user (works for both new invites and resends)
+    try {
+      await base44.auth.inviteUser(email, role);
+    } catch (inviteError) {
+      // If invite fails because user was already invited but hasn't accepted,
+      // re-send the invite email anyway
+      console.log('Invite call result:', inviteError.message);
+    }
 
     // Send invitation email
     try {
@@ -50,7 +56,8 @@ Deno.serve(async (req) => {
     return Response.json({ 
       success: true, 
       message: `Invitation sent to ${email}`,
-      emailSent: true
+      emailSent: true,
+      resend: resend
     });
   } catch (error) {
     console.error('Error inviting user:', error);

@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import toast from "react-hot-toast";
 import LeadsSection from "../components/clients/LeadsSection.jsx";
 import UsersSection from "../components/clients/UsersSection.jsx";
+import PendingInvitesSection from "../components/clients/PendingInvitesSection";
 import ConvertLeadsDialog from "../components/clients/ConvertLeadsDialog.jsx";
 import MassEmailDialog from "../components/crm/MassEmailDialog";
 import CampaignHistory from "../components/crm/CampaignHistory";
@@ -46,10 +47,21 @@ export default function ClientsHub() {
   const convertedLeads = leads.filter((l) => l.converted_to_client).length;
   const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;
 
+
+  // Calculate pending invites count
+  const userEmails = new Set(users.map((u) => u.email?.toLowerCase()));
+  const pendingInvites = leads.filter((l) => {
+    if (!l.converted_to_client && !l.user_id) return false;
+    return !userEmails.has(l.email?.toLowerCase());
+  });
+  const pendingCount = pendingInvites.length;
+
   const renderContent = () => {
     switch (activeSection) {
       case "leads":
         return <LeadsSection leads={leads} isLoading={leadsLoading} />;
+      case "pending_invites":
+        return <PendingInvitesSection leads={leads} users={users} />;
       case "users":
         return <UsersSection users={users} isLoading={usersLoading} />;
       case "sequences":
@@ -120,13 +132,14 @@ export default function ClientsHub() {
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="max-w-sm bg-[#1E3A32] text-[#F9F5EF] border-0">
                   <div className="space-y-2 text-sm">
-                    <p className="font-semibold">Workflow for Creating Users</p>
-                    <ol className="list-decimal list-inside space-y-1">
-                      <li><span className="font-medium">Create or Import Leads</span> — Add prospects to the Leads tab</li>
-                      <li><span className="font-medium">Convert to Users</span> — Use "Convert to Users" button to create platform accounts from selected leads</li>
-                      <li><span className="font-medium">Assign Courses</span> — During conversion, optionally assign courses to new users immediately</li>
-                    </ol>
-                    <p className="text-xs text-[#F9F5EF]/80 pt-2 border-t border-[#F9F5EF]/20">Converted leads are marked in the Leads tab and synced to MailerLite.</p>
+                   <p className="font-semibold">How Invites Work</p>
+                   <ol className="list-decimal list-inside space-y-1">
+                     <li><span className="font-medium">Add Leads</span> — Add contacts to the Leads tab</li>
+                     <li><span className="font-medium">Invite to Platform</span> — Send them an invite email to create their account</li>
+                     <li><span className="font-medium">Track Status</span> — Check "Pending Invites" to see who hasn't set up their account yet</li>
+                     <li><span className="font-medium">Enroll</span> — Once they accept, enroll them in courses</li>
+                   </ol>
+                   <p className="text-xs text-[#F9F5EF]/80 pt-2 border-t border-[#F9F5EF]/20">Invited leads show as "Awaiting Setup" until they create their account.</p>
                   </div>
                 </TooltipContent>
               </Tooltip>
@@ -165,7 +178,7 @@ export default function ClientsHub() {
                   {syncing ? "Syncing..." : "Sync MailerLite"}
                 </Button>
                 <Button onClick={() => setConvertDialogOpen(true)} className="bg-[#6E4F7D] hover:bg-[#5A3F69] text-[#F9F5EF]">
-                  <Plus size={16} className="mr-2" /> Convert to Users
+                  <Plus size={16} className="mr-2" /> Invite to Platform
                 </Button>
               </>
             )}
@@ -173,7 +186,7 @@ export default function ClientsHub() {
         </div>
 
         {/* Stats - visible on people sections */}
-        {(activeSection === "leads" || activeSection === "users") && (
+        {(activeSection === "leads" || activeSection === "users" || activeSection === "pending_invites") && (
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white rounded-lg border border-[#E4D9C4] p-6">
               <div className="flex items-center justify-between">
@@ -229,7 +242,7 @@ export default function ClientsHub() {
           <ClientsHubSidebar
             activeSection={activeSection}
             onSectionChange={setActiveSection}
-            counts={{ leads: totalLeads, users: users.length }}
+            counts={{ leads: totalLeads, pending_invites: pendingCount, users: users.length }}
           />
           <div className="flex-1 min-w-0">
             {renderContent()}

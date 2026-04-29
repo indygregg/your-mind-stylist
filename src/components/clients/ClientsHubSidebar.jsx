@@ -1,5 +1,5 @@
 import React from "react";
-import { Users, Mail, FileText, FolderPlus, BarChart3, Workflow, Send } from "lucide-react";
+import { Users, Mail, FileText, FolderPlus, BarChart3, Workflow, Send, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const SECTIONS = [
@@ -7,6 +7,7 @@ const SECTIONS = [
     group: "People",
     items: [
       { key: "leads", label: "Leads", icon: Users },
+      { key: "pending_invites", label: "Pending Invites", icon: Clock },
       { key: "users", label: "Users", icon: Users },
     ],
   },

@@ -5,9 +5,9 @@ export default function SuggestedNextStep({ personStatus, userData, bookings = [
   let suggestion = null;
 
   if (!userData && personStatus !== "invite_pending") {
-    suggestion = "Send invite to create account";
+    suggestion = "Send invite so they can create their account";
   } else if (personStatus === "invite_pending") {
-    suggestion = "Waiting for them to set up their account";
+    suggestion = "Invite sent — waiting for them to set up their account. You can resend if needed.";
   } else if (userData && bookings.length === 0) {
     suggestion = "Schedule first session";
   } else if (userData && whatBought && enrollments.length === 0) {

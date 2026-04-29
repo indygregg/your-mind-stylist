@@ -98,7 +98,7 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
     enabled: open && enrollments.length > 0,
   });
 
-  const personStatus = getPersonStatus({ user: userData, lead: leadData });
+  const personStatus = getPersonStatus({ user: userData, lead: leadData, enrollments });
   const displayName = userData?.full_name || name || leadData?.full_name ||
     (leadData?.first_name ? `${leadData.first_name} ${leadData.last_name || ""}`.trim() : email);
   const phone = userData?.phone || leadData?.phone || null;
@@ -327,9 +327,9 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
             <div>
               <SectionLabel>Enrolled Programs</SectionLabel>
               {!userData ? (
-                <EmptyState text={personStatus === "lead"
-                  ? "This person needs an account before they can be enrolled"
-                  : "No enrollments yet"
+                <EmptyState text={personStatus === "invite_pending"
+                  ? "They haven't set up their account yet — enrollment will be available once they accept the invite"
+                  : "Send an invite first so they can create an account"
                 } />
               ) : enrollments.length === 0 ? (
                 <EmptyState text="No enrollments yet" />
@@ -360,20 +360,32 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
 
             <Separator className="bg-[#E4D9C4]" />
 
-            {/* Invite Status — only show when not an active user */}
+            {/* Account Status — only show when not an active user */}
             {!userData && (
               <>
                 <div>
                   <SectionLabel>Account Status</SectionLabel>
                   {personStatus === "invite_pending" ? (
-                    <div className="flex items-start gap-3 text-sm">
-                      <Clock size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-[#2B2725]">Invite sent</p>
-                        <p className="text-xs text-[#2B2725]/50 mt-0.5">
-                          Waiting for them to set up their account
-                        </p>
+                    <div className="space-y-2">
+                      <div className="flex items-start gap-3 text-sm">
+                        <Clock size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-[#2B2725] font-medium">Invite sent — waiting for setup</p>
+                          <p className="text-xs text-[#2B2725]/50 mt-0.5">
+                            They haven't created their account yet. You can resend the invite if needed.
+                          </p>
+                        </div>
                       </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-amber-300 text-amber-700 hover:bg-amber-50 ml-6"
+                        onClick={handleInvite}
+                        disabled={inviting}
+                      >
+                        {inviting ? <Loader2 size={13} className="mr-1.5 animate-spin" /> : <RefreshCw size={13} className="mr-1.5" />}
+                        Resend Invite
+                      </Button>
                     </div>
                   ) : (
                     <div className="flex items-start gap-3 text-sm">
@@ -412,8 +424,8 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                   Send Email
                 </Button>
 
-                {/* Invite — only for non-users */}
-                {!userData && (
+                {/* Invite — only for leads who haven't been invited yet */}
+                {!userData && personStatus === "lead" && (
                   <Button
                     variant="outline"
                     className="justify-start border-[#E4D9C4]"
@@ -425,7 +437,7 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                     ) : (
                       <Mail size={15} className="mr-2 text-[#D8B46B]" />
                     )}
-                    {inviting ? "Sending Invite..." : "Send Invite to Create Account"}
+                    {inviting ? "Sending Invite..." : "Invite to Platform"}
                   </Button>
                 )}
 
@@ -473,12 +485,14 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                     ) : (
                       <GraduationCap size={15} className="mr-2" />
                     )}
-                    Send Invite + Enroll
+                    Invite + Enroll
                   </Button>
                 )}
                 {!userData && (
                   <p className="text-xs text-[#2B2725]/40 italic ml-1">
-                    They'll be enrolled after they create their account.
+                    {personStatus === "invite_pending"
+                      ? "They haven't set up their account yet. You can enroll them once they accept the invite."
+                      : "They'll be enrolled after they create their account."}
                   </p>
                 )}
               </div>

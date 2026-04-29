@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Trash2, ChevronUp, ChevronDown, Mail } from "lucide-react";
+import { Trash2, ChevronUp, ChevronDown, Mail, Clock, RefreshCw, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
 import PersonDetailPanel from "./PersonDetailPanel";
@@ -45,6 +46,26 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
   const [emailTarget, setEmailTarget] = useState(null);
   const [personPanelOpen, setPersonPanelOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
+  const [resendingId, setResendingId] = useState(null);
+
+  const handleResendInvite = async (lead) => {
+    setResendingId(lead.id);
+    try {
+      await base44.functions.invoke("inviteUserToApp", {
+        email: lead.email.toLowerCase(),
+        role: "user",
+      });
+      toast.success(`Invite resent to ${lead.email}`);
+    } catch (error) {
+      if (error.response?.data?.userExists) {
+        toast.success("They already set up their account!");
+      } else {
+        toast.error(error.response?.data?.error || error.message);
+      }
+    } finally {
+      setResendingId(null);
+    }
+  };
 
   const deleteLeadMutation = useMutation({
     mutationFn: (id) => base44.entities.Lead.delete(id),
@@ -120,8 +141,8 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
             <th className="px-4 py-3 text-left text-xs font-semibold text-[#2B2725] uppercase tracking-wide whitespace-nowrap">What They Bought</th>
             <ColHeader field="date_of_purchase">Purchase Date</ColHeader>
             <ColHeader field="source">Source</ColHeader>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-[#2B2725] uppercase tracking-wide whitespace-nowrap">Follow-Up</th>
-            <th className="px-4 py-3 w-12"></th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-[#2B2725] uppercase tracking-wide whitespace-nowrap">Status</th>
+            <th className="px-4 py-3 w-24"></th>
           </tr>
         </thead>
         <tbody className="divide-y divide-[#E4D9C4]/60">
@@ -181,21 +202,47 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
                   {sourceLabels[lead.source] || lead.source || "—"}
                 </Badge>
               </td>
-              <td className="px-4 py-3 text-[#2B2725]/70 max-w-[150px] truncate text-xs" title={lead.follow_up_actions || ""}>
-                {lead.follow_up_actions || "—"}
+              <td className="px-4 py-3 whitespace-nowrap">
+                {lead.converted_to_client || lead.user_id ? (
+                  <Badge className="bg-amber-100 text-amber-800 text-[10px] gap-1">
+                    <Clock size={10} />
+                    Invite Sent
+                  </Badge>
+                ) : (
+                  <Badge className="bg-purple-50 text-purple-700 text-[10px]">
+                    Lead
+                  </Badge>
+                )}
               </td>
               <td className="px-4 py-3">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 w-7 p-0 text-[#2B2725]/40 hover:text-red-600"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteLeadMutation.mutate(lead.id);
-                  }}
-                >
-                  <Trash2 size={14} />
-                </Button>
+                <div className="flex items-center gap-1">
+                  {(lead.converted_to_client || lead.user_id) && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 px-2 text-amber-700 hover:bg-amber-50 text-xs"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleResendInvite(lead);
+                      }}
+                      disabled={resendingId === lead.id}
+                      title="Resend invite"
+                    >
+                      {resendingId === lead.id ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 w-7 p-0 text-[#2B2725]/40 hover:text-red-600"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteLeadMutation.mutate(lead.id);
+                    }}
+                  >
+                    <Trash2 size={14} />
+                  </Button>
+                </div>
               </td>
             </tr>
           ))}

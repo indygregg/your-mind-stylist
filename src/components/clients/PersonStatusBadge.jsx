@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { UserCheck, Mail, Clock, UserPlus, Users } from "lucide-react";
+import { UserCheck, Mail, Clock, UserPlus, GraduationCap } from "lucide-react";
 
 const STATUS_CONFIG = {
   active_user: {
@@ -8,13 +8,13 @@ const STATUS_CONFIG = {
     icon: UserCheck,
     className: "bg-green-100 text-green-800",
   },
-  invited: {
-    label: "Invite Sent",
-    icon: Mail,
-    className: "bg-blue-100 text-blue-800",
+  enrolled: {
+    label: "Enrolled",
+    icon: GraduationCap,
+    className: "bg-emerald-100 text-emerald-800",
   },
   invite_pending: {
-    label: "Waiting for Account Setup",
+    label: "Invite Sent — Awaiting Setup",
     icon: Clock,
     className: "bg-amber-100 text-amber-800",
   },
@@ -23,17 +23,20 @@ const STATUS_CONFIG = {
     icon: UserPlus,
     className: "bg-purple-100 text-purple-800",
   },
-  converted_lead: {
-    label: "Converted Lead",
-    icon: Users,
-    className: "bg-emerald-100 text-emerald-800",
-  },
 };
 
-export function getPersonStatus({ user, lead }) {
+/**
+ * Determines person status:
+ * - active_user: has a User record (accepted invite, account active)
+ * - enrolled: active user with enrollments
+ * - invite_pending: lead was converted/invited but has NOT created account yet
+ * - lead: CRM contact only, no invite sent
+ */
+export function getPersonStatus({ user, lead, enrollments }) {
+  if (user && enrollments && enrollments.length > 0) return "enrolled";
   if (user) return "active_user";
-  if (lead?.converted_to_client) return "converted_lead";
-  if (lead?.user_id) return "invite_pending";
+  // converted_to_client OR user_id means an invite was sent
+  if (lead?.converted_to_client || lead?.user_id) return "invite_pending";
   return "lead";
 }
 

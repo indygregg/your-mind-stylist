@@ -90,11 +90,11 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Convert Leads to Users</DialogTitle>
+          <DialogTitle>Invite to Platform</DialogTitle>
           <DialogDescription>
-            {step === 1 && "Select leads to invite to the platform"}
-            {step === 2 && "Choose courses to enroll (optional)"}
-            {step === 3 && "Conversion complete!"}
+            {step === 1 && "Select people to invite — they'll receive an email to set up their account"}
+            {step === 2 && "Optionally enroll them in courses (enrollment happens after they accept the invite)"}
+            {step === 3 && "Invitations sent!"}
           </DialogDescription>
         </DialogHeader>
 
@@ -165,14 +165,14 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
                     onCheckedChange={setIncludeEnrollment}
                   />
                   <Label className="font-medium cursor-pointer">
-                    Enroll users in courses immediately
+                    Queue course enrollment (starts after they accept the invite)
                   </Label>
                 </div>
 
                 {includeEnrollment && (
                   <div className="space-y-3 pl-6 border-l-2 border-[#D8B46B] pt-2">
                     <p className="text-sm text-[#2B2725]/70">
-                      Select courses to enroll the {selectedLeads.length} users in:
+                      Select courses for the {selectedLeads.length} invited people. Enrollment will happen after they set up their account:
                     </p>
                     <div className="space-y-2 max-h-[300px] overflow-y-auto">
                       {courses.length === 0 ? (
@@ -216,7 +216,7 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
                     <Loader2 size={16} className="animate-spin mr-2" /> Converting...
                   </>
                 ) : (
-                  `Convert ${selectedLeads.length} Leads`
+                  `Send ${selectedLeads.length} Invite${selectedLeads.length !== 1 ? "s" : ""}`
                 )}
               </Button>
             </div>
@@ -231,10 +231,10 @@ export default function ConvertLeadsDialog({ open, onOpenChange, leads, onSucces
                 <CheckCircle2 size={20} className="text-green-600 mt-0.5" />
                 <div>
                   <p className="font-medium text-green-900">
-                    {results.imported} user{results.imported !== 1 ? "s" : ""} created
+                    {results.imported} invite{results.imported !== 1 ? "s" : ""} sent
                   </p>
                   <p className="text-sm text-green-700">
-                    Invitations sent to all new users
+                    They'll appear as "Invite Sent — Awaiting Setup" until they create their account
                   </p>
                 </div>
               </div>

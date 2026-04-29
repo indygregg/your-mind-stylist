@@ -137,7 +137,7 @@ export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
 
             {/* Person status + link to full profile */}
             <div className="flex items-center justify-between p-3 bg-[#F9F5EF] border border-[#E4D9C4] rounded-lg">
-              <PersonStatusBadge status={getPersonStatus({ user: null, lead: editData })} />
+              <PersonStatusBadge status={getPersonStatus({ user: null, lead: editData, enrollments: [] })} />
               <Button
                 variant="ghost"
                 size="sm"

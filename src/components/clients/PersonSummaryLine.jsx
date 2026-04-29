@@ -2,10 +2,9 @@ import React from "react";
 
 const STATUS_LABELS = {
   active_user: "Active client",
-  invited: "Invite sent",
-  invite_pending: "Waiting for account setup",
+  enrolled: "Enrolled",
+  invite_pending: "Invite sent — waiting for setup",
   lead: "Lead",
-  converted_lead: "Converted lead",
 };
 
 export default function PersonSummaryLine({ personStatus, bookings = [], whatBought }) {

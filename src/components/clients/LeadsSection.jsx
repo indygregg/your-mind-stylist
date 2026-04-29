@@ -106,7 +106,8 @@ export default function LeadsSection({ leads, isLoading }) {
         <Info size={18} className="text-[#D8B46B] mt-0.5 flex-shrink-0" />
         <p className="text-sm text-[#2B2725]/80">
           <strong>Leads</strong> are CRM contacts for tracking interest and follow-ups — they don't have platform accounts. 
-          To give someone access to courses or the client portal, use the <strong>"Convert to Users"</strong> button in the Clients Hub header to invite them and optionally enroll them in a course at the same time.
+          To give someone access to courses or the client portal, use the <strong>"Invite to Platform"</strong> button in the Clients Hub header. 
+          After they accept and set up their account, you can enroll them in courses. Check <strong>"Pending Invites"</strong> to see who hasn't set up yet.
         </p>
       </div>
 
