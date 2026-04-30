@@ -123,8 +123,8 @@ export default function InviteEmailPreview({ open, onOpenChange, recipientName, 
           </DialogTitle>
           <DialogDescription>
             {mode === "invite_enroll"
-              ? "This branded email from Roberta will be sent first. Then the system will send a setup email. Once they create their account, enrollment will be available."
-              : "This branded email from Roberta will be sent first. Then the system will send a separate account setup email."}
+              ? "This branded email from Roberta includes a link to set up their account. Once they create their account, enrollment will be available."
+              : "This branded email from Roberta includes a link to set up their account."}
           </DialogDescription>
         </DialogHeader>
 
@@ -203,8 +203,7 @@ export default function InviteEmailPreview({ open, onOpenChange, recipientName, 
 
           {/* Info box */}
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
-            <strong>What happens next:</strong> After this branded email is sent, the system will 
-            automatically send a second email with the account setup link and password creation.
+            <strong>What happens next:</strong> This email includes a direct link for the recipient to set up their account.
             {mode === "invite_enroll" && (
               <span className="block mt-1">
                 Once they create their account, you can enroll them in courses.
