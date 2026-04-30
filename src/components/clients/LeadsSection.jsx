@@ -18,7 +18,7 @@ import PersonDetailPanel from "./PersonDetailPanel";
 import KajabiImportModal from "./KajabiImportModal";
 import AddLeadDialog from "./AddLeadDialog";
 
-export default function LeadsSection({ leads, isLoading }) {
+export default function LeadsSection({ leads, users, isLoading }) {
   const queryClient = useQueryClient();
   const [searchQuery, setSearchQuery] = useState("");
   const [stageFilter, setStageFilter] = useState("all");
@@ -78,8 +78,12 @@ export default function LeadsSection({ leads, isLoading }) {
     return lead.email;
   };
 
+  // Exclude leads who already have a matching User account
+  const userEmails = new Set((users || []).map((u) => u.email?.toLowerCase()));
+  const visibleLeads = leads.filter((l) => !userEmails.has(l.email?.toLowerCase()));
+
   // Filter leads
-  const filteredLeads = leads.filter((lead) => {
+  const filteredLeads = visibleLeads.filter((lead) => {
     const query = searchQuery.toLowerCase();
     const fullName = getFullName(lead);
     const matchesSearch =
@@ -278,7 +282,7 @@ export default function LeadsSection({ leads, isLoading }) {
               />
             )}
             <div className="text-center text-sm text-[#2B2725]/60">
-              Showing {filteredLeads.length} of {leads.length} leads
+              Showing {filteredLeads.length} of {visibleLeads.length} leads
             </div>
           </div>
         </TabsContent>

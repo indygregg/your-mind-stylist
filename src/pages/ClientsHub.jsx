@@ -42,14 +42,17 @@ export default function ClientsHub() {
     },
   });
 
-  // Calculate stats
-  const totalLeads = leads.length;
-  const convertedLeads = leads.filter((l) => l.converted_to_client).length;
+  // Calculate stats — exclude leads who already have a User account
+  const activeLeads = leads.filter((l) => !userEmails.has(l.email?.toLowerCase()));
+  const totalLeads = activeLeads.length;
+  const convertedLeads = activeLeads.filter((l) => l.converted_to_client).length;
   const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;
 
 
-  // Calculate pending invites count — only leads with a confirmed invite
+  // Build user email set for cross-referencing
   const userEmails = new Set(users.map((u) => u.email?.toLowerCase()));
+
+  // Calculate pending invites count — only leads with a confirmed invite
   const pendingInvites = leads.filter((l) => {
     if (l.invite_status !== "invited") return false;
     return !userEmails.has(l.email?.toLowerCase());
@@ -59,7 +62,7 @@ export default function ClientsHub() {
   const renderContent = () => {
     switch (activeSection) {
       case "leads":
-        return <LeadsSection leads={leads} isLoading={leadsLoading} />;
+        return <LeadsSection leads={leads} users={users} isLoading={leadsLoading} />;
       case "pending_invites":
         return <PendingInvitesSection leads={leads} users={users} />;
       case "users":
@@ -109,7 +112,7 @@ export default function ClientsHub() {
       case "analytics":
         return <EmailAnalyticsSection />;
       default:
-        return <LeadsSection leads={leads} isLoading={leadsLoading} />;
+        return <LeadsSection leads={leads} users={users} isLoading={leadsLoading} />;
     }
   };
 
