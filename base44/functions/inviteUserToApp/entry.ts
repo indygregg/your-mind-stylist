@@ -59,7 +59,8 @@ Deno.serve(async (req) => {
     } else {
       try {
         const finalSubject = brandedSubject || 'Your Mind Stylist — Your access is ready';
-        const finalBody = brandedBody || getDefaultBrandedBody(normalizedEmail);
+        const innerContent = brandedBody || getDefaultInnerBody(normalizedEmail);
+        const finalBody = wrapInBrandShell(innerContent);
 
         const resendRes = await fetch('https://api.resend.com/emails', {
           method: 'POST',
@@ -227,14 +228,30 @@ Deno.serve(async (req) => {
   }
 });
 
-function getDefaultBrandedBody(email) {
-  const name = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+/**
+ * Wraps any inner HTML content in the branded Your Mind Stylist email shell.
+ * This ensures consistent branding regardless of which template body is used.
+ * Roberta can edit the inner content via her Email Templates dashboard —
+ * the wrapper is always applied automatically at send time.
+ */
+function wrapInBrandShell(innerHtml) {
   return `<div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #F9F5EF; padding: 0;">
   <div style="text-align: center; padding: 32px 24px 16px;">
     <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/fad26f1a8_mind-stylist-whie-gold-logo2x.png" alt="Your Mind Stylist" style="height: 60px; width: auto;" />
   </div>
   <div style="background: white; border-radius: 12px; margin: 0 24px; padding: 32px 28px; border: 1px solid #E4D9C4;">
-    <p style="font-family: Georgia, serif; color: #1E3A32; font-size: 18px; margin: 0 0 16px;">Hi ${name},</p>
+    ${innerHtml}
+  </div>
+  <div style="text-align: center; padding: 24px; color: #2B2725; opacity: 0.5; font-size: 12px;">
+    <p style="margin: 0;">&copy; ${new Date().getFullYear()} Your Mind Stylist &middot; Las Vegas, NV</p>
+    <p style="margin: 4px 0 0;"><a href="https://yourmindstylist.com" style="color: #6E4F7D;">yourmindstylist.com</a></p>
+  </div>
+</div>`;
+}
+
+function getDefaultInnerBody(email) {
+  const name = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  return `<p style="font-family: Georgia, serif; color: #1E3A32; font-size: 18px; margin: 0 0 16px;">Hi ${name},</p>
     <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">Roberta here. I've created access for you inside Your Mind Stylist so you can access your programs, courses, and resources.</p>
     <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">Click the button below to set up your account and get started:</p>
     <div style="text-align: center; margin: 0 0 24px;">
@@ -242,11 +259,5 @@ function getDefaultBrandedBody(email) {
     </div>
     <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">Once inside, you'll be able to find your materials, appointments, and resources in your client area.</p>
     <p style="color: #1E3A32; font-size: 15px; font-weight: 500; margin: 0;">Warmly,</p>
-    <p style="color: #1E3A32; font-size: 15px; margin: 4px 0 0;">Roberta Fernandez<br/><span style="color: #6E4F7D; font-size: 13px;">Your Mind Stylist</span></p>
-  </div>
-  <div style="text-align: center; padding: 24px; color: #2B2725; opacity: 0.5; font-size: 12px;">
-    <p style="margin: 0;">© ${new Date().getFullYear()} Your Mind Stylist · Las Vegas, NV</p>
-    <p style="margin: 4px 0 0;"><a href="https://yourmindstylist.com" style="color: #6E4F7D;">yourmindstylist.com</a></p>
-  </div>
-</div>`;
+    <p style="color: #1E3A32; font-size: 15px; margin: 4px 0 0;">Roberta Fernandez<br/><span style="color: #6E4F7D; font-size: 13px;">Your Mind Stylist</span></p>`;
 }
