@@ -68,6 +68,17 @@
       ],
       "description": "Custom role for extended permissions"
     },
+    "account_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "archived",
+        "deleted"
+      ],
+      "default": "active",
+      "description": "Account access status \u2014 inactive/archived/deleted blocks login"
+    },
     "onboarding_completed": {
       "type": "boolean",
       "default": false,

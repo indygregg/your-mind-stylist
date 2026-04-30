@@ -8,6 +8,7 @@ import MobileBottomNav from "./MobileBottomNav";
 import GlobalSearch from "./GlobalSearch";
 import haptics from "./utils/haptics";
 import BugReportButton from "./bug-tracker/BugReportButton";
+import AccountBlockedScreen from "./AccountBlockedScreen";
 import { useQuery } from "@tanstack/react-query";
 import {
   DropdownMenu,
@@ -27,6 +28,7 @@ export default function AuthLayout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [accountBlocked, setAccountBlocked] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -39,6 +41,15 @@ export default function AuthLayout({ children, currentPageName }) {
         }
         
         const currentUser = await base44.auth.me();
+        
+        // ACCESS GUARD: block inactive/archived/deleted accounts
+        const blockedStatuses = ["inactive", "archived", "deleted"];
+        if (blockedStatuses.includes(currentUser.account_status)) {
+          setUser(currentUser);
+          setAccountBlocked(currentUser.account_status);
+          return;
+        }
+        
         console.log('🔍 AuthLayout User Data:', {
           email: currentUser.email,
           role: currentUser.role,
@@ -142,6 +153,11 @@ export default function AuthLayout({ children, currentPageName }) {
     enabled: !!user && user.role === "admin",
     refetchInterval: 30000, // Refetch every 30 seconds
   });
+
+  // Render blocked screen if account is inactive/archived/deleted
+  if (accountBlocked) {
+    return <AccountBlockedScreen status={accountBlocked} user={user} onLogout={handleLogout} />;
+  }
 
   return (
     <CartProvider>
