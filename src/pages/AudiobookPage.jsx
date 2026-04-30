@@ -32,8 +32,8 @@ export default function AudiobookPage() {
       if (!audiobook?.product_id || audiobook.access_level === "free") {
         return { has_access: true };
       }
-      // Manager bypass: creator of this audiobook can always preview
-      if (user?.role === "manager" && audiobook.created_by === user.email) {
+      // Admin/manager bypass: can always preview audiobooks
+      if (user?.role === "admin" || user?.role === "manager") {
         return { has_access: true, access_type: "manager_preview" };
       }
       const result = await base44.functions.invoke("checkProductOwnership", {
