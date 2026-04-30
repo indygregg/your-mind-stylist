@@ -14,35 +14,58 @@ Deno.serve(async (req) => {
     const { users, brandedSubject, brandedBody } = await req.json();
     if (!users || !Array.isArray(users)) return Response.json({ error: 'No users provided' }, { status: 400 });
 
+    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
     const results = { invited: 0, enrolled: 0, skipped: 0, errors: [] };
 
     for (const u of users) {
       const email = (u.email || '').trim().toLowerCase();
       if (!email) { results.skipped++; continue; }
 
-      // 1a. Send branded email from Roberta FIRST
+      let brandedSent = false;
+      let systemSent = false;
+
+      // 1a. Send branded email from Roberta via Resend
       try {
         const recipientName = u.full_name || u.first_name || email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
         const personalizedBody = (brandedBody || getDefaultBrandedBody(recipientName))
           .replace(/\{\{name\}\}/g, recipientName)
           .replace(/\{\{user_name\}\}/g, recipientName);
-        const personalizedSubject = (brandedSubject || "Your Mind Stylist access from Roberta Fernandez")
+        const personalizedSubject = (brandedSubject || "Your Mind Stylist — Your access is ready")
           .replace(/\{\{name\}\}/g, recipientName)
           .replace(/\{\{user_name\}\}/g, recipientName);
 
-        await base44.integrations.Core.SendEmail({
-          to: email,
-          from_name: "Roberta Fernandez",
-          subject: personalizedSubject,
-          body: personalizedBody,
-        });
+        if (RESEND_API_KEY) {
+          const resendRes = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${RESEND_API_KEY}`,
+            },
+            body: JSON.stringify({
+              from: 'Roberta Fernandez <roberta@yourmindstylist.com>',
+              to: [email],
+              subject: personalizedSubject,
+              html: personalizedBody,
+            }),
+          });
+          if (resendRes.ok) {
+            brandedSent = true;
+            console.log(`Branded invite sent via Resend to ${email}`);
+          } else {
+            const errData = await resendRes.json();
+            console.error(`Resend error for ${email}:`, errData.message || JSON.stringify(errData));
+          }
+        } else {
+          console.error('RESEND_API_KEY not configured — skipping branded email');
+        }
       } catch (emailErr) {
         console.error(`Branded email failed for ${email}:`, emailErr.message);
       }
 
       // 1b. Invite the user to the platform (system email with account setup link)
       try {
-        await base44.users.inviteUser(email, 'user');
+        await base44.auth.inviteUser(email, 'user');
+        systemSent = true;
         results.invited++;
       } catch (err) {
         // User may already exist - that's fine, continue to enrollment
@@ -50,6 +73,8 @@ Deno.serve(async (req) => {
         if (!msg.toLowerCase().includes('already')) {
           results.errors.push(`Invite failed for ${email}: ${msg}`);
         }
+        // Count as invited if branded email at least went out
+        if (brandedSent && !systemSent) results.invited++;
       }
 
       // 2. Find user in the system (they may be newly invited or already exist)

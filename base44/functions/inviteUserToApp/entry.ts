@@ -1,5 +1,15 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
+/**
+ * PATCH-INVITES-DELIVERY-001: Invite Email Delivery Failure
+ * 
+ * Sends a branded invite email via Resend (works for external addresses)
+ * then triggers the Base44 system invite for account setup.
+ * Only updates Lead state if at least one mechanism succeeds.
+ */
+
+const RESEND_FROM = 'Roberta Fernandez <roberta@yourmindstylist.com>';
+
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
@@ -37,61 +47,83 @@ Deno.serve(async (req) => {
 
     const nowISO = new Date().toISOString();
     const emailType = resend ? 'resend_invite' : 'invite';
+    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
 
-    // STEP 1: Send branded email from Roberta FIRST
+    // ── STEP 1: Send branded email via Resend ──
     let brandedEmailSent = false;
     let brandedEmailError = null;
-    try {
-      const finalSubject = brandedSubject || "Your Mind Stylist access from Roberta Fernandez";
-      const finalBody = brandedBody || getDefaultBrandedBody(normalizedEmail);
 
-      await base44.integrations.Core.SendEmail({
-        to: normalizedEmail,
-        from_name: "Roberta Fernandez",
-        subject: finalSubject,
-        body: finalBody,
-      });
-      brandedEmailSent = true;
-      console.log('Branded invite email sent to', normalizedEmail);
-
-      // Log success
-      await base44.asServiceRole.entities.EmailSendLog.create({
-        recipient_email: normalizedEmail,
-        subject: finalSubject,
-        email_type: emailType,
-        send_type: 'individual',
-        provider: 'base44',
-        status: 'sent',
-        sent_by: user.email,
-      });
-    } catch (emailError) {
-      console.error('Error sending branded invite email:', emailError);
-      brandedEmailError = emailError.message;
-      // Log failure
+    if (!RESEND_API_KEY) {
+      brandedEmailError = 'RESEND_API_KEY not configured';
+      console.error(brandedEmailError);
+    } else {
       try {
+        const finalSubject = brandedSubject || 'Your Mind Stylist — Your access is ready';
+        const finalBody = brandedBody || getDefaultBrandedBody(normalizedEmail);
+
+        const resendRes = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${RESEND_API_KEY}`,
+          },
+          body: JSON.stringify({
+            from: RESEND_FROM,
+            to: [normalizedEmail],
+            subject: finalSubject,
+            html: finalBody,
+          }),
+        });
+
+        const resendData = await resendRes.json();
+
+        if (!resendRes.ok) {
+          brandedEmailError = resendData.message || JSON.stringify(resendData);
+          console.error('Resend API error:', brandedEmailError);
+        } else {
+          brandedEmailSent = true;
+          console.log('Branded invite email sent via Resend to', normalizedEmail, 'id:', resendData.id);
+        }
+
+        // Log result
         await base44.asServiceRole.entities.EmailSendLog.create({
           recipient_email: normalizedEmail,
-          subject: brandedSubject || "Your Mind Stylist access from Roberta Fernandez",
+          subject: finalSubject,
           email_type: emailType,
           send_type: 'individual',
-          provider: 'base44',
-          status: 'failed',
-          error_message: emailError.message,
+          provider: 'resend',
+          status: brandedEmailSent ? 'sent' : 'failed',
+          error_message: brandedEmailError || undefined,
           sent_by: user.email,
         });
-      } catch (logErr) {
-        console.error('Failed to log email error:', logErr.message);
+      } catch (emailError) {
+        brandedEmailError = emailError.message;
+        console.error('Error sending branded invite email via Resend:', emailError);
+        try {
+          await base44.asServiceRole.entities.EmailSendLog.create({
+            recipient_email: normalizedEmail,
+            subject: brandedSubject || 'Your Mind Stylist — Your access is ready',
+            email_type: emailType,
+            send_type: 'individual',
+            provider: 'resend',
+            status: 'failed',
+            error_message: brandedEmailError,
+            sent_by: user.email,
+          });
+        } catch (logErr) {
+          console.error('Failed to log email error:', logErr.message);
+        }
       }
     }
 
-    // STEP 2: Send system invite (triggers account setup email from Base44)
+    // ── STEP 2: Send system invite (account setup email from Base44) ──
     let systemInviteSent = false;
+    let systemInviteError = null;
     try {
       await base44.auth.inviteUser(normalizedEmail, role);
       systemInviteSent = true;
       console.log('System invite sent to', normalizedEmail);
 
-      // Log system invite
       await base44.asServiceRole.entities.EmailSendLog.create({
         recipient_email: normalizedEmail,
         subject: 'Account setup invitation (system)',
@@ -102,9 +134,11 @@ Deno.serve(async (req) => {
         sent_by: user.email,
       });
     } catch (inviteError) {
-      console.log('Invite call result:', inviteError.message);
-      // Log if it's a real failure (not "already invited")
-      if (!inviteError.message?.includes('already')) {
+      systemInviteError = inviteError.message;
+      console.error('System invite error for', normalizedEmail, ':', systemInviteError);
+
+      // Don't log "already invited" as a failure
+      if (!systemInviteError?.includes('already')) {
         try {
           await base44.asServiceRole.entities.EmailSendLog.create({
             recipient_email: normalizedEmail,
@@ -113,7 +147,7 @@ Deno.serve(async (req) => {
             send_type: 'automated',
             provider: 'system',
             status: 'failed',
-            error_message: inviteError.message,
+            error_message: systemInviteError,
             sent_by: user.email,
           });
         } catch (logErr) {
@@ -122,7 +156,19 @@ Deno.serve(async (req) => {
       }
     }
 
-    // STEP 3: Update Lead record — set invite_status and invite_sent_at
+    // ── STEP 3: Gate success — at least one mechanism must have worked ──
+    const anySuccess = brandedEmailSent || systemInviteSent;
+
+    if (!anySuccess) {
+      return Response.json({
+        success: false,
+        error: 'Both invite methods failed',
+        brandedEmailError,
+        systemInviteError,
+      }, { status: 502 });
+    }
+
+    // ── STEP 4: Update Lead record ONLY on success ──
     try {
       const existingLeads = await base44.asServiceRole.entities.Lead.filter({ email: normalizedEmail });
 
@@ -166,12 +212,14 @@ Deno.serve(async (req) => {
       console.error('Failed to update Lead record (non-critical):', leadError.message);
     }
 
-    return Response.json({ 
-      success: true, 
+    return Response.json({
+      success: true,
       message: `Invitation sent to ${normalizedEmail}`,
       brandedEmailSent,
       systemInviteSent,
-      resend
+      brandedEmailError,
+      systemInviteError,
+      resend,
     });
   } catch (error) {
     console.error('Error inviting user:', error);
