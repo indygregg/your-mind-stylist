@@ -219,7 +219,11 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
                 </Badge>
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
-                {lead.converted_to_client || lead.user_id ? (
+                {lead.invite_status === "accepted" ? (
+                  <Badge className="bg-green-100 text-green-800 text-[10px]">
+                    Active User
+                  </Badge>
+                ) : (lead.invite_status === "invited" || lead.converted_to_client || lead.user_id) ? (
                   <Badge className="bg-amber-100 text-amber-800 text-[10px] gap-1">
                     <Clock size={10} />
                     Invite Sent

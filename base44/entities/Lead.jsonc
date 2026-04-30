@@ -82,7 +82,34 @@
         "free_masterclass",
         "other"
       ],
-      "description": "How they found us"
+      "description": "Primary source \u2014 how they found us"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "All sources this lead came from (appended on duplicate)"
+    },
+    "invite_status": {
+      "type": "string",
+      "enum": [
+        "not_invited",
+        "invited",
+        "accepted"
+      ],
+      "default": "not_invited",
+      "description": "Current invite lifecycle state"
+    },
+    "invite_sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of most recent invite send"
+    },
+    "invite_accepted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When they accepted the invite and created account"
     },
     "what_inquired_about": {
       "type": "string",

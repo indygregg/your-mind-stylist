@@ -15,7 +15,8 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
   const [userEmail, setUserEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedCourses, setSelectedCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(""); // kept for backward compat
   const [sendNotification, setSendNotification] = useState(true);
   const [userExists, setUserExists] = useState(false);
   const [checkingUser, setCheckingUser] = useState(false);
@@ -105,22 +106,32 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
     },
   });
 
-  // Enrollment mutation
+  // Enrollment mutation — supports multiple courses
   const enrollmentMutation = useMutation({
-    mutationFn: () =>
-      base44.functions.invoke("manualEnrollUser", {
-        user_email: userEmail.toLowerCase(),
-        course_id: selectedCourse,
-        send_notification: sendNotification,
-        first_name: firstName || undefined,
-        last_name: lastName || undefined,
-      }),
-    onSuccess: (response) => {
-      const course = courses.find(c => c.id === selectedCourse);
+    mutationFn: async () => {
+      const courseIds = selectedCourses.length > 0 ? selectedCourses : (selectedCourse ? [selectedCourse] : []);
+      const results = [];
+      // Only send notification on the last enrollment to avoid spam
+      for (let i = 0; i < courseIds.length; i++) {
+        const isLast = i === courseIds.length - 1;
+        const res = await base44.functions.invoke("manualEnrollUser", {
+          user_email: userEmail.toLowerCase(),
+          course_id: courseIds[i],
+          send_notification: sendNotification && isLast,
+          first_name: firstName || undefined,
+          last_name: lastName || undefined,
+        });
+        results.push(res.data);
+      }
+      return results;
+    },
+    onSuccess: (results) => {
+      const courseIds = selectedCourses.length > 0 ? selectedCourses : (selectedCourse ? [selectedCourse] : []);
+      const courseNames = courseIds.map(id => courses.find(c => c.id === id)?.title || "Unknown").join(", ");
       setSuccessResult({
-        message: response.data?.message || "User enrolled successfully!",
-        emailSent: response.data?.emailSent,
-        courseName: course?.title || "the course",
+        message: `Successfully enrolled in ${courseIds.length} course${courseIds.length > 1 ? "s" : ""}!`,
+        emailSent: results[results.length - 1]?.emailSent,
+        courseName: courseNames,
         userEmail,
         notificationRequested: sendNotification,
       });
@@ -133,11 +144,18 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
     },
   });
 
+  const toggleCourse = (courseId) => {
+    setSelectedCourses(prev =>
+      prev.includes(courseId) ? prev.filter(id => id !== courseId) : [...prev, courseId]
+    );
+  };
+
   const handleReset = () => {
     setUserEmail("");
     setFirstName("");
     setLastName("");
     setSelectedCourse("");
+    setSelectedCourses([]);
     setSendNotification(true);
     setUserExists(false);
     setExistingEnrollments([]);
@@ -147,7 +165,8 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
   };
 
   const handleEnroll = () => {
-    if (!userEmail.trim() || !selectedCourse) {
+    const hasCourses = selectedCourses.length > 0 || selectedCourse;
+    if (!userEmail.trim() || !hasCourses) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -316,32 +335,40 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
           </div>
 
           <div>
-            <Label htmlFor="course" className="text-sm font-medium">
-              Select Course *
+            <Label className="text-sm font-medium">
+              Select Courses * <span className="text-xs font-normal text-[#2B2725]/50">(select one or more)</span>
             </Label>
-            <Select
-              value={selectedCourse}
-              onValueChange={setSelectedCourse}
-              disabled={enrollmentMutation.isPending}
-            >
-              <SelectTrigger id="course">
-                <SelectValue placeholder="Choose a course..." />
-              </SelectTrigger>
-              <SelectContent>
-                {courses.map((course) => {
+            <div className="mt-2 max-h-[200px] overflow-y-auto border border-gray-200 rounded-lg divide-y divide-gray-100">
+              {courses.length === 0 ? (
+                <p className="text-xs text-[#2B2725]/50 p-3">No published courses available</p>
+              ) : (
+                courses.map((course) => {
                   const alreadyEnrolled = existingEnrollments.some(e => e.course_id === course.id);
+                  const isSelected = selectedCourses.includes(course.id);
                   return (
-                    <SelectItem key={course.id} value={course.id} disabled={alreadyEnrolled}>
-                      {course.title}{alreadyEnrolled ? " (already enrolled)" : ""}
-                    </SelectItem>
+                    <label
+                      key={course.id}
+                      className={`flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-[#F9F5EF]/50 transition-colors ${alreadyEnrolled ? "opacity-50 cursor-not-allowed" : ""} ${isSelected ? "bg-[#6E4F7D]/5" : ""}`}
+                    >
+                      <Checkbox
+                        checked={isSelected}
+                        onCheckedChange={() => !alreadyEnrolled && toggleCourse(course.id)}
+                        disabled={alreadyEnrolled || enrollmentMutation.isPending}
+                      />
+                      <div className="flex-1 min-w-0">
+                        <span className="text-sm text-[#1E3A32] block truncate">{course.title}</span>
+                        {course.type && <span className="text-[10px] text-[#2B2725]/50">{course.type}</span>}
+                      </div>
+                      {alreadyEnrolled && (
+                        <span className="text-[10px] text-amber-600 flex-shrink-0">enrolled</span>
+                      )}
+                    </label>
                   );
-                })}
-              </SelectContent>
-            </Select>
-            {courses.length === 0 && (
-              <p className="text-xs text-[#2B2725]/50 mt-1">
-                No published courses available
-              </p>
+                })
+              )}
+            </div>
+            {selectedCourses.length > 0 && (
+              <p className="text-xs text-[#6E4F7D] mt-1 font-medium">{selectedCourses.length} course{selectedCourses.length > 1 ? "s" : ""} selected</p>
             )}
           </div>
 
@@ -372,7 +399,7 @@ export default function ManualEnrollmentModal({ open, onOpenChange, onSuccess })
               onClick={handleEnroll}
               disabled={
                 !userEmail.trim() ||
-                !selectedCourse ||
+                (selectedCourses.length === 0 && !selectedCourse) ||
                 !userExists ||
                 enrollmentMutation.isPending ||
                 inviteMutation.isPending

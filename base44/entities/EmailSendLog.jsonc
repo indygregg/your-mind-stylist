@@ -14,24 +14,60 @@
       "type": "string",
       "description": "Email subject line"
     },
+    "email_type": {
+      "type": "string",
+      "enum": [
+        "invite",
+        "resend_invite",
+        "booking_confirmation",
+        "booking_reminder",
+        "enrollment",
+        "individual",
+        "mass_campaign",
+        "sequence",
+        "masterclass",
+        "other"
+      ],
+      "description": "Category of email sent"
+    },
     "send_type": {
       "type": "string",
       "enum": [
         "individual",
         "mass_campaign",
-        "sequence"
+        "sequence",
+        "automated"
       ],
       "description": "How the email was sent"
     },
-    "method": {
+    "provider": {
       "type": "string",
       "enum": [
-        "platform",
+        "base44",
+        "resend",
         "mailerlite",
-        "resend"
+        "system"
       ],
-      "default": "platform",
+      "default": "base44",
       "description": "Which service sent the email"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "failed",
+        "unknown"
+      ],
+      "default": "sent",
+      "description": "Send status"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if failed"
+    },
+    "sent_by": {
+      "type": "string",
+      "description": "Email of user who triggered the send"
     },
     "campaign_subject": {
       "type": "string",
@@ -41,14 +77,21 @@
       "type": "number",
       "description": "Total recipients (for mass sends)"
     },
-    "sent_by": {
+    "method": {
       "type": "string",
-      "description": "Email of user who sent it"
+      "enum": [
+        "platform",
+        "mailerlite",
+        "resend"
+      ],
+      "default": "platform",
+      "description": "Legacy field \u2014 use provider instead"
     }
   },
   "required": [
     "recipient_email",
     "subject",
-    "send_type"
+    "email_type",
+    "status"
   ]
 }

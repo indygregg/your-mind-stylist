@@ -9,17 +9,23 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Manager access required' }, { status: 403 });
     }
 
-    const { userId, updates } = await req.json();
+    const body = await req.json();
+    const userId = body.userId;
+    const updates = body.updates || body.data;
     
     if (!userId) {
       return Response.json({ error: 'userId is required' }, { status: 400 });
+    }
+
+    if (!updates) {
+      return Response.json({ error: 'updates or data is required' }, { status: 400 });
     }
 
     // Only allow safe fields to be updated by manager
     const allowedFields = [
       'first_name', 'last_name', 'phone',
       'address_line1', 'address_line2', 'city', 'state', 'zip', 'country',
-      'manager_notes'
+      'manager_notes', 'account_status'
     ];
 
     const safeUpdates = {};

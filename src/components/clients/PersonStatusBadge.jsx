@@ -35,8 +35,8 @@ const STATUS_CONFIG = {
 export function getPersonStatus({ user, lead, enrollments }) {
   if (user && enrollments && enrollments.length > 0) return "enrolled";
   if (user) return "active_user";
-  // converted_to_client OR user_id means an invite was sent
-  if (lead?.converted_to_client || lead?.user_id) return "invite_pending";
+  // Use invite_status if available, fallback to legacy converted_to_client check
+  if (lead?.invite_status === "invited" || lead?.converted_to_client || lead?.user_id) return "invite_pending";
   return "lead";
 }
 

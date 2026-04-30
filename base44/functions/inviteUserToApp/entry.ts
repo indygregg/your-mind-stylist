@@ -35,8 +35,12 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'User already exists', userExists: true }, { status: 400 });
     }
 
+    const nowISO = new Date().toISOString();
+    const emailType = resend ? 'resend_invite' : 'invite';
+
     // STEP 1: Send branded email from Roberta FIRST
     let brandedEmailSent = false;
+    let brandedEmailError = null;
     try {
       const finalSubject = brandedSubject || "Your Mind Stylist access from Roberta Fernandez";
       const finalBody = brandedBody || getDefaultBrandedBody(normalizedEmail);
@@ -49,8 +53,35 @@ Deno.serve(async (req) => {
       });
       brandedEmailSent = true;
       console.log('Branded invite email sent to', normalizedEmail);
+
+      // Log success
+      await base44.asServiceRole.entities.EmailSendLog.create({
+        recipient_email: normalizedEmail,
+        subject: finalSubject,
+        email_type: emailType,
+        send_type: 'individual',
+        provider: 'base44',
+        status: 'sent',
+        sent_by: user.email,
+      });
     } catch (emailError) {
       console.error('Error sending branded invite email:', emailError);
+      brandedEmailError = emailError.message;
+      // Log failure
+      try {
+        await base44.asServiceRole.entities.EmailSendLog.create({
+          recipient_email: normalizedEmail,
+          subject: brandedSubject || "Your Mind Stylist access from Roberta Fernandez",
+          email_type: emailType,
+          send_type: 'individual',
+          provider: 'base44',
+          status: 'failed',
+          error_message: emailError.message,
+          sent_by: user.email,
+        });
+      } catch (logErr) {
+        console.error('Failed to log email error:', logErr.message);
+      }
     }
 
     // STEP 2: Send system invite (triggers account setup email from Base44)
@@ -59,24 +90,51 @@ Deno.serve(async (req) => {
       await base44.auth.inviteUser(normalizedEmail, role);
       systemInviteSent = true;
       console.log('System invite sent to', normalizedEmail);
+
+      // Log system invite
+      await base44.asServiceRole.entities.EmailSendLog.create({
+        recipient_email: normalizedEmail,
+        subject: 'Account setup invitation (system)',
+        email_type: emailType,
+        send_type: 'automated',
+        provider: 'system',
+        status: 'sent',
+        sent_by: user.email,
+      });
     } catch (inviteError) {
-      // If invite fails because user was already invited but hasn't accepted,
-      // that's OK — the branded email was already sent above
       console.log('Invite call result:', inviteError.message);
+      // Log if it's a real failure (not "already invited")
+      if (!inviteError.message?.includes('already')) {
+        try {
+          await base44.asServiceRole.entities.EmailSendLog.create({
+            recipient_email: normalizedEmail,
+            subject: 'Account setup invitation (system)',
+            email_type: emailType,
+            send_type: 'automated',
+            provider: 'system',
+            status: 'failed',
+            error_message: inviteError.message,
+            sent_by: user.email,
+          });
+        } catch (logErr) {
+          console.error('Failed to log system invite error:', logErr.message);
+        }
+      }
     }
 
-    // STEP 3: Update Lead record so it appears in Pending Invites
+    // STEP 3: Update Lead record — set invite_status and invite_sent_at
     try {
       const existingLeads = await base44.asServiceRole.entities.Lead.filter({ email: normalizedEmail });
-      const nowISO = new Date().toISOString();
 
       if (existingLeads.length > 0) {
         const lead = existingLeads[0];
         const updates = {
           converted_to_client: true,
           last_contact_date: nowISO,
+          invite_status: 'invited',
+          invite_sent_at: nowISO,
         };
-        // Only set notes on first invite, append on resend
+        // Append to notes
         if (resend) {
           updates.notes = `${lead.notes || ''}\n[${new Date().toLocaleDateString()}] Invite resent`.trim();
         } else {
@@ -84,7 +142,7 @@ Deno.serve(async (req) => {
           updates.stage = lead.stage === 'new' || lead.stage === 'contacted' ? 'qualified' : lead.stage;
         }
         await base44.asServiceRole.entities.Lead.update(lead.id, updates);
-        console.log('Lead updated with converted_to_client=true for', normalizedEmail);
+        console.log('Lead updated with invite_status=invited for', normalizedEmail);
       } else {
         // No lead exists — create one so it shows in Pending Invites
         const nameParts = normalizedEmail.split('@')[0].replace(/[._-]/g, ' ').split(' ');
@@ -95,11 +153,14 @@ Deno.serve(async (req) => {
           full_name: normalizedEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
           stage: 'qualified',
           source: 'referral',
+          sources: ['referral'],
           converted_to_client: true,
+          invite_status: 'invited',
+          invite_sent_at: nowISO,
           last_contact_date: nowISO,
           notes: `[${new Date().toLocaleDateString()}] Invited to platform`,
         });
-        console.log('Lead created with converted_to_client=true for', normalizedEmail);
+        console.log('Lead created with invite_status=invited for', normalizedEmail);
       }
     } catch (leadError) {
       console.error('Failed to update Lead record (non-critical):', leadError.message);

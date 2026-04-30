@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 // Also trigger MailerLite automation
 async function addToMailerLite(email, name, bookingData) {
@@ -41,7 +41,6 @@ Deno.serve(async (req) => {
         }
 
         // Fetch booking details
-        console.log('Fetching booking from database...');
         const booking = await base44.asServiceRole.entities.Booking.filter({ id: booking_id });
         if (!booking || booking.length === 0) {
             console.error('Booking not found in database');
@@ -74,7 +73,6 @@ Deno.serve(async (req) => {
             subject = template.subject;
             emailHtml = template.body_html;
 
-            // Helper functions
             const formatAmount = (amount) => {
                 return new Intl.NumberFormat("en-US", {
                     style: "currency",
@@ -96,7 +94,6 @@ Deno.serve(async (req) => {
                 });
             };
 
-            // Replace variables
             emailHtml = emailHtml
                 .replace(/\{\{user_name\}\}/g, bookingData.user_name || '')
                 .replace(/\{\{user_email\}\}/g, bookingData.user_email || '')
@@ -129,7 +126,6 @@ Deno.serve(async (req) => {
                     timeZoneName: "short"
                 });
             };
-            // Client sees their local time (no forced tz), manager sees PST
             const formatDate = (date) => formatDateTz(date, 'America/Los_Angeles');
 
             if (recipient_type === 'client') {
@@ -189,43 +185,43 @@ Deno.serve(async (req) => {
             }
         }
 
-        // Send email via Resend (third-party email service)
+        // Send email via Base44 platform (unified provider)
         console.log(`Sending ${recipient_type} email to:`, recipient);
-        const resendApiKey = Deno.env.get('RESEND_API_KEY');
-        if (!resendApiKey) {
-            console.warn('RESEND_API_KEY not set, email will not be sent');
-            return Response.json({ 
-                error: 'Email service not configured',
-                message: 'Please set RESEND_API_KEY in your environment variables'
-            }, { status: 500 });
-        }
+        
+        let emailSendStatus = 'unknown';
+        let emailSendError = null;
 
         try {
-            const emailResponse = await fetch('https://api.resend.com/emails', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${resendApiKey}`
-                },
-                body: JSON.stringify({
-                    from: 'noreply@yourmindstylist.com',
-                    to: recipient,
-                    subject: subject,
-                    html: emailHtml
-                })
+            await base44.asServiceRole.integrations.Core.SendEmail({
+                to: recipient,
+                from_name: "Roberta Fernandez",
+                subject: subject,
+                body: emailHtml,
             });
-
-            if (!emailResponse.ok) {
-                const errorData = await emailResponse.text();
-                console.error('Resend API error:', errorData);
-                throw new Error(`Failed to send email: ${errorData}`);
-            }
-
-            const result = await emailResponse.json();
-            console.log('Email sent successfully to:', recipient, 'ID:', result.id);
+            emailSendStatus = 'sent';
+            console.log('Email sent successfully to:', recipient);
         } catch (emailError) {
-            console.error('Failed to send email:', emailError);
+            console.error('Failed to send email via Base44:', emailError);
+            emailSendStatus = 'failed';
+            emailSendError = emailError.message;
             throw emailError;
+        } finally {
+            // Log every email attempt
+            try {
+                await base44.asServiceRole.entities.EmailSendLog.create({
+                    recipient_email: recipient,
+                    recipient_name: recipient_type === 'manager' ? 'Roberta Fernandez' : bookingData.user_name,
+                    subject: subject,
+                    email_type: 'booking_confirmation',
+                    send_type: 'automated',
+                    provider: 'base44',
+                    status: emailSendStatus,
+                    error_message: emailSendError,
+                    sent_by: 'system',
+                });
+            } catch (logErr) {
+                console.error('Failed to log email:', logErr.message);
+            }
         }
 
         // Add to MailerLite for automation sequences (client only)

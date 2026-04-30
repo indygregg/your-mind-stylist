@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import CreateUserModal from "./CreateUserModal.jsx";
 import ManualEnrollmentModal from "../manager/ManualEnrollmentModal";
+import DeactivateUserDialog from "./DeactivateUserDialog";
 
 export default function UsersSection({ users, isLoading, leads = [] }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,6 +24,8 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
   const [emailTarget, setEmailTarget] = useState(null);
   const [personPanelOpen, setPersonPanelOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
+  const [deactivateTarget, setDeactivateTarget] = useState(null);
+  const [deactivateAction, setDeactivateAction] = useState("deactivate");
   const queryClient = useQueryClient();
 
   const updateRoleMutation = useMutation({
@@ -242,21 +245,40 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <Select
-                          value={user.custom_role || user.role}
-                          onValueChange={(newRole) =>
-                            updateRoleMutation.mutate({ userId: user.id, newRole })
-                          }
-                        >
-                          <SelectTrigger className="w-32">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="admin">Admin</SelectItem>
-                            <SelectItem value="manager">Manager</SelectItem>
-                            <SelectItem value="user">User</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <div className="flex items-center gap-2">
+                          <Select
+                            value={user.custom_role || user.role}
+                            onValueChange={(newRole) =>
+                              updateRoleMutation.mutate({ userId: user.id, newRole })
+                            }
+                          >
+                            <SelectTrigger className="w-28">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="admin">Admin</SelectItem>
+                              <SelectItem value="manager">Manager</SelectItem>
+                              <SelectItem value="user">User</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {(user.custom_role || user.role) === "user" && (
+                            <Select
+                              value=""
+                              onValueChange={(action) => {
+                                setDeactivateTarget(user);
+                                setDeactivateAction(action);
+                              }}
+                            >
+                              <SelectTrigger className="w-8 h-8 p-0 border-none shadow-none [&>svg]:hidden">
+                                <span className="text-[#2B2725]/40 text-lg">⋮</span>
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="deactivate">Deactivate</SelectItem>
+                                <SelectItem value="archive">Archive</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                        </div>
                       </td>
                     </motion.tr>
                     );
@@ -308,6 +330,16 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
           onOpenChange={setPersonPanelOpen}
           email={selectedPerson.email}
           name={selectedPerson.name}
+        />
+      )}
+
+      {/* Deactivate/Archive Dialog */}
+      {deactivateTarget && (
+        <DeactivateUserDialog
+          open={!!deactivateTarget}
+          onOpenChange={(v) => { if (!v) setDeactivateTarget(null); }}
+          user={deactivateTarget}
+          action={deactivateAction}
         />
       )}
     </div>

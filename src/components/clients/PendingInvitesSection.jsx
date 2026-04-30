@@ -20,10 +20,12 @@ export default function PendingInvitesSection({ leads, users }) {
   const [invitePreviewOpen, setInvitePreviewOpen] = useState(false);
   const [invitePreviewTarget, setInvitePreviewTarget] = useState(null);
 
-  // People who were invited (converted_to_client or user_id set) but don't have active User records
+  // People who were invited but don't have active User records
   const userEmails = new Set((users || []).map((u) => u.email?.toLowerCase()));
   const pendingLeads = leads.filter((l) => {
-    if (!l.converted_to_client && !l.user_id) return false;
+    // Use invite_status if available, fallback to legacy converted_to_client
+    const wasInvited = l.invite_status === "invited" || l.converted_to_client || l.user_id;
+    if (!wasInvited) return false;
     return !userEmails.has(l.email?.toLowerCase());
   });
 
@@ -147,9 +149,9 @@ export default function PendingInvitesSection({ leads, users }) {
                     <Badge className="bg-amber-100 text-amber-800 text-xs whitespace-nowrap">
                       Awaiting Setup
                     </Badge>
-                    {lead.updated_date && (
+                    {(lead.invite_sent_at || lead.updated_date) && (
                       <span className="text-xs text-[#2B2725]/40 hidden md:block whitespace-nowrap">
-                        Invited {format(new Date(lead.updated_date), "MMM d")}
+                        Invited {format(new Date(lead.invite_sent_at || lead.updated_date), "MMM d")}
                       </span>
                     )}
                     <Button

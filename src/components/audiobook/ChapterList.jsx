@@ -30,7 +30,7 @@ export default function ChapterList({
       <h3 className="text-xs text-[#2B2725]/50 uppercase tracking-[0.2em] mb-3 font-medium">
         Chapters ({chapters.length})
       </h3>
-      <ScrollArea className="max-h-[300px] md:max-h-[400px]">
+      <ScrollArea className="max-h-[400px] md:max-h-[600px]">
         <div className="space-y-1">
           {chapters.map((chapter, index) => {
             const isActive = index === currentChapterIndex;
@@ -74,6 +74,11 @@ export default function ChapterList({
           })}
         </div>
       </ScrollArea>
+      {chapters.length > 6 && (
+        <p className="text-[10px] text-[#2B2725]/40 text-center mt-2 italic">
+          Scroll for all {chapters.length} chapters
+        </p>
+      )}
     </div>
   );
 }

@@ -19,6 +19,7 @@ import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
 import LeadDetailsDialog from "./LeadDetailsDialog";
 import InviteEmailPreview from "./InviteEmailPreview";
 import EditUserDialog from "./EditUserDialog";
+import EmailHistorySection from "./EmailHistorySection";
 
 function SectionLabel({ children }) {
   return (
@@ -256,12 +257,23 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                     </span>
                   </div>
                 )}
-                {leadData?.source && (
-                  <div className="flex items-center gap-3 text-sm">
-                    <ExternalLink size={15} className="text-[#D8B46B] flex-shrink-0" />
-                    <span className="text-[#2B2725]">
-                      Source: <span className="font-medium">{leadData.source.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}</span>
-                    </span>
+                {(leadData?.source || leadData?.sources?.length > 0) && (
+                  <div className="flex items-start gap-3 text-sm">
+                    <ExternalLink size={15} className="text-[#D8B46B] flex-shrink-0 mt-0.5" />
+                    <div>
+                      <span className="text-[#2B2725]">
+                        Source: <span className="font-medium">{leadData.source?.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()) || "Unknown"}</span>
+                      </span>
+                      {leadData.sources?.length > 1 && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {leadData.sources.map((s, i) => (
+                            <span key={i} className="inline-block text-[10px] px-1.5 py-0.5 bg-[#D8B46B]/10 text-[#2B2725]/70 rounded">
+                              {s.replace(/_/g, " ")}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
                 {leadData?.last_contact_date && (
@@ -422,43 +434,63 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
 
             <Separator className="bg-[#E4D9C4]" />
 
-            {/* Account Status — only show when not an active user */}
-            {!userData && (
-              <>
-                <div>
-                  <SectionLabel>Account Status</SectionLabel>
-                  {personStatus === "invite_pending" ? (
-                    <div className="space-y-2">
-                      <div className="flex items-start gap-3 text-sm">
-                        <Clock size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-[#2B2725] font-medium">Invite sent — waiting for setup</p>
-                          <p className="text-xs text-[#2B2725]/50 mt-0.5">
-                            They haven't created their account yet. You can resend the invite if needed.
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-amber-300 text-amber-700 hover:bg-amber-50 ml-6"
-                        onClick={handleInvite}
-                        disabled={inviting}
-                      >
-                        {inviting ? <Loader2 size={13} className="mr-1.5 animate-spin" /> : <RefreshCw size={13} className="mr-1.5" />}
-                        Resend Invite
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex items-start gap-3 text-sm">
-                      <Mail size={15} className="text-[#2B2725]/25 flex-shrink-0 mt-0.5" />
-                      <p className="text-[#2B2725]/40 italic">No invite sent yet</p>
-                    </div>
-                  )}
+            {/* Account Status */}
+            <div>
+              <SectionLabel>Account Status</SectionLabel>
+              {userData ? (
+                <div className="flex items-start gap-3 text-sm">
+                  <User size={15} className="text-green-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[#2B2725] font-medium">Active account</p>
+                    <p className="text-xs text-[#2B2725]/50 mt-0.5">
+                      Joined {userData.created_date ? format(new Date(userData.created_date), "MMM d, yyyy") : "unknown"}
+                    </p>
+                  </div>
                 </div>
-                <Separator className="bg-[#E4D9C4]" />
-              </>
-            )}
+              ) : personStatus === "invite_pending" ? (
+                <div className="space-y-2">
+                  <div className="flex items-start gap-3 text-sm">
+                    <Clock size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-[#2B2725] font-medium">Invite sent — waiting for setup</p>
+                      {leadData?.invite_sent_at && (
+                        <p className="text-xs text-[#2B2725]/50 mt-0.5">
+                          Last sent: {format(new Date(leadData.invite_sent_at), "MMM d, yyyy 'at' h:mm a")}
+                        </p>
+                      )}
+                      <p className="text-xs text-[#2B2725]/50 mt-0.5">
+                        They haven't created their account yet. You can resend the invite if needed.
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-amber-300 text-amber-700 hover:bg-amber-50 ml-6"
+                    onClick={handleInvite}
+                    disabled={inviting}
+                  >
+                    {inviting ? <Loader2 size={13} className="mr-1.5 animate-spin" /> : <RefreshCw size={13} className="mr-1.5" />}
+                    Resend Invite
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-start gap-3 text-sm">
+                  <Mail size={15} className="text-[#2B2725]/25 flex-shrink-0 mt-0.5" />
+                  <p className="text-[#2B2725]/40 italic">No invite sent yet</p>
+                </div>
+              )}
+            </div>
+
+            <Separator className="bg-[#E4D9C4]" />
+
+            {/* Email History */}
+            <div>
+              <SectionLabel>Email History</SectionLabel>
+              <EmailHistorySection email={email} />
+            </div>
+
+            <Separator className="bg-[#E4D9C4]" />
 
             {/* Actions */}
             <div>
