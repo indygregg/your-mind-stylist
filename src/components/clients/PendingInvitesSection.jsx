@@ -23,9 +23,8 @@ export default function PendingInvitesSection({ leads, users }) {
   // People who were invited but don't have active User records
   const userEmails = new Set((users || []).map((u) => u.email?.toLowerCase()));
   const pendingLeads = leads.filter((l) => {
-    // Use invite_status if available, fallback to legacy converted_to_client
-    const wasInvited = l.invite_status === "invited" || l.converted_to_client || l.user_id;
-    if (!wasInvited) return false;
+    // Only show people with a confirmed invite_status
+    if (l.invite_status !== "invited") return false;
     return !userEmails.has(l.email?.toLowerCase());
   });
 
@@ -149,9 +148,9 @@ export default function PendingInvitesSection({ leads, users }) {
                     <Badge className="bg-amber-100 text-amber-800 text-xs whitespace-nowrap">
                       Awaiting Setup
                     </Badge>
-                    {(lead.invite_sent_at || lead.updated_date) && (
+                    {lead.invite_sent_at && (
                       <span className="text-xs text-[#2B2725]/40 hidden md:block whitespace-nowrap">
-                        Invited {format(new Date(lead.invite_sent_at || lead.updated_date), "MMM d")}
+                        Invited {format(new Date(lead.invite_sent_at), "MMM d")}
                       </span>
                     )}
                     <Button
