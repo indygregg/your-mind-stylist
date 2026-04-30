@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
@@ -80,8 +80,39 @@ Deno.serve(async (req) => {
         });
         console.log(`[manualEnrollUser] Email sent successfully:`, emailResult);
         emailSent = true;
+        // Log to EmailSendLog
+        try {
+          await base44.asServiceRole.entities.EmailSendLog.create({
+            recipient_email: targetUser.email,
+            recipient_name: targetUser.full_name || targetUser.email,
+            subject: `You've been enrolled in ${course.title}!`,
+            email_type: 'enrollment',
+            send_type: 'individual',
+            provider: 'base44',
+            status: 'sent',
+            sent_by: user.email,
+          });
+        } catch (logErr) {
+          console.error('[manualEnrollUser] Failed to log email:', logErr?.message);
+        }
       } catch (emailError) {
         console.error('[manualEnrollUser] Email send error:', emailError?.message || emailError);
+        // Log failure
+        try {
+          await base44.asServiceRole.entities.EmailSendLog.create({
+            recipient_email: targetUser.email,
+            recipient_name: targetUser.full_name || targetUser.email,
+            subject: `You've been enrolled in ${course.title}!`,
+            email_type: 'enrollment',
+            send_type: 'individual',
+            provider: 'base44',
+            status: 'failed',
+            error_message: emailError?.message,
+            sent_by: user.email,
+          });
+        } catch (logErr) {
+          console.error('[manualEnrollUser] Failed to log email error:', logErr?.message);
+        }
         // Don't throw - enrollment was successful even if email failed
         emailSent = false;
       }

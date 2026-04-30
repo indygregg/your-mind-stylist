@@ -55,7 +55,10 @@ export default function SendIndividualEmailDialog({ open, onOpenChange, recipien
           recipient_email: recipientEmail,
           recipient_name: recipientName || "",
           subject,
+          email_type: "individual",
           send_type: "individual",
+          provider: "base44",
+          status: "sent",
           method: "platform",
         });
       } catch (_) { /* don't fail for logging */ }

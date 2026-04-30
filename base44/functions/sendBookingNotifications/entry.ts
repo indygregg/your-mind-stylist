@@ -199,6 +199,23 @@ Deno.serve(async (req) => {
       body: emailBody
     });
 
+    // Log the email send
+    try {
+      const isReminder = notification_type === 'reminder_24h' || notification_type === 'reminder_1h';
+      await base44.asServiceRole.entities.EmailSendLog.create({
+        recipient_email: recipientEmail,
+        recipient_name: notification_type === 'booking_confirmation_manager' ? 'Roberta Fernandez' : booking.user_name,
+        subject: emailSubject,
+        email_type: isReminder ? 'booking_reminder' : 'booking_confirmation',
+        send_type: 'automated',
+        provider: 'base44',
+        status: 'sent',
+        sent_by: 'system',
+      });
+    } catch (logErr) {
+      console.error('Failed to log email:', logErr.message);
+    }
+
     // Update booking to mark reminder as sent
     if (notification_type === 'reminder_24h') {
       await base44.asServiceRole.entities.Booking.update(booking_id, {

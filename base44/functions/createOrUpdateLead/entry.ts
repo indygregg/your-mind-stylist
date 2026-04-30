@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
     try {
@@ -25,6 +25,18 @@ Deno.serve(async (req) => {
                 // Merge with existing interests
                 const currentInterests = lead.interested_products || [];
                 updates.interested_products = [...new Set([...currentInterests, ...interested_products])];
+            }
+
+            // Append source to sources array (no duplicates)
+            if (source) {
+                const currentSources = lead.sources || (lead.source ? [lead.source] : []);
+                if (!currentSources.includes(source)) {
+                    updates.sources = [...currentSources, source];
+                }
+                // Update primary source only if not already set
+                if (!lead.source) {
+                    updates.source = source;
+                }
             }
             
             // Update UTM data only if not already set
@@ -58,11 +70,13 @@ Deno.serve(async (req) => {
             // Create new lead
             const leadScore = calculateLeadScore(data);
             
+            const effectiveSource = source || 'website';
             const newLead = await base44.asServiceRole.entities.Lead.create({
                 email,
                 full_name,
                 phone,
-                source: source || 'website',
+                source: effectiveSource,
+                sources: [effectiveSource],
                 interested_products: interested_products || [],
                 stage: 'new',
                 lead_score: leadScore,
