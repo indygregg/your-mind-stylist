@@ -48,10 +48,10 @@ export default function ClientsHub() {
   const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;
 
 
-  // Calculate pending invites count
+  // Calculate pending invites count — only leads with a confirmed invite
   const userEmails = new Set(users.map((u) => u.email?.toLowerCase()));
   const pendingInvites = leads.filter((l) => {
-    if (!l.converted_to_client && !l.user_id) return false;
+    if (l.invite_status !== "invited") return false;
     return !userEmails.has(l.email?.toLowerCase());
   });
   const pendingCount = pendingInvites.length;
