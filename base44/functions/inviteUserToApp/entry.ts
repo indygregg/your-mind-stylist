@@ -236,7 +236,10 @@ function getDefaultBrandedBody(email) {
   <div style="background: white; border-radius: 12px; margin: 0 24px; padding: 32px 28px; border: 1px solid #E4D9C4;">
     <p style="font-family: Georgia, serif; color: #1E3A32; font-size: 18px; margin: 0 0 16px;">Hi ${name},</p>
     <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">Roberta here. I've created access for you inside Your Mind Stylist so you can access your programs, courses, and resources.</p>
-    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">You'll receive a separate setup email shortly. Please use that link to create your login.</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">Click the button below to set up your account and get started:</p>
+    <div style="text-align: center; margin: 0 0 24px;">
+      <a href="https://yourmindstylist.com/login" style="display: inline-block; background: #1E3A32; color: #F9F5EF; padding: 14px 36px; text-decoration: none; font-size: 14px; letter-spacing: 0.1em; border-radius: 4px;">SET UP YOUR ACCOUNT</a>
+    </div>
     <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">Once inside, you'll be able to find your materials, appointments, and resources in your client area.</p>
     <p style="color: #1E3A32; font-size: 15px; font-weight: 500; margin: 0;">Warmly,</p>
     <p style="color: #1E3A32; font-size: 15px; margin: 4px 0 0;">Roberta Fernandez<br/><span style="color: #6E4F7D; font-size: 13px;">Your Mind Stylist</span></p>
