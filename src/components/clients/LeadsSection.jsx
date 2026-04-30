@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Mail, Filter, Plus, Trash2, Upload, Info } from "lucide-react";
+import { Search, Mail, Filter, Plus, Trash2, Upload, Info, Archive } from "lucide-react";
 import LeadsDatabaseTable from "./LeadsDatabaseTable";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -30,6 +30,7 @@ export default function LeadsSection({ leads, users, isLoading }) {
   const [addLeadDialogOpen, setAddLeadDialogOpen] = useState(false);
   const [personPanelOpen, setPersonPanelOpen] = useState(false);
   const [selectedPerson, setSelectedPerson] = useState(null);
+  const [showArchived, setShowArchived] = useState(false);
 
   const stages = ["new", "contacted", "booked", "qualified", "proposal", "negotiation", "won", "lost"];
   const stageLabels = {
@@ -78,9 +79,14 @@ export default function LeadsSection({ leads, users, isLoading }) {
     return lead.email;
   };
 
-  // Exclude leads who already have a matching User account or are archived
+  // Exclude leads who already have a matching User account; exclude archived unless toggle is on
   const userEmails = new Set((users || []).map((u) => u.email?.toLowerCase()));
-  const visibleLeads = leads.filter((l) => !userEmails.has(l.email?.toLowerCase()) && l.lead_status !== "archived");
+  const visibleLeads = leads.filter((l) => {
+    if (userEmails.has(l.email?.toLowerCase())) return false;
+    if (!showArchived && l.lead_status === "archived") return false;
+    return true;
+  });
+  const archivedCount = leads.filter((l) => !userEmails.has(l.email?.toLowerCase()) && l.lead_status === "archived").length;
 
   // Filter leads
   const filteredLeads = visibleLeads.filter((lead) => {
@@ -114,6 +120,21 @@ export default function LeadsSection({ leads, users, isLoading }) {
           After they accept and set up their account, you can enroll them in courses. Check <strong>"Pending Invites"</strong> to see who hasn't set up yet.
         </p>
       </div>
+
+      {/* Show Archived Toggle */}
+      {archivedCount > 0 && (
+        <button
+          onClick={() => setShowArchived(!showArchived)}
+          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            showArchived
+              ? "bg-gray-200 text-gray-800"
+              : "bg-transparent text-[#2B2725]/50 hover:bg-gray-100"
+          }`}
+        >
+          <Archive size={14} />
+          {showArchived ? "Hide Archived" : `Show Archived (${archivedCount})`}
+        </button>
+      )}
 
       {/* Top Actions */}
       <div className="flex gap-3 flex-wrap">

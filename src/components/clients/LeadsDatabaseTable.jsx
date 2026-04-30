@@ -165,7 +165,7 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
           {sorted.map((lead) => (
             <tr
               key={lead.id}
-              className="hover:bg-[#F9F5EF]/50 cursor-pointer transition-colors"
+              className={`cursor-pointer transition-colors ${lead.lead_status === "archived" ? "bg-gray-50/80 opacity-60 hover:opacity-80" : "hover:bg-[#F9F5EF]/50"}`}
               onClick={() => onSelectLead(lead)}
             >
               <td className="px-4 py-3 whitespace-nowrap">
@@ -219,20 +219,27 @@ export default function LeadsDatabaseTable({ leads, onSelectLead }) {
                 </Badge>
               </td>
               <td className="px-4 py-3 whitespace-nowrap">
-                {lead.invite_status === "accepted" ? (
-                  <Badge className="bg-green-100 text-green-800 text-[10px]">
-                    Active User
-                  </Badge>
-                ) : (lead.invite_status === "invited" || lead.converted_to_client || lead.user_id) ? (
-                  <Badge className="bg-amber-100 text-amber-800 text-[10px] gap-1">
-                    <Clock size={10} />
-                    Invite Sent
-                  </Badge>
-                ) : (
-                  <Badge className="bg-purple-50 text-purple-700 text-[10px]">
-                    Lead
-                  </Badge>
-                )}
+                <div className="flex items-center gap-1.5">
+                  {lead.lead_status === "archived" && (
+                    <Badge className="bg-gray-200 text-gray-600 text-[10px]">
+                      Archived
+                    </Badge>
+                  )}
+                  {lead.invite_status === "accepted" ? (
+                    <Badge className="bg-green-100 text-green-800 text-[10px]">
+                      Active User
+                    </Badge>
+                  ) : (lead.invite_status === "invited" || lead.converted_to_client || lead.user_id) ? (
+                    <Badge className="bg-amber-100 text-amber-800 text-[10px] gap-1">
+                      <Clock size={10} />
+                      Invite Sent
+                    </Badge>
+                  ) : (
+                    <Badge className="bg-purple-50 text-purple-700 text-[10px]">
+                      Lead
+                    </Badge>
+                  )}
+                </div>
               </td>
               <td className="px-4 py-3">
                 <div className="flex items-center gap-1">
