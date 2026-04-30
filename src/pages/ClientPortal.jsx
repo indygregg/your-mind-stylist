@@ -204,6 +204,13 @@ export default function ClientPortal() {
           <p className="text-[#2B2725]/70">Your complete account overview</p>
         </motion.div>
 
+        {(user?.role === "manager" || user?.role === "admin") && (
+          <div className="mb-6 px-4 py-3 bg-[#D8B46B]/10 border border-[#D8B46B]/30 rounded-lg flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#D8B46B] flex-shrink-0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <p className="text-sm text-[#2B2725]/70">You're viewing as manager. Clients only see courses and products they have purchased or been enrolled in.</p>
+          </div>
+        )}
+
         <Tabs defaultValue="materials" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-8">
             <TabsTrigger value="materials">
