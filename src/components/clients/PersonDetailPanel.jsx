@@ -20,6 +20,7 @@ import LeadDetailsDialog from "./LeadDetailsDialog";
 import InviteEmailPreview from "./InviteEmailPreview";
 import EditUserDialog from "./EditUserDialog";
 import EmailHistorySection from "./EmailHistorySection";
+import PersonBookingHistory from "./PersonBookingHistory";
 
 function SectionLabel({ children }) {
   return (
@@ -180,26 +181,6 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
     }
   };
 
-  const formatBookingStatus = (status) => {
-    const labels = {
-      pending_payment: "Pending Payment",
-      confirmed: "Confirmed",
-      scheduled: "Scheduled",
-      completed: "Completed",
-      cancelled: "Cancelled",
-      expired: "Expired",
-    };
-    return labels[status] || status;
-  };
-
-  const statusColors = {
-    confirmed: "bg-green-100 text-green-800",
-    scheduled: "bg-blue-100 text-blue-800",
-    completed: "bg-gray-100 text-gray-700",
-    cancelled: "bg-red-100 text-red-700",
-    pending_payment: "bg-yellow-100 text-yellow-800",
-  };
-
   return (
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
@@ -325,37 +306,7 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
             {/* Bookings */}
             <div>
               <SectionLabel>Bookings</SectionLabel>
-              {bookings.length === 0 ? (
-                <EmptyState text="No bookings yet" />
-              ) : (
-                <div className="space-y-2">
-                  {bookings.slice(0, 10).map((b) => (
-                    <div
-                      key={b.id}
-                      className="flex items-center justify-between p-2.5 bg-[#F9F5EF] rounded-lg"
-                    >
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-[#1E3A32] truncate">
-                          {b.service_type?.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
-                        </p>
-                        <p className="text-xs text-[#2B2725]/50">
-                          {b.scheduled_date
-                            ? format(new Date(b.scheduled_date), "MMM d, yyyy")
-                            : format(new Date(b.created_date), "MMM d, yyyy")}
-                        </p>
-                      </div>
-                      <Badge className={`text-[10px] ${statusColors[b.booking_status] || "bg-gray-100 text-gray-600"}`}>
-                        {formatBookingStatus(b.booking_status)}
-                      </Badge>
-                    </div>
-                  ))}
-                  {bookings.length > 10 && (
-                    <p className="text-xs text-[#2B2725]/50 text-center">
-                      +{bookings.length - 10} more bookings
-                    </p>
-                  )}
-                </div>
-              )}
+              <PersonBookingHistory bookings={bookings} />
             </div>
 
             <Separator className="bg-[#E4D9C4]" />
@@ -411,20 +362,42 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                 <div className="space-y-2">
                   {enrollments.map((e) => {
                     const course = courses.find((c) => c.id === e.course_id);
+                    const pct = e.completion_percentage || 0;
                     return (
                       <div
                         key={e.course_id}
-                        className="flex items-center justify-between p-2.5 bg-[#F9F5EF] rounded-lg"
+                        className="p-2.5 bg-[#F9F5EF] rounded-lg"
                       >
-                        <div className="flex items-center gap-2 min-w-0">
-                          <GraduationCap size={14} className="text-[#6E4F7D] flex-shrink-0" />
-                          <span className="text-sm text-[#1E3A32] truncate">
-                            {course?.title || "Unknown Course"}
-                          </span>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <GraduationCap size={14} className="text-[#6E4F7D] flex-shrink-0" />
+                            <span className="text-sm text-[#1E3A32] truncate">
+                              {course?.title || "Unknown Course"}
+                            </span>
+                          </div>
+                          <Badge className="bg-[#A6B7A3]/20 text-[#1E3A32] text-[10px]">
+                            {e.status?.replace(/_/g, " ") || "enrolled"}
+                          </Badge>
                         </div>
-                        <Badge className="bg-[#A6B7A3]/20 text-[#1E3A32] text-[10px]">
-                          {e.status?.replace(/_/g, " ") || "enrolled"}
-                        </Badge>
+                        {/* Progress bar */}
+                        <div className="mt-2 flex items-center gap-2">
+                          <div className="flex-1 h-1.5 bg-[#E4D9C4]/60 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-[#6E4F7D] rounded-full transition-all"
+                              style={{ width: `${Math.min(100, pct)}%` }}
+                            />
+                          </div>
+                          <span className="text-[10px] text-[#2B2725]/50 w-8 text-right">{Math.round(pct)}%</span>
+                        </div>
+                        {/* Dates */}
+                        <div className="flex items-center gap-3 mt-1.5 text-[10px] text-[#2B2725]/40">
+                          {e.started_date && (
+                            <span>Started {format(new Date(e.started_date), "MMM d, yyyy")}</span>
+                          )}
+                          {e.completed_date && (
+                            <span>Completed {format(new Date(e.completed_date), "MMM d, yyyy")}</span>
+                          )}
+                        </div>
                       </div>
                     );
                   })}

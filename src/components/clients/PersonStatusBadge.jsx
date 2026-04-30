@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { UserCheck, Mail, Clock, UserPlus, GraduationCap } from "lucide-react";
+import { UserCheck, Mail, Clock, UserPlus, GraduationCap, UserX, Archive } from "lucide-react";
 
 const STATUS_CONFIG = {
   active_user: {
@@ -12,6 +12,16 @@ const STATUS_CONFIG = {
     label: "Enrolled",
     icon: GraduationCap,
     className: "bg-emerald-100 text-emerald-800",
+  },
+  inactive: {
+    label: "Inactive",
+    icon: UserX,
+    className: "bg-gray-200 text-gray-600",
+  },
+  archived: {
+    label: "Archived",
+    icon: Archive,
+    className: "bg-gray-100 text-gray-500",
   },
   invite_pending: {
     label: "Invite Sent — Awaiting Setup",
@@ -33,6 +43,8 @@ const STATUS_CONFIG = {
  * - lead: CRM contact only, no invite sent
  */
 export function getPersonStatus({ user, lead, enrollments }) {
+  if (user?.account_status === "archived") return "archived";
+  if (user?.account_status === "inactive") return "inactive";
   if (user && enrollments && enrollments.length > 0) return "enrolled";
   if (user) return "active_user";
   // Use invite_status if available, fallback to legacy converted_to_client check
