@@ -51,8 +51,8 @@ export default function ClientsHub() {
   // Build user email set for cross-referencing
   const userEmails = new Set(users.map((u) => u.email?.toLowerCase()));
 
-  // Calculate stats — exclude leads who already have a User account
-  const activeLeads = leads.filter((l) => !userEmails.has(l.email?.toLowerCase()));
+  // Calculate stats — exclude leads who already have a User account or are archived
+  const activeLeads = leads.filter((l) => !userEmails.has(l.email?.toLowerCase()) && l.lead_status !== "archived");
   const totalLeads = activeLeads.length;
   const convertedLeads = activeLeads.filter((l) => l.converted_to_client).length;
   const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;

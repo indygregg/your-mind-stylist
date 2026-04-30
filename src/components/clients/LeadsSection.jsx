@@ -78,9 +78,9 @@ export default function LeadsSection({ leads, users, isLoading }) {
     return lead.email;
   };
 
-  // Exclude leads who already have a matching User account
+  // Exclude leads who already have a matching User account or are archived
   const userEmails = new Set((users || []).map((u) => u.email?.toLowerCase()));
-  const visibleLeads = leads.filter((l) => !userEmails.has(l.email?.toLowerCase()));
+  const visibleLeads = leads.filter((l) => !userEmails.has(l.email?.toLowerCase()) && l.lead_status !== "archived");
 
   // Filter leads
   const filteredLeads = visibleLeads.filter((lead) => {
