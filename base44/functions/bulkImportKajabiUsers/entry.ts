@@ -184,7 +184,8 @@ function wrapInBrandShell(innerHtml) {
 function getDefaultInnerBody(name) {
   return `<p style="font-family: Georgia, serif; color: #1E3A32; font-size: 18px; margin: 0 0 16px;">Hi ${name},</p>
     <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">Roberta here. I've created access for you inside Your Mind Stylist so you can access your programs, courses, and resources.</p>
-    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">Click the button below to set up your account and get started:</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 8px;">Click below, then choose <strong>Sign up</strong> on the login screen using the email address this message was sent to.</p>
+    <p style="color: #2B2725; font-size: 13px; line-height: 1.6; margin: 0 0 24px; opacity: 0.7;">(No need for "Forgot password" — just choose <strong>Sign up</strong> to create your new account.)</p>
     <div style="text-align: center; margin: 0 0 24px;">
       <a href="https://yourmindstylist.com/login" style="display: inline-block; background: #1E3A32; color: #F9F5EF; padding: 14px 36px; text-decoration: none; font-size: 14px; letter-spacing: 0.1em; border-radius: 4px;">SET UP YOUR ACCOUNT</a>
     </div>
