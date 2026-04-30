@@ -24,6 +24,7 @@ import EmailHistorySection from "./EmailHistorySection";
 import PersonBookingHistory from "./PersonBookingHistory";
 import DeactivateUserDialog from "./DeactivateUserDialog";
 import SafeDeleteUserDialog from "./SafeDeleteUserDialog";
+import ArchiveLeadDialog from "./ArchiveLeadDialog";
 
 function SectionLabel({ children }) {
   return (
@@ -48,6 +49,7 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
   const [invitePreviewMode, setInvitePreviewMode] = useState("invite"); // "invite" or "invite_enroll"
   const [statusAction, setStatusAction] = useState(null); // "deactivate" | "archive" | "reactivate"
   const [safeDeleteOpen, setSafeDeleteOpen] = useState(false);
+  const [archiveLeadAction, setArchiveLeadAction] = useState(null);
   const [currentUserEmail, setCurrentUserEmail] = useState(null);
 
   // Get current user for self-protection
@@ -589,6 +591,28 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                   </p>
                 )}
 
+                {/* Lead archive/restore — always visible when lead exists, regardless of user account */}
+                {leadData && (!leadData.lead_status || leadData.lead_status === "active") && (
+                  <Button
+                    variant="outline"
+                    className="justify-start border-gray-200 text-gray-600 hover:bg-gray-50"
+                    onClick={() => setArchiveLeadAction("archive")}
+                  >
+                    <Archive size={15} className="mr-2" />
+                    Archive Lead
+                  </Button>
+                )}
+                {leadData && leadData.lead_status === "archived" && (
+                  <Button
+                    variant="outline"
+                    className="justify-start border-green-200 text-green-700 hover:bg-green-50"
+                    onClick={() => setArchiveLeadAction("restore")}
+                  >
+                    <CheckCircle size={15} className="mr-2" />
+                    Restore Lead
+                  </Button>
+                )}
+
                 {/* Account status actions — only for users, not self, not admin/manager */}
                 {userData && currentUserEmail && userData.email?.toLowerCase() !== currentUserEmail?.toLowerCase() && 
                  (userData.custom_role || userData.role) !== "admin" && (userData.custom_role || userData.role) !== "manager" && (
@@ -722,6 +746,16 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
           open={safeDeleteOpen}
           onOpenChange={setSafeDeleteOpen}
           user={userData}
+        />
+      )}
+
+      {/* Archive/Restore Lead Dialog */}
+      {archiveLeadAction && leadData && (
+        <ArchiveLeadDialog
+          open={!!archiveLeadAction}
+          onOpenChange={(v) => { if (!v) setArchiveLeadAction(null); }}
+          lead={leadData}
+          action={archiveLeadAction}
         />
       )}
     </>
