@@ -26,6 +26,12 @@ export default function ClientsHub() {
   const [syncing, setSyncing] = useState(false);
   const [bulkGroupDialogOpen, setBulkGroupDialogOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("leads");
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Get current user for self-protection checks
+  React.useEffect(() => {
+    base44.auth.me().then(setCurrentUser).catch(() => {});
+  }, []);
 
   // Fetch leads
   const { data: leads = [], isLoading: leadsLoading } = useQuery({
@@ -65,7 +71,7 @@ export default function ClientsHub() {
       case "pending_invites":
         return <PendingInvitesSection leads={leads} users={users} />;
       case "users":
-        return <UsersSection users={users} isLoading={usersLoading} leads={leads} />;
+        return <UsersSection users={users} isLoading={usersLoading} leads={leads} currentUser={currentUser} />;
       case "sequences":
         return <EmailSequencesSection />;
       case "templates":

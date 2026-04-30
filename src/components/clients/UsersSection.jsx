@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Mail, Calendar, Plus, SendHorizonal, Info } from "lucide-react";
+import { Search, Mail, Calendar, Plus, SendHorizonal, Info, MoreVertical, UserX, Archive, CheckCircle, Trash2 } from "lucide-react";
 import SendIndividualEmailDialog from "./SendIndividualEmailDialog";
 import PersonDetailPanel from "./PersonDetailPanel";
 import { format } from "date-fns";
@@ -14,8 +14,15 @@ import toast from "react-hot-toast";
 import CreateUserModal from "./CreateUserModal.jsx";
 import ManualEnrollmentModal from "../manager/ManualEnrollmentModal";
 import DeactivateUserDialog from "./DeactivateUserDialog";
+import SafeDeleteUserDialog from "./SafeDeleteUserDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export default function UsersSection({ users, isLoading, leads = [] }) {
+export default function UsersSection({ users, isLoading, leads = [], currentUser }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
   const [createUserOpen, setCreateUserOpen] = useState(false);
@@ -26,6 +33,8 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [deactivateTarget, setDeactivateTarget] = useState(null);
   const [deactivateAction, setDeactivateAction] = useState("deactivate");
+  const [safeDeleteTarget, setSafeDeleteTarget] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("all");
   const queryClient = useQueryClient();
 
   const updateRoleMutation = useMutation({
@@ -68,7 +77,9 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
       lead?.city?.toLowerCase().includes(term);
     const userRole = user.custom_role || user.role;
     const matchesRole = roleFilter === "all" || userRole === roleFilter;
-    return matchesSearch && matchesRole;
+    const userStatus = user.account_status || "active";
+    const matchesStatus = statusFilter === "all" || userStatus === statusFilter;
+    return matchesSearch && matchesRole && matchesStatus;
   });
 
   return (
@@ -127,6 +138,20 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
                 </SelectContent>
               </Select>
             </div>
+            <div className="w-48">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                  <SelectItem value="archived">Archived</SelectItem>
+                  <SelectItem value="deleted">Deleted</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -149,6 +174,7 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Location</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">What They Bought</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Role</th>
+                    <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Status</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Joined</th>
                     <th className="px-6 py-4 text-left text-sm font-medium text-[#2B2725]">Actions</th>
                   </tr>
@@ -166,12 +192,19 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
                       : user.full_name || (lead?.first_name ? `${lead.first_name} ${lead.last_name || ""}`.trim() : lead?.full_name || "");
                     const displayUsername = user.username || (user.email ? user.email.split("@")[0] : "—");
 
+                    const acctStatus = user.account_status || "active";
+                    const isBlocked = ["inactive", "archived", "deleted"].includes(acctStatus);
+                    const isSelf = currentUser && (user.id === currentUser.id || user.email === currentUser.email);
+                    const targetRole = user.custom_role || user.role;
+                    const isProtectedRole = targetRole === "admin" || targetRole === "manager";
+                    const showMenu = !isSelf && !isProtectedRole && acctStatus !== "deleted";
+
                     return (
                     <motion.tr
                       key={user.id}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="hover:bg-[#F9F5EF]/50"
+                      className={`hover:bg-[#F9F5EF]/50 ${isBlocked ? "opacity-60" : ""}`}
                     >
                       <td className="px-6 py-4">
                         <button
@@ -238,6 +271,28 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
                           {user.custom_role || user.role}
                         </span>
                       </td>
+                      {/* Status Badge */}
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full ${
+                          acctStatus === "active" ? "bg-green-100 text-green-700" :
+                          acctStatus === "inactive" ? "bg-amber-100 text-amber-700" :
+                          acctStatus === "archived" ? "bg-gray-100 text-gray-600" :
+                          acctStatus === "deleted" ? "bg-red-100 text-red-700" :
+                          "bg-green-100 text-green-700"
+                        }`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${
+                            acctStatus === "active" ? "bg-green-500" :
+                            acctStatus === "inactive" ? "bg-amber-500" :
+                            acctStatus === "archived" ? "bg-gray-400" :
+                            acctStatus === "deleted" ? "bg-red-500" :
+                            "bg-green-500"
+                          }`} />
+                          {acctStatus === "active" ? "Active" :
+                           acctStatus === "inactive" ? "Paused" :
+                           acctStatus === "archived" ? "Archived" :
+                           acctStatus === "deleted" ? "Deleted" : "Active"}
+                        </span>
+                      </td>
                       <td className="px-6 py-4 text-sm text-[#2B2725]/70">
                         <div className="flex items-center gap-2">
                           <Calendar size={14} />
@@ -261,22 +316,52 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
                               <SelectItem value="user">User</SelectItem>
                             </SelectContent>
                           </Select>
-                          {(user.custom_role || user.role) === "user" && (
-                            <Select
-                              value=""
-                              onValueChange={(action) => {
-                                setDeactivateTarget(user);
-                                setDeactivateAction(action);
-                              }}
-                            >
-                              <SelectTrigger className="w-8 h-8 p-0 border-none shadow-none [&>svg]:hidden">
-                                <span className="text-[#2B2725]/40 text-lg">⋮</span>
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="deactivate">Deactivate</SelectItem>
-                                <SelectItem value="archive">Archive</SelectItem>
-                              </SelectContent>
-                            </Select>
+                          {showMenu && (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button className="p-1.5 rounded hover:bg-[#E4D9C4]/50 text-[#2B2725]/40 hover:text-[#2B2725]">
+                                  <MoreVertical size={16} />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                {acctStatus === "active" && (
+                                  <>
+                                    <DropdownMenuItem onClick={() => { setDeactivateTarget(user); setDeactivateAction("deactivate"); }}>
+                                      <UserX size={14} className="mr-2 text-amber-600" /> Deactivate
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => { setDeactivateTarget(user); setDeactivateAction("archive"); }}>
+                                      <Archive size={14} className="mr-2 text-[#2B2725]/60" /> Archive
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
+                                {acctStatus === "inactive" && (
+                                  <>
+                                    <DropdownMenuItem onClick={() => { setDeactivateTarget(user); setDeactivateAction("reactivate"); }}>
+                                      <CheckCircle size={14} className="mr-2 text-green-600" /> Reactivate
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => { setDeactivateTarget(user); setDeactivateAction("archive"); }}>
+                                      <Archive size={14} className="mr-2 text-[#2B2725]/60" /> Archive
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setSafeDeleteTarget(user)} className="text-red-600">
+                                      <Trash2 size={14} className="mr-2" /> Permanent Delete
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
+                                {acctStatus === "archived" && (
+                                  <>
+                                    <DropdownMenuItem onClick={() => { setDeactivateTarget(user); setDeactivateAction("reactivate"); }}>
+                                      <CheckCircle size={14} className="mr-2 text-green-600" /> Reactivate
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => setSafeDeleteTarget(user)} className="text-red-600">
+                                      <Trash2 size={14} className="mr-2" /> Permanent Delete
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
+                          {isSelf && (
+                            <span className="text-[10px] text-[#2B2725]/30 italic">You</span>
                           )}
                         </div>
                       </td>
@@ -333,13 +418,22 @@ export default function UsersSection({ users, isLoading, leads = [] }) {
         />
       )}
 
-      {/* Deactivate/Archive Dialog */}
+      {/* Deactivate/Archive/Reactivate Dialog */}
       {deactivateTarget && (
         <DeactivateUserDialog
           open={!!deactivateTarget}
           onOpenChange={(v) => { if (!v) setDeactivateTarget(null); }}
           user={deactivateTarget}
           action={deactivateAction}
+        />
+      )}
+
+      {/* Safe Delete Dialog */}
+      {safeDeleteTarget && (
+        <SafeDeleteUserDialog
+          open={!!safeDeleteTarget}
+          onOpenChange={(v) => { if (!v) setSafeDeleteTarget(null); }}
+          user={safeDeleteTarget}
         />
       )}
     </div>

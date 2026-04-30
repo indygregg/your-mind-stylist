@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
   User, Mail, Phone, MapPin, Calendar, BookOpen,
-  ShoppingBag, Send, GraduationCap, Loader2, RefreshCw, ExternalLink, Clock, Pencil, Tag
+  ShoppingBag, Send, GraduationCap, Loader2, RefreshCw, ExternalLink, Clock, Pencil, Tag,
+  UserX, Archive, CheckCircle, Trash2
 } from "lucide-react";
 import { format } from "date-fns";
 import toast from "react-hot-toast";
@@ -21,6 +22,8 @@ import InviteEmailPreview from "./InviteEmailPreview";
 import EditUserDialog from "./EditUserDialog";
 import EmailHistorySection from "./EmailHistorySection";
 import PersonBookingHistory from "./PersonBookingHistory";
+import DeactivateUserDialog from "./DeactivateUserDialog";
+import SafeDeleteUserDialog from "./SafeDeleteUserDialog";
 
 function SectionLabel({ children }) {
   return (
@@ -43,6 +46,14 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
   const [editUserDialogOpen, setEditUserDialogOpen] = useState(false);
   const [invitePreviewOpen, setInvitePreviewOpen] = useState(false);
   const [invitePreviewMode, setInvitePreviewMode] = useState("invite"); // "invite" or "invite_enroll"
+  const [statusAction, setStatusAction] = useState(null); // "deactivate" | "archive" | "reactivate"
+  const [safeDeleteOpen, setSafeDeleteOpen] = useState(false);
+  const [currentUserEmail, setCurrentUserEmail] = useState(null);
+
+  // Get current user for self-protection
+  React.useEffect(() => {
+    base44.auth.me().then(u => setCurrentUserEmail(u?.email)).catch(() => {});
+  }, []);
 
   // Look up user by email
   const { data: userData } = useQuery({
@@ -410,7 +421,37 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
             {/* Account Status */}
             <div>
               <SectionLabel>Account Status</SectionLabel>
-              {userData ? (
+              {userData && userData.account_status === "inactive" ? (
+                <div className="flex items-start gap-3 text-sm">
+                  <UserX size={15} className="text-amber-500 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[#2B2725] font-medium">Account paused</p>
+                    <p className="text-xs text-[#2B2725]/50 mt-0.5">
+                      This user's access has been temporarily disabled.
+                    </p>
+                  </div>
+                </div>
+              ) : userData && userData.account_status === "archived" ? (
+                <div className="flex items-start gap-3 text-sm">
+                  <Archive size={15} className="text-gray-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[#2B2725] font-medium">Account archived</p>
+                    <p className="text-xs text-[#2B2725]/50 mt-0.5">
+                      This user's account has been archived.
+                    </p>
+                  </div>
+                </div>
+              ) : userData && userData.account_status === "deleted" ? (
+                <div className="flex items-start gap-3 text-sm">
+                  <Trash2 size={15} className="text-red-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[#2B2725] font-medium">Account deleted</p>
+                    <p className="text-xs text-[#2B2725]/50 mt-0.5">
+                      This user's data has been anonymized and personal records purged.
+                    </p>
+                  </div>
+                </div>
+              ) : userData ? (
                 <div className="flex items-start gap-3 text-sm">
                   <User size={15} className="text-green-600 flex-shrink-0 mt-0.5" />
                   <div>
@@ -547,6 +588,33 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                       : "Send an invite first — enrollment will be available after they create their account."}
                   </p>
                 )}
+
+                {/* Account status actions — only for users, not self, not admin/manager */}
+                {userData && currentUserEmail && userData.email?.toLowerCase() !== currentUserEmail?.toLowerCase() && 
+                 (userData.custom_role || userData.role) !== "admin" && (userData.custom_role || userData.role) !== "manager" && (
+                  <>
+                    {(!userData.account_status || userData.account_status === "active") && (
+                      <>
+                        <Button variant="outline" className="justify-start border-amber-200 text-amber-700 hover:bg-amber-50" onClick={() => setStatusAction("deactivate")}>
+                          <UserX size={15} className="mr-2" /> Deactivate Account
+                        </Button>
+                        <Button variant="outline" className="justify-start border-gray-200 text-gray-600 hover:bg-gray-50" onClick={() => setStatusAction("archive")}>
+                          <Archive size={15} className="mr-2" /> Archive Account
+                        </Button>
+                      </>
+                    )}
+                    {(userData.account_status === "inactive" || userData.account_status === "archived") && (
+                      <Button variant="outline" className="justify-start border-green-200 text-green-700 hover:bg-green-50" onClick={() => setStatusAction("reactivate")}>
+                        <CheckCircle size={15} className="mr-2" /> Reactivate Account
+                      </Button>
+                    )}
+                    {(userData.account_status === "inactive" || userData.account_status === "archived") && (
+                      <Button variant="outline" className="justify-start border-red-200 text-red-600 hover:bg-red-50" onClick={() => setSafeDeleteOpen(true)}>
+                        <Trash2 size={15} className="mr-2" /> Permanent Delete
+                      </Button>
+                    )}
+                  </>
+                )}
               </div>
             </div>
 
@@ -637,6 +705,25 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
         mode={invitePreviewMode === "invite_enroll" ? "invite_enroll" : personStatus === "invite_pending" ? "resend" : "invite"}
         onConfirmSend={handleConfirmInvite}
       />
+
+      {/* Deactivate/Archive/Reactivate Dialog */}
+      {statusAction && userData && (
+        <DeactivateUserDialog
+          open={!!statusAction}
+          onOpenChange={(v) => { if (!v) setStatusAction(null); }}
+          user={userData}
+          action={statusAction}
+        />
+      )}
+
+      {/* Safe Delete Dialog */}
+      {safeDeleteOpen && userData && (
+        <SafeDeleteUserDialog
+          open={safeDeleteOpen}
+          onOpenChange={setSafeDeleteOpen}
+          user={userData}
+        />
+      )}
     </>
   );
 }
