@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.4';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
@@ -19,12 +19,13 @@ Deno.serve(async (req) => {
 
     const booking = bookings[0];
 
-    if (!booking.google_calendar_event_id) {
+    if (!booking.google_event_id) {
       return Response.json({ success: true, message: 'No calendar event to delete' });
     }
 
     // Get access token
-    const accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
+    const conn = await base44.asServiceRole.connectors.getConnection('googlecalendar');
+    const accessToken = conn.accessToken;
     
     if (!accessToken) {
       return Response.json({ error: 'Google Calendar not connected' }, { status: 400 });
@@ -32,7 +33,7 @@ Deno.serve(async (req) => {
 
     // Delete calendar event
     const response = await fetch(
-      `https://www.googleapis.com/calendar/v3/calendars/primary/events/${booking.google_calendar_event_id}`,
+      `https://www.googleapis.com/calendar/v3/calendars/primary/events/${booking.google_event_id}`,
       {
         method: 'DELETE',
         headers: {
@@ -48,7 +49,7 @@ Deno.serve(async (req) => {
 
     // Clear calendar event ID from booking
     await base44.asServiceRole.entities.Booking.update(booking_id, {
-      google_calendar_event_id: null,
+      google_event_id: null,
     });
 
     return Response.json({
