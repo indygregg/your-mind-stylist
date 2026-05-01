@@ -1,4 +1,4 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
@@ -38,7 +38,8 @@ Deno.serve(async (req) => {
         old_data.scheduled_date !== booking.scheduled_date ||
         old_data.booking_status !== booking.booking_status ||
         old_data.zoom_join_url !== booking.zoom_join_url ||
-        old_data.appointment_type_id !== booking.appointment_type_id;
+        old_data.appointment_type_id !== booking.appointment_type_id ||
+        old_data.google_event_id !== booking.google_event_id;
       
       if (!relevantChanged) {
         return Response.json({ success: true, message: 'No relevant changes, skipping calendar sync.' });
@@ -46,7 +47,8 @@ Deno.serve(async (req) => {
     }
 
     // Get access token
-    const accessToken = await base44.asServiceRole.connectors.getAccessToken('googlecalendar');
+    const conn = await base44.asServiceRole.connectors.getConnection('googlecalendar');
+    const accessToken = conn.accessToken;
     
     if (!accessToken) {
       return Response.json({ error: 'Google Calendar not connected' }, { status: 400 });
@@ -89,7 +91,7 @@ Deno.serve(async (req) => {
     };
 
     let response, event;
-    const existingEventId = booking.google_calendar_event_id;
+    const existingEventId = booking.google_event_id;
 
     if (existingEventId) {
       // Update existing event
@@ -120,17 +122,16 @@ Deno.serve(async (req) => {
 
     event = await response.json();
 
-    // IMPORTANT: Only update booking on first creation (to avoid triggering the entity automation in a loop)
-    // When called directly from managerBookingAction, old_data is undefined so we skip this update safely
+    // Save google_event_id on first creation (matches Booking entity schema field name)
     if (!existingEventId && !old_data) {
       await base44.asServiceRole.entities.Booking.update(booking_id, {
-        google_calendar_event_id: event.id,
+        google_event_id: event.id,
       });
     } else if (!existingEventId && old_data) {
       // Called from entity automation - save event ID only if it wasn't set before
-      if (!old_data.google_calendar_event_id) {
+      if (!old_data.google_event_id) {
         await base44.asServiceRole.entities.Booking.update(booking_id, {
-          google_calendar_event_id: event.id,
+          google_event_id: event.id,
         });
       }
     }
