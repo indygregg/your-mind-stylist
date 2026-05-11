@@ -777,19 +777,20 @@ export default function ManagerProducts() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <Label>Category *</Label>
+                <Label>Category * <span className="text-xs font-normal text-[#2B2725]/50">(matches Programs page sections)</span></Label>
                 <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  value={formData.product_subtype || ""}
+                  onValueChange={(value) => setFormData({ ...formData, product_subtype: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select category..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="foundation">Tier 1: Foundation</SelectItem>
-                    <SelectItem value="mid_level">Tier 2: Mid-Level</SelectItem>
-                    <SelectItem value="high_touch">Tier 3: High-Touch</SelectItem>
-                    <SelectItem value="advanced">Advanced</SelectItem>
+                    <SelectItem value={null}>✨ Signature Services</SelectItem>
+                    <SelectItem value="webinar">📹 Webinars & Live Events</SelectItem>
+                    <SelectItem value="book">📖 Books & Resources</SelectItem>
+                    <SelectItem value="course">🎓 Hypnosis Training</SelectItem>
+                    <SelectItem value="other">🌟 Other Programs & Tools</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -1042,23 +1043,21 @@ export default function ManagerProducts() {
             {/* Pricing */}
             <div className="grid md:grid-cols-3 gap-4">
               <div>
-                <Label>Product Subtype <span className="text-xs font-normal text-[#2B2725]/50">(what kind of product is this?)</span></Label>
+                <Label>Pricing Tier <span className="text-xs font-normal text-[#2B2725]/50">(internal classification)</span></Label>
                 <Select
-                  value={formData.product_subtype || ""}
-                  onValueChange={(value) => setFormData({ ...formData, product_subtype: value })}
+                  value={formData.category}
+                  onValueChange={(value) => setFormData({ ...formData, category: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select subtype..." />
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={null}>✨ Signature Service / Coaching</SelectItem>
-                    <SelectItem value="webinar">📹 Webinar / Live Event</SelectItem>
-                    <SelectItem value="book">📖 Book or Resource</SelectItem>
-                    <SelectItem value="course">🎓 Hypnosis Training</SelectItem>
-                    <SelectItem value="other">🌟 Other Programs & Tools</SelectItem>
+                    <SelectItem value="foundation">Tier 1: Foundation</SelectItem>
+                    <SelectItem value="mid_level">Tier 2: Mid-Level</SelectItem>
+                    <SelectItem value="high_touch">Tier 3: High-Touch</SelectItem>
+                    <SelectItem value="advanced">Advanced</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-[#2B2725]/50 mt-1">Webinars & books auto-appear in correct sections on Programs page</p>
               </div>
               <div>
                 <Label>Pricing Type * <span className="text-xs font-normal text-[#2B2725]/50">(how it's charged)</span></Label>
