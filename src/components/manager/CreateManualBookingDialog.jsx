@@ -90,20 +90,18 @@ export default function CreateManualBookingDialog({ open, onOpenChange, prefillD
 
     setSubmitting(true);
     try {
-      // Build ISO date from date + time
-      const dateTimeStr = `${scheduledDate}T${scheduledTime}:00`;
-      // Convert local Pacific time to ISO
-      const localDate = new Date(dateTimeStr);
-      const isDST = localDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', timeZoneName: 'short' }).includes('PDT');
-      const offsetHours = isDST ? 7 : 8;
-      const utcDate = new Date(localDate.getTime() + offsetHours * 60 * 60 * 1000);
+      // Send the bare Pacific date+time string — the backend will handle
+      // timezone conversion using the canonical 'America/Los_Angeles' timezone.
+      // Do NOT convert to UTC here — that caused a double-offset bug.
+      const pacificDateTimeStr = `${scheduledDate}T${scheduledTime}:00`;
 
       const response = await base44.functions.invoke("createManualBooking", {
         client_name: clientName,
         client_email: clientEmail,
         client_phone: clientPhone,
         appointment_type_id: appointmentTypeId || null,
-        scheduled_date: utcDate.toISOString(),
+        scheduled_date: pacificDateTimeStr,
+        scheduled_timezone: 'America/Los_Angeles',
         duration_minutes: parseInt(durationMinutes) || 60,
         location_type: locationType,
         custom_location: customLocation,

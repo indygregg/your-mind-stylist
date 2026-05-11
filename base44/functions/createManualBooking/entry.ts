@@ -20,6 +20,7 @@ Deno.serve(async (req) => {
       client_phone,
       appointment_type_id,
       scheduled_date,
+      scheduled_timezone,
       duration_minutes,
       location_type,
       custom_location,
@@ -33,6 +34,33 @@ Deno.serve(async (req) => {
     if (!client_name || !client_email || !scheduled_date) {
       return Response.json({ error: 'client_name, client_email, and scheduled_date are required' }, { status: 400 });
     }
+
+    // --- Timezone-safe conversion ---
+    // The frontend sends a bare local datetime like "2026-06-01T13:30:00"
+    // along with scheduled_timezone = "America/Los_Angeles".
+    // We need to convert that to a proper UTC ISO string for storage.
+    const tz = scheduled_timezone || 'America/Los_Angeles';
+    let scheduledUTC;
+
+    if (scheduled_date.endsWith('Z') || /[+-]\d{2}:\d{2}$/.test(scheduled_date)) {
+      // Already a full ISO/UTC string (legacy callers) — use as-is
+      scheduledUTC = scheduled_date;
+    } else {
+      // Bare local datetime like "2026-06-01T13:30:00"
+      // Convert from Pacific local → UTC using Intl offset detection
+      const naiveDate = new Date(scheduled_date);
+      // Get the UTC representation of the same wall-clock time in the target timezone
+      const utcStr = naiveDate.toLocaleString('en-US', { timeZone: 'UTC' });
+      const tzStr = naiveDate.toLocaleString('en-US', { timeZone: tz });
+      const utcParsed = new Date(utcStr);
+      const tzParsed = new Date(tzStr);
+      const offsetMs = utcParsed.getTime() - tzParsed.getTime();
+      const utcDate = new Date(naiveDate.getTime() + offsetMs);
+      scheduledUTC = utcDate.toISOString();
+    }
+
+    console.log('[createManualBooking] Input scheduled_date:', scheduled_date);
+    console.log('[createManualBooking] Resolved UTC:', scheduledUTC);
 
     // Fetch appointment type if provided
     let appointmentType = null;
@@ -56,7 +84,7 @@ Deno.serve(async (req) => {
       locationStr = custom_location;
     }
 
-    // Create Booking entity
+    // Create Booking entity — always store UTC
     const bookingData = {
       user_email: client_email.toLowerCase().trim(),
       user_name: client_name.trim(),
@@ -71,7 +99,7 @@ Deno.serve(async (req) => {
       booking_status: 'confirmed',
       booking_source: 'manual_manager',
       location: locationStr || '',
-      scheduled_date: scheduled_date,
+      scheduled_date: scheduledUTC,
       notes: notes || '',
       manager_notes: manager_notes || '',
       can_reschedule: true,
@@ -128,7 +156,7 @@ Deno.serve(async (req) => {
     let calendarSynced = false;
     if (sync_to_google_calendar) {
       try {
-        const endDate = new Date(new Date(scheduled_date).getTime() + effectiveDuration * 60 * 1000).toISOString();
+        const endDateUTC = new Date(new Date(scheduledUTC).getTime() + effectiveDuration * 60 * 1000).toISOString();
         
         const conn = await base44.asServiceRole.connectors.getConnection('googlecalendar');
         const accessToken = conn.accessToken;
@@ -145,12 +173,12 @@ Deno.serve(async (req) => {
             `Created by: ${user.full_name || user.email} (manual booking)`,
           ].filter(Boolean).join('\n'),
           start: {
-            dateTime: scheduled_date,
-            timeZone: 'America/Los_Angeles'
+            dateTime: scheduledUTC,
+            timeZone: tz
           },
           end: {
-            dateTime: endDate,
-            timeZone: 'America/Los_Angeles'
+            dateTime: endDateUTC,
+            timeZone: tz
           },
           location: locationStr || undefined,
         };
@@ -212,6 +240,12 @@ Deno.serve(async (req) => {
       console.error('[createManualBooking] Lead upsert failed (non-critical):', leadErr.message);
     }
 
+    // Format display time in Pacific for the response message
+    const displayOptions = { 
+      weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit',
+      timeZone: 'America/Los_Angeles'
+    };
+
     return Response.json({
       success: true,
       booking_id: booking.id,
@@ -219,10 +253,7 @@ Deno.serve(async (req) => {
       emails_sent: emailsSent,
       calendar_synced: calendarSynced,
       zoom_created: !!zoomResult,
-      message: `Appointment created for ${client_name} on ${new Date(scheduled_date).toLocaleDateString('en-US', { 
-        weekday: 'long', month: 'long', day: 'numeric', hour: 'numeric', minute: '2-digit',
-        timeZone: 'America/Los_Angeles'
-      })}`,
+      message: `Appointment created for ${client_name} on ${new Date(scheduledUTC).toLocaleDateString('en-US', displayOptions)}`,
     });
 
   } catch (error) {
