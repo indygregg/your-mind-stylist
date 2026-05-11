@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Loader2, ArrowLeft, Trash2, Eye } from "lucide-react";
+import { Plus, Loader2, ArrowLeft, Trash2, Eye, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -130,10 +130,13 @@ export default function ManagerQuizEditor() {
                     <p className="text-sm text-[#2B2725]/60 mt-1">/quiz/{quiz.slug}</p>
                   </div>
                   <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="sm" onClick={() => setSelectedQuizId(quiz.id)} title="Edit quiz">
+                      <Pencil size={16} />
+                    </Button>
                     <a href={`/quiz/${quiz.slug}`} target="_blank" rel="noopener noreferrer">
-                      <Button variant="ghost" size="sm"><Eye size={16} /></Button>
+                      <Button variant="ghost" size="sm" title="Preview quiz"><Eye size={16} /></Button>
                     </a>
-                    <Button variant="ghost" size="sm" onClick={() => handleDeleteQuiz(quiz.id)} className="text-red-500 hover:text-red-700">
+                    <Button variant="ghost" size="sm" onClick={() => handleDeleteQuiz(quiz.id)} className="text-red-500 hover:text-red-700" title="Delete quiz">
                       <Trash2 size={16} />
                     </Button>
                   </div>
