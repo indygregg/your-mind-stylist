@@ -4,6 +4,7 @@ import { createPageUrl } from "../utils";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import SEO from "../components/SEO";
+import CmsText from "../components/cms/CmsText";
 import { ArrowLeft, Sparkles, ShoppingCart, Loader2, CheckCircle } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
@@ -70,11 +71,25 @@ export default function ProgramsOther() {
           >
             <div className="flex items-center gap-3 mb-4">
               <Sparkles size={40} className="text-[#D8B46B]" />
-              <h1 className="font-serif text-4xl md:text-5xl">Other Programs & Tools</h1>
+              <CmsText
+                contentKey="programs-other-hero-title"
+                fallback="Other Programs & Tools"
+                as="h1"
+                className="font-serif text-4xl md:text-5xl"
+                page="ProgramsOther"
+                blockTitle="Hero Title"
+                contentType="short_text"
+              />
             </div>
-            <p className="text-xl text-white/90 max-w-3xl">
-              Additional resources, tools, and offerings to support your journey — curated by Your Mind Stylist.
-            </p>
+            <CmsText
+              contentKey="programs-other-hero-subtitle"
+              fallback="Additional resources, tools, and offerings to support your journey — curated by Your Mind Stylist."
+              as="p"
+              className="text-xl text-white/90 max-w-3xl"
+              page="ProgramsOther"
+              blockTitle="Hero Subtitle"
+              contentType="short_text"
+            />
           </motion.div>
         </div>
       </section>
@@ -175,13 +190,34 @@ export default function ProgramsOther() {
       {/* CTA Section */}
       <section className="py-16 bg-[#1E3A32] text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="font-serif text-3xl mb-4">Not Sure What You Need?</h2>
-          <p className="text-white/80 mb-8 text-lg">
-            Let's have a conversation about where you are and where you want to go.
-          </p>
+          <CmsText
+            contentKey="programs-other-cta-title"
+            fallback="Not Sure What You Need?"
+            as="h2"
+            className="font-serif text-3xl mb-4"
+            page="ProgramsOther"
+            blockTitle="CTA Title"
+            contentType="short_text"
+          />
+          <CmsText
+            contentKey="programs-other-cta-subtitle"
+            fallback="Let's have a conversation about where you are and where you want to go."
+            as="p"
+            className="text-white/80 mb-8 text-lg"
+            page="ProgramsOther"
+            blockTitle="CTA Subtitle"
+            contentType="short_text"
+          />
           <Link to={createPageUrl("Bookings")}>
             <Button className="bg-[#D8B46B] text-[#1E3A32] hover:bg-[#C5A35B] px-8 py-6 text-lg">
-              Book a Consultation
+              <CmsText
+                contentKey="programs-other-cta-button"
+                fallback="Book a Consultation"
+                as="span"
+                page="ProgramsOther"
+                blockTitle="CTA Button Text"
+                contentType="short_text"
+              />
             </Button>
           </Link>
         </div>
