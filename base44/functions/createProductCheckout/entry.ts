@@ -111,17 +111,17 @@ Deno.serve(async (req) => {
     const origin = req.headers.get('origin') || 'https://yourmindstylist.com';
 
     // Detect if any product requires physical shipping
-    // Check both product_subtype and purchase_options type
+    // Only physical_product subtype or products with "paperback" in the key trigger shipping
+    // Digital books, audiobooks, and other digital products do NOT require shipping
     const hasPhysicalProduct = products.some(p => {
       // Direct check on product subtype for physical products
       if (p.product_subtype === 'physical_product') return true;
-      // Check if any purchase option is "physical" type
+      // Check if any purchase option is explicitly "physical" type
       if (p.purchase_options && p.purchase_options.length > 0) {
         return p.purchase_options.some(opt => opt.type === 'physical');
       }
-      // Also check the parent product's purchase_options if this is a variant
-      // A book with product_subtype "book" that has physical purchase options
-      if (p.product_subtype === 'book') return true;
+      // Check product key for paperback indicator (physical book needing shipping)
+      if (p.key && (p.key.includes('paperback') || p.key.includes('hardcover'))) return true;
       return false;
     });
 

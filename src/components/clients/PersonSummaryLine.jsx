@@ -7,11 +7,18 @@ const STATUS_LABELS = {
   lead: "Lead",
 };
 
-export default function PersonSummaryLine({ personStatus, bookings = [], whatBought }) {
+export default function PersonSummaryLine({ personStatus, bookings = [], whatBought, purchasedProducts = [] }) {
   const statusLabel = STATUS_LABELS[personStatus] || "Lead";
 
-  // Purchase state
-  const purchaseState = whatBought ? `Purchased ${whatBought.split(",")[0].trim()}` : "No purchases yet";
+  // Purchase state — prefer actual product records, fallback to lead text
+  let purchaseState;
+  if (purchasedProducts.length > 0) {
+    purchaseState = `${purchasedProducts.length} purchase${purchasedProducts.length > 1 ? "s" : ""}`;
+  } else if (whatBought) {
+    purchaseState = `Purchased ${whatBought.split(",")[0].trim()}`;
+  } else {
+    purchaseState = "No purchases yet";
+  }
 
   // Booking state
   const now = new Date();

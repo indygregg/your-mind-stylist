@@ -151,7 +151,18 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
     : null;
   const hasAddress = address && (address.line1 || address.city);
 
-  // Purchased products from lead
+  // Fetch actual purchased products from user record
+  const { data: purchasedProducts = [] } = useQuery({
+    queryKey: ["person-purchased-products", userData?.id],
+    queryFn: async () => {
+      if (!userData?.purchased_product_ids?.length) return [];
+      const allProducts = await base44.entities.Product.list();
+      return allProducts.filter(p => userData.purchased_product_ids.includes(p.id));
+    },
+    enabled: open && !!userData?.purchased_product_ids?.length,
+  });
+
+  // Purchased products from lead (legacy/fallback)
   const whatBought = leadData?.what_they_bought;
 
   const handleInvite = () => {
@@ -219,6 +230,7 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                 personStatus={personStatus}
                 bookings={bookings}
                 whatBought={whatBought}
+                purchasedProducts={purchasedProducts}
               />
             </div>
 
@@ -327,7 +339,29 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
             {/* Purchases */}
             <div>
               <SectionLabel>Purchases</SectionLabel>
-              {whatBought ? (
+              {purchasedProducts.length > 0 ? (
+                <div className="space-y-2">
+                  {purchasedProducts.map((product) => (
+                    <div key={product.id} className="flex items-start gap-3 text-sm">
+                      <ShoppingBag size={15} className="text-[#D8B46B] flex-shrink-0 mt-0.5" />
+                      <p className="text-[#2B2725]">
+                        {product.name}
+                        {product.price > 0 && (
+                          <span className="text-[#2B2725]/50"> — ${(product.price / 100).toFixed(2)}</span>
+                        )}
+                      </p>
+                    </div>
+                  ))}
+                  {leadData?.date_of_purchase && (
+                    <p className="text-xs text-[#2B2725]/40 ml-7">
+                      Last purchase: {(() => {
+                        try { return format(new Date(leadData.date_of_purchase), "MMM d, yyyy"); }
+                        catch { return leadData.date_of_purchase; }
+                      })()}
+                    </p>
+                  )}
+                </div>
+              ) : whatBought ? (
                 <div className="space-y-2">
                   {whatBought.split(",").map((product, i) => {
                     const trimmed = product.trim();

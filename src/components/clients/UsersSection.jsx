@@ -186,7 +186,8 @@ export default function UsersSection({ users, isLoading, leads = [], currentUser
                     const lead = getLeadForUser(user);
                     const phone = user.phone || lead?.phone || "";
                     const location = [lead?.city, lead?.state].filter(Boolean).join(", ");
-                    const purchased = lead?.what_they_bought || "";
+                    const purchased = lead?.what_they_bought || 
+                      (user.purchased_product_ids?.length ? `${user.purchased_product_ids.length} product${user.purchased_product_ids.length > 1 ? "s" : ""} purchased` : "");
 
                     // Derive display name: prefer first_name+last_name, fallback to full_name, then lead
                     const derivedName = user.first_name
