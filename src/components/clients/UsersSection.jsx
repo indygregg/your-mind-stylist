@@ -65,14 +65,16 @@ export default function UsersSection({ users, isLoading, leads = [], currentUser
   const filteredUsers = users.filter((user) => {
     const lead = getLeadForUser(user);
     const term = searchTerm.toLowerCase();
+    // Build a combined searchable name from all available name fields
+    const derivedName = [user.first_name, user.last_name].filter(Boolean).join(" ");
+    const leadDerivedName = [lead?.first_name, lead?.last_name].filter(Boolean).join(" ");
     const matchesSearch =
       user.full_name?.toLowerCase().includes(term) ||
-      user.first_name?.toLowerCase().includes(term) ||
-      user.last_name?.toLowerCase().includes(term) ||
+      derivedName.toLowerCase().includes(term) ||
       user.username?.toLowerCase().includes(term) ||
       user.email?.toLowerCase().includes(term) ||
-      lead?.first_name?.toLowerCase().includes(term) ||
-      lead?.last_name?.toLowerCase().includes(term) ||
+      lead?.full_name?.toLowerCase().includes(term) ||
+      leadDerivedName.toLowerCase().includes(term) ||
       lead?.phone?.includes(searchTerm) ||
       lead?.city?.toLowerCase().includes(term);
     const userRole = user.custom_role || user.role;

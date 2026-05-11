@@ -92,9 +92,12 @@ export default function LeadsSection({ leads, users, isLoading }) {
   const filteredLeads = visibleLeads.filter((lead) => {
     const query = searchQuery.toLowerCase();
     const fullName = getFullName(lead);
+    // Also check individual name parts for partial matching
     const matchesSearch =
       lead.email?.toLowerCase().includes(query) ||
       fullName.toLowerCase().includes(query) ||
+      lead.first_name?.toLowerCase().includes(query) ||
+      lead.last_name?.toLowerCase().includes(query) ||
       lead.phone?.includes(query);
 
     const matchesStage = stageFilter === "all" || lead.stage === stageFilter;
