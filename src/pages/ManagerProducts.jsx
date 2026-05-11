@@ -289,6 +289,7 @@ export default function ManagerProducts() {
       book_hero_layout: product.book_hero_layout || "book_left",
       book_video_embed: product.book_video_embed || "",
       book_reviews: product.book_reviews || [],
+      requires_shipping: product.requires_shipping || false,
       purchase_options: (product.purchase_options || []).map(opt => {
         // Parse JSON-encoded product_id arrays back for the editor UI
         if (opt.product_id && typeof opt.product_id === 'string' && opt.product_id.startsWith('[')) {
@@ -1019,6 +1020,24 @@ export default function ManagerProducts() {
                 </div>
               </div>
             )}
+
+            {/* Physical Product / Shipping Toggle */}
+            <div className="border border-[#E4D9C4] rounded-lg p-4">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.requires_shipping || false}
+                  onChange={(e) => setFormData({ ...formData, requires_shipping: e.target.checked })}
+                  className="w-4 h-4 accent-[#1E3A32]"
+                />
+                <div>
+                  <span className="font-medium text-[#1E3A32]">Physical Product — Requires Shipping</span>
+                  <p className="text-xs text-[#2B2725]/60 mt-0.5">
+                    Turn this on for paperback books or other physical items. Checkout will collect a shipping address and charge shipping fees.
+                  </p>
+                </div>
+              </label>
+            </div>
 
             {/* Pricing */}
             <div className="grid md:grid-cols-3 gap-4">

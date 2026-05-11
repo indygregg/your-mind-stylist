@@ -71,6 +71,11 @@
       ],
       "description": "Product subtype for tax and organizational purposes"
     },
+    "requires_shipping": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, checkout will collect a shipping address and charge shipping fees. Turn on only for physical products like paperback books."
+    },
     "price": {
       "type": "number",
       "description": "Price in cents"

@@ -111,16 +111,9 @@ Deno.serve(async (req) => {
     const origin = req.headers.get('origin') || 'https://yourmindstylist.com';
 
     // Detect if any product requires physical shipping
-    // ONLY these qualify as physical:
-    //   1. product_subtype is explicitly 'physical_product'
-    //   2. product key contains 'paperback' or 'hardcover' (physical book SKUs)
-    // Everything else is digital — courses, webinars, digital books, audiobooks,
-    // bundles, services, etc. do NOT trigger shipping.
-    const hasPhysicalProduct = products.some(p => {
-      if (p.product_subtype === 'physical_product') return true;
-      if (p.key && (p.key.includes('paperback') || p.key.includes('hardcover'))) return true;
-      return false;
-    });
+    // Uses the explicit requires_shipping toggle on the Product entity.
+    // Only products with requires_shipping === true trigger shipping collection.
+    const hasPhysicalProduct = products.some(p => p.requires_shipping === true);
 
     // Build shipping config for physical products
     let shippingConfig = {};
