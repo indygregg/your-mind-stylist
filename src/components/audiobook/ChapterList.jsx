@@ -30,10 +30,10 @@ export default function ChapterList({
         Chapters ({chapters.length})
       </h3>
       <div
-        className="max-h-[400px] md:max-h-[600px] overflow-y-auto overscroll-contain"
+        className="max-h-[400px] md:max-h-[600px] overflow-y-scroll overscroll-contain relative"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
-        <div className="space-y-1">
+        <div className="space-y-1 pb-4">
           {chapters.map((chapter, index) => {
             const isActive = index === currentChapterIndex;
             const chapterEnd = chapter.start_seconds + (chapter.duration_seconds || 0);

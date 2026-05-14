@@ -31,36 +31,17 @@ export default function AudiobookLibrarySection({ userId, expanded, onToggle }) 
     staleTime: 2 * 60 * 1000,
   });
 
-  // Get current user for manager bypass check
-  const { data: currentUser } = useQuery({
-    queryKey: ["currentUser"],
-    queryFn: () => base44.auth.me(),
-    staleTime: 5 * 60 * 1000,
-  });
-
-  // Check product ownership for each gated audiobook (manager/creator bypass included)
+  // Check audiobook access via comprehensive backend function (batch)
   const { data: accessMap = {}, isLoading: loadingAccess } = useQuery({
-    queryKey: ["audiobookAccess", userId, audiobooks.map(a => a.id).join(","), currentUser?.role, currentUser?.email],
+    queryKey: ["audiobookAccess", userId, audiobooks.map(a => a.id).join(",")],
     queryFn: async () => {
-      const map = {};
-      for (const ab of audiobooks) {
-        if (ab.access_level === "free" || !ab.product_id) {
-          map[ab.id] = true;
-          continue;
-        }
-        // Manager bypass: creator of this audiobook can always preview
-        if (currentUser?.role === "manager" && ab.created_by === currentUser.email) {
-          map[ab.id] = true;
-          continue;
-        }
-        const result = await base44.functions.invoke("checkProductOwnership", {
-          product_id: ab.product_id,
-        });
-        map[ab.id] = result.data?.owns_product || result.data?.has_access || false;
-      }
-      return map;
+      const ids = audiobooks.map(a => a.id);
+      const result = await base44.functions.invoke("checkAudiobookAccess", {
+        audiobook_ids: ids,
+      });
+      return result.data?.access || {};
     },
-    enabled: audiobooks.length > 0 && !!userId && !!currentUser,
+    enabled: audiobooks.length > 0 && !!userId,
     staleTime: 5 * 60 * 1000,
   });
 
