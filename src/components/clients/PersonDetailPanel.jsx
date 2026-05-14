@@ -25,6 +25,7 @@ import PersonBookingHistory from "./PersonBookingHistory";
 import DeactivateUserDialog from "./DeactivateUserDialog";
 import SafeDeleteUserDialog from "./SafeDeleteUserDialog";
 import ArchiveLeadDialog from "./ArchiveLeadDialog";
+import PendingAccessGrantsSection from "./PendingAccessGrantsSection";
 
 function SectionLabel({ children }) {
   return (
@@ -392,6 +393,17 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                 <EmptyState text="No purchases yet" />
               )}
             </div>
+
+            {/* Pending Access Grants — from migration */}
+            {leadData?.pending_access_grants?.length > 0 && (
+              <>
+                <Separator className="bg-[#E4D9C4]" />
+                <div>
+                  <SectionLabel>Access Grants (Migration)</SectionLabel>
+                  <PendingAccessGrantsSection grants={leadData.pending_access_grants} />
+                </div>
+              </>
+            )}
 
             <Separator className="bg-[#E4D9C4]" />
 
