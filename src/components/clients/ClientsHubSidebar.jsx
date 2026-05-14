@@ -7,7 +7,7 @@ const SECTIONS = [
     group: "People",
     items: [
       { key: "leads", label: "Leads", icon: Users },
-      { key: "pending_invites", label: "Pending Invites", icon: Clock },
+      { key: "pending_invites", label: "Invited Customers", icon: Clock },
       { key: "users", label: "Users", icon: Users },
     ],
   },

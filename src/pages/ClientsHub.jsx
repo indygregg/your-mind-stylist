@@ -140,14 +140,13 @@ export default function ClientsHub() {
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="max-w-sm bg-[#1E3A32] text-[#F9F5EF] border-0">
                   <div className="space-y-2 text-sm">
-                   <p className="font-semibold">How Invites Work</p>
+                   <p className="font-semibold">How It Works</p>
                    <ol className="list-decimal list-inside space-y-1">
-                     <li><span className="font-medium">Add Leads</span> — Add contacts to the Leads tab</li>
-                     <li><span className="font-medium">Invite to Platform</span> — Send them an invite email to create their account</li>
-                     <li><span className="font-medium">Track Status</span> — Check "Pending Invites" to see who hasn't set up their account yet</li>
-                     <li><span className="font-medium">Enroll</span> — Once they accept, enroll them in courses</li>
+                     <li><span className="font-medium">Leads</span> — Contacts and inquiries</li>
+                     <li><span className="font-medium">Invited Customers</span> — Imported or invited customers awaiting account setup</li>
+                     <li><span className="font-medium">Active Users</span> — Customers who have created their password and can access the platform</li>
                    </ol>
-                   <p className="text-xs text-[#F9F5EF]/80 pt-2 border-t border-[#F9F5EF]/20">Invited leads show as "Awaiting Setup" until they create their account.</p>
+                   <p className="text-xs text-[#F9F5EF]/80 pt-2 border-t border-[#F9F5EF]/20">Invited customers automatically become active users once they sign up and create their password.</p>
                   </div>
                 </TooltipContent>
               </Tooltip>

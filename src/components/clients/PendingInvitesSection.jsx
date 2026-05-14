@@ -81,10 +81,9 @@ export default function PendingInvitesSection({ leads, users }) {
       <div className="flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-lg">
         <Info size={18} className="text-amber-600 mt-0.5 flex-shrink-0" />
         <div className="text-sm text-amber-900">
-          <p className="font-medium mb-1">What are Pending Invites?</p>
+          <p className="font-medium mb-1">Invited Customers</p>
           <p className="text-amber-800">
-            These people were invited to the platform but haven't set up their account yet. 
-            They won't appear as active users until they accept the invite email and create a password.
+            These customers have been imported and invited. They become active users after they create their password.
             You can resend the invite if they didn't receive it.
           </p>
         </div>
@@ -96,7 +95,7 @@ export default function PendingInvitesSection({ leads, users }) {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#2B2725]/40" size={16} />
             <Input
-              placeholder="Search pending invites..."
+              placeholder="Search invited customers..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -111,7 +110,7 @@ export default function PendingInvitesSection({ leads, users }) {
           {filtered.length === 0 ? (
             <div className="p-12 text-center">
               <Clock size={32} className="mx-auto text-[#2B2725]/20 mb-3" />
-              <p className="text-[#2B2725]/60 font-medium">No pending invites</p>
+              <p className="text-[#2B2725]/60 font-medium">No invited customers waiting</p>
               <p className="text-sm text-[#2B2725]/40 mt-1">
                 Everyone you've invited has set up their account
               </p>
@@ -146,7 +145,7 @@ export default function PendingInvitesSection({ leads, users }) {
 
                   <div className="flex items-center gap-3 flex-shrink-0">
                     <Badge className="bg-amber-100 text-amber-800 text-xs whitespace-nowrap">
-                      Awaiting Setup
+                      Invited — Awaiting Setup
                     </Badge>
                     {lead.invite_sent_at && (
                       <span className="text-xs text-[#2B2725]/40 hidden md:block whitespace-nowrap">
@@ -176,7 +175,7 @@ export default function PendingInvitesSection({ leads, users }) {
       </Card>
 
       <div className="text-center text-sm text-[#2B2725]/60">
-        {pendingLeads.length} pending invite{pendingLeads.length !== 1 ? "s" : ""}
+        {pendingLeads.length} invited customer{pendingLeads.length !== 1 ? "s" : ""} awaiting account setup
       </div>
 
       {/* Person Detail Panel */}

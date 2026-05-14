@@ -24,7 +24,7 @@ const STATUS_CONFIG = {
     className: "bg-gray-100 text-gray-500",
   },
   invite_pending: {
-    label: "Invite Sent — Awaiting Setup",
+    label: "Invited Customer — Awaiting Setup",
     icon: Clock,
     className: "bg-amber-100 text-amber-800",
   },
