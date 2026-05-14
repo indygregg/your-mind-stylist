@@ -49,7 +49,7 @@ function buildBrandedBody(email, firstName) {
   // Wrap in brand shell
   return `<div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #F9F5EF; padding: 0;">
   <div style="text-align: center; padding: 32px 24px 16px;">
-    <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/fad26f1a8_mind-stylist-whie-gold-logo2x.png" alt="Your Mind Stylist" style="height: 60px; width: auto;" />
+    <img src="https://media.base44.com/images/public/693a98b3e154ab3b36c88ebb/a5bb69af7_your-mind-stylist-horizontal-fin.png" alt="Your Mind Stylist" style="height: 60px; width: auto;" />
   </div>
   <div style="background: white; border-radius: 12px; margin: 0 24px; padding: 32px 28px; border: 1px solid #E4D9C4;">
     ${innerHtml}
