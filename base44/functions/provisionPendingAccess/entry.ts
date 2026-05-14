@@ -93,7 +93,6 @@ Deno.serve(async (req) => {
       if (grant.action_type === 'grant_product' && grant.product_id) {
         // ── Grant Product ──────────────────────────────────────
         if (purchasedIds.includes(grant.product_id)) {
-          // Already has it — mark provisioned but don't duplicate
           results.actions.push({
             index: i,
             item: grant.platform_item_name,
@@ -109,6 +108,60 @@ Deno.serve(async (req) => {
             product_id: grant.product_id,
           });
         }
+
+        // ── Auto-enroll in linked courses if product has them ──
+        const product = await base44.asServiceRole.entities.Product.get(grant.product_id);
+        if (product) {
+          const courseIdsToEnroll = [];
+          if (product.related_course_id) courseIdsToEnroll.push(product.related_course_id);
+          if (product.access_grants?.length > 0) courseIdsToEnroll.push(...product.access_grants);
+
+          for (const courseId of courseIdsToEnroll) {
+            const existingEnroll = await base44.asServiceRole.entities.UserCourseProgress.filter({
+              user_id: targetUser.id,
+              course_id: courseId,
+            });
+            if (existingEnroll.length === 0) {
+              await base44.asServiceRole.entities.UserCourseProgress.create({
+                user_id: targetUser.id,
+                course_id: courseId,
+                status: 'not_started',
+                completion_percentage: 0,
+                started_date: nowISO,
+              });
+              results.actions.push({
+                index: i,
+                item: grant.platform_item_name,
+                action: 'auto_enrolled_course',
+                course_id: courseId,
+                reason: 'Product has related_course_id or access_grants',
+              });
+            }
+          }
+
+          // ── Auto-grant webinar access if product has related_webinar_id ──
+          if (product.related_webinar_id) {
+            const existingWebinar = await base44.asServiceRole.entities.UserWebinarAccess.filter({
+              user_email: email,
+              webinar_id: product.related_webinar_id,
+            });
+            if (existingWebinar.length === 0) {
+              await base44.asServiceRole.entities.UserWebinarAccess.create({
+                user_email: email,
+                webinar_id: product.related_webinar_id,
+                access_type: 'purchased',
+                granted_date: nowISO,
+              });
+              results.actions.push({
+                index: i,
+                item: grant.platform_item_name,
+                action: 'auto_granted_webinar',
+                webinar_id: product.related_webinar_id,
+              });
+            }
+          }
+        }
+
         // Mark provisioned either way
         grants[i] = {
           ...grant,

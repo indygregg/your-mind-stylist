@@ -28,13 +28,14 @@ import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
 import StudentDashboard from "../components/library/StudentDashboard";
 import AudiobookLibrarySection from "../components/audiobook/AudiobookLibrarySection";
+import PurchasedProductsSection from "../components/library/PurchasedProductsSection";
 
 export default function ClientPortal() {
   if (typeof window !== 'undefined') {
     window.__USE_AUTH_LAYOUT = true;
   }
 
-  const [expandedSections, setExpandedSections] = useState({ toolkit: true, webinars: true, audio: true, training: true, audiobooks: true });
+  const [expandedSections, setExpandedSections] = useState({ products: true, toolkit: true, webinars: true, audio: true, training: true, audiobooks: true });
   const toggleSection = (key) => setExpandedSections(prev => ({ ...prev, [key]: !prev[key] }));
 
   const { data: user } = useQuery({
@@ -111,6 +112,19 @@ export default function ClientPortal() {
   const { data: resources = [] } = useQuery({
     queryKey: ["publishedResources"],
     queryFn: () => base44.entities.Resource.filter({ status: "published" }),
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Fetch purchased products from user record
+  const { data: purchasedProducts = [] } = useQuery({
+    queryKey: ["purchasedProducts", user?.id],
+    queryFn: async () => {
+      const ids = user?.purchased_product_ids || [];
+      if (ids.length === 0) return [];
+      const allProducts = await base44.entities.Product.filter({ status: "published" });
+      return allProducts.filter(p => ids.includes(p.id));
+    },
+    enabled: !!user?.purchased_product_ids?.length,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -241,7 +255,14 @@ export default function ClientPortal() {
                 onToggle={() => toggleSection("audiobooks")}
               />
 
-              {courses.length === 0 ? (
+              {/* Purchased Products Section */}
+              <PurchasedProductsSection
+                products={purchasedProducts}
+                expanded={expandedSections.products}
+                onToggle={() => toggleSection("products")}
+              />
+
+              {courses.length === 0 && purchasedProducts.length === 0 ? (
                 <Card className="p-12 text-center">
                   <Lock size={48} className="mx-auto mb-4 text-[#2B2725]/30" />
                   <h3 className="font-serif text-2xl text-[#1E3A32] mb-2">Your Library is Empty (For Now)</h3>
@@ -255,6 +276,8 @@ export default function ClientPortal() {
                     </Link>
                   </div>
                 </Card>
+              ) : courses.length === 0 ? (
+                null /* Products are shown above, skip course sections if none enrolled */
               ) : (
                 <div>
                   {/* Student Dashboard Summary */}
