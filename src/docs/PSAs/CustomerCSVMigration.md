@@ -312,6 +312,111 @@ After import:
 
 ---
 
+## ADDENDUM — Migration Guardrails
+
+**Added:** 2026-05-14
+
+### 1. Pre-Import Snapshot / Backup
+
+Before any writes, export and store timestamped references of existing data:
+- **Users** — full entity export
+- **Leads** — full entity export
+- **UserCourseProgress** — full entity export
+- **Product access/grants** — purchased_product_ids from all users
+
+Store as a migration snapshot with batch ID and timestamp so we can diff against post-import state.
+
+### 2. Migration Metadata on Every Record
+
+Every imported or updated record MUST include:
+- `migration_batch_id` — unique ID for this import run (e.g., `csv-migration-2026-05-14`)
+- `migration_source_files` — array of CSV filenames that contributed to this record
+- `imported_by` — `"atlas-migration"` (technical) or `"roberta@robertafernandez.com"` (operational owner)
+- `imported_at` — ISO datetime of when the record was created/updated by the migration
+
+### 3. Reversible Import Logs
+
+Create a structured migration log (stored as entity records or exportable JSON) tracking:
+
+| Log Field | Description |
+|-----------|-------------|
+| created_records | New records created (email + entity type + ID) |
+| updated_records | Existing records that were updated (email + fields changed + old values) |
+| merged_records | Records merged from multiple CSVs (email + source files combined) |
+| skipped_rows | Rows not imported (reason: missing email, malformed, etc.) |
+| email_conflicts | Same email with conflicting data across CSVs |
+
+This log enables full rollback if needed.
+
+### 4. Normalization Before Dedupe
+
+All data MUST be normalized before deduplication:
+- **email** → lowercase, trimmed
+- **first_name / last_name** → trimmed, remove duplicate internal spaces
+- **phone** → strip non-numeric chars, normalize to consistent format (preserve country code if present)
+- **address fields** → trimmed
+
+Normalization happens BEFORE dedup comparison, not after.
+
+### 5. Username Collision Protection
+
+If a username/email collision occurs during import:
+- Do NOT overwrite the existing user's data
+- If creating a new display name and collision exists, append a safe suffix (e.g., `_2`)
+- Log the collision for manual review
+- Never silently merge two distinct people
+
+### 6. High-Risk Merge Flagging
+
+The following situations MUST be flagged for manual review (NOT auto-resolved):
+
+| Flag | Condition |
+|------|-----------|
+| 🔴 Name mismatch | Same email but different first_name or last_name across CSVs |
+| 🔴 Phone conflict | Same phone number but different email addresses |
+| 🔴 Missing email | Row has no email — cannot be imported as user |
+| 🔴 Malformed email | Email fails basic validation (no @, invalid domain, contains spaces/commas) |
+| 🟡 Duplicate purchases | Same email has conflicting what_they_bought across CSVs |
+| 🟡 Multi-email row | Row contains multiple emails in one field (e.g., comma-separated) |
+
+These records go into a `manual_review` queue returned in the dry-run report, NOT silently imported.
+
+### 7. Sensitive Course Protection
+
+The following content categories are **PROTECTED** and must NOT be auto-enrolled without explicit Roberta approval during Phase 4 mapping review:
+
+- **Hypnosis Certification** — any practitioner/certification training
+- **FARE Hypnosis Training Bundle** — professional training content
+- **Mind Styling Hypnosis 1.0 / 2.0** — practitioner-level content
+- **Private client session content** — 1:1 session materials
+- **Any course marked as `clients_only` visibility**
+
+Safe to auto-map (after mapping table approval):
+- Pocket Mindset™
+- Cleaning Out Your Closet™
+- LENS™
+- Published webinars
+- Audiobooks
+- Digital books
+
+### 8. Email Sending Throttle
+
+When Phase 6 invite emails begin:
+
+| Control | Rule |
+|---------|------|
+| Batch size | Max 25 emails per batch |
+| Batch interval | 60-second pause between batches |
+| Failure threshold | Pause if >3 failures in a single batch |
+| Bounce spike | Stop all sends if >5% bounce rate across batches |
+| Logging | Every send logged to EmailSendLog with status (sent/failed/bounced) |
+| Resume | Manual approval required to resume after pause |
+| Duplicate guard | Check EmailSendLog before each send — skip if already sent to this email for this migration batch |
+
+**No bulk fire.** Controlled, logged, pausable.
+
+---
+
 ## CSV File URLs (for processing)
 
 | File | URL |
