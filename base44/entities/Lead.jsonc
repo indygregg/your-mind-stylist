@@ -80,6 +80,7 @@
         "booking_system",
         "product_purchase",
         "free_masterclass",
+        "csv_import",
         "other"
       ],
       "description": "Primary source \u2014 how they found us"
@@ -90,6 +91,15 @@
         "type": "string"
       },
       "description": "All sources this lead came from (appended on duplicate)"
+    },
+    "lead_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "default": "active",
+      "description": "Lifecycle status of the lead record"
     },
     "invite_status": {
       "type": "string",
@@ -209,6 +219,48 @@
     "first_page_visited": {
       "type": "string",
       "description": "First page they visited"
+    },
+    "imported_from_csv": {
+      "type": "boolean",
+      "default": false,
+      "description": "Was this record imported from a CSV migration"
+    },
+    "imported_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the record was imported"
+    },
+    "import_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "CSV file names this record was imported from"
+    },
+    "migration_batch_id": {
+      "type": "string",
+      "description": "Unique batch ID for this import run"
+    },
+    "migration_source_files": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "All CSV filenames that contributed to this record"
+    },
+    "original_csv_rows": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "description": "Raw original CSV row data for provenance/rollback"
+    },
+    "original_purchase_texts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Original what_they_bought text from each CSV source"
     }
   },
   "required": [
