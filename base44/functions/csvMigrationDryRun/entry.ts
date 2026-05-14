@@ -65,6 +65,21 @@ function parsePurchases(text) {
   return text.split(',').map(s => s.trim()).filter(Boolean);
 }
 
+function editDistance(a, b) {
+  const m = a.length, n = b.length;
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
+  for (let i = 0; i <= m; i++) dp[i][0] = i;
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i-1] === b[j-1]
+        ? dp[i-1][j-1]
+        : 1 + Math.min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1]);
+    }
+  }
+  return dp[m][n];
+}
+
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
   const user = await base44.auth.me();
@@ -157,11 +172,11 @@ Deno.serve(async (req) => {
       // Merge into existing
       const existing = mergedRecords.get(email);
       
-      // Check for name conflicts (shared_email_conflict)
-      if (firstName && existing.first_name && firstName.toLowerCase() !== existing.first_name.toLowerCase()) {
-        existing._name_conflicts = existing._name_conflicts || [];
-        existing._name_conflicts.push({ file: row._csv_file, first_name: firstName, last_name: lastName });
-      }
+      // Track ALL name appearances for this email (for conflict detection later)
+      existing._all_name_appearances = existing._all_name_appearances || [
+        { file: existing.original_csv_rows[0]?.file, first_name: existing.first_name, last_name: existing.last_name }
+      ];
+      existing._all_name_appearances.push({ file: row._csv_file, first_name: firstName, last_name: lastName });
       
       // Append source
       if (source && !existing.import_sources.includes(source)) {
@@ -220,111 +235,136 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 3. Identify shared_email_conflicts (different people same email)
-  // Also track ALL name appearances per email for full context
-  const nameConflictRecords = [];
+  // 3. Identify EXACT same-email conflicts (different names on identical normalized email)
+  const exactEmailConflicts = [];
   for (const [email, rec] of mergedRecords) {
-    if (rec._name_conflicts && rec._name_conflicts.length > 0) {
-      // Gather all name appearances from all csv rows for this email
-      const allNames = rec.original_csv_rows.map(r => ({
-        file: r.file,
-        first_name: normalizeName(r.data.first_name || r.data.First_Name || r.data.first_Name || ''),
-        last_name: normalizeName(r.data.last_name || r.data.Last_Name || r.data.last_Name || ''),
-      }));
+    const appearances = rec._all_name_appearances;
+    if (!appearances || appearances.length < 2) continue;
 
-      // Build all unique purchases from the raw rows
-      const allPurchasesRaw = [];
-      for (const text of rec.original_purchase_texts) {
-        const items = parsePurchases(text);
-        allPurchasesRaw.push(...items);
-      }
-      const uniquePurchases = [...new Set(allPurchasesRaw)];
+    // Get unique first/last names (lowercased, trimmed, non-empty)
+    const uniqueFirstNames = [...new Set(appearances.map(a => a.first_name.toLowerCase().trim()).filter(Boolean))];
+    const uniqueLastNames = [...new Set(appearances.map(a => a.last_name.toLowerCase().trim()).filter(Boolean))];
 
-      // Classify the conflict
-      const uniqueFirstNames = [...new Set(allNames.map(n => n.first_name.toLowerCase()).filter(Boolean))];
-      const uniqueLastNames = [...new Set(allNames.map(n => n.last_name.toLowerCase()).filter(Boolean))];
+    // Only flag if there are actually different names — not just casing/whitespace
+    if (uniqueFirstNames.length <= 1 && uniqueLastNames.length <= 1) continue;
 
-      let recommendation = 'manual_review';
-      let reason = '';
-
-      // Case 1: Same last name, different first name → likely family sharing email
-      if (uniqueLastNames.length <= 1 && uniqueFirstNames.length > 1) {
-        recommendation = 'exclude_shared_email';
-        reason = 'Different first names, same last name — likely family sharing one email. Needs manual split.';
-      }
-      // Case 2: First/last swapped (e.g., "Christine Chapin" vs "Chapin Christine")
-      else if (uniqueFirstNames.length === 2 && uniqueLastNames.length === 2) {
-        const fn = uniqueFirstNames;
-        const ln = uniqueLastNames;
-        if ((fn[0] === ln[1] && fn[1] === ln[0]) || 
-            (fn.some(f => ln.includes(f)))) {
-          recommendation = 'safe_merge';
-          reason = 'First/last name appear swapped across files — same person.';
-        }
-      }
-      // Case 3: Minor typo (Levenshtein-like: one char diff)
-      if (recommendation === 'manual_review') {
-        if (uniqueFirstNames.length === 2) {
-          const a = uniqueFirstNames[0], b = uniqueFirstNames[1];
-          // Check if one is substring of other or 1 char diff
-          if (a.includes(b) || b.includes(a) || Math.abs(a.length - b.length) <= 1) {
-            const shorter = a.length <= b.length ? a : b;
-            const longer = a.length > b.length ? a : b;
-            let diffs = 0;
-            for (let i = 0; i < shorter.length; i++) {
-              if (shorter[i] !== longer[i]) diffs++;
-            }
-            diffs += longer.length - shorter.length;
-            if (diffs <= 2) {
-              recommendation = 'safe_merge';
-              reason = `Minor name variant/typo: "${uniqueFirstNames[0]}" vs "${uniqueFirstNames[1]}" — likely same person.`;
-            }
-          }
-        }
-        // Check last name typos too
-        if (recommendation === 'manual_review' && uniqueLastNames.length === 2 && uniqueFirstNames.length <= 1) {
-          const a = uniqueLastNames[0], b = uniqueLastNames[1];
-          if (a.includes(b) || b.includes(a)) {
-            recommendation = 'safe_merge';
-            reason = `Minor last name variant: "${uniqueLastNames[0]}" vs "${uniqueLastNames[1]}" — likely same person.`;
-          } else {
-            let diffs = 0;
-            const shorter = a.length <= b.length ? a : b;
-            const longer = a.length > b.length ? a : b;
-            for (let i = 0; i < shorter.length; i++) {
-              if (shorter[i] !== longer[i]) diffs++;
-            }
-            diffs += longer.length - shorter.length;
-            if (diffs <= 2) {
-              recommendation = 'safe_merge';
-              reason = `Minor last name typo: "${uniqueLastNames[0]}" vs "${uniqueLastNames[1]}" — likely same person.`;
-            }
-          }
-        }
-      }
-      // Case 4: Completely different names → likely different people
-      if (recommendation === 'manual_review') {
-        if (uniqueFirstNames.length > 1 && uniqueLastNames.length > 1) {
-          // Check if any first name matches any last name (swap scenario already checked above)
-          recommendation = 'exclude_shared_email';
-          reason = 'Significantly different names — likely different people sharing email. Needs Roberta review.';
-        } else {
-          reason = 'Name mismatch — cannot automatically determine if same person or different people.';
-        }
-      }
-
-      nameConflictRecords.push({
-        email,
-        all_name_appearances: allNames,
-        unique_first_names: uniqueFirstNames,
-        unique_last_names: uniqueLastNames,
-        source_files: rec.import_sources,
-        purchases: uniquePurchases,
-        recommendation,
-        reason,
-        flag: 'shared_email_conflict',
-      });
+    // Build purchases for this email
+    const allPurchasesRaw = [];
+    for (const text of rec.original_purchase_texts) {
+      allPurchasesRaw.push(...parsePurchases(text));
     }
+    const uniquePurchases = [...new Set(allPurchasesRaw)];
+
+    // Classify using edit distance for accurate typo detection
+    let recommendation = 'manual_review';
+    let reason = '';
+
+    // Case A: First/last name swapped (e.g., "Christine Chapin" vs "Chapin Christine")
+    if (uniqueFirstNames.length === 2 && uniqueLastNames.length === 2) {
+      const fn = uniqueFirstNames, ln = uniqueLastNames;
+      if ((fn[0] === ln[1] && fn[1] === ln[0]) || fn.some(f => ln.includes(f))) {
+        recommendation = 'safe_merge';
+        reason = `First/last swapped: "${fn.join('" / "')}" ↔ "${ln.join('" / "')}" — same person.`;
+      }
+    }
+
+    // Case B: Same last name(s), different first names
+    if (recommendation === 'manual_review' && uniqueFirstNames.length >= 2 && uniqueLastNames.length <= 1) {
+      // Check all pairs of first names
+      let allClose = true;
+      const pairReasons = [];
+      for (let i = 0; i < uniqueFirstNames.length; i++) {
+        for (let j = i + 1; j < uniqueFirstNames.length; j++) {
+          const a = uniqueFirstNames[i], b = uniqueFirstNames[j];
+          const dist = editDistance(a, b);
+          const longer = Math.max(a.length, b.length);
+          const isSubstring = a.includes(b) || b.includes(a);
+          if (dist <= 2 || isSubstring) {
+            pairReasons.push(`"${a}" ↔ "${b}" (edit dist ${dist}${isSubstring ? ', substring' : ''})`);
+          } else {
+            allClose = false;
+          }
+        }
+      }
+      if (allClose && pairReasons.length > 0) {
+        recommendation = 'safe_merge';
+        reason = `First name variant(s): ${pairReasons.join('; ')} — same last name "${uniqueLastNames[0]}".`;
+      }
+    }
+
+    // Case C: Same first name(s), different last names
+    if (recommendation === 'manual_review' && uniqueLastNames.length >= 2 && uniqueFirstNames.length <= 1) {
+      let allClose = true;
+      const pairReasons = [];
+      for (let i = 0; i < uniqueLastNames.length; i++) {
+        for (let j = i + 1; j < uniqueLastNames.length; j++) {
+          const a = uniqueLastNames[i], b = uniqueLastNames[j];
+          const dist = editDistance(a, b);
+          const isSubstring = a.includes(b) || b.includes(a);
+          if (dist <= 2 || isSubstring) {
+            pairReasons.push(`"${a}" ↔ "${b}" (edit dist ${dist}${isSubstring ? ', substring' : ''})`);
+          } else {
+            allClose = false;
+          }
+        }
+      }
+      if (allClose && pairReasons.length > 0) {
+        recommendation = 'safe_merge';
+        reason = `Last name variant(s): ${pairReasons.join('; ')} — same first name "${uniqueFirstNames[0] || '(empty)'}".`;
+      }
+    }
+
+    // Case D: Both first AND last differ — check if it's a close variant on both axes
+    if (recommendation === 'manual_review' && uniqueFirstNames.length >= 2 && uniqueLastNames.length >= 2) {
+      // Already checked swap in Case A. If we're here, it's genuinely different.
+      recommendation = 'exclude_shared_email';
+      reason = `Different first AND last names: [${uniqueFirstNames.join(', ')}] × [${uniqueLastNames.join(', ')}] — likely different people.`;
+    }
+
+    // Case E: Remaining manual_review — only first OR only last differs, but too far to auto-merge
+    if (recommendation === 'manual_review') {
+      if (uniqueFirstNames.length > 1) {
+        recommendation = 'exclude_shared_email';
+        reason = `Distinct first names: [${uniqueFirstNames.join(', ')}] with last [${uniqueLastNames.join(', ')}] — too different to auto-merge.`;
+      } else {
+        recommendation = 'exclude_shared_email';
+        reason = `Distinct last names: [${uniqueLastNames.join(', ')}] with first [${uniqueFirstNames.join(', ')}] — too different to auto-merge.`;
+      }
+    }
+
+    exactEmailConflicts.push({
+      email,
+      all_name_appearances: appearances,
+      unique_first_names: uniqueFirstNames,
+      unique_last_names: uniqueLastNames,
+      source_files: rec.import_sources,
+      purchases: uniquePurchases,
+      recommendation,
+      reason,
+    });
+  }
+
+  // 3b. Detect possible same-person/different-email matches (separate section, does NOT block import)
+  // Build name→emails index for cross-email matching
+  const nameIndex = new Map(); // "firstname|lastname" -> [{email, file}]
+  for (const [email, rec] of mergedRecords) {
+    const key = `${rec.first_name.toLowerCase().trim()}|${rec.last_name.toLowerCase().trim()}`;
+    if (!key || key === '|') continue;
+    if (!nameIndex.has(key)) nameIndex.set(key, []);
+    nameIndex.get(key).push({ email, files: rec.import_sources });
+  }
+  const possibleCrossEmailMatches = [];
+  for (const [nameKey, entries] of nameIndex) {
+    if (entries.length <= 1) continue;
+    const uniqueEmails = [...new Set(entries.map(e => e.email))];
+    if (uniqueEmails.length <= 1) continue;
+    const [firstName, lastName] = nameKey.split('|');
+    possibleCrossEmailMatches.push({
+      name: `${firstName} ${lastName}`,
+      emails: uniqueEmails,
+      files: [...new Set(entries.flatMap(e => e.files))],
+      note: 'Same name, different emails — may be same person with multiple accounts. Import as separate records unless manually merged.',
+    });
   }
 
   // 4. Build normalized purchase map
@@ -428,14 +468,24 @@ Deno.serve(async (req) => {
   const body = await req.json().catch(() => ({}));
   const mode = body.mode || 'full';
 
+  // Conflict sub-counts
+  const safeMergeCount = exactEmailConflicts.filter(r => r.recommendation === 'safe_merge').length;
+  const excludeCount = exactEmailConflicts.filter(r => r.recommendation === 'exclude_shared_email').length;
+  const manualReviewCount = exactEmailConflicts.filter(r => r.recommendation === 'manual_review').length;
+
   if (mode === 'conflicts_only') {
     return Response.json({
-      total_conflicts: nameConflictRecords.length,
-      conflicts: nameConflictRecords,
-      summary_by_recommendation: {
-        safe_merge: nameConflictRecords.filter(r => r.recommendation === 'safe_merge').length,
-        exclude_shared_email: nameConflictRecords.filter(r => r.recommendation === 'exclude_shared_email').length,
-        manual_review: nameConflictRecords.filter(r => r.recommendation === 'manual_review').length,
+      exact_email_conflicts: {
+        total: exactEmailConflicts.length,
+        safe_merge: safeMergeCount,
+        exclude_shared_email: excludeCount,
+        manual_review: manualReviewCount,
+        records: exactEmailConflicts,
+      },
+      possible_cross_email_matches: {
+        total: possibleCrossEmailMatches.length,
+        records: possibleCrossEmailMatches,
+        note: 'These are different emails that share the same name. They do NOT block import. Each imports as a separate record.',
       },
     });
   }
@@ -444,15 +494,21 @@ Deno.serve(async (req) => {
   const report = {
     summary: {
       total_raw_rows: allRows.length,
-      total_unique_emails: mergedRecords.size,
-      total_excluded: excluded.length,
-      total_malformed: malformed.length,
-      total_shared_email_conflicts: nameConflictRecords.length,
+      total_unique_normalized_emails: mergedRecords.size,
+      total_excluded_junk: excluded.length,
+      total_malformed_emails: malformed.length,
       total_multi_email_rows: multiEmailRows.length,
       total_merged_from_multiple_csvs: [...mergedRecords.values()].filter(r => r._merge_count > 1).length,
-      will_create_new: willCreate.length,
-      will_update_existing_lead: willUpdateLead.length,
-      will_update_existing_user: willUpdateUser.length,
+      exact_email_conflicts: {
+        total: exactEmailConflicts.length,
+        safe_merge: safeMergeCount,
+        exclude_shared_email: excludeCount,
+        manual_review: manualReviewCount,
+      },
+      possible_cross_email_matches: possibleCrossEmailMatches.length,
+      will_create_new_leads: willCreate.length,
+      will_update_existing_leads: willUpdateLead.length,
+      will_update_existing_users: willUpdateUser.length,
       existing_users_in_system: existingUsers.length,
       existing_leads_in_system: existingLeadCount,
     },
@@ -464,9 +520,10 @@ Deno.serve(async (req) => {
     },
     exclusions: excluded,
     malformed_emails: malformed,
-    shared_email_conflicts: nameConflictRecords,
+    exact_email_conflicts: exactEmailConflicts,
+    possible_cross_email_matches: possibleCrossEmailMatches,
     multi_email_rows: multiEmailRows,
-    will_create: willCreate.slice(0, 20),
+    will_create_sample: willCreate.slice(0, 20),
     will_create_total: willCreate.length,
     will_update_leads: willUpdateLead,
     will_update_users: willUpdateUser,
