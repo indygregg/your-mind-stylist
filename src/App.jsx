@@ -44,16 +44,14 @@ const AuthenticatedApp = () => {
     );
   }
 
-  // Handle authentication errors
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
-    }
+  // Handle user_not_registered error (block entire app)
+  if (authError && authError.type === 'user_not_registered') {
+    return <UserNotRegisteredError />;
   }
+
+  // For auth_required: this is a public website — let all routes render.
+  // Protected pages handle their own auth gating via Layout/AuthLayout.
+  // Only the layout's auth check will redirect to login for protected pages.
 
   // Render the main app
   return (
