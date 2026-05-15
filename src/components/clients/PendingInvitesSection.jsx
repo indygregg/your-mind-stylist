@@ -25,6 +25,9 @@ export default function PendingInvitesSection({ leads, users }) {
   const pendingLeads = leads.filter((l) => {
     // Only show people with a confirmed invite_status
     if (l.invite_status !== "invited") return false;
+    // Exclude archived / opted-out leads
+    if (l.lead_status === "archived") return false;
+    if ((l.tags || []).includes("opted_out")) return false;
     return !userEmails.has(l.email?.toLowerCase());
   });
 
