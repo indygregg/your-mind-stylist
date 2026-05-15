@@ -67,16 +67,22 @@ function hasPilotTag(lead) {
 function buildPersonalizedBody(lead) {
   const name = lead.first_name || lead.email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   return `<p style="font-family: Georgia, serif; color: #1E3A32; font-size: 18px; margin: 0 0 16px;">Hi ${name},</p>
-    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">Roberta here. You may already know me through FARE Hypnosis, Conscious Napping&reg;, a class, a session, or another connection.</p>
-    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">I've built a new home for everything — Your Mind Stylist — and I've set up access for you so your programs, courses, and resources are waiting inside.</p>
-    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 8px;">Click the button below to go to the login page. Choose <strong>Sign Up</strong> and use this same email address to create your password.</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">I promise that you know me!</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">You've either been a client of FARE Hypnosis, used Conscious Napping&reg;, been a student, or have some other connection to me.</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">I am rebranding to better reflect the evolution of FARE Hypnosis and Conscious Napping&reg;.</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">The new name is <strong>Your Mind Stylist</strong>, and the app is now <strong>Pocket Mindset</strong>.</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">Over the past 15 years, you may have received only one or 2 emails from me. This will not change, as I now have a non-intrusive way for you to continue our work or to re-engage with me:</p>
+    <p style="color: #1E3A32; font-size: 16px; line-height: 1.7; margin: 0 0 16px; font-weight: 600;">Your new personalized dashboard has been set up and is waiting for you!</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">It is fun, has freebies (to be added regularly!), and other ways to engage with my services and content.</p>
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 8px;">All you have to do is click the link in this email and set up a password. Then have fun continuing to restyle your life.</p>
     <p style="color: #2B2725; font-size: 13px; line-height: 1.6; margin: 0 0 24px; opacity: 0.7;">(Use <strong>${lead.email}</strong> — the email this message was sent to.)</p>
     <div style="text-align: center; margin: 0 0 24px;">
-      <a href="https://yourmindstylist.com/login" style="display: inline-block; background: #1E3A32; color: #F9F5EF; padding: 14px 36px; text-decoration: none; font-size: 14px; letter-spacing: 0.1em; border-radius: 4px;">SET UP YOUR ACCOUNT</a>
+      <a href="https://yourmindstylist.com/register" style="display: inline-block; background: #1E3A32; color: #F9F5EF; padding: 14px 36px; text-decoration: none; font-size: 14px; letter-spacing: 0.1em; border-radius: 4px;">SET UP YOUR PASSWORD</a>
     </div>
-    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">Once inside, you'll find your materials, appointments, and resources in your client area.</p>
-    <p style="color: #1E3A32; font-size: 15px; font-weight: 500; margin: 0;">Warmly,</p>
-    <p style="color: #1E3A32; font-size: 15px; margin: 4px 0 0;">Roberta Fernandez<br/><span style="color: #6E4F7D; font-size: 13px;">Your Mind Stylist</span></p>`;
+    <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">As always, feel free to reach out any time,</p>
+    <p style="color: #1E3A32; font-size: 15px; font-weight: 500; margin: 0;">Roberta Fernandez</p>
+    <p style="color: #6E4F7D; font-size: 14px; margin: 4px 0 0;">Your Mind Stylist</p>
+    <p style="color: #2B2725; font-size: 13px; margin: 4px 0 0; opacity: 0.7;">Online Anywhere or Las Vegas, NV</p>`;
 }
 
 function wrapInBrandShell(innerHtml) {
