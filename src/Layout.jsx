@@ -392,20 +392,20 @@ export default function Layout({ children, currentPageName }) {
                     <Search size={18} />
                   </button>
                   <CartIcon hasDarkHero={hasDarkHero} />
-                  <a
-                    href="https://yourmindstylist.com/login"
+                  <Link
+                    to="/login"
                     onClick={() => haptics.light()}
                     className={`text-sm tracking-wide ${hasDarkHero ? 'text-white/80 hover:text-white' : 'text-[#2B2725]/70 hover:text-[#1E3A32]'} transition-colors`}
                   >
                     Login
-                  </a>
-                  <a
-                    href="https://yourmindstylist.com/login"
+                  </Link>
+                  <Link
+                    to="/register"
                     onClick={() => haptics.medium()}
                     className={`px-5 py-2 ${hasDarkHero ? 'bg-white text-[#1E3A32] hover:bg-[#F9F5EF]' : 'bg-[#1E3A32] text-[#F9F5EF] hover:bg-[#2B2725]'} text-sm tracking-wide transition-all duration-300`}
                   >
                     Get Started
-                  </a>
+                  </Link>
                 </div>
                 </div>
 
@@ -519,20 +519,20 @@ export default function Layout({ children, currentPageName }) {
                 </div>
 
                 <div className="mt-6 pt-4 border-t border-[#E4D9C4] flex flex-col gap-3">
-                  <a
-                    href="https://yourmindstylist.com/login"
-                    onClick={() => haptics.light()}
+                  <Link
+                    to="/login"
+                    onClick={() => { haptics.light(); setMobileMenuOpen(false); }}
                     className="px-6 py-4 border border-[#1E3A32] text-[#1E3A32] text-center text-sm tracking-wide rounded-lg hover:bg-[#1E3A32]/5 active:scale-98 transition-all min-h-[52px] flex items-center justify-center"
                   >
                     Login
-                  </a>
-                  <a
-                    href="https://yourmindstylist.com/login"
-                    onClick={() => haptics.medium()}
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => { haptics.medium(); setMobileMenuOpen(false); }}
                     className="px-6 py-4 bg-[#1E3A32] text-[#F9F5EF] text-center text-sm tracking-wide rounded-lg hover:bg-[#2B2725] active:scale-98 transition-all min-h-[52px] flex items-center justify-center"
                   >
                     Get Started
-                  </a>
+                  </Link>
                 </div>
               </div>
             </motion.div>
