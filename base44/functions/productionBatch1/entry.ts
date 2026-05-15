@@ -217,6 +217,8 @@ Deno.serve(async (req) => {
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { skip(email, 'malformed_or_missing'); continue; }
     if (lead.lead_status === 'archived') { skip(email, 'archived'); continue; }
+    if ((lead.tags || []).includes('opted_out')) { skip(email, 'opted_out'); continue; }
+    if (lead.opted_out_at) { skip(email, 'opted_out_timestamp'); continue; }
     if (isTestAccount(lead)) { skip(email, 'test_account'); continue; }
     if (hasPilotTag(lead)) { skip(email, 'pilot_batch_1_excluded'); continue; }
     if (lead.invite_status === 'invited' || lead.invite_status === 'accepted') { skip(email, `already_${lead.invite_status}`); continue; }

@@ -25,6 +25,7 @@ import PersonBookingHistory from "./PersonBookingHistory";
 import DeactivateUserDialog from "./DeactivateUserDialog";
 import SafeDeleteUserDialog from "./SafeDeleteUserDialog";
 import ArchiveLeadDialog from "./ArchiveLeadDialog";
+import OptOutLeadDialog from "./OptOutLeadDialog";
 import PendingAccessGrantsSection from "./PendingAccessGrantsSection";
 
 function SectionLabel({ children }) {
@@ -51,6 +52,7 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
   const [statusAction, setStatusAction] = useState(null); // "deactivate" | "archive" | "reactivate"
   const [safeDeleteOpen, setSafeDeleteOpen] = useState(false);
   const [archiveLeadAction, setArchiveLeadAction] = useState(null);
+  const [optOutDialogOpen, setOptOutDialogOpen] = useState(false);
   const [currentUserEmail, setCurrentUserEmail] = useState(null);
 
   // Get current user for self-protection
@@ -637,26 +639,36 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
                   </p>
                 )}
 
-                {/* Lead archive/restore — always visible when lead exists, regardless of user account */}
+                {/* Opt Out / Archive — for active leads */}
                 {leadData && (!leadData.lead_status || leadData.lead_status === "active") && (
-                  <Button
-                    variant="outline"
-                    className="justify-start border-gray-200 text-gray-600 hover:bg-gray-50"
-                    onClick={() => setArchiveLeadAction("archive")}
-                  >
-                    <Archive size={15} className="mr-2" />
-                    Archive Lead
-                  </Button>
+                  <>
+                    <Button
+                      variant="outline"
+                      className="justify-start border-amber-200 text-amber-700 hover:bg-amber-50"
+                      onClick={() => setOptOutDialogOpen(true)}
+                    >
+                      <UserX size={15} className="mr-2" />
+                      Opt Out / Archive
+                    </Button>
+                  </>
                 )}
                 {leadData && leadData.lead_status === "archived" && (
-                  <Button
-                    variant="outline"
-                    className="justify-start border-green-200 text-green-700 hover:bg-green-50"
-                    onClick={() => setArchiveLeadAction("restore")}
-                  >
-                    <CheckCircle size={15} className="mr-2" />
-                    Restore Lead
-                  </Button>
+                  <>
+                    {leadData.tags?.includes("opted_out") && (
+                      <div className="flex items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
+                        <UserX size={14} />
+                        <span>Opted out{leadData.opted_out_at ? ` on ${format(new Date(leadData.opted_out_at), "MMM d, yyyy")}` : ""}</span>
+                      </div>
+                    )}
+                    <Button
+                      variant="outline"
+                      className="justify-start border-green-200 text-green-700 hover:bg-green-50"
+                      onClick={() => setArchiveLeadAction("restore")}
+                    >
+                      <CheckCircle size={15} className="mr-2" />
+                      Restore Lead
+                    </Button>
+                  </>
                 )}
 
                 {/* Account status actions — only for users, not self, not admin/manager */}
@@ -802,6 +814,15 @@ export default function PersonDetailPanel({ open, onOpenChange, email, name }) {
           onOpenChange={(v) => { if (!v) setArchiveLeadAction(null); }}
           lead={leadData}
           action={archiveLeadAction}
+        />
+      )}
+
+      {/* Opt Out Dialog */}
+      {optOutDialogOpen && leadData && (
+        <OptOutLeadDialog
+          open={optOutDialogOpen}
+          onOpenChange={setOptOutDialogOpen}
+          lead={leadData}
         />
       )}
     </>

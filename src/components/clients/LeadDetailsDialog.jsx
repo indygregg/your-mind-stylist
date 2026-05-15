@@ -9,15 +9,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { base44 } from "@/api/base44Client";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { Loader2, ExternalLink } from "lucide-react";
+import { Loader2, ExternalLink, UserX } from "lucide-react";
 import PersonDetailPanel from "./PersonDetailPanel";
 import PersonStatusBadge, { getPersonStatus } from "./PersonStatusBadge";
+import OptOutLeadDialog from "./OptOutLeadDialog";
 
 export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [editData, setEditData] = useState(lead);
   const [personPanelOpen, setPersonPanelOpen] = useState(false);
+  const [optOutDialogOpen, setOptOutDialogOpen] = useState(false);
   const queryClient = useQueryClient();
 
   // Re-sync editData when lead changes (e.g. clicking a different lead)
@@ -180,7 +182,7 @@ export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
             </div>
 
             <div className="flex justify-between pt-4">
-              <div>
+              <div className="flex gap-2">
                 {editing && (
                   <Button variant="outline" onClick={() => {
                     setEditData(lead);
@@ -188,6 +190,22 @@ export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
                   }}>
                     Cancel
                   </Button>
+                )}
+                {!editing && lead?.lead_status !== "archived" && (
+                  <Button
+                    variant="outline"
+                    className="border-amber-200 text-amber-700 hover:bg-amber-50"
+                    onClick={() => setOptOutDialogOpen(true)}
+                  >
+                    <UserX size={15} className="mr-2" />
+                    Opt Out / Archive
+                  </Button>
+                )}
+                {!editing && lead?.lead_status === "archived" && lead?.tags?.includes("opted_out") && (
+                  <div className="flex items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700">
+                    <UserX size={14} />
+                    <span>Opted out</span>
+                  </div>
                 )}
               </div>
               <div className="flex gap-2">
@@ -228,6 +246,15 @@ export default function LeadDetailsDialog({ open, onOpenChange, lead }) {
         onOpenChange={setPersonPanelOpen}
         email={lead.email}
         name={getDisplayName(lead)}
+      />
+    )}
+
+    {/* Opt Out Dialog */}
+    {optOutDialogOpen && lead && (
+      <OptOutLeadDialog
+        open={optOutDialogOpen}
+        onOpenChange={setOptOutDialogOpen}
+        lead={lead}
       />
     )}
     </>

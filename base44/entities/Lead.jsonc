@@ -121,6 +121,11 @@
       "format": "date-time",
       "description": "When they accepted the invite and created account"
     },
+    "opted_out_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this person requested removal from email communications"
+    },
     "what_inquired_about": {
       "type": "string",
       "description": "What they inquired about"
