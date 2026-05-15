@@ -76,9 +76,10 @@ function buildPersonalizedBody(lead) {
     <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">It is fun, has freebies (to be added regularly!), and other ways to engage with my services and content.</p>
     <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 8px;">All you have to do is click the link in this email and set up a password. Then have fun continuing to restyle your life.</p>
     <p style="color: #2B2725; font-size: 13px; line-height: 1.6; margin: 0 0 24px; opacity: 0.7;">(Use <strong>${lead.email}</strong> — the email this message was sent to.)</p>
-    <div style="text-align: center; margin: 0 0 24px;">
+    <div style="text-align: center; margin: 0 0 12px;">
       <a href="https://yourmindstylist.com/register" style="display: inline-block; background: #1E3A32; color: #F9F5EF; padding: 14px 36px; text-decoration: none; font-size: 14px; letter-spacing: 0.1em; border-radius: 4px;">SET UP YOUR PASSWORD</a>
     </div>
+    <p style="color: #2B2725; font-size: 13px; line-height: 1.5; margin: 0 0 24px; text-align: center; opacity: 0.6;">If you already created your password, you can simply <a href="https://yourmindstylist.com/login" style="color: #6E4F7D; text-decoration: underline;">log in</a>.</p>
     <p style="color: #2B2725; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">As always, feel free to reach out any time,</p>
     <p style="color: #1E3A32; font-size: 15px; font-weight: 500; margin: 0;">Roberta Fernandez</p>
     <p style="color: #6E4F7D; font-size: 14px; margin: 4px 0 0;">Your Mind Stylist</p>
@@ -86,7 +87,15 @@ function buildPersonalizedBody(lead) {
 }
 
 function wrapInBrandShell(innerHtml) {
-  return `<div style="font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #F9F5EF; padding: 0;">
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Mind Stylist</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F9F5EF; font-family: 'Inter', Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased;">
+<div style="max-width: 600px; margin: 0 auto; background: #F9F5EF; padding: 0;">
   <div style="text-align: center; padding: 32px 24px 16px;">
     <img src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/693a98b3e154ab3b36c88ebb/7d5c32b99_Mind-stylist-dark-icon2x.png" alt="Your Mind Stylist" style="height: 60px; width: auto;" />
   </div>
@@ -97,7 +106,9 @@ function wrapInBrandShell(innerHtml) {
     <p style="margin: 0;">&copy; ${new Date().getFullYear()} Your Mind Stylist &middot; Las Vegas, NV</p>
     <p style="margin: 4px 0 0;"><a href="https://yourmindstylist.com" style="color: #6E4F7D;">yourmindstylist.com</a></p>
   </div>
-</div>`;
+</div>
+</body>
+</html>`;
 }
 
 async function resolveProductIds(base44) {
@@ -337,7 +348,7 @@ Deno.serve(async (req) => {
     result.protected_grants_skipped = protectedGrants.map(g => g.platform_item_name);
 
     // ── Step 2: Send branded email via Resend ──
-    const subject = 'Your Mind Stylist — Your access is ready';
+    const subject = 'Your Mind Stylist — Your Personal Dashboard Is Ready';
     const innerHtml = buildPersonalizedBody(lead);
     const fullHtml = wrapInBrandShell(innerHtml);
 
