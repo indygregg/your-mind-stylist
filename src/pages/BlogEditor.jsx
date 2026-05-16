@@ -519,7 +519,12 @@ export default function BlogEditor() {
                 <Save size={18} className="mr-2" />
                 Save Draft
               </Button>
-              {formData.status === "published" ? (
+              {formData.publish_date && new Date(formData.publish_date) > new Date() && formData.status !== "published" ? (
+                <Button onClick={() => handleSave("scheduled")} className="bg-[#6E4F7D] hover:bg-[#5D4469]">
+                  <Calendar size={18} className="mr-2" />
+                  Schedule
+                </Button>
+              ) : formData.status === "published" ? (
                 <Button onClick={() => handleSave("published")} className="bg-[#1E3A32] hover:bg-[#2B2725]">
                   <Save size={18} className="mr-2" />
                   Update
@@ -527,7 +532,7 @@ export default function BlogEditor() {
               ) : (
                 <Button onClick={() => handleSave("published")} className="bg-[#1E3A32] hover:bg-[#2B2725]">
                   <Calendar size={18} className="mr-2" />
-                  Publish
+                  Publish Now
                 </Button>
               )}
             </div>
