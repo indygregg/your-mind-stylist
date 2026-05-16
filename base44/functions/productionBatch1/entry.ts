@@ -3,7 +3,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 /**
  * productionBatch1
  * 
- * PRODUCTION BATCH #1 — 200 recipients maximum.
+ * PRODUCTION BATCH #1 — 100 recipients maximum.
  * Path B: branded email only + open registration. NO Base44 system invite.
  * 
  * For each eligible recipient:
@@ -23,7 +23,7 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
  */
 
 const RESEND_FROM = 'Roberta Fernandez <roberta@yourmindstylist.com>';
-const BATCH_MAX = 200;
+const BATCH_MAX = 100;
 
 const PURCHASE_MAP = {
   'Pocket Mindset™': { platform_item: 'Pocket Mindset™ (Subscription)', action_type: 'grant_product', type: 'product', protected: false },
